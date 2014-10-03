@@ -4,9 +4,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="lib/lucene-analyzers-common-4.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-expressions-4.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-4.10.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-4.10.1.jar" sourcepath="/home/kieran/projects/conductus/lucene-4.10.1_src/lucene-4.10.1/core/src/java"/>
 	<classpathentry kind="lib" path="lib/lucene-facet-4.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-queries-4.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-queryparser-4.10.1.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-annotations-2.4.2.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.4.2.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.4.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
