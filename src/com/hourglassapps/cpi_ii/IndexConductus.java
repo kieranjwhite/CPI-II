@@ -22,7 +22,8 @@ public class IndexConductus {
 		Indexer indexer=null;
 		try {
 			indexer=new Indexer(new File("index"));
-			JSONParser<Long, String, PoemRecord> parser=new JSONParser(args[0], PoemRecord.class);
+			JSONParser<Long, String, PoemRecord> parser=
+					new JSONParser<>(args[0], PoemRecord.class);
 			while(parser.hasNext()) {
 				Ii<Long, String> record=parser.next();
 				if(record==null) {
@@ -31,13 +32,8 @@ public class IndexConductus {
 				}
 				indexer.add(record.fst(), record.snd());
 			}
-			
-			indexer.close();
-			
-			Throwable t=parser.caught();
-			if(t!=null) {
-				throw t;
-			}
+
+			parser.throwCaught();
 			
 		} catch (Throwable e) {
 			Log.e(TAG, e);

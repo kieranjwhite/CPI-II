@@ -60,8 +60,10 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator
 	}
 
 	@Override
-	public Throwable caught() {
-		return mThrowable;
+	public void throwCaught() throws Throwable {
+		if(mThrowable!=null) {
+			throw mThrowable;
+		}
 	}
 
 }
