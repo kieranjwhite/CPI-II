@@ -9,6 +9,9 @@ public class RemoveUnescapesReader extends Reader {
 	private Reader mInput;
 	private boolean done=false;
 	private Buffer mPending=new Buffer();
+	/**
+	 * Deals with identifying an modifying lines matching the 'unescape' regular expression.
+	 */
 	private ReGroupHandler mUnescapeGroup=new ReGroupHandler("unescape\\('([^)]*)'\\)", 10, 2, 
 			new SearchAndReplacer() {
 		private char quoteArr[]=new char[]{'"'};
@@ -26,6 +29,14 @@ public class RemoveUnescapesReader extends Reader {
 		}
 
 	}, mPending);
+	/**
+	 * Deals with identifying an modifying a string matching a single HTMLified control character,
+	 * (i.e. a string matching the re <code>%([a-fA-F0-9]{2})</code>.
+	 * <p>
+	 * Such a control character (i.e. any 2 digit hex number preceded by 
+	 * a %) is converted to the number's corresponding ASCII character, with 
+	 * one exception: <code>%09</code> is replaced by a space
+	 */
 	private ReGroupHandler mEscapedCharGroup=new ReGroupHandler("%([a-fA-F0-9]{2})", 1, 0, 
 			new SearchAndReplacer() {
 
@@ -62,6 +73,26 @@ public class RemoveUnescapesReader extends Reader {
 		mInput.close();
 	}
 
+	/**
+	 * Reads json and passes along any line that doesn't contain a match for 
+	 * the regular expression "unescape\\('([^)]*)'\\)".
+	 * <p>
+	 * Any line that does match that re is replaced by one where the matching 
+	 * substring is replaced by a modified version of captured group 1 (i.e. 
+	 * the matching string corresponding to the <code>([^)]*)</code> part of the re.
+	 * <p>
+	 * Captured group 1 is altered so that any 2 digit hex number preceded by 
+	 * a % is converted to the number's corresponding ASCII character, with 
+	 * one exception: <code>%09</code> is replaced by a space.
+	 * <p>
+	 * Examples:
+	 * <p>
+	 * <code>
+	 * "eprintid": "4763", -> "eprintid": "4763",<br>
+	 * "title": unescape('Amors%20m%27a%20au%20las%20pris'), -> "title": "Amors m'a au las pris",<br>
+	 * "title": unescape('Amors%20m%27a%20au%09las%20pris'), -> "title": "Amors m'a au las pris",<br>
+	 * </code>
+	 */
 	@Override
 	public int read(char[] pDst, int pDstOff, int pMaxLen) throws IOException {
 		if(done) {
@@ -82,11 +113,8 @@ public class RemoveUnescapesReader extends Reader {
 
 		mNewLen=mLen+charsRead;
 		int last_copied=copyToNewLine();
-		int copied=last_copied;
 		while(last_copied!=0) {
-
 			last_copied=copyToNewLine();
-			copied+=last_copied;
 		}
 		return mPending.shift(pDst, pDstOff, pMaxLen);
 	}

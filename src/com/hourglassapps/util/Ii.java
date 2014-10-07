@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * An immutable pair implementation.
+ */
 public class Ii<F,S> implements Cloneable, Serializable {
 	private static final long serialVersionUID = 3011084707804958069L;
 	protected F mFst;

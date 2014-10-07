@@ -2,18 +2,13 @@ package com.hourglassapps.serialise;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Iterator;
-
-import org.apache.lucene.queryparser.xml.ParserException;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hourglassapps.cpi_ii.Record;
-import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.ThrowableIterator;
 
 public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator<R> {

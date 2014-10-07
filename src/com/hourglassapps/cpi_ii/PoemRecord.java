@@ -2,6 +2,12 @@ package com.hourglassapps.cpi_ii;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * This class fields are populated by the Jackson JSON parser.
+ * Each field corresponds to a key-value pair in corresponding JSON object.
+ * <p>
+ * Setter implementations are required by Jackson and are invoked to set field values.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PoemRecord implements Record<Long, String> {
 	private static final Object TEXT_INCIPIT_ONLY = "Text_incipit_only";

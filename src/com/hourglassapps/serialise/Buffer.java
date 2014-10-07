@@ -2,6 +2,11 @@ package com.hourglassapps.serialise;
 
 import com.hourglassapps.util.Log;
 
+/**
+ * Think of a Buffer instance as a queue of characters, allowing an 
+ * arbitrary number of characters to be pushed to the end 
+ * or shifted from the start in a single method call.
+ */
 public class Buffer {
 	private final static String TAG=Buffer.class.getName();
 	private StringBuilder mBuf=new StringBuilder();
