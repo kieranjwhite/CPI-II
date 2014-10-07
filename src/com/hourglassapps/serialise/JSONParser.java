@@ -1,6 +1,5 @@
-package com.hourglassapps.cpi_ii;
+package com.hourglassapps.serialise;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -12,22 +11,23 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hourglassapps.serialise.ParseException;
+import com.hourglassapps.cpi_ii.Record;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.ThrowableIterator;
 
-public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator<Ii<I,C>> {
+public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator<R> {
 	private JsonParser mParser;
 	private JsonToken mNextToken;
 	private ObjectMapper mMapper=new ObjectMapper();
 	private Throwable mThrowable=null;
 	private Class<R> mClass;
+	private Preprocessor mPreprocessor;
 	
-	public JSONParser(String pFilename, Class<R> pClass) throws IOException, ParseException  {
+	public JSONParser(Preprocessor pPreprocessor, Class<R> pClass) throws IOException, ParseException  {
 		mClass=pClass;
 		JsonFactory f=new JsonFactory();
 		try {
-			mParser=f.createJsonParser(new File(pFilename));
+			mParser=f.createJsonParser(pPreprocessor.reader());
 		} catch (JsonParseException e) {
 			throw new ParseException(e);
 		}
@@ -41,7 +41,7 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator
 	}
 
 	@Override
-	public Ii<I,C> next() {
+	public R next() {
 		R rec;
 		try {
 			rec = mMapper.readValue(mParser, mClass);
@@ -51,7 +51,7 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator
 			mNextToken=JsonToken.NOT_AVAILABLE;
 			return null;
 		}
-		return new Ii<I,C>(rec.id(), rec.content());
+		return rec;
 	}
 
 	@Override

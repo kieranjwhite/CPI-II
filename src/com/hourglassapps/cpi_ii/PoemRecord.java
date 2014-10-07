@@ -1,6 +1,11 @@
 package com.hourglassapps.cpi_ii;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PoemRecord implements Record<Long, String> {
+	private static final Object TEXT_INCIPIT_ONLY = "Text_incipit_only";
+	private static final String LANG_LATIN="Latin";
 	private String _poem_text_3;
 	private long _eprintid;
 	private String _date;
@@ -20,9 +25,8 @@ public class PoemRecord implements Record<Long, String> {
 	private enum EprintStatus { archive };
 	private EprintStatus _eprint_status;
 	private String _status_changed;
-	private enum Language { Latin };
-	private Language _language;
-	private static class Stanza {
+	private String _language;
+	public static class Stanza {
 		private String _rhyme;
 		private String _end_accent;
 		private String _line_length;
@@ -35,13 +39,63 @@ public class PoemRecord implements Record<Long, String> {
 	private String _title;
 	private enum Datable { Yes, No };
 	private Datable _datable;
-	private int _no_of_stanzas;
+	private String _no_of_stanzas;
 	
+	@Override
 	public Long id() {
 		return _eprintid;
 	}
 	
+	@Override
 	public String content() {
-		return _poem_text_3;
+		assert getLanguage()==LANG_LATIN;
+		if(_poem_text_3!=null) {
+			return _poem_text_3;
+		} else {
+			assert(getNoOfStanzas().equals(TEXT_INCIPIT_ONLY));
+			return getTitle();
+		}
 	}
+	
+	@Override
+	public boolean ignore() {
+		return getLanguage()!=LANG_LATIN;
+	}
+
+	public void setPoem_text_3(String pArg) {
+		_poem_text_3=pArg;
+	}
+	
+	public void setEprintid(long pArg) {
+		_eprintid=pArg;
+	}
+	
+	public String getLanguage() {
+		return _language;
+	}
+	
+	public void setLanguage(String pArg) {
+		_language=pArg;
+	}
+
+	public String getTitle() {
+		return _title;
+	}
+	
+	public void setTitle(String pArg) {
+		_title=pArg;
+	}
+
+	public void setDate(String pArg) {
+		_date=pArg;
+	}
+	
+	public String getNoOfStanzas() {
+		return _no_of_stanzas;
+	}
+	
+	public void setNo_of_stanzas(String pArg) {
+		_no_of_stanzas=pArg;
+	}
+	
 }

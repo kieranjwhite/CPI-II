@@ -2,15 +2,15 @@ package com.hourglassapps.util;
 
 public class Log {
 	public static enum Level {
-		VERBOSE(2), INFO(1), ERROR(0);
+		VERBOSE(0), INFO(1), ERROR(2);
 		
-		private final int mUnimportance;
-		Level(int pUnimportance) {
-			this.mUnimportance=pUnimportance;
+		private final int mImportance;
+		Level(int pImportance) {
+			this.mImportance=pImportance;
 		}
 		
-		public int unimportance() {
-			return mUnimportance;
+		public int importance() {
+			return mImportance;
 		}
 	}
 	
@@ -39,7 +39,7 @@ public class Log {
     
     static public void v(String tag, String msgFormat, Object...args)
     {
-        if (LEVEL.unimportance()<=Log.Level.VERBOSE.unimportance())
+        if (LEVEL.importance()<=Log.Level.VERBOSE.importance())
         {
             write(tag, String.format(msgFormat, args));
         }
@@ -47,7 +47,7 @@ public class Log {
 
     static public void v(String tag, Throwable t, String msgFormat, Object...args)
     {
-        if (LEVEL.unimportance()<=Log.Level.VERBOSE.unimportance())
+        if (LEVEL.importance()<=Log.Level.VERBOSE.importance())
         {
             write(tag, String.format(msgFormat, args));
             printStack(tag, t); 
@@ -56,7 +56,7 @@ public class Log {
 
     static public void i(String tag, String msgFormat, Object...args)
     {
-        if (LEVEL.unimportance()<=Log.Level.INFO.unimportance())
+        if (LEVEL.importance()<=Log.Level.INFO.importance())
         {
         	write(tag, String.format(msgFormat, args));
         }
@@ -64,7 +64,7 @@ public class Log {
 
     static public void i(String tag, Throwable t, String msgFormat, Object...args)
     {
-        if (LEVEL.unimportance()<=Log.Level.INFO.unimportance())
+        if (LEVEL.importance()<=Log.Level.INFO.importance())
         {
         	write(tag, String.format(msgFormat, args));
             printStack(tag, t); 
@@ -73,7 +73,7 @@ public class Log {
 
     static public void e(String tag, String msgFormat, Object...args)
     {
-        if (LEVEL.unimportance()<=Log.Level.ERROR.unimportance())
+        if (LEVEL.importance()<=Log.Level.ERROR.importance())
         {
             write(tag, String.format(msgFormat, args));
         }
@@ -81,7 +81,7 @@ public class Log {
 
     static public void e(Runnable pIf, Runnable pElse)
     {
-        if (LEVEL.unimportance()<=Log.Level.ERROR.unimportance()) {
+        if (LEVEL.importance()<=Log.Level.ERROR.importance()) {
         	pIf.run();
         } else {
         	pElse.run();
@@ -90,7 +90,7 @@ public class Log {
 
     static public void i(Runnable pIf, Runnable pElse)
     {
-        if (LEVEL.unimportance()<=Log.Level.INFO.unimportance()) {
+        if (LEVEL.importance()<=Log.Level.INFO.importance()) {
         	pIf.run();
         } else {
         	pElse.run();
@@ -99,7 +99,7 @@ public class Log {
 
     static public void v(Runnable pIf, Runnable pElse)
     {
-        if (LEVEL.unimportance()<=Log.Level.VERBOSE.unimportance()) {
+        if (LEVEL.importance()<=Log.Level.VERBOSE.importance()) {
         	pIf.run();
         } else {
         	pElse.run();
@@ -108,7 +108,7 @@ public class Log {
 
     static public void e(String tag, Throwable t)
     {
-        if (LEVEL.unimportance()<=Log.Level.ERROR.unimportance())
+        if (LEVEL.importance()<=Log.Level.ERROR.importance())
         {
             printStack(tag, t); 
         }
@@ -116,7 +116,7 @@ public class Log {
 
     static public void i(String tag, Throwable t)
     {
-        if (LEVEL.unimportance()<=Log.Level.INFO.unimportance())
+        if (LEVEL.importance()<=Log.Level.INFO.importance())
         {
             printStack(tag, t); 
         }
@@ -124,7 +124,7 @@ public class Log {
 
     static public void eStack(String tag, String msgFormat, Object...args)
     {
-        if (LEVEL.unimportance()<=Log.Level.ERROR.unimportance())
+        if (LEVEL.importance()<=Log.Level.ERROR.importance())
         {
             write(tag, String.format(msgFormat, args));
             try {
@@ -137,7 +137,7 @@ public class Log {
 
     static public void e(String tag, Throwable t, String msgFormat, Object...args)
     {
-        if (LEVEL.unimportance()<=Log.Level.ERROR.unimportance())
+        if (LEVEL.importance()<=Log.Level.ERROR.importance())
         {
             write(tag, String.format(msgFormat, args));
             printStack(tag, t); 
