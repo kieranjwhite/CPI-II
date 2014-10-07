@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.LongField;
@@ -36,7 +37,7 @@ public class Indexer {
 		}
 		
 		mDir = FSDirectory.open(index_dir);
-		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_4_10_0);
+		Analyzer analyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
 		mIwc = new IndexWriterConfig(Version.LUCENE_4_10_0, analyzer);
         mIwc.setOpenMode(OpenMode.CREATE);
         mWriter = new IndexWriter(mDir, mIwc);
