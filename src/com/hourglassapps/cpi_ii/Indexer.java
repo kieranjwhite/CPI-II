@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.shingle.ShingleAnalyzerWrapper;
+import org.apache.lucene.analysis.shingle.ShingleFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
@@ -25,6 +27,8 @@ public class Indexer {
 	private final static String ID_KEY="eprintid";
 	private final static String CONTENT_KEY="content";
 	
+	private final static int NGRAM_SIZE=3;
+	
 	private IndexWriter mWriter=null;
 	private Directory mDir;
 	private IndexWriterConfig mIwc;
@@ -37,7 +41,9 @@ public class Indexer {
 		}
 		
 		mDir = FSDirectory.open(index_dir);
-		Analyzer analyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
+		Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(CharArraySet.EMPTY_SET),
+					NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, ShingleFilter.DEFAULT_FILLER_TOKEN
+				);
 		mIwc = new IndexWriterConfig(Version.LUCENE_4_10_0, analyzer);
         mIwc.setOpenMode(OpenMode.CREATE);
         mWriter = new IndexWriter(mDir, mIwc);

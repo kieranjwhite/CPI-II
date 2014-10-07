@@ -65,7 +65,7 @@ public class PoemRecord implements Record<Long, String> {
 	
 	@Override
 	public boolean ignore() {
-		return getLanguage()!=LANG_LATIN;
+		return !LANG_LATIN.equals(getLanguage());
 	}
 
 	public void setPoem_text_3(String pArg) {
