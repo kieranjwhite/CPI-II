@@ -1,5 +1,5 @@
 package com.hourglassapps.serialise;
 
 public interface SearchAndReplacer {
-	public void run(String pArg);
+	public int run(String pArg);
 }

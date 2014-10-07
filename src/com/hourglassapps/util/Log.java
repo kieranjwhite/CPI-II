@@ -14,25 +14,35 @@ public class Log {
 		}
 	}
 	
+	public final static boolean BARE_OUTPUT=true;
     public static Log.Level LEVEL = Log.Level.VERBOSE;
 
     static private void write(String pTag, String pMsg) {
-    	System.err.println(pTag+": "+pMsg);
+    	if(BARE_OUTPUT) {
+    		System.err.print(pMsg);    		
+    	} else {
+    		System.err.println(pTag+": "+pMsg);
+    	}
+    }
+    
+    static private void writeln(String pTag, String pMsg) {
+    	write(pTag, pMsg);
+    	System.err.println();
     }
     
     static private void printStack(String tag, Throwable e) {
     	String msg=e.getMessage();
     	if(msg!=null) {
-    		write(tag, e.getMessage());
+    		writeln(tag, e.getMessage());
     	} else {
-    		write(tag, "Exception: "+e);
+    		writeln(tag, "Exception: "+e);
     	}
 		for(StackTraceElement frame: e.getStackTrace()) {
-			write(tag, "\t"+frame.toString()+" ("+frame.getClassName()+":"+frame.getLineNumber()+")");
+			writeln(tag, "\t"+frame.toString()+" ("+frame.getClassName()+":"+frame.getLineNumber()+")");
 		}
 		Throwable cause=e.getCause();
 		if(cause!=null) {
-			write(tag, "caused by...");
+			writeln(tag, "caused by...");
 			printStack(tag, cause);
 		}
     }
@@ -75,7 +85,7 @@ public class Log {
     {
         if (LEVEL.importance()<=Log.Level.ERROR.importance())
         {
-            write(tag, String.format(msgFormat, args));
+            writeln(tag, String.format(msgFormat, args));
         }
     }
 
@@ -126,7 +136,7 @@ public class Log {
     {
         if (LEVEL.importance()<=Log.Level.ERROR.importance())
         {
-            write(tag, String.format(msgFormat, args));
+            writeln(tag, String.format(msgFormat, args));
             try {
             	throw new Exception();
             } catch(Exception t) {
@@ -139,7 +149,7 @@ public class Log {
     {
         if (LEVEL.importance()<=Log.Level.ERROR.importance())
         {
-            write(tag, String.format(msgFormat, args));
+            writeln(tag, String.format(msgFormat, args));
             printStack(tag, t); 
         }
     }

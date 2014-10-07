@@ -1,12 +1,13 @@
 package com.hourglassapps.cpi_ii;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 
 import com.hourglassapps.serialise.JSONParser;
-import com.hourglassapps.serialise.ParseException;
-import com.hourglassapps.serialise.Preprocessor;
-import com.hourglassapps.util.Ii;
+import com.hourglassapps.serialise.RemoveUnescapesReader;
 import com.hourglassapps.util.Log;
 
 public class IndexConductus {
@@ -24,9 +25,9 @@ public class IndexConductus {
 		Indexer indexer=null;
 		try {
 			indexer=new Indexer(new File("index"));
-			Preprocessor preprocessor=null;
+			Reader preprocessor=null;
 			try {
-				preprocessor=new Preprocessor(new File(args[0]));
+				preprocessor=new RemoveUnescapesReader(new BufferedReader(new FileReader(new File(args[0]))));
 				JSONParser<Long, String, PoemRecord> parser=new JSONParser<>(preprocessor, PoemRecord.class);
 				while(parser.hasNext()) {
 					PoemRecord record=parser.next();

@@ -1,6 +1,7 @@
 package com.hourglassapps.serialise;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Iterator;
 
 import org.apache.lucene.queryparser.xml.ParserException;
@@ -21,13 +22,12 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator
 	private ObjectMapper mMapper=new ObjectMapper();
 	private Throwable mThrowable=null;
 	private Class<R> mClass;
-	private Preprocessor mPreprocessor;
 	
-	public JSONParser(Preprocessor pPreprocessor, Class<R> pClass) throws IOException, ParseException  {
+	public JSONParser(Reader pPreprocessor, Class<R> pClass) throws IOException, ParseException  {
 		mClass=pClass;
 		JsonFactory f=new JsonFactory();
 		try {
-			mParser=f.createJsonParser(pPreprocessor.reader());
+			mParser=f.createJsonParser(pPreprocessor);
 		} catch (JsonParseException e) {
 			throw new ParseException(e);
 		}
