@@ -44,17 +44,20 @@ public class RemoveUnescapesReader extends Reader {
 		public int run(String pCtrlArg) {
 			int c=Integer.parseInt(pCtrlArg, 16);
 			String s;
+			char charArr[];
 			switch(c) {
-			case 9:
-				s=" ";
+			case 0x9:
+				s="\\t";
+				charArr=s.toCharArray();
+				assert charArr.length==2;
 				break;
 			default:
 				s=Character.toString((char)c);
+				charArr=s.toCharArray();
+				assert charArr.length==1;
 			}
-			char charArr[]=s.toCharArray();
-			assert charArr.length==1;
-			mPending.push(charArr, 0, 1);
-			return 1;
+			mPending.push(charArr, 0, charArr.length);
+			return charArr.length;
 		}
 
 	}, mPending);
