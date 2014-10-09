@@ -15,7 +15,7 @@ public class Log {
 	}
 	
 	public final static boolean BARE_OUTPUT=true;
-    public static Log.Level LEVEL = Log.Level.VERBOSE;
+    public static Log.Level LEVEL = Log.Level.INFO;
 
     static private void write(String pTag, String pMsg) {
     	if(BARE_OUTPUT) {

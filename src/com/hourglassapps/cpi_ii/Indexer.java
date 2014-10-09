@@ -14,7 +14,10 @@ import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -24,41 +27,30 @@ import com.hourglassapps.util.Log;
 public class Indexer {
 	private final static String TAG=Indexer.class.getName();
 	
-	private final static String ID_KEY="eprintid";
-	private final static String CONTENT_KEY="content";
-	
-	private final static int NGRAM_SIZE=3;
-	
 	private IndexWriter mWriter=null;
 	private Directory mDir;
 	private IndexWriterConfig mIwc;
+	private ConductusIndex mIndex;
 	
-	public Indexer(File index_dir) throws IOException {
-		if(!new File(System.getProperty("user.dir")).canWrite()) {
-			Log.e(TAG, "cannot write to index dir's parent: "+System.getProperty("user.dir"));
-			System.exit(1);
-			
-		}
-		
-		mDir = FSDirectory.open(index_dir);
-		Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(CharArraySet.EMPTY_SET),
-					NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, ShingleFilter.DEFAULT_FILLER_TOKEN
-				);
+	public Indexer(ConductusIndex index) throws IOException {
+		mIndex=index;
+		mDir =index.dir();
+		Analyzer analyzer =index.analyzer();
 		mIwc = new IndexWriterConfig(Version.LUCENE_4_10_0, analyzer);
         mIwc.setOpenMode(OpenMode.CREATE);
         mWriter = new IndexWriter(mDir, mIwc);
 
 	}
 	
-	public void add(long eprint_id, String content) throws IOException {
+	public void add(long pEprintId, String pContent) throws IOException {
 		if(mWriter==null) {
 			mWriter=new IndexWriter(mDir, mIwc);
 		}
         Document doc = new Document();
 
-        Field idField = new LongField(ID_KEY, eprint_id, Field.Store.YES);
+        Field idField =mIndex.eprintIdField(pEprintId);
         doc.add(idField);
-        doc.add(new TextField(CONTENT_KEY, content, TextField.Store.NO));
+        doc.add(mIndex.contentField(pContent));
         mWriter.addDocument(doc);
 
 	}
@@ -68,4 +60,5 @@ public class Indexer {
 			mWriter.close();
 		}
 	}
+	
 }

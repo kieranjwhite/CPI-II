@@ -23,7 +23,7 @@ public class Buffer {
 		mBuf.getChars(0, copyable, pDst, pDstOff);
 		mBuf.delete(0, copyable);
 		String toLog=new String(pDst, pDstOff, copyable);
-		Log.i(TAG, toLog);
+		Log.v(TAG, toLog);
 		return copyable;
 	}
 }

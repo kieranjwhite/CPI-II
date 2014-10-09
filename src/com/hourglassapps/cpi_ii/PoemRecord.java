@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PoemRecord implements Record<Long, String> {
-	private static final Object TEXT_INCIPIT_ONLY = "Text incipit only";
+	private static final String TEXT_INCIPIT_ONLY = "Text incipit only";
 	private static final String LANG_LATIN="Latin";
 	private String _poem_text_3;
 	private long _eprintid;
