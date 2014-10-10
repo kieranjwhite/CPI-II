@@ -14,10 +14,10 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 	private static final long serialVersionUID = 1L;
 
 	private enum PartOfSpeech {
-		NOUN, VERB
+		NOUN, VERB, UNKNOWN
 	}
 	
-	private final static PartOfSpeech ASSUMED_POS=PartOfSpeech.NOUN;
+	private final static PartOfSpeech ASSUMED_POS=PartOfSpeech.UNKNOWN;
 	
 	private final static LatinStemmer methodObject = new LatinStemmer ();
 
@@ -280,6 +280,7 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 	}
 
 	public boolean stem() {
+		StringBuffer currentAttempt=current;
 		int among_var;
 		int v_1;
 		int v_3;
@@ -311,7 +312,7 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 			// => verb_form, line 45
 			S_verb_form = assign_to(S_verb_form);
 			// $ noun_form, line 47
-			if(ASSUMED_POS==PartOfSpeech.NOUN){
+			if(ASSUMED_POS!=PartOfSpeech.VERB){
 				LatinStemmer v_2 = this;
 				current = new StringBuffer(S_noun_form.toString());
 				cursor = 0;
@@ -356,10 +357,11 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 				} while (false);
 				cursor = limit_backward;                            
 				copy_from(v_2);
-			} else
+				currentAttempt=current;
+			} 
+			if(ASSUMED_POS!=PartOfSpeech.NOUN)
 			// $ verb_form, line 56
 			{
-				assert ASSUMED_POS==PartOfSpeech.VERB;
 				
 				LatinStemmer v_4 = this;
 				current = new StringBuffer(S_verb_form.toString());
@@ -420,6 +422,10 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 				} while (false);
 				cursor = limit_backward;                            
 				copy_from(v_4);
+				
+				if(currentAttempt.length()<current.length()) {
+					current=currentAttempt;
+				}
 			}
 		} while (false);
 		cursor = limit_backward;                    
