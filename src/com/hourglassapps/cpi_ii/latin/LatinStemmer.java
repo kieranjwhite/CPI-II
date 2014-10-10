@@ -13,6 +13,7 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 
 	private static final long serialVersionUID = 1L;
 
+	//when ASSUMED_POS is UNKNOWN the shortest result from verb stemming and noun stemming is returned
 	private enum PartOfSpeech {
 		NOUN, VERB, UNKNOWN
 	}

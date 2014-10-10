@@ -98,7 +98,7 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
   }
 
   /**
-   * @deprecated Use {@link #IrishAnalyzer()}
+   * @deprecated Use {@link #LatinAnalyzer()}
    */
   @Deprecated
   public LatinAnalyzer(Version matchVersion) {
@@ -115,7 +115,7 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
   }
 
   /**
-   * @deprecated Use {@link #IrishAnalyzer(CharArraySet)}
+   * @deprecated Use {@link #LatinAnalyzer(CharArraySet)}
    */
   @Deprecated
   public LatinAnalyzer(Version matchVersion, CharArraySet stopwords) {
@@ -136,7 +136,7 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
   }
 
   /**
-   * @deprecated Use {@link #IrishAnalyzer(CharArraySet,CharArraySet)}
+   * @deprecated Use {@link #LatinAnalyzer(CharArraySet,CharArraySet)}
    */
   @Deprecated
   public LatinAnalyzer(Version matchVersion, CharArraySet stopwords, CharArraySet stemExclusionSet) {

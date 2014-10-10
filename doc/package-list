@@ -1,3 +1,6 @@
 com.hourglassapps.cpi_ii
+com.hourglassapps.cpi_ii.latin
+com.hourglassapps.cpi_ii.snowball.lucene
+com.hourglassapps.cpi_ii.snowball.tartarus
 com.hourglassapps.serialise
 com.hourglassapps.util
