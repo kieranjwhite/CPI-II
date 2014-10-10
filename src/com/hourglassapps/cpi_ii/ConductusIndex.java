@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.shingle.ShingleAnalyzerWrapper;
 import org.apache.lucene.analysis.shingle.ShingleFilter;
-import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Field;
@@ -18,6 +17,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
+import com.hourglassapps.cpi_ii.snowball.lucene.SnowballAnalyzer;
 import com.hourglassapps.util.Log;
 
 public class ConductusIndex {
@@ -27,7 +27,7 @@ public class ConductusIndex {
 	public final static String CONTENT_KEY="content";
 	
 	private final static int NGRAM_SIZE=3;
-	
+	private final static boolean STEM=true;
 
 	private File mIndexDir;
 	private Directory mDir;
@@ -47,18 +47,18 @@ public class ConductusIndex {
 
 	public Analyzer analyzer() {
 		 if(mAnalyzer==null) {
-			 /*
-			 mAnalyzer=new ShingleAnalyzerWrapper(new StandardAnalyzer(CharArraySet.EMPTY_SET),
-						NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
-						ShingleFilter.DEFAULT_FILLER_TOKEN
-					);
-					*/
-			 //mAnalyzer=new StandardAnalyzer(CharArraySet.EMPTY_SET);	
-			 mAnalyzer=new ShingleAnalyzerWrapper(
-					 new LatinAnalyzer(CharArraySet.EMPTY_SET),
-						NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
-						ShingleFilter.DEFAULT_FILLER_TOKEN
-					);
+			 if(STEM) {
+				 mAnalyzer=new ShingleAnalyzerWrapper(
+						 new LatinAnalyzer(CharArraySet.EMPTY_SET),
+							NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
+							ShingleFilter.DEFAULT_FILLER_TOKEN
+						);				 
+			 } else {
+				 mAnalyzer=new ShingleAnalyzerWrapper(new StandardAnalyzer(CharArraySet.EMPTY_SET),
+							NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
+							ShingleFilter.DEFAULT_FILLER_TOKEN
+						);				 
+			 }
 		 }
 		 return mAnalyzer;
 	}

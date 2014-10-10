@@ -1,4 +1,4 @@
-package org.apache.lucene.analysis.snowball;
+package com.hourglassapps.cpi_ii.snowball.lucene;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -25,7 +25,7 @@ import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.tokenattributes.KeywordAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tr.TurkishLowerCaseFilter; // javadoc @link
-import org.tartarus.snowball.SnowballProgram;
+import com.hourglassapps.cpi_ii.snowball.tartarus.SnowballProgram;
 
 /**
  * A filter that stems words using a Snowball-generated stemmer.

@@ -1,5 +1,5 @@
 
-package org.tartarus.snowball;
+package com.hourglassapps.cpi_ii.snowball.tartarus;
 
 import java.lang.reflect.Method;
 import java.io.Reader;
