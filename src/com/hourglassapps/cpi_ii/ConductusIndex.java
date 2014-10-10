@@ -45,19 +45,23 @@ public class ConductusIndex {
 		return mDir;
 	}
 
+	@SuppressWarnings("unused")
 	public Analyzer analyzer() {
 		 if(mAnalyzer==null) {
+			 Analyzer termAnalyser;
 			 if(STEM) {
-				 mAnalyzer=new ShingleAnalyzerWrapper(
-						 new LatinAnalyzer(CharArraySet.EMPTY_SET),
-							NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
-							ShingleFilter.DEFAULT_FILLER_TOKEN
-						);				 
+				 termAnalyser=new LatinAnalyzer(CharArraySet.EMPTY_SET);				 
 			 } else {
-				 mAnalyzer=new ShingleAnalyzerWrapper(new StandardAnalyzer(CharArraySet.EMPTY_SET),
-							NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
-							ShingleFilter.DEFAULT_FILLER_TOKEN
-						);				 
+				 termAnalyser=new StandardAnalyzer(CharArraySet.EMPTY_SET);
+			 }
+			 if(NGRAM_SIZE<2) {
+				 mAnalyzer=termAnalyser;				 
+			 } else {
+				 mAnalyzer=new ShingleAnalyzerWrapper(
+						 termAnalyser,
+						 NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
+						 ShingleFilter.DEFAULT_FILLER_TOKEN
+						 );
 			 }
 		 }
 		 return mAnalyzer;
