@@ -97,13 +97,14 @@ public final class SnowballFilter extends TokenFilter {
         stemmer.stem();
         String current=stemmer.getCurrent();
         final int newLength = current.length();
-        final char finalTerm[]=new char[newLength];
-        		//= stemmer.getCurrentBuffer();
-        current.getChars(0, newLength, finalTerm, 0);
-        if (finalTerm != termBuffer)
-          termAtt.copyBuffer(finalTerm, 0, newLength);
-        else
-          termAtt.setLength(newLength);
+        if (!term.equals(current)) {
+        	final char finalTerm[]=new char[newLength];
+        	//= stemmer.getCurrentBuffer();
+        	current.getChars(0, newLength, finalTerm, 0);
+        	termAtt.copyBuffer(finalTerm, 0, newLength);
+        } else {
+        	termAtt.setLength(newLength);
+        }
       }
       return true;
     } else {

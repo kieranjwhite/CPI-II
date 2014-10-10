@@ -64,7 +64,13 @@ public class ConductusIndex {
 	}
 	
 	public Field eprintIdField(long pEprintId) {
-		return new TextField(ID_KEY, Long.toString(pEprintId), Field.Store.YES);
+		FieldType type = new FieldType();
+	    type.setIndexed(true);
+	    type.setTokenized(false);
+	    type.setStored(true);
+	    type.freeze();
+
+		return new Field(ID_KEY, Long.toString(pEprintId), type);
 	}
 	
 	private Term eprintIdTerm(long pEprintId) {
@@ -74,8 +80,10 @@ public class ConductusIndex {
 	public Field contentField(String pContent) {
 		FieldType type = new FieldType();
 		type.setIndexed(true);
+	    type.setTokenized(true);
 		type.setStored(true);
 		type.setStoreTermVectors(true);
+		type.freeze();
 		
 		return new Field(CONTENT_KEY, pContent, type);
 	}
