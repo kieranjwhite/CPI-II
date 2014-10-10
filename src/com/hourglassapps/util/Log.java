@@ -1,5 +1,7 @@
 package com.hourglassapps.util;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 public class Log {
 	public static enum Level {
 		VERBOSE(0), INFO(1), ERROR(2);
@@ -31,20 +33,35 @@ public class Log {
     }
     
     static private void printStack(String tag, Throwable e) {
+    	/*
     	String msg=e.getMessage();
     	if(msg!=null) {
     		writeln(tag, e.getMessage());
     	} else {
     		writeln(tag, "Exception: "+e);
     	}
+    	*/
+		writeln(tag, "Exception: "+e); //this seems to provide more information than the comment out lines above
 		for(StackTraceElement frame: e.getStackTrace()) {
 			writeln(tag, "\t"+frame.toString()+" ("+frame.getClassName()+":"+frame.getLineNumber()+")");
 		}
-		Throwable cause=e.getCause();
+		Throwable cause=ExceptionUtils.getRootCause(e);
 		if(cause!=null) {
 			writeln(tag, "caused by...");
 			printStack(tag, cause);
 		}
+		if(e.getSuppressed().length>0) {
+			writeln(tag, "the following were suppressed...");
+		}
+    }
+    
+    static private void printSuppressed(String pTag, Throwable e) {
+    	Throwable suppressed[]=e.getSuppressed();
+    	for(Throwable s: suppressed) {
+			writeln(pTag, "->");
+    		printStack(pTag, s);
+			writeln(pTag, "<-");
+    	}
     }
     
     static public void v(String tag, String msgFormat, Object...args)
