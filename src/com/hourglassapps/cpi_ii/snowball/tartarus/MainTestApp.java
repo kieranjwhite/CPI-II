@@ -1,6 +1,7 @@
 
 package com.hourglassapps.cpi_ii.snowball.tartarus;
 
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.io.BufferedReader;
@@ -21,18 +22,28 @@ public class MainTestApp {
 		System.err.println("Usage: TestApp <input file> <output file>");
 	}
 
+	private static void stemAndShow(LatinStemmer pStemmer, String pTerm, PrintWriter pOut) {
+		pStemmer.setCurrent(pTerm);
+		pOut.print(pTerm+"\t");
+		pStemmer.stem(LatinStemmer.PartOfSpeech.NOUN);
+		pOut.print(pStemmer.getCurrent()+"\t");
+		pStemmer.setCurrent(pTerm);
+		pStemmer.stem(LatinStemmer.PartOfSpeech.VERB);
+		pOut.println(pStemmer.getCurrent());
+	}
+	
 	public static void main(String [] args) throws Throwable {
 		if (args.length < 1) {
 			usage();
 			return;
 		}
 
-		SnowballProgram stemmer = new LatinStemmer();
+		LatinStemmer stemmer = new LatinStemmer();
 
 		if(args.length==1) {
-			stemmer.setCurrent(args[0]);
-			stemmer.stem();
-			System.out.println(stemmer.getCurrent());
+			try(PrintWriter out=new PrintWriter(new OutputStreamWriter(System.out))) {
+				stemAndShow(stemmer, args[0].toLowerCase(), out);				
+			}
 		} else {
 
 			Reader reader=null;
@@ -58,38 +69,21 @@ public class MainTestApp {
 					return;
 				}
 
-				Writer output=null;
-				try {
-					output = new OutputStreamWriter(outstream);
-					output = new BufferedWriter(output);
-
-					int repeat = 1;
-					if (args.length > 4) {
-						repeat = Integer.parseInt(args[4]);
-					}
-
+				//Writer output=null;
+				try(PrintWriter out=new PrintWriter(new BufferedWriter(new OutputStreamWriter(outstream)))) {
 					int character;
 					while ((character = reader.read()) != -1) {
 						char ch = (char) character;
 						if (Character.isWhitespace((char) ch)) {
 							if (input.length() > 0) {
-								stemmer.setCurrent(input.toString());
-								for (int i = repeat; i != 0; i--) {
-									stemmer.stem();
-								}
-								output.write(stemmer.getCurrent());
-								output.write('\n');
+								stemAndShow(stemmer, input.toString(), out);
 								input.delete(0, input.length());
 							}
 						} else {
 							input.append(Character.toLowerCase(ch));
 						}
 					}
-					output.flush();
-				} finally {
-					if(output!=null) {
-						output.close();
-					}
+					out.flush();
 				}
 
 			} finally {

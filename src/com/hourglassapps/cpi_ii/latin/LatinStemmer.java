@@ -14,7 +14,7 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 	private static final long serialVersionUID = 1L;
 
 	//when ASSUMED_POS is UNKNOWN the shortest result from verb stemming and noun stemming is returned
-	private enum PartOfSpeech {
+	public enum PartOfSpeech {
 		NOUN, VERB, UNKNOWN
 	}
 	
@@ -281,6 +281,10 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 	}
 
 	public boolean stem() {
+		return stem(ASSUMED_POS);
+	}
+	
+	public boolean stem(PartOfSpeech pPos) {
 		StringBuffer currentAttempt=current;
 		int among_var;
 		int v_1;
@@ -313,7 +317,7 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 			// => verb_form, line 45
 			S_verb_form = assign_to(S_verb_form);
 			// $ noun_form, line 47
-			if(ASSUMED_POS!=PartOfSpeech.VERB){
+			if(pPos!=PartOfSpeech.VERB){
 				LatinStemmer v_2 = this;
 				current = new StringBuffer(S_noun_form.toString());
 				cursor = 0;
@@ -360,7 +364,7 @@ public class LatinStemmer extends com.hourglassapps.cpi_ii.snowball.tartarus.Sno
 				copy_from(v_2);
 				currentAttempt=current;
 			} 
-			if(ASSUMED_POS!=PartOfSpeech.NOUN)
+			if(pPos!=PartOfSpeech.NOUN)
 			// $ verb_form, line 56
 			{
 				
