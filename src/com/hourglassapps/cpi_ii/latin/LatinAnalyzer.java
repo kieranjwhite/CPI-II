@@ -17,7 +17,11 @@ package com.hourglassapps.cpi_ii.latin;
  * limitations under the License.
  */
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.Arrays;
 
@@ -28,16 +32,20 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.stempel.StempelFilter;
+import org.apache.lucene.analysis.stempel.StempelStemmer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
 import org.apache.lucene.util.Version;
 
 import com.hourglassapps.cpi_ii.snowball.lucene.SnowballFilter;
+import com.hourglassapps.util.Log;
 
 /**
  * {@link Analyzer} for Latin.
  */
 public final class LatinAnalyzer extends StopwordAnalyzerBase {
+	private final static String TAG=LatinAnalyzer.class.getName();
   private final CharArraySet stemExclusionSet;
   
   /** File containing default Latin stopwords. */
@@ -176,7 +184,13 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
     result = new StopFilter(getVersion(), result, stopwords);
     if(!stemExclusionSet.isEmpty())
       result = new SetKeywordMarkerFilter(result, stemExclusionSet);
-    result = new SnowballFilter(result, new LatinStemmer());
-    return new TokenStreamComponents(source, result);
+    //result = new SnowballFilter(result, new LatinStemmer());
+    try(InputStream in=new FileInputStream(new File("/tmp/stempel/training.txt"))) {
+    	result = new StempelFilter(result, new StempelStemmer(in));
+    	return new TokenStreamComponents(source, result);
+    } catch(IOException e) {
+    	Log.e(TAG, e);
+    	return new TokenStreamComponents(source, result);
+    }
   }
 }

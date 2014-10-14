@@ -32,37 +32,37 @@ public class MainTestApp {
 		pOut.println(pStemmer.getCurrent());
 	}
 	
-	public static void main(String [] args) throws Throwable {
-		if (args.length < 1) {
+	public static void main(String [] pArgs) throws Throwable {
+		if (pArgs.length < 1) {
 			usage();
 			return;
 		}
 
 		LatinStemmer stemmer = new LatinStemmer();
 
-		if(args.length==1) {
+		if(pArgs.length==1) {
 			try(PrintWriter out=new PrintWriter(new OutputStreamWriter(System.out))) {
-				stemAndShow(stemmer, args[0].toLowerCase(), out);				
+				stemAndShow(stemmer, pArgs[0].toLowerCase(), out);				
 			}
 		} else {
 
 			Reader reader=null;
 			try {
-				if("-".equals(args[0])) {
+				if("-".equals(pArgs[0])) {
 					reader=new InputStreamReader(System.in);
 				} else {
-					reader = new InputStreamReader(new FileInputStream(args[0]));
+					reader = new InputStreamReader(new FileInputStream(pArgs[0]));
 					reader = new BufferedReader(reader);
 				}
 				StringBuffer input = new StringBuffer();
 
 				OutputStream outstream;
 
-				if (args.length < 3) {
-					if("-".equals(args[1])) {
+				if (pArgs.length < 3) {
+					if("-".equals(pArgs[1])) {
 						outstream = System.out;							
 					} else {
-						outstream = new FileOutputStream(args[1]);							
+						outstream = new FileOutputStream(pArgs[1]);							
 					}
 				} else {
 					usage();
