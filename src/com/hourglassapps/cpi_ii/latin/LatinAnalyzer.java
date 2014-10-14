@@ -185,7 +185,8 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
     if(!stemExclusionSet.isEmpty())
       result = new SetKeywordMarkerFilter(result, stemExclusionSet);
     //result = new SnowballFilter(result, new LatinStemmer());
-    try(InputStream in=new FileInputStream(new File("/tmp/stempel/training.txt"))) {
+    //try(InputStream in=new FileInputStream(new File("/tmp/stempel/training.txt.out"))) {
+    try(InputStream in=new FileInputStream(new File("/tmp/stempel/model.out"))) {
     	result = new StempelFilter(result, new StempelStemmer(in));
     	return new TokenStreamComponents(source, result);
     } catch(IOException e) {

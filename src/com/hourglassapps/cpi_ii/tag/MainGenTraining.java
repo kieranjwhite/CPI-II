@@ -8,11 +8,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 
-public class MainGenTraining {
+import com.hourglassapps.cpi_ii.tag.stempel.Compile;
+import com.hourglassapps.util.Log;
 
+public class MainGenTraining {
+	private final static String TAG=MainGenTraining.class.getName();
 	
 	public static void main(String[] pArgs) throws IOException {
 		if (pArgs.length < 1) {
@@ -28,14 +33,22 @@ public class MainGenTraining {
 				reader = new BufferedReader(new InputStreamReader(new FileInputStream(pArgs[0])));
 			}
 	
-			OutputStream outstream;
+			PipedOutputStream outstream=new PipedOutputStream();
 
 			if (pArgs.length < 3) {
-				if("-".equals(pArgs[1])) {
-					outstream = System.out;							
-				} else {
-					outstream = new FileOutputStream(pArgs[1]);							
-				}
+				final Reader pipe=new InputStreamReader(new PipedInputStream(outstream));
+				final String outFilename=pArgs[1];
+				Thread compiler=new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							Compile.compileFromReader(pipe, new String[]{ "latin", outFilename});
+						} catch (IOException e) {
+							Log.e(TAG, e);
+						}
+					}});
+				compiler.start();
 			} else {
 				usage();
 				return;
