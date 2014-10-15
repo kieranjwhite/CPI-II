@@ -52,7 +52,7 @@
    individuals  on  behalf  of  the  Egothor  Project  and was originally
    created by Leo Galambos (Leo.G@seznam.cz).
  */
-package com.hourglassapps.cpi_ii.tag.stempel;
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;
 
 import java.io.DataInput;
 import java.io.DataOutput;

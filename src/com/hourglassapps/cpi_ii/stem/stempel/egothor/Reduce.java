@@ -52,7 +52,7 @@
    individuals  on  behalf  of  the  Egothor  Project  and was originally
    created by Leo Galambos (Leo.G@seznam.cz).
  */
-package com.hourglassapps.cpi_ii.tag.stempel;
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,139 +60,75 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * The Optimizer class is a Trie that will be reduced (have empty rows removed).
- * <p>
- * The reduction will be made by joining two rows where the first is a subset of
- * the second.
+ * The Reduce object is used to remove gaps in a Trie which stores a dictionary.
  */
-public class Optimizer extends Reduce {
-  /**
-   * Constructor for the Optimizer object.
-   */
-  public Optimizer() {}
+public class Reduce {
   
   /**
-   * Optimize (remove empty rows) from the given Trie and return the resulting
-   * Trie.
-   * 
-   * @param orig the Trie to consolidate
-   * @return the newly consolidated Trie
+   * Constructor for the Reduce object.
    */
-  @Override
+  public Reduce() {}
+  
+  /**
+   * Optimize (remove holes in the rows) the given Trie and return the
+   * restructured Trie.
+   * 
+   * @param orig the Trie to optimize
+   * @return the restructured Trie
+   */
   public Trie optimize(Trie orig) {
     List<CharSequence> cmds = orig.cmds;
     List<Row> rows = new ArrayList<>();
     List<Row> orows = orig.rows;
     int remap[] = new int[orows.size()];
     
-    for (int j = orows.size() - 1; j >= 0; j--) {
-      Row now = new Remap(orows.get(j), remap);
-      boolean merged = false;
-      
-      for (int i = 0; i < rows.size(); i++) {
-        Row q = merge(now, rows.get(i));
-        if (q != null) {
-          rows.set(i, q);
-          merged = true;
-          remap[j] = i;
-          break;
-        }
-      }
-      
-      if (merged == false) {
-        remap[j] = rows.size();
-        rows.add(now);
-      }
-    }
-    
-    int root = remap[orig.root];
     Arrays.fill(remap, -1);
-    rows = removeGaps(root, rows, new ArrayList<Row>(), remap);
+    rows = removeGaps(orig.root, rows, new ArrayList<Row>(), remap);
     
-    return new Trie(orig.forward, remap[root], cmds, rows);
+    return new Trie(orig.forward, remap[orig.root], cmds, rows);
+  }
+  
+  List<Row> removeGaps(int ind, List<Row> old, List<Row> to, int remap[]) {
+    remap[ind] = to.size();
+    
+    Row now = old.get(ind);
+    to.add(now);
+    Iterator<Cell> i = now.cells.values().iterator();
+    for (; i.hasNext();) {
+      Cell c = i.next();
+      if (c.ref >= 0 && remap[c.ref] < 0) {
+        removeGaps(c.ref, old, to, remap);
+      }
+    }
+    to.set(remap[ind], new Remap(now, remap));
+    return to;
   }
   
   /**
-   * Merge the given rows and return the resulting Row.
-   * 
-   * @param master the master Row
-   * @param existing the existing Row
-   * @return the resulting Row, or <tt>null</tt> if the operation cannot be
-   *         realized
+   * This class is part of the Egothor Project
    */
-  public Row merge(Row master, Row existing) {
-    Iterator<Character> i = master.cells.keySet().iterator();
-    Row n = new Row();
-    for (; i.hasNext();) {
-      Character ch = i.next();
-      // XXX also must handle Cnt and Skip !!
-      Cell a = master.cells.get(ch);
-      Cell b = existing.cells.get(ch);
-      
-      Cell s = (b == null) ? new Cell(a) : merge(a, b);
-      if (s == null) {
-        return null;
-      }
-      n.cells.put(ch, s);
-    }
-    i = existing.cells.keySet().iterator();
-    for (; i.hasNext();) {
-      Character ch = i.next();
-      if (master.at(ch) != null) {
-        continue;
-      }
-      n.cells.put(ch, existing.at(ch));
-    }
-    return n;
-  }
-  
-  /**
-   * Merge the given Cells and return the resulting Cell.
-   * 
-   * @param m the master Cell
-   * @param e the existing Cell
-   * @return the resulting Cell, or <tt>null</tt> if the operation cannot be
-   *         realized
-   */
-  public Cell merge(Cell m, Cell e) {
-    Cell n = new Cell();
-    
-    if (m.skip != e.skip) {
-      return null;
-    }
-    
-    if (m.cmd >= 0) {
-      if (e.cmd >= 0) {
-        if (m.cmd == e.cmd) {
-          n.cmd = m.cmd;
+  class Remap extends Row {
+    /**
+     * Constructor for the Remap object
+     * 
+     * @param old Description of the Parameter
+     * @param remap Description of the Parameter
+     */
+    public Remap(Row old, int remap[]) {
+      super();
+      Iterator<Character> i = old.cells.keySet().iterator();
+      for (; i.hasNext();) {
+        Character ch = i.next();
+        Cell c = old.at(ch);
+        Cell nc;
+        if (c.ref >= 0) {
+          nc = new Cell(c);
+          nc.ref = remap[nc.ref];
         } else {
-          return null;
+          nc = new Cell(c);
         }
-      } else {
-        n.cmd = m.cmd;
+        cells.put(ch, nc);
       }
-    } else {
-      n.cmd = e.cmd;
     }
-    if (m.ref >= 0) {
-      if (e.ref >= 0) {
-        if (m.ref == e.ref) {
-          if (m.skip == e.skip) {
-            n.ref = m.ref;
-          } else {
-            return null;
-          }
-        } else {
-          return null;
-        }
-      } else {
-        n.ref = m.ref;
-      }
-    } else {
-      n.ref = e.ref;
-    }
-    n.cnt = m.cnt + e.cnt;
-    n.skip = m.skip;
-    return n;
   }
 }

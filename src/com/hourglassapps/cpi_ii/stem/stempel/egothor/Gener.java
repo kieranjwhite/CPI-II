@@ -52,43 +52,81 @@
    individuals  on  behalf  of  the  Egothor  Project  and was originally
    created by Leo Galambos (Leo.G@seznam.cz).
  */
-package com.hourglassapps.cpi_ii.tag.stempel;
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
- * A Cell is a portion of a trie.
+ * The Gener object helps in the discarding of nodes which break the reduction
+ * effort and defend the structure against large reductions.
  */
-class Cell {
-  /** next row id in this way */
-  int ref = -1;
-  /** command of the cell */
-  int cmd = -1;
-  /** how many cmd-s was in subtrie before pack() */
-  int cnt = 0;
-  /** how many chars would be discarded from input key in this way */
-  int skip = 0;
-  
-  /** Constructor for the Cell object. */
-  Cell() {}
+public class Gener extends Reduce {
+  /**
+   * Constructor for the Gener object.
+   */
+  public Gener() {}
   
   /**
-   * Construct a Cell using the properties of the given Cell.
+   * Return a Trie with infrequent values occurring in the given Trie removed.
    * 
-   * @param a the Cell whose properties will be used
+   * @param orig the Trie to optimize
+   * @return a new optimized Trie
    */
-  Cell(Cell a) {
-    ref = a.ref;
-    cmd = a.cmd;
-    cnt = a.cnt;
-    skip = a.skip;
+  @Override
+  public Trie optimize(Trie orig) {
+    List<CharSequence> cmds = orig.cmds;
+    List<Row> rows = new ArrayList<>();
+    List<Row> orows = orig.rows;
+    int remap[] = new int[orows.size()];
+    
+    Arrays.fill(remap, 1);
+    for (int j = orows.size() - 1; j >= 0; j--) {
+      if (eat(orows.get(j), remap)) {
+        remap[j] = 0;
+      }
+    }
+    
+    Arrays.fill(remap, -1);
+    rows = removeGaps(orig.root, orows, new ArrayList<Row>(), remap);
+    
+    return new Trie(orig.forward, remap[orig.root], cmds, rows);
   }
   
   /**
-   * Return a String containing this Cell's attributes.
+   * Test whether the given Row of Cells in a Trie should be included in an
+   * optimized Trie.
    * 
-   * @return a String representation of this Cell
+   * @param in the Row to test
+   * @param remap Description of the Parameter
+   * @return <tt>true</tt> if the Row should remain, <tt>false
+     *      </tt> otherwise
    */
-  @Override
-  public String toString() {
-    return "ref(" + ref + ")cmd(" + cmd + ")cnt(" + cnt + ")skp(" + skip + ")";
+  public boolean eat(Row in, int remap[]) {
+    int sum = 0;
+    for (Iterator<Cell> i = in.cells.values().iterator(); i.hasNext();) {
+      Cell c = i.next();
+      sum += c.cnt;
+      if (c.ref >= 0) {
+        if (remap[c.ref] == 0) {
+          c.ref = -1;
+        }
+      }
+    }
+    int frame = sum / 10;
+    boolean live = false;
+    for (Iterator<Cell> i = in.cells.values().iterator(); i.hasNext();) {
+      Cell c = i.next();
+      if (c.cnt < frame && c.cmd >= 0) {
+        c.cnt = 0;
+        c.cmd = -1;
+      }
+      if (c.cmd >= 0 || c.ref >= 0) {
+        live |= true;
+      }
+    }
+    return !live;
   }
 }

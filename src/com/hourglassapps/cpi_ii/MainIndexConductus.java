@@ -36,9 +36,7 @@ public class MainIndexConductus {
 	}
 
 	public static void index(String pInputPath) {
-		Indexer indexer=null;
-		try {
-			indexer=new Indexer(new ConductusIndex(new File("index")));
+		try(Indexer indexer=new Indexer(new ConductusIndex(new File("index")))) {
 			Reader preprocessor=null;
 			try {
 				preprocessor=new RemoveUnescapesReader(new BufferedReader(new FileReader(new File(pInputPath))));
@@ -61,16 +59,11 @@ public class MainIndexConductus {
 					preprocessor.close();
 				}
 			}
+			
+			indexer.displayStemGroups();
+			
 		} catch (Throwable e) {
 			Log.e(TAG, e);
-		} finally {
-			try {
-				if(indexer!=null) {
-					indexer.close();
-				}
-			} catch (IOException e) {
-				Log.e(TAG, e);
-			}
 		}
 	}
 	

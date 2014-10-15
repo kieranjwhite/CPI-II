@@ -32,6 +32,7 @@ public class ConductusIndex {
 	private File mIndexDir;
 	private Directory mDir;
 
+	private LatinAnalyzer mStemmingAnalyser;
 	private Analyzer mAnalyzer;
 
 	public ConductusIndex(File pIndexDir) throws IOException {
@@ -50,7 +51,8 @@ public class ConductusIndex {
 		 if(mAnalyzer==null) {
 			 Analyzer termAnalyser;
 			 if(STEM) {
-				 termAnalyser=new LatinAnalyzer(CharArraySet.EMPTY_SET);				 
+				 mStemmingAnalyser=new LatinAnalyzer(CharArraySet.EMPTY_SET);
+				 termAnalyser=mStemmingAnalyser;
 			 } else {
 				 termAnalyser=new StandardAnalyzer(CharArraySet.EMPTY_SET);
 			 }
@@ -65,6 +67,27 @@ public class ConductusIndex {
 			 }
 		 }
 		 return mAnalyzer;
+	}
+
+	private boolean hasStemmer() {
+		if(!STEM) {
+			return false;
+		}
+		return mStemmingAnalyser!=null;
+	}
+	
+	public boolean storeStems(File pSaveFile) throws IOException {
+		if(hasStemmer()) {
+			return mStemmingAnalyser.storeStems(pSaveFile);
+		}
+		return false;
+	}
+	
+	public boolean displayStemGroups() {
+		if(hasStemmer()) {
+			return mStemmingAnalyser.displayStemGroups();
+		}
+		return false;
 	}
 	
 	public Field eprintIdField(long pEprintId) {

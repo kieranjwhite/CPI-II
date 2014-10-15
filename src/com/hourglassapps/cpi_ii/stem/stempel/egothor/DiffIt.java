@@ -52,96 +52,70 @@
    individuals  on  behalf  of  the  Egothor  Project  and was originally
    created by Leo Galambos (Leo.G@seznam.cz).
  */
-package com.hourglassapps.cpi_ii.tag.stempel;
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.util.Locale;
+import java.util.StringTokenizer;
 
 /**
- * The Lift class is a data structure that is a variation of a Patricia trie.
- * <p>
- * Lift's <i>raison d'etre</i> is to implement reduction of the trie via the
- * Lift-Up method., which makes the data structure less liable to overstemming.
+ * The DiffIt class is a means generate patch commands from an already prepared
+ * stemmer table.
  */
-public class Lift extends Reduce {
-  boolean changeSkip;
+public class DiffIt {
   
-  /**
-   * Constructor for the Lift object.
-   * 
-   * @param changeSkip when set to <tt>true</tt>, comparison of two Cells takes
-   *          a skip command into account
-   */
-  public Lift(boolean changeSkip) {
-    this.changeSkip = changeSkip;
-  }
+  /** no instantiation */
+  private DiffIt() {}
   
-  /**
-   * Optimize (eliminate rows with no content) the given Trie and return the
-   * reduced Trie.
-   * 
-   * @param orig the Trie to optimized
-   * @return the reduced Trie
-   */
-  @Override
-  public Trie optimize(Trie orig) {
-    List<CharSequence> cmds = orig.cmds;
-    List<Row> rows = new ArrayList<>();
-    List<Row> orows = orig.rows;
-    int remap[] = new int[orows.size()];
-    
-    for (int j = orows.size() - 1; j >= 0; j--) {
-      liftUp(orows.get(j), orows);
+  static int get(int i, String s) {
+    try {
+      return Integer.parseInt(s.substring(i, i + 1));
+    } catch (Throwable x) {
+      return 1;
     }
-    
-    Arrays.fill(remap, -1);
-    rows = removeGaps(orig.root, orows, new ArrayList<Row>(), remap);
-    
-    return new Trie(orig.forward, remap[orig.root], cmds, rows);
   }
   
   /**
-   * Reduce the trie using Lift-Up reduction.
+   * Entry point to the DiffIt application.
    * <p>
-   * The Lift-Up reduction propagates all leaf-values (patch commands), where
-   * possible, to higher levels which are closer to the root of the trie.
+   * This application takes one argument, the path to a file containing a
+   * stemmer table. The program reads the file and generates the patch commands
+   * for the stems.
    * 
-   * @param in the Row to consider when optimizing
-   * @param nodes contains the patch commands
+   * @param args the path to a file containing a stemmer table
    */
-  public void liftUp(Row in, List<Row> nodes) {
-    Iterator<Cell> i = in.cells.values().iterator();
-    for (; i.hasNext();) {
-      Cell c = i.next();
-      if (c.ref >= 0) {
-        Row to = nodes.get(c.ref);
-        int sum = to.uniformCmd(changeSkip);
-        if (sum >= 0) {
-          if (sum == c.cmd) {
-            if (changeSkip) {
-              if (c.skip != to.uniformSkip + 1) {
-                continue;
-              }
-              c.skip = to.uniformSkip + 1;
-            } else {
-              c.skip = 0;
-            }
-            c.cnt += to.uniformCnt;
-            c.ref = -1;
-          } else if (c.cmd < 0) {
-            c.cnt = to.uniformCnt;
-            c.cmd = sum;
-            c.ref = -1;
-            if (changeSkip) {
-              c.skip = to.uniformSkip + 1;
-            } else {
-              c.skip = 0;
-            }
-          }
-        }
-      }
+  public static void main(java.lang.String[] args) throws Exception {
+    
+    int ins = get(0, args[0]);
+    int del = get(1, args[0]);
+    int rep = get(2, args[0]);
+    int nop = get(3, args[0]);
+    
+    for (int i = 1; i < args.length; i++) {
+    	// System.out.println("[" + args[i] + "]");
+    	Diff diff = new Diff(ins, del, rep, nop);
+    	String charset = System.getProperty("egothor.stemmer.charset", "UTF-8");
+    	try(LineNumberReader in = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(args[i]), charset)))) {
+    		for (String line = in.readLine(); line != null; line = in.readLine()) {
+    			try {
+    				line = line.toLowerCase(Locale.ROOT);
+    				StringTokenizer st = new StringTokenizer(line);
+    				String stem = st.nextToken();
+    				System.out.println(stem + " -a");
+    				while (st.hasMoreTokens()) {
+    					String token = st.nextToken();
+    					if (token.equals(stem) == false) {
+    						System.out.println(stem + " " + diff.exec(token, stem));
+    					}
+    				}
+    			} catch (java.util.NoSuchElementException x) {
+    				// no base token (stem) on a line
+    			}
+    		}
+    	}
     }
   }
 }

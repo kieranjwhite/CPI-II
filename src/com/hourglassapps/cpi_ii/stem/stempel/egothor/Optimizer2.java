@@ -52,83 +52,39 @@
    individuals  on  behalf  of  the  Egothor  Project  and was originally
    created by Leo Galambos (Leo.G@seznam.cz).
  */
-package com.hourglassapps.cpi_ii.tag.stempel;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;
 
 /**
- * The Reduce object is used to remove gaps in a Trie which stores a dictionary.
+ * The Optimizer class is a Trie that will be reduced (have empty rows removed).
+ * <p>
+ * This is the result of allowing a joining of rows when there is no collision
+ * between non-<tt>null</tt> values in the rows. Information loss, resulting in
+ * the stemmer not being able to recognize words (as in Optimizer), is
+ * curtailed, allowing the stemmer to recognize words for which the original
+ * trie was built. Use of this class allows the stemmer to be self-teaching.
  */
-public class Reduce {
-  
+public class Optimizer2 extends Optimizer {
   /**
-   * Constructor for the Reduce object.
+   * Constructor for the Optimizer2 object.
    */
-  public Reduce() {}
+  public Optimizer2() {}
   
   /**
-   * Optimize (remove holes in the rows) the given Trie and return the
-   * restructured Trie.
+   * Merge the given Cells and return the resulting Cell.
    * 
-   * @param orig the Trie to optimize
-   * @return the restructured Trie
+   * @param m the master Cell
+   * @param e the existing Cell
+   * @return the resulting Cell, or <tt>null</tt> if the operation cannot be
+   *         realized
    */
-  public Trie optimize(Trie orig) {
-    List<CharSequence> cmds = orig.cmds;
-    List<Row> rows = new ArrayList<>();
-    List<Row> orows = orig.rows;
-    int remap[] = new int[orows.size()];
-    
-    Arrays.fill(remap, -1);
-    rows = removeGaps(orig.root, rows, new ArrayList<Row>(), remap);
-    
-    return new Trie(orig.forward, remap[orig.root], cmds, rows);
-  }
-  
-  List<Row> removeGaps(int ind, List<Row> old, List<Row> to, int remap[]) {
-    remap[ind] = to.size();
-    
-    Row now = old.get(ind);
-    to.add(now);
-    Iterator<Cell> i = now.cells.values().iterator();
-    for (; i.hasNext();) {
-      Cell c = i.next();
-      if (c.ref >= 0 && remap[c.ref] < 0) {
-        removeGaps(c.ref, old, to, remap);
-      }
-    }
-    to.set(remap[ind], new Remap(now, remap));
-    return to;
-  }
-  
-  /**
-   * This class is part of the Egothor Project
-   */
-  class Remap extends Row {
-    /**
-     * Constructor for the Remap object
-     * 
-     * @param old Description of the Parameter
-     * @param remap Description of the Parameter
-     */
-    public Remap(Row old, int remap[]) {
-      super();
-      Iterator<Character> i = old.cells.keySet().iterator();
-      for (; i.hasNext();) {
-        Character ch = i.next();
-        Cell c = old.at(ch);
-        Cell nc;
-        if (c.ref >= 0) {
-          nc = new Cell(c);
-          nc.ref = remap[nc.ref];
-        } else {
-          nc = new Cell(c);
-        }
-        cells.put(ch, nc);
-      }
+  @Override
+  public Cell merge(Cell m, Cell e) {
+    if (m.cmd == e.cmd && m.ref == e.ref && m.skip == e.skip) {
+      Cell c = new Cell(m);
+      c.cnt += e.cnt;
+      return c;
+    } else {
+      return null;
     }
   }
 }

@@ -1,3 +1,7 @@
+/* Copied this class and any dependencies to allow Compile.main to be invoked
+ * without needing to create extra temporary files (we use a pipe instead).
+ */
+
 /*
                     Egothor Software License version 1.00
                     Copyright (C) 1997-2004 Leo Galambos.
@@ -52,7 +56,7 @@
    individuals  on  behalf  of  the  Egothor  Project  and was originally
    created by Leo Galambos (Leo.G@seznam.cz).
  */
-package com.hourglassapps.cpi_ii.tag.stempel;
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;

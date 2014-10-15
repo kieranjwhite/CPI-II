@@ -52,70 +52,43 @@
    individuals  on  behalf  of  the  Egothor  Project  and was originally
    created by Leo Galambos (Leo.G@seznam.cz).
  */
-package com.hourglassapps.cpi_ii.tag.stempel;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.util.Locale;
-import java.util.StringTokenizer;
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;
 
 /**
- * The DiffIt class is a means generate patch commands from an already prepared
- * stemmer table.
+ * A Cell is a portion of a trie.
  */
-public class DiffIt {
+class Cell {
+  /** next row id in this way */
+  int ref = -1;
+  /** command of the cell */
+  int cmd = -1;
+  /** how many cmd-s was in subtrie before pack() */
+  int cnt = 0;
+  /** how many chars would be discarded from input key in this way */
+  int skip = 0;
   
-  /** no instantiation */
-  private DiffIt() {}
+  /** Constructor for the Cell object. */
+  Cell() {}
   
-  static int get(int i, String s) {
-    try {
-      return Integer.parseInt(s.substring(i, i + 1));
-    } catch (Throwable x) {
-      return 1;
-    }
+  /**
+   * Construct a Cell using the properties of the given Cell.
+   * 
+   * @param a the Cell whose properties will be used
+   */
+  Cell(Cell a) {
+    ref = a.ref;
+    cmd = a.cmd;
+    cnt = a.cnt;
+    skip = a.skip;
   }
   
   /**
-   * Entry point to the DiffIt application.
-   * <p>
-   * This application takes one argument, the path to a file containing a
-   * stemmer table. The program reads the file and generates the patch commands
-   * for the stems.
+   * Return a String containing this Cell's attributes.
    * 
-   * @param args the path to a file containing a stemmer table
+   * @return a String representation of this Cell
    */
-  public static void main(java.lang.String[] args) throws Exception {
-    
-    int ins = get(0, args[0]);
-    int del = get(1, args[0]);
-    int rep = get(2, args[0]);
-    int nop = get(3, args[0]);
-    
-    for (int i = 1; i < args.length; i++) {
-      LineNumberReader in;
-      // System.out.println("[" + args[i] + "]");
-      Diff diff = new Diff(ins, del, rep, nop);
-      String charset = System.getProperty("egothor.stemmer.charset", "UTF-8");
-      in = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(args[i]), charset)));
-      for (String line = in.readLine(); line != null; line = in.readLine()) {
-        try {
-          line = line.toLowerCase(Locale.ROOT);
-          StringTokenizer st = new StringTokenizer(line);
-          String stem = st.nextToken();
-          System.out.println(stem + " -a");
-          while (st.hasMoreTokens()) {
-            String token = st.nextToken();
-            if (token.equals(stem) == false) {
-              System.out.println(stem + " " + diff.exec(token, stem));
-            }
-          }
-        } catch (java.util.NoSuchElementException x) {
-          // no base token (stem) on a line
-        }
-      }
-    }
+  @Override
+  public String toString() {
+    return "ref(" + ref + ")cmd(" + cmd + ")cnt(" + cnt + ")skp(" + skip + ")";
   }
 }

@@ -52,7 +52,7 @@
    individuals  on  behalf  of  the  Egothor  Project  and was originally
    created by Leo Galambos (Leo.G@seznam.cz).
  */
-package com.hourglassapps.cpi_ii.tag.stempel;
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,20 +60,23 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * The Gener object helps in the discarding of nodes which break the reduction
- * effort and defend the structure against large reductions.
+ * The Optimizer class is a Trie that will be reduced (have empty rows removed).
+ * <p>
+ * The reduction will be made by joining two rows where the first is a subset of
+ * the second.
  */
-public class Gener extends Reduce {
+public class Optimizer extends Reduce {
   /**
-   * Constructor for the Gener object.
+   * Constructor for the Optimizer object.
    */
-  public Gener() {}
+  public Optimizer() {}
   
   /**
-   * Return a Trie with infrequent values occurring in the given Trie removed.
+   * Optimize (remove empty rows) from the given Trie and return the resulting
+   * Trie.
    * 
-   * @param orig the Trie to optimize
-   * @return a new optimized Trie
+   * @param orig the Trie to consolidate
+   * @return the newly consolidated Trie
    */
   @Override
   public Trie optimize(Trie orig) {
@@ -82,51 +85,114 @@ public class Gener extends Reduce {
     List<Row> orows = orig.rows;
     int remap[] = new int[orows.size()];
     
-    Arrays.fill(remap, 1);
     for (int j = orows.size() - 1; j >= 0; j--) {
-      if (eat(orows.get(j), remap)) {
-        remap[j] = 0;
+      Row now = new Remap(orows.get(j), remap);
+      boolean merged = false;
+      
+      for (int i = 0; i < rows.size(); i++) {
+        Row q = merge(now, rows.get(i));
+        if (q != null) {
+          rows.set(i, q);
+          merged = true;
+          remap[j] = i;
+          break;
+        }
+      }
+      
+      if (merged == false) {
+        remap[j] = rows.size();
+        rows.add(now);
       }
     }
     
+    int root = remap[orig.root];
     Arrays.fill(remap, -1);
-    rows = removeGaps(orig.root, orows, new ArrayList<Row>(), remap);
+    rows = removeGaps(root, rows, new ArrayList<Row>(), remap);
     
-    return new Trie(orig.forward, remap[orig.root], cmds, rows);
+    return new Trie(orig.forward, remap[root], cmds, rows);
   }
   
   /**
-   * Test whether the given Row of Cells in a Trie should be included in an
-   * optimized Trie.
+   * Merge the given rows and return the resulting Row.
    * 
-   * @param in the Row to test
-   * @param remap Description of the Parameter
-   * @return <tt>true</tt> if the Row should remain, <tt>false
-     *      </tt> otherwise
+   * @param master the master Row
+   * @param existing the existing Row
+   * @return the resulting Row, or <tt>null</tt> if the operation cannot be
+   *         realized
    */
-  public boolean eat(Row in, int remap[]) {
-    int sum = 0;
-    for (Iterator<Cell> i = in.cells.values().iterator(); i.hasNext();) {
-      Cell c = i.next();
-      sum += c.cnt;
-      if (c.ref >= 0) {
-        if (remap[c.ref] == 0) {
-          c.ref = -1;
+  public Row merge(Row master, Row existing) {
+    Iterator<Character> i = master.cells.keySet().iterator();
+    Row n = new Row();
+    for (; i.hasNext();) {
+      Character ch = i.next();
+      // XXX also must handle Cnt and Skip !!
+      Cell a = master.cells.get(ch);
+      Cell b = existing.cells.get(ch);
+      
+      Cell s = (b == null) ? new Cell(a) : merge(a, b);
+      if (s == null) {
+        return null;
+      }
+      n.cells.put(ch, s);
+    }
+    i = existing.cells.keySet().iterator();
+    for (; i.hasNext();) {
+      Character ch = i.next();
+      if (master.at(ch) != null) {
+        continue;
+      }
+      n.cells.put(ch, existing.at(ch));
+    }
+    return n;
+  }
+  
+  /**
+   * Merge the given Cells and return the resulting Cell.
+   * 
+   * @param m the master Cell
+   * @param e the existing Cell
+   * @return the resulting Cell, or <tt>null</tt> if the operation cannot be
+   *         realized
+   */
+  public Cell merge(Cell m, Cell e) {
+    Cell n = new Cell();
+    
+    if (m.skip != e.skip) {
+      return null;
+    }
+    
+    if (m.cmd >= 0) {
+      if (e.cmd >= 0) {
+        if (m.cmd == e.cmd) {
+          n.cmd = m.cmd;
+        } else {
+          return null;
         }
+      } else {
+        n.cmd = m.cmd;
       }
+    } else {
+      n.cmd = e.cmd;
     }
-    int frame = sum / 10;
-    boolean live = false;
-    for (Iterator<Cell> i = in.cells.values().iterator(); i.hasNext();) {
-      Cell c = i.next();
-      if (c.cnt < frame && c.cmd >= 0) {
-        c.cnt = 0;
-        c.cmd = -1;
+    if (m.ref >= 0) {
+      if (e.ref >= 0) {
+        if (m.ref == e.ref) {
+          if (m.skip == e.skip) {
+            n.ref = m.ref;
+          } else {
+            return null;
+          }
+        } else {
+          return null;
+        }
+      } else {
+        n.ref = m.ref;
       }
-      if (c.cmd >= 0 || c.ref >= 0) {
-        live |= true;
-      }
+    } else {
+      n.ref = e.ref;
     }
-    return !live;
+    n.cnt = m.cnt + e.cnt;
+    n.skip = m.skip;
+    return n;
   }
 }

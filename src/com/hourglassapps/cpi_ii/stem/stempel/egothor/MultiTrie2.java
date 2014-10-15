@@ -52,50 +52,39 @@
    individuals  on  behalf  of  the  Egothor  Project  and was originally
    created by Leo Galambos (Leo.G@seznam.cz).
  */
-package com.hourglassapps.cpi_ii.tag.stempel;
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The MultiTrie is a Trie of Tries. It stores words and their associated patch
- * commands. The MultiTrie handles patch commands individually (each command by
- * itself).
+ * The MultiTrie is a Trie of Tries.
+ * <p>
+ * It stores words and their associated patch commands. The MultiTrie handles
+ * patch commands broken into their constituent parts, as a MultiTrie does, but
+ * the commands are delimited by the skip command.
  */
-public class MultiTrie extends Trie {
-  final char EOM = '*';
-  final String EOM_NODE = "" + EOM;
-  
-  List<Trie> tries = new ArrayList<>();
-  
-  int BY = 1;
-  
+public class MultiTrie2 extends MultiTrie {
   /**
    * Constructor for the MultiTrie object.
    * 
    * @param is the input stream
    * @exception IOException if an I/O error occurs
    */
-  public MultiTrie(DataInput is) throws IOException {
-    super(false);
-    forward = is.readBoolean();
-    BY = is.readInt();
-    for (int i = is.readInt(); i > 0; i--) {
-      tries.add(new Trie(is));
-    }
+  public MultiTrie2(DataInput is) throws IOException {
+    super(is);
   }
   
   /**
-   * Constructor for the MultiTrie object
+   * Constructor for the MultiTrie2 object
    * 
    * @param forward set to <tt>true</tt> if the elements should be read left to
    *          right
    */
-  public MultiTrie(boolean forward) {
+  public MultiTrie2(boolean forward) {
     super(forward);
   }
   
@@ -108,13 +97,35 @@ public class MultiTrie extends Trie {
   @Override
   public CharSequence getFully(CharSequence key) {
     StringBuilder result = new StringBuilder(tries.size() * 2);
-    for (int i = 0; i < tries.size(); i++) {
-      CharSequence r = tries.get(i).getFully(key);
-      if (r == null || (r.length() == 1 && r.charAt(0) == EOM)) {
-        return result;
+    try {
+      CharSequence lastkey = key;
+      CharSequence p[] = new CharSequence[tries.size()];
+      char lastch = ' ';
+      for (int i = 0; i < tries.size(); i++) {
+        CharSequence r = tries.get(i).getFully(lastkey);
+        if (r == null || (r.length() == 1 && r.charAt(0) == EOM)) {
+          return result;
+        }
+        if (cannotFollow(lastch, r.charAt(0))) {
+          return result;
+        } else {
+          lastch = r.charAt(r.length() - 2);
+        }
+        // key=key.substring(lengthPP(r));
+        p[i] = r;
+        if (p[i].charAt(0) == '-') {
+          if (i > 0) {
+            key = skip(key, lengthPP(p[i - 1]));
+          }
+          key = skip(key, lengthPP(p[i]));
+        }
+        // key = skip(key, lengthPP(r));
+        result.append(r);
+        if (key.length() != 0) {
+          lastkey = key;
+        }
       }
-      result.append(r);
-    }
+    } catch (IndexOutOfBoundsException x) {}
     return result;
   }
   
@@ -128,13 +139,36 @@ public class MultiTrie extends Trie {
   @Override
   public CharSequence getLastOnPath(CharSequence key) {
     StringBuilder result = new StringBuilder(tries.size() * 2);
-    for (int i = 0; i < tries.size(); i++) {
-      CharSequence r = tries.get(i).getLastOnPath(key);
-      if (r == null || (r.length() == 1 && r.charAt(0) == EOM)) {
-        return result;
+    try {
+      CharSequence lastkey = key;
+      CharSequence p[] = new CharSequence[tries.size()];
+      char lastch = ' ';
+      for (int i = 0; i < tries.size(); i++) {
+        CharSequence r = tries.get(i).getLastOnPath(lastkey);
+        if (r == null || (r.length() == 1 && r.charAt(0) == EOM)) {
+          return result;
+        }
+        // System.err.println("LP:"+key+" last:"+lastch+" new:"+r);
+        if (cannotFollow(lastch, r.charAt(0))) {
+          return result;
+        } else {
+          lastch = r.charAt(r.length() - 2);
+        }
+        // key=key.substring(lengthPP(r));
+        p[i] = r;
+        if (p[i].charAt(0) == '-') {
+          if (i > 0) {
+            key = skip(key, lengthPP(p[i - 1]));
+          }
+          key = skip(key, lengthPP(p[i]));
+        }
+        // key = skip(key, lengthPP(r));
+        result.append(r);
+        if (key.length() != 0) {
+          lastkey = key;
+        }
       }
-      result.append(r);
-    }
+    } catch (IndexOutOfBoundsException x) {}
     return result;
   }
   
@@ -146,11 +180,7 @@ public class MultiTrie extends Trie {
    */
   @Override
   public void store(DataOutput os) throws IOException {
-    os.writeBoolean(forward);
-    os.writeInt(BY);
-    os.writeInt(tries.size());
-    for (Trie trie : tries)
-      trie.store(os);
+    super.store(os);
   }
   
   /**
@@ -168,14 +198,75 @@ public class MultiTrie extends Trie {
     if (cmd.length() == 0) {
       return;
     }
-    int levels = cmd.length() / BY;
+    // System.err.println( cmd );
+    CharSequence p[] = decompose(cmd);
+    int levels = p.length;
+    // System.err.println("levels "+key+" cmd "+cmd+"|"+levels);
     while (levels >= tries.size()) {
       tries.add(new Trie(forward));
     }
+    CharSequence lastkey = key;
     for (int i = 0; i < levels; i++) {
-      tries.get(i).add(key, cmd.subSequence(BY * i, BY * i + BY));
+      if (key.length() > 0) {
+        tries.get(i).add(key, p[i]);
+        lastkey = key;
+      } else {
+        tries.get(i).add(lastkey, p[i]);
+      }
+      // System.err.println("-"+key+" "+p[i]+"|"+key.length());
+      /*
+       * key=key.substring(lengthPP(p[i]));
+       */
+      if (p[i].length() > 0 && p[i].charAt(0) == '-') {
+        if (i > 0) {
+          key = skip(key, lengthPP(p[i - 1]));
+        }
+        key = skip(key, lengthPP(p[i]));
+      }
+      // System.err.println("--->"+key);
     }
-    tries.get(levels).add(key, EOM_NODE);
+    if (key.length() > 0) {
+      tries.get(levels).add(key, EOM_NODE);
+    } else {
+      tries.get(levels).add(lastkey, EOM_NODE);
+    }
+  }
+  
+  /**
+   * Break the given patch command into its constituent pieces. The pieces are
+   * delimited by NOOP commands.
+   * 
+   * @param cmd the patch command
+   * @return an array containing the pieces of the command
+   */
+  public CharSequence[] decompose(CharSequence cmd) {
+    int parts = 0;
+    
+    for (int i = 0; 0 <= i && i < cmd.length();) {
+      int next = dashEven(cmd, i);
+      if (i == next) {
+        parts++;
+        i = next + 2;
+      } else {
+        parts++;
+        i = next;
+      }
+    }
+    
+    CharSequence part[] = new CharSequence[parts];
+    int x = 0;
+    
+    for (int i = 0; 0 <= i && i < cmd.length();) {
+      int next = dashEven(cmd, i);
+      if (i == next) {
+        part[x++] = cmd.subSequence(i, i + 2);
+        i = next + 2;
+      } else {
+        part[x++] = (next < 0) ? cmd.subSequence(i, cmd.length()) : cmd.subSequence(i, next);
+        i = next;
+      }
+    }
+    return part;
   }
   
   /**
@@ -189,21 +280,55 @@ public class MultiTrie extends Trie {
     List<Trie> h = new ArrayList<>();
     for (Trie trie : tries)
       h.add(trie.reduce(by));
-    
-    MultiTrie m = new MultiTrie(forward);
+
+    MultiTrie2 m = new MultiTrie2(forward);
     m.tries = h;
     return m;
   }
   
-  /**
-   * Print the given prefix and the position(s) in the Trie where it appears.
-   * 
-   * @param prefix the desired prefix
-   */
-  @Override
-  public void printInfo(PrintStream out, CharSequence prefix) {
-    int c = 0;
-    for (Trie trie : tries)
-      trie.printInfo(out, prefix + "[" + (++c) + "] ");
+  private boolean cannotFollow(char after, char goes) {
+    switch (after) {
+      case '-':
+      case 'D':
+        return after == goes;
+    }
+    return false;
+  }
+  
+  private CharSequence skip(CharSequence in, int count) {
+    if (forward) {
+      return in.subSequence(count, in.length());
+    } else {
+      return in.subSequence(0, in.length() - count);
+    }
+  }
+  
+  private int dashEven(CharSequence in, int from) {
+    while (from < in.length()) {
+      if (in.charAt(from) == '-') {
+        return from;
+      } else {
+        from += 2;
+      }
+    }
+    return -1;
+  }
+  
+  @SuppressWarnings("fallthrough")
+  private int lengthPP(CharSequence cmd) {
+    int len = 0;
+    for (int i = 0; i < cmd.length(); i++) {
+      switch (cmd.charAt(i++)) {
+        case '-':
+        case 'D':
+          len += cmd.charAt(i) - 'a' + 1;
+          break;
+        case 'R':
+          len++; /* intentional fallthrough */
+        case 'I':
+          break;
+      }
+    }
+    return len;
   }
 }

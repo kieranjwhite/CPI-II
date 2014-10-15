@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii.tag;
+package com.hourglassapps.cpi_ii.stem;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -13,11 +13,11 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 
-import com.hourglassapps.cpi_ii.tag.stempel.Compile;
+import com.hourglassapps.cpi_ii.stem.stempel.egothor.Compile;
 import com.hourglassapps.util.Log;
 
-public class MainGenTraining {
-	private final static String TAG=MainGenTraining.class.getName();
+public class MainGenStempelModel {
+	private final static String TAG=MainGenStempelModel.class.getName();
 	
 	public static void main(String[] pArgs) throws IOException {
 		if (pArgs.length < 1) {
