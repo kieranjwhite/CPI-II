@@ -14,19 +14,23 @@ import org.apache.lucene.analysis.stempel.StempelStemmer;
 import com.hourglassapps.util.MultiMap;
 
 public final class StempelRecorderFilter extends StemRecorderFilter {
-	public StempelRecorderFilter(TokenStream pInput) throws IOException {
+	private File mModel;
+	
+	public StempelRecorderFilter(TokenStream pInput, File pModel) throws IOException {
 		super(pInput);
+		mModel=pModel;
 	}
 
 
 	public <C extends Set<String>> StempelRecorderFilter(TokenStream pInput,
-			MultiMap<String, C, String> stem2Expansions) throws IOException {
+			MultiMap<String, C, String> stem2Expansions, File pModel) throws IOException {
 		super(pInput, stem2Expansions);
+		mModel=pModel;
 	}
 
 	@Override
 	protected TokenFilter stemmer(TokenFilter pInput) throws IOException {
-		try(InputStream in=new FileInputStream(new File("/tmp/stempel/model.out"))) {
+		try(InputStream in=new FileInputStream(mModel)) {
 			return new StempelFilter(pInput, new StempelStemmer(in));
 		}
 	}

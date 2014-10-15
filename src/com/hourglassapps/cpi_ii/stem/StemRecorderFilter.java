@@ -18,22 +18,24 @@ import com.hourglassapps.util.MultiMap;
 
 public abstract class StemRecorderFilter extends TokenFilter {
 	private final Underlying mUnderlying;
-	private final TokenStream mStemmer;
+	private TokenStream mStemmer;
 	private final MultiMap<String, Set<String>, String> mStem2Expansions;
 	private final CharTermAttribute termAtt=addAttribute(CharTermAttribute.class);
 
+	public static abstract class Factory {
+		public abstract StemRecorderFilter inst(TokenStream result) throws IOException;
+	}
+	
 	public StemRecorderFilter(TokenStream pInput) throws IOException {
 		super(pInput);
 		mStem2Expansions=new HashSetMultiMap<String, String>();
 		mUnderlying=new Underlying(pInput);
-		mStemmer=stemmer(mUnderlying);
 	}
 
 	public <C extends Set<String>> StemRecorderFilter(TokenStream pInput, MultiMap<String,C,String> stem2Expansions) throws IOException {
 		super(pInput);
 		mStem2Expansions=new HashSetMultiMap<String, String>(stem2Expansions);
 		mUnderlying=new Underlying(pInput);
-		mStemmer=stemmer(mUnderlying);
 	}
 
 	private final static class Underlying extends TokenFilter implements PreFilter {
@@ -63,6 +65,9 @@ public abstract class StemRecorderFilter extends TokenFilter {
 	
 	@Override
 	public boolean incrementToken() throws IOException {
+		if(mStemmer==null) {
+			mStemmer=stemmer(mUnderlying);
+		}
 		if(mStemmer.incrementToken()) {
 			mStem2Expansions.addOne(termAtt.toString(), mUnderlying.priorToken().toString());
 			return true;

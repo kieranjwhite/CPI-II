@@ -18,10 +18,8 @@ package com.hourglassapps.cpi_ii.latin;
  */
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Arrays;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.StopFilter;
@@ -35,7 +33,9 @@ import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
 import org.apache.lucene.util.Version;
 
 import com.hourglassapps.cpi_ii.snowball.lucene.SnowballFilter;
+import com.hourglassapps.cpi_ii.stem.SnowballRecorderFilter;
 import com.hourglassapps.cpi_ii.stem.StemRecorderFilter;
+import com.hourglassapps.cpi_ii.stem.StemRecorderFilter.Factory;
 import com.hourglassapps.cpi_ii.stem.StempelRecorderFilter;
 import com.hourglassapps.util.Log;
 
@@ -49,6 +49,26 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
   /** File containing default Latin stopwords. */
   public final static String DEFAULT_STOPWORD_FILE = "stopwords.txt";
   private StemRecorderFilter mRecorder;
+  
+  private final static Factory STEMPEL_RECORDER_FACTORY=new StemRecorderFilter.Factory() {
+
+	@Override
+	public StemRecorderFilter inst(TokenStream pInput) throws IOException {
+		return new StempelRecorderFilter(pInput, new File("/tmp/stempel/model.out"));
+	}
+	  
+  };
+  
+  private final static Factory SNOWBALL_RECORDER_FACTORY=new StemRecorderFilter.Factory() {
+
+	@Override
+	public StemRecorderFilter inst(TokenStream pInput) throws IOException {
+		return new SnowballRecorderFilter(pInput, new LatinStemmer());
+	}
+	  
+  };
+  
+  private final static Factory DEFAULT_STEMMER_FACTORY=STEMPEL_RECORDER_FACTORY;
   
   /*
    * TODO consider for Latin
@@ -184,9 +204,8 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
     if(!stemExclusionSet.isEmpty()) {
       result = new SetKeywordMarkerFilter(result, stemExclusionSet);
     }
-    //result = new SnowballFilter(result, new LatinStemmer());
     try {
-    	mRecorder=new StempelRecorderFilter(result);
+    	mRecorder=DEFAULT_STEMMER_FACTORY.inst(result);
     	return new TokenStreamComponents(source, mRecorder);
     } catch(IOException e) {
     	Log.e(TAG, e);
