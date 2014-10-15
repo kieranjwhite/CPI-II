@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii.snowball.lucene;
+package com.hourglassapps.cpi_ii.stem.snowball.lucene;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more

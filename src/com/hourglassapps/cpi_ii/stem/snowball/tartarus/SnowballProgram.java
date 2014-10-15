@@ -1,8 +1,8 @@
 
-package com.hourglassapps.cpi_ii.snowball.tartarus;
+package com.hourglassapps.cpi_ii.stem.snowball.tartarus;
 import java.lang.reflect.InvocationTargetException;
 
-import com.hourglassapps.cpi_ii.snowball.tartarus.SnowballProgram;
+import com.hourglassapps.cpi_ii.stem.snowball.tartarus.SnowballProgram;
 
 public abstract class SnowballProgram {
     protected SnowballProgram()

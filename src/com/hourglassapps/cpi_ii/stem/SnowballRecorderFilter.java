@@ -6,8 +6,8 @@ import java.util.Set;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 
-import com.hourglassapps.cpi_ii.snowball.lucene.SnowballFilter;
-import com.hourglassapps.cpi_ii.snowball.tartarus.SnowballProgram;
+import com.hourglassapps.cpi_ii.stem.snowball.lucene.SnowballFilter;
+import com.hourglassapps.cpi_ii.stem.snowball.tartarus.SnowballProgram;
 import com.hourglassapps.util.MultiMap;
 
 public final class SnowballRecorderFilter extends StemRecorderFilter {

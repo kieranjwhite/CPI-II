@@ -17,7 +17,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
-import com.hourglassapps.cpi_ii.snowball.lucene.SnowballAnalyzer;
+import com.hourglassapps.cpi_ii.stem.snowball.lucene.SnowballAnalyzer;
 import com.hourglassapps.util.Log;
 
 public class ConductusIndex {

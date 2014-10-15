@@ -32,10 +32,10 @@ import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
 import org.apache.lucene.util.Version;
 
-import com.hourglassapps.cpi_ii.snowball.lucene.SnowballFilter;
 import com.hourglassapps.cpi_ii.stem.SnowballRecorderFilter;
 import com.hourglassapps.cpi_ii.stem.StemRecorderFilter;
 import com.hourglassapps.cpi_ii.stem.StemRecorderFilter.Factory;
+import com.hourglassapps.cpi_ii.stem.snowball.lucene.SnowballFilter;
 import com.hourglassapps.cpi_ii.stem.StempelRecorderFilter;
 import com.hourglassapps.util.Log;
 
