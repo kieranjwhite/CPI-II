@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
@@ -115,7 +116,7 @@ public abstract class StemRecorderFilter extends TokenFilter {
 	}
 
 	public void displayGroups() {
-		Set<String> keys=mStem2Expansions.keySet();
+		Set<String> keys=new TreeSet<>(mStem2Expansions.keySet());
 		for(String k: keys) {
 			Set<String> expansions=mStem2Expansions.get(k);
 			for(String ex: expansions) {
