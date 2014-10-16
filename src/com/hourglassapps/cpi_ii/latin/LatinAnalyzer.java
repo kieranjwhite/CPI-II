@@ -56,7 +56,7 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
 
 	@Override
 	public StemRecorderFilter inst(TokenStream pInput) throws IOException {
-		return new StempelRecorderFilter(pInput, new File("/tmp/stempel/model.out"));
+		return new StempelRecorderFilter(pInput, new File("data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out"));
 	}
 	  
   };
