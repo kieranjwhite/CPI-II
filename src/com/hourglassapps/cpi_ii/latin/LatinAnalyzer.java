@@ -32,6 +32,7 @@ import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
 import org.apache.lucene.util.Version;
 
+import com.hourglassapps.cpi_ii.stem.IdentityRecorderFilter;
 import com.hourglassapps.cpi_ii.stem.SnowballRecorderFilter;
 import com.hourglassapps.cpi_ii.stem.StemRecorderFilter;
 import com.hourglassapps.cpi_ii.stem.StemRecorderFilter.Factory;
@@ -42,12 +43,13 @@ import com.hourglassapps.util.Log;
 /**
  * {@link Analyzer} for Latin.
  */
+@SuppressWarnings("unused")
 public final class LatinAnalyzer extends StopwordAnalyzerBase {
 	private final static String TAG=LatinAnalyzer.class.getName();
   private final CharArraySet stemExclusionSet;
   
   /** File containing default Latin stopwords. */
-  public final static String DEFAULT_STOPWORD_FILE = "stopwords.txt";
+  public final static String DEFAULT_STOPWORD_FILE = "/com/hourglassapps/cpi_ii/latin/la.stop";
   private StemRecorderFilter mRecorder;
   
   private final static Factory STEMPEL_RECORDER_FACTORY=new StemRecorderFilter.Factory() {
@@ -64,6 +66,16 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
 	@Override
 	public StemRecorderFilter inst(TokenStream pInput) throws IOException {
 		return new SnowballRecorderFilter(pInput, new LatinStemmer());
+	}
+	  
+  };
+  
+  //Set this as the DEFAULT_STEMMER_FACTORY to disable stemming
+  private final static Factory IDENTITY_RECORDER_FACTORY=new StemRecorderFilter.Factory() {
+
+	@Override
+	public StemRecorderFilter inst(TokenStream pInput) throws IOException {
+		return new IdentityRecorderFilter(pInput);
 	}
 	  
   };
@@ -107,7 +119,7 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
 
     static {
       try {
-        DEFAULT_STOP_SET = loadStopwordSet(false, 
+        DEFAULT_STOP_SET = loadStopwordSet(true, 
             LatinAnalyzer.class, DEFAULT_STOPWORD_FILE, "#");
       } catch (IOException ex) {
         // default set should always be present as it is part of the

@@ -27,7 +27,6 @@ public class ConductusIndex {
 	public final static String CONTENT_KEY="content";
 	
 	private final static int NGRAM_SIZE=1;
-	private final static boolean STEM=true;
 
 	private File mIndexDir;
 	private Directory mDir;
@@ -50,12 +49,8 @@ public class ConductusIndex {
 	public Analyzer analyzer() {
 		 if(mAnalyzer==null) {
 			 Analyzer termAnalyser;
-			 if(STEM) {
-				 mStemmingAnalyser=new LatinAnalyzer(CharArraySet.EMPTY_SET);
-				 termAnalyser=mStemmingAnalyser;
-			 } else {
-				 termAnalyser=new StandardAnalyzer(CharArraySet.EMPTY_SET);
-			 }
+			 mStemmingAnalyser=new LatinAnalyzer();
+			 termAnalyser=mStemmingAnalyser;
 			 if(NGRAM_SIZE<2) {
 				 mAnalyzer=termAnalyser;				 
 			 } else {
@@ -70,9 +65,6 @@ public class ConductusIndex {
 	}
 
 	private boolean hasStemmer() {
-		if(!STEM) {
-			return false;
-		}
 		return mStemmingAnalyser!=null;
 	}
 	
