@@ -32,6 +32,7 @@ import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
 import org.apache.lucene.util.Version;
 
+import com.hourglassapps.cpi_ii.NumeralFilter;
 import com.hourglassapps.cpi_ii.stem.IdentityRecorderFilter;
 import com.hourglassapps.cpi_ii.stem.SnowballRecorderFilter;
 import com.hourglassapps.cpi_ii.stem.StemRecorderFilter;
@@ -211,6 +212,7 @@ public final class LatinAnalyzer extends StopwordAnalyzerBase {
     /* TODO consider for Latin kw
      * result = new ElisionFilter(result, DEFAULT_ARTICLES);
      */
+    result=new NumeralFilter(result);
     result = new LatinLowerCaseFilter(result);
     result = new StopFilter(getVersion(), result, stopwords);
     if(!stemExclusionSet.isEmpty()) {
