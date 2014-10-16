@@ -12,12 +12,19 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class TreeArrayMultiMap<K extends Comparable<K>, E> extends AbstractMultiMap<K, List<E>, E> implements SortedMultiMap<K, List<E>,E> {
+public class TreeArrayMultiMap<K extends Comparable<K>, E> extends AbstractMultiMap<K, List<E>, E> 
+		implements SortedMultiMap<K, List<E>,E> {
 	private static final long serialVersionUID = 1L;
-	private SortedMap<K, List<E>> mDelegateMap=new TreeMap<K, List<E>>();
+	private final SortedMap<K, List<E>> mDelegateMap;
 	
 	public TreeArrayMultiMap() {
 		super(new ListFactory<E>());
+		mDelegateMap=new TreeMap<K, List<E>>();
+	}
+
+	public TreeArrayMultiMap(Comparator<K> pComparator) {
+		super(new ListFactory<E>());
+		mDelegateMap=new TreeMap<K, List<E>>(pComparator);
 	}
 
 	/**

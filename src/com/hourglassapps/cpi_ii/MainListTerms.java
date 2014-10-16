@@ -53,7 +53,6 @@ public class MainListTerms {
 	private void showDocTerms(IndexReader reader, int pDocId, int pTotalDocs) throws IOException {
 		SortedMap<Double, List<String>> scores=new TreeMap<>();
 		
-	    Document doc = reader.document(pDocId);         
 	    Terms termVector = reader.getTermVector(pDocId, ConductusIndex.CONTENT_KEY);
 	    TermsEnum itr = termVector.iterator(null);
 	    BytesRef term = null;
