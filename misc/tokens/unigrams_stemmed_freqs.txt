@@ -1,12 +1,8 @@
-1	832
 quis2	674
-2	618
-3	547
 virgo1	464
 sum1	463
 quod1	440
 omnis1	412
-4	380
 te	346
 a	338
 homo1	338
@@ -16,7 +12,6 @@ mare1	290
 mater1	289
 filius1	283
 gaudium1	283
-5	279
 novus1	270
 rex1	270
 deus1	260
@@ -32,7 +27,6 @@ vita1	199
 hec	194
 do1	193
 hoc	188
-6	180
 christus1	180
 ave	179
 rex	178
@@ -55,7 +49,6 @@ pario2	139
 fit	138
 celque1	137
 tu1	134
-7	127
 sino1	126
 verbum1	126
 lex1	124
@@ -80,7 +73,6 @@ habeo1	98
 dico2	97
 lux	97
 flos	95
-8	91
 possum1	90
 vitium1	90
 carnique1	89
@@ -112,7 +104,6 @@ salvother	73
 terra1	73
 vir1	73
 sol	72
-9	71
 pia	71
 cor1	70
 totus2	70
@@ -168,7 +159,6 @@ credo1	53
 primus1	53
 puer1	53
 factum1	52
-10	51
 iudeeo1	51
 miseri1	51
 perdo1	51
@@ -223,7 +213,6 @@ meus1	43
 maneo1	42
 mirus1	42
 sollempnio1	42
-11	41
 donum1	41
 liliumucius1	41
 pre	41
@@ -247,7 +236,6 @@ dano1	38
 flos1	38
 labor2	38
 lex	38
-12	37
 caritaus1	37
 eximieo1	37
 lux1	37
@@ -344,7 +332,6 @@ studium1	29
 titulus1	29
 tunc1	29
 venter1	29
-13	28
 agnus1	28
 anima1	28
 curius2	28
@@ -401,7 +388,6 @@ sto1	25
 tandem1	25
 tego1	25
 tertius1	25
-14	24
 audi1	24
 crucque1	24
 humilis1	24
@@ -450,7 +436,6 @@ ostium1	22
 seculuui1	22
 tollo1	22
 umbra1	22
-15	21
 auris1	21
 capio1	21
 civitas1	21
@@ -532,7 +517,6 @@ terminum1	19
 terre1	19
 totus1	19
 veniao1	19
-16	18
 absqu1	18
 aperio1	18
 benedicaus1	18
@@ -560,7 +544,6 @@ tres1	18
 triclinium1	18
 trinitatitisus1	18
 votum1	18
-17	17
 asperum1	17
 cecque1	17
 civis1	17
@@ -626,7 +609,6 @@ termino1	16
 turba1	16
 uterus1	16
 vivus1	16
-18	15
 adest1	15
 apparuitulus1	15
 auxilium1	15
@@ -724,8 +706,6 @@ urbs1	14
 veritatius1	14
 vilis1	14
 voco1	14
-19	13
-20	13
 angustia1	13
 area1	13
 bonitaus1	13
@@ -925,7 +905,6 @@ vins1	11
 virginali1	11
 vision1	11
 visolo1	11
-21	10
 aditus2	10
 amabilisulus1	10
 apertus1	10
@@ -1030,7 +1009,6 @@ ver	10
 videnso1	10
 vie	10
 virtutibs1	10
-22	9
 acies1	9
 adsum1	9
 agmen1	9
@@ -1155,7 +1133,6 @@ verius1	9
 vespere1	9
 virginalis1	9
 virgini1	9
-23	8
 aaronulus1	8
 abrahe1	8
 ambitus2	8
@@ -1310,7 +1287,6 @@ vinea1	8
 viperas1	8
 virtuts1	8
 vulnero1	8
-24	7
 amicitia1	7
 ancilla1	7
 arca1	7
@@ -1496,7 +1472,6 @@ virgino1	7
 virus1	7
 vitulus1	7
 vocao1	7
-25	6
 abstulo1	6
 actione1	6
 advoco1	6
@@ -1750,10 +1725,6 @@ volebanumeral1	6
 vomitunumeral1	6
 vomuio	6
 vulnerinumeral1	6
-26	5
-27	5
-28	5
-29	5
 abel1	5
 abscondo1	5
 absi1	5
@@ -2169,12 +2140,6 @@ virilis1	5
 visitavolo1	5
 vitaliss1	5
 vitiis1	5
-30	4
-31	4
-32	4
-33	4
-34	4
-35	4
 abeo1	4
 abit1	4
 abluit1	4
@@ -2779,7 +2744,6 @@ voluptats1	4
 vorago1	4
 vulnerunumeral1	4
 vulpis1	4
-36	3
 abhorruit1	3
 ablue1	3
 abscondito1	3
@@ -3835,20 +3799,6 @@ ysaias	3
 zacharie	3
 zelo	3
 zelum	3
-37	2
-38	2
-39	2
-40	2
-41	2
-42	2
-43	2
-44	2
-45	2
-46	2
-47	2
-48	2
-49	2
-50	2
 abeas1	2
 abhorrent1	2
 abicio1	2
@@ -6113,10 +6063,6 @@ vulnerato1	2
 vulneraus1	2
 vulpiunumeral1	2
 1aurea	1
-51	1
-52	1
-53	1
-54	1
 abacuc1	1
 abatur1	1
 abbas1	1

@@ -19,7 +19,7 @@ public class NumeralFilter extends FilteringTokenFilter {
 
 	@Override
 	protected boolean accept() throws IOException {
-		Matcher matcher=NUMBER.matcher(new String(termAtt.buffer()));
+		Matcher matcher=NUMBER.matcher(new String(termAtt.buffer(), 0, termAtt.length()));
 		return !matcher.matches();
 	}
 

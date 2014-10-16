@@ -24,7 +24,7 @@ public class ConductusIndex {
 	private final static String ID_KEY="eprintid";
 	public final static String CONTENT_KEY="content";
 	
-	private final static int NGRAM_SIZE=2;
+	private final static int NGRAM_SIZE=3;
 
 	private File mIndexDir;
 	private Directory mDir;
