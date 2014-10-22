@@ -16,15 +16,10 @@ public class Log {
 		}
 	}
 	
-	public final static boolean BARE_OUTPUT=true;
     public static Log.Level LEVEL = Log.Level.INFO;
 
     static private void write(String pTag, String pMsg) {
-    	if(BARE_OUTPUT) {
-    		System.err.print(pMsg);    		
-    	} else {
-    		System.err.println(pTag+": "+pMsg);
-    	}
+    	System.err.println(pTag+": "+pMsg);
     }
     
     static private void writeln(String pTag, String pMsg) {

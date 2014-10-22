@@ -25,18 +25,18 @@ public class MainListTerms {
 	private ConductusIndex mIndex;
 	
 	public MainListTerms() throws IOException {
-		mIndex=new ConductusIndex(new File("index"));
+		mIndex=new ConductusIndex(new File(MainIndexConductus.UNSTEMMED_2_EPRINT_INDEX));
 	}
 	
-	public static void main(String[] args) {
-		if(args.length!=1) {
-			Log.e(TAG, "Must provide eprintid");
+	public static void main(String[] pArgs) {
+		if(pArgs.length!=1) {
+			Log.e(TAG, "Must provide key");
 			System.exit(-1);
 		}
 
 		try {
 			MainListTerms reporter=new MainListTerms();
-			reporter.interrogateIndex(Long.parseLong(args[0]));
+			reporter.showTerms(pArgs[0]);
 		} catch (NumberFormatException | IOException e) {
 			Log.e(TAG, e);
 		}
@@ -53,14 +53,14 @@ public class MainListTerms {
 	private void showDocTerms(IndexReader reader, int pDocId, int pTotalDocs) throws IOException {
 		SortedMap<Double, List<String>> scores=new TreeMap<>();
 		
-	    Terms termVector = reader.getTermVector(pDocId, ConductusIndex.CONTENT_KEY);
+	    Terms termVector = reader.getTermVector(pDocId, mIndex.CONTENT.s());
 	    TermsEnum itr = termVector.iterator(null);
 	    BytesRef term = null;
 
 	    while ((term = itr.next()) != null) {               
 	        String termText = term.utf8ToString();                              
 	        long tf = itr.totalTermFreq(); //yup just using raw tf right now
-	        int termDocs = reader.docFreq(mIndex.term(termText));
+	        int termDocs = reader.docFreq(mIndex.CONTENT.term(termText));
 	        
 	        Double tfIdf=tfIdf(pTotalDocs, termDocs, tf);
 	        
@@ -76,31 +76,22 @@ public class MainListTerms {
 	    
 	    for(Map.Entry<Double, List<String>> scoreTerm: scores.entrySet()) {
 	    	for(String termText: scoreTerm.getValue()) {
-	    		Log.i(TAG, termText+": "+scoreTerm.getKey()+"\n");
+	    		System.out.println(termText+": "+scoreTerm.getKey());
 	    	}
 	    	
 	    }
 	}
-	
-	public void interrogateIndex(long pEprintId) throws IOException {
-		IndexReader reader=null;
-		try {
-			reader=DirectoryReader.open(mIndex.dir());
-			IndexSearcher searcher = new IndexSearcher(reader);
 
-			TopDocs results = searcher.search(mIndex.eprintIdQuery(pEprintId), 1);
-			if(results.totalHits<1) {
-				Log.i(TAG, "unrecognised eprintid "+pEprintId);
-				return;
+	public void showTerms(String pKey) throws IOException {
+		mIndex.interrogate(mIndex.KEY, pKey, 1, new ResultRelayer() {
+
+			@Override
+			public void run(IndexReader pReader, TopDocs pResults) throws IOException {
+				int docId=pResults.scoreDocs[0].doc;
+				int totalDocs=pReader.numDocs();
+				showDocTerms(pReader, docId, totalDocs);
 			}
-			int docId=results.scoreDocs[0].doc;
-			int totalDocs=reader.numDocs();
-			showDocTerms(reader, docId, totalDocs);
-		} finally {
-			if(reader!=null) {
-				reader.close();
-			}
-		}
+			
+		});
 	}
-	
 }

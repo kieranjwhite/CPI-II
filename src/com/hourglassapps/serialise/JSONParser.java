@@ -1,5 +1,6 @@
 package com.hourglassapps.serialise;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -11,14 +12,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hourglassapps.cpi_ii.Record;
 import com.hourglassapps.util.ThrowableIterator;
 
-public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator<R> {
+public class JSONParser<I,C, R extends Record<I,C>> implements Closeable, ThrowableIterator<R> {
 	private JsonParser mParser;
 	private JsonToken mNextToken;
 	private ObjectMapper mMapper=new ObjectMapper();
-	private Throwable mThrowable=null;
+	private IOException mThrowable=null;
 	private Class<R> mClass;
+	private final Reader mPreprocessor;
 	
-	public JSONParser(Reader pPreprocessor, Class<R> pClass) throws IOException, ParseException  {
+	public JSONParser(Reader pPreprocessor, Class<R> pClass) throws IOException, ParseException {
+		mPreprocessor=pPreprocessor;
 		mClass=pClass;
 		JsonFactory f=new JsonFactory();
 		try {
@@ -26,7 +29,7 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator
 		} catch (JsonParseException e) {
 			throw new ParseException(e);
 		}
-		mParser.nextToken(); //advances mParser to start of arrray
+		mParser.nextToken(); //advances mParser to start of array
 		mNextToken=mParser.nextToken(); //advances mParser to first element
 	}
 	
@@ -41,7 +44,7 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator
 		try {
 			rec = mMapper.readValue(mParser, mClass);
 			mNextToken=mParser.nextToken();
-		} catch (Throwable e) {
+		} catch (IOException e) {
 			mThrowable=e;
 			mNextToken=JsonToken.NOT_AVAILABLE;
 			return null;
@@ -55,10 +58,16 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowableIterator
 	}
 
 	@Override
-	public void throwCaught() throws Throwable {
+	public void throwCaught() throws IOException {
 		if(mThrowable!=null) {
 			throw mThrowable;
 		}
+	}
+
+	@Override
+	public void close() throws IOException {
+		throwCaught();
+		mPreprocessor.close();
 	}
 
 }

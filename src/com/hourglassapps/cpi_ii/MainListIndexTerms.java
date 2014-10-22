@@ -22,46 +22,43 @@ import com.hourglassapps.util.TreeArrayMultiMap;
 
 public class MainListIndexTerms {
 	private final static String TAG=MainListIndexTerms.class.getName();
-	private ConductusIndex mIndex;
-	
-	public MainListIndexTerms() throws IOException {
-		mIndex=new ConductusIndex(new File("index"));
-	}
-	
 	public static void main(String[] args) {
 		try {
-			MainListIndexTerms reporter=new MainListIndexTerms();
-			reporter.interrogateIndex();
+			ConductusIndex index=new ConductusIndex(new File("index"));
+			Freq2TermMapper mapper=new Freq2TermMapper();
+			index.visitTerms(mapper);
+			mapper.display();
 		} catch (NumberFormatException | IOException e) {
 			Log.e(TAG, e);
 		}
-
 	}
 
-	private void interrogateIndex() throws IOException {
-		try(IndexReader reader=DirectoryReader.open(mIndex.dir())) {
-			SortedMultiMap<Long,List<String>,String> freq2Terms=
-					new TreeArrayMultiMap<Long, String>(new Comparator<Long>() {
+	private static class Freq2TermMapper implements TermHandler {
+		private SortedMultiMap<Long,List<String>,String> mFreq2Terms=
+				new TreeArrayMultiMap<Long, String>(new Comparator<Long>() {
 
-						@Override
-						public int compare(Long pFst, Long pSnd) {
-							return -pFst.compareTo(pSnd);
-						}});
-			Terms terms=SlowCompositeReaderWrapper.wrap(reader).terms(mIndex.CONTENT_KEY);
-			TermsEnum e=terms.iterator(null);
+					@Override
+					public int compare(Long pFst, Long pSnd) {
+						return -pFst.compareTo(pSnd);
+					}});
+
+		@Override
+		public void run(TermsEnum pTerms) throws IOException {
 			BytesRef term;
-			while((term=e.next())!=null) {
-				long freq=e.totalTermFreq();
-				freq2Terms.addOne(freq, term.utf8ToString());
-			}
-			
-			for(Long f: freq2Terms.keySet()) {
-				for(String t: freq2Terms.get(f)) {
-					System.out.println(t+"\t"+f);
-				}
+			while((term=pTerms.next())!=null) {
+				long freq=pTerms.totalTermFreq();
+				mFreq2Terms.addOne(freq, term.utf8ToString());
 			}
 		}
-		
+
+		public void display() {
+			for(Long f: mFreq2Terms.keySet()) {
+				for(String t: mFreq2Terms.get(f)) {
+					System.out.println(t+"\t"+f);
+				}
+			}			
+		}
+
 	}
 
 }

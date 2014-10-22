@@ -2,9 +2,11 @@ package com.hourglassapps.cpi_ii.stem;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -12,7 +14,9 @@ import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
+import com.hourglassapps.serialise.AbstractDeserialiser;
 import com.hourglassapps.serialise.AbstractSerialiser;
+import com.hourglassapps.serialise.Deserialiser;
 import com.hourglassapps.serialise.Serialiser;
 import com.hourglassapps.util.HashSetMultiMap;
 import com.hourglassapps.util.MultiMap;
@@ -94,9 +98,29 @@ public abstract class StemRecorderFilter extends TokenFilter {
 							saver.writeUTF(ex);
 						}
 					}
-				};
+				}
 			}
+		};
+	}
 
+	public Set<String> expansions(String pStem) {
+		return Collections.unmodifiableSet(mStem2Expansions.get(pStem));
+	}
+	
+	public void displayGroups() {
+		Set<String> keys=new TreeSet<>(mStem2Expansions.keySet());
+		for(String k: keys) {
+			Set<String> expansions=mStem2Expansions.get(k);
+			for(String ex: expansions) {
+				System.out.println(ex);
+			}
+			System.out.println();
+		}
+	}
+	
+
+	public static Deserialiser<MultiMap<String, Set<String>, String>> deserialiser() {
+		return new AbstractDeserialiser<MultiMap<String, Set<String>, String>>() {
 			@Override
 			public MultiMap<String, Set<String>, String> restore(InputStream pIn) throws IOException {
 				try(DataInputStream loader=new DataInputStream(pIn)) {
@@ -113,16 +137,5 @@ public abstract class StemRecorderFilter extends TokenFilter {
 				}
 			}
 		};
-	}
-
-	public void displayGroups() {
-		Set<String> keys=new TreeSet<>(mStem2Expansions.keySet());
-		for(String k: keys) {
-			Set<String> expansions=mStem2Expansions.get(k);
-			for(String ex: expansions) {
-				System.out.println(ex);
-			}
-			System.out.println();
-		}
 	}
 }
