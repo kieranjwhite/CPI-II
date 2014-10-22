@@ -6,15 +6,12 @@ import java.io.OutputStream;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.miscellaneous.SetKeywordMarkerFilter;
 import org.apache.lucene.analysis.shingle.ShingleAnalyzerWrapper;
 import org.apache.lucene.analysis.shingle.ShingleFilter;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.AtomicReader;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.SlowCompositeReaderWrapper;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.IndexSearcher;
@@ -33,40 +30,40 @@ public class ConductusIndex {
 	private final File mIndexDir;
 	private Directory mDir;
 
-	private Analyzer mAnalyser;
-	private LatinAnalyzer mTokeniser=new WhiteSpaceLatinAnalyzer();
+	private Analyzer mNGramAnalyser;
+	private LatinAnalyzer mUnigramAnalyser=new WhiteSpaceLatinAnalyzer();
 	
 	public ConductusIndex(File pIndexDir) throws IOException {
 		mIndexDir=pIndexDir;
 	}
 
-	/* Suppressing resource warning (suggesting that LatinAnalyzer was never closed)
-	 * as I suspect analyzer is closed by IndexWriter that uses it, when it is closed. */
+	/* Suppressing resource warning (which were suggesting that LatinAnalyzer was never closed).
+	 * However, I suspect analyzer is closed by IndexWriter that uses it, when it is closed. */
 	@SuppressWarnings({ "unused", "resource" })	
-	public ConductusIndex enableStemmer(boolean stem) {
-		if(mAnalyser!=null) {
-			mAnalyser.close();
+	public ConductusIndex enableStemmer(boolean pStem) {
+		if(mNGramAnalyser!=null) {
+			mNGramAnalyser.close();
 		}
-		 Analyzer termAnalyser;
-		 if(stem) {
-			 mTokeniser=mTokeniser.setStemmer(LatinAnalyzer.STEMPEL_RECORDER_FACTORY);			 			 
-		 } else {
-			 mTokeniser=mTokeniser.setStemmer(LatinAnalyzer.IDENTITY_RECORDER_FACTORY);			 			 
-		 }
-		 termAnalyser=mTokeniser;
-		 if(NGRAM_SIZE<2) {
-			 mAnalyser=termAnalyser;				 
-		 } else {
-			 mAnalyser=new ShingleAnalyzerWrapper(
-					 termAnalyser,
-					 NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
-					 ShingleFilter.DEFAULT_FILLER_TOKEN
-					 );
-		 }
-		
+		Analyzer termAnalyser;
+		if(pStem) {
+			mUnigramAnalyser=mUnigramAnalyser.setStemmer(LatinAnalyzer.STEMPEL_RECORDER_FACTORY);			 			 
+		} else {
+			mUnigramAnalyser=mUnigramAnalyser.setStemmer(LatinAnalyzer.IDENTITY_RECORDER_FACTORY);			 			 
+		}
+		assert NGRAM_SIZE>0;
+		if(NGRAM_SIZE<2) {
+			mNGramAnalyser=mUnigramAnalyser;				 
+		} else {
+			mNGramAnalyser=new ShingleAnalyzerWrapper(
+					mUnigramAnalyser,
+					NGRAM_SIZE, NGRAM_SIZE, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
+					ShingleFilter.DEFAULT_FILLER_TOKEN
+					);
+		}
+
 		return this;
 	}
-	
+
 	public Directory dir() throws IOException {
 		if(mDir==null) {
 			mDir=FSDirectory.open(mIndexDir);
@@ -74,37 +71,36 @@ public class ConductusIndex {
 		return mDir;
 	}
 
-	public Analyzer analyser() {
-		if(mAnalyser==null) {
+	public Analyzer nGramAnalyser() {
+		if(mNGramAnalyser==null) {
 			enableStemmer(false);
 		}
-		assert mAnalyser!=null;
-		return mAnalyser;
+		assert mNGramAnalyser!=null;
+		return mNGramAnalyser;
 	}
 
-	public LatinAnalyzer tokeniser() {
-		if(mTokeniser==null) {
+	public LatinAnalyzer unigramAnalyser() {
+		if(mUnigramAnalyser==null) {
 			enableStemmer(false);
 		}
-		assert mTokeniser!=null;
-		return mTokeniser;
+		assert mUnigramAnalyser!=null;
+		return mUnigramAnalyser;
 	}
 	
 	public boolean storeStems(OutputStream pSave) throws IOException {
-		return tokeniser().storeStems(pSave);
+		return unigramAnalyser().storeStems(pSave);
 	}
 	
 	public Set<String> tokenExpansions(String pToken) {
-		return tokeniser().tokenExpansions(pToken);
+		return unigramAnalyser().tokenExpansions(pToken);
 	}
 	
 	public boolean displayStemGroups() {
-		return tokeniser().displayStemGroups();
+		return unigramAnalyser().displayStemGroups();
 	}
 	
 	public void visitTerms(TermHandler pConsumer) throws IOException {
 		try(AtomicReader reader=AtomicReader.open(dir()).leaves().get(0).reader()) {
-			//Terms terms=reader.terms(CONTENT.s());
 			Fields fields=reader.fields();
 			if(fields!=null) {
 				Terms terms=fields.terms(FieldVal.CONTENT.s());
@@ -149,7 +145,7 @@ public class ConductusIndex {
 
 	public ConductusIndex setTokenizer(
 			LatinAnalyzer pTokeniser) {
-		mTokeniser=pTokeniser;
+		mUnigramAnalyser=pTokeniser;
 		return this;
 	}
 }

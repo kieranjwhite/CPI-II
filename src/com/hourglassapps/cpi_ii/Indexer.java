@@ -11,7 +11,6 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 
 public class Indexer implements AutoCloseable {
@@ -23,7 +22,7 @@ public class Indexer implements AutoCloseable {
 	
 	public Indexer(ConductusIndex index) throws IOException {
 		mIndex=index;
-		Analyzer analyzer =index.analyser();
+		Analyzer analyzer =index.nGramAnalyser();
 		mIwc = new IndexWriterConfig(Version.LUCENE_4_10_0, analyzer);
         mIwc.setOpenMode(OpenMode.CREATE);
         mWriter = new IndexWriter(mIndex.dir(), mIwc);
@@ -31,12 +30,7 @@ public class Indexer implements AutoCloseable {
 	}
 	
 	public void add(String pKey, String pContent) throws IOException {
-		/*
-		if(mWriter==null) {
-			mWriter=new IndexWriter(mDir, mIwc);
-		}
-		*/
-        Document doc = new Document();
+		Document doc = new Document();
 
         Field idField=FieldVal.KEY.field(pKey);
         doc.add(idField);

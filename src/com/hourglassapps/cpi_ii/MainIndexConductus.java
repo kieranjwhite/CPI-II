@@ -49,7 +49,7 @@ public class MainIndexConductus {
 	}
 	
 	private void displayExpansions() throws IOException {
-		final ResultRelayer relayer=new ResultRelayer() {
+		final ResultRelayer stemExpansionsLister=new ResultRelayer() {
 
 			@Override
 			public void run(IndexReader pReader, TopDocs pResults)
@@ -72,7 +72,7 @@ public class MainIndexConductus {
 				while((term=pTerms.next())!=null) {
 					//term should be unstemmed
 					String termStr=term.utf8ToString();
-					mStemmed2UnstemmedIndex.interrogate(FieldVal.CONTENT, termStr, relayer);
+					mStemmed2UnstemmedIndex.interrogate(FieldVal.CONTENT, termStr, stemExpansionsLister);
 				}
 			}
 
@@ -104,7 +104,7 @@ public class MainIndexConductus {
 			while(parser.hasNext()) {
 				PoemRecord record=parser.next();
 				if(record==null) {
-					//an exception will cause this
+					//an exception will cause this -- it'll be thrown when parser is closed
 					break;
 				}
 				if(record.ignore()) {
@@ -115,7 +115,7 @@ public class MainIndexConductus {
 		}
 	}
 
-	public void indexByUnstemmed() {
+	public void indexByUnstemmed() throws IOException {
 		try(Indexer indexer=new Indexer(mStemmed2UnstemmedIndex)) {
 			mUnstemmed2EprintIdIndex.visitTerms(new TermHandler(){
 
@@ -123,15 +123,14 @@ public class MainIndexConductus {
 				public void run(TermsEnum pTerms) throws IOException {
 					BytesRef term;
 					while((term=pTerms.next())!=null) {
-						//term should be unstemmed
+						//assert term is unstemmed
+						//assert term is an n-gram
 						String termStr=term.utf8ToString();
 						indexer.add(termStr, termStr);
 					}
 				}
 				
 			});
-		} catch (Throwable e) {
-			Log.e(TAG, e);
 		}
 	}
 	

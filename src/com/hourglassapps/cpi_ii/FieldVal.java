@@ -7,18 +7,18 @@ import org.apache.lucene.search.TermQuery;
 
 public class FieldVal {
 	private final String mName;
-	private final boolean mAnalyse;
+	private final boolean mTokenise;
 	
-	public final static FieldVal KEY=new FieldVal("eprintid", true);
+	public final static FieldVal KEY=new FieldVal("key", true);
 	public final static FieldVal CONTENT=new FieldVal("content", true);
 	
-	FieldVal(String pName, boolean pAnalyse) {
+	FieldVal(String pName, boolean pTokenise) {
 		mName=pName;
-		mAnalyse=pAnalyse;
+		mTokenise=pTokenise;
 	}
 	
-	public boolean analyse() {
-		return mAnalyse;
+	public boolean tokenised() {
+		return mTokenise;
 	}
 
 	public String s() {
@@ -34,8 +34,8 @@ public class FieldVal {
 	    type.setIndexed(true);
 	    type.setStored(true);
 	    
-	    type.setTokenized(analyse());
-		type.setStoreTermVectors(analyse());
+	    type.setTokenized(tokenised());
+		type.setStoreTermVectors(tokenised());
 	    
 	    type.freeze();
 		return new Field(s(), pKey, type);
