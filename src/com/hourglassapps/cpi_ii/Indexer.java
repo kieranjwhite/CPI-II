@@ -38,9 +38,9 @@ public class Indexer implements AutoCloseable {
 		*/
         Document doc = new Document();
 
-        Field idField=mIndex.KEY.field(pKey);
+        Field idField=FieldVal.KEY.field(pKey);
         doc.add(idField);
-        doc.add(mIndex.CONTENT.field(pContent));
+        doc.add(FieldVal.CONTENT.field(pContent));
         mWriter.addDocument(doc);
 
 	}

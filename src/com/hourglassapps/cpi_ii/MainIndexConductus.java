@@ -4,28 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.MultiFields;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.BytesRef;
 
-import com.hourglassapps.cpi_ii.ConductusIndex.StandardLatinAnalyzer;
 import com.hourglassapps.serialise.JSONParser;
 import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.RemoveUnescapesReader;
@@ -47,13 +31,11 @@ public class MainIndexConductus {
 	public MainIndexConductus(String pInput) throws IOException {
 		mInput=new File(pInput);
 		mUnstemmed2EprintIdIndex=new ConductusIndex(new File(UNSTEMMED_2_EPRINT_INDEX)).
-				setTokenizer(new StandardLatinAnalyzer()).enableStemmer(false);
-		mUnstemmed2EprintIdIndex.enableAnalyse(mUnstemmed2EprintIdIndex.KEY, false).
-		enableAnalyse(mUnstemmed2EprintIdIndex.CONTENT, true);
-		
-		mStemmed2UnstemmedIndex=new ConductusIndex(new File(STEMMED_2_UNSTEMMED_INDEX)).enableStemmer(true);
-		mStemmed2UnstemmedIndex.enableAnalyse(mStemmed2UnstemmedIndex.KEY, false).
-		enableAnalyse(mStemmed2UnstemmedIndex.CONTENT, true);
+				setTokenizer(new StandardLatinAnalyzer()).
+				enableStemmer(false);
+
+		mStemmed2UnstemmedIndex=new ConductusIndex(new File(STEMMED_2_UNSTEMMED_INDEX)).
+				enableStemmer(true);
 	}
 
 	public MainIndexConductus setListExpansions(boolean pList) {
@@ -73,7 +55,7 @@ public class MainIndexConductus {
 			public void run(IndexReader pReader, TopDocs pResults)
 					throws IOException {
 				for(int docIdx=0; docIdx<pResults.scoreDocs.length; docIdx++) {
-					String[] unstemmedTerms=pReader.document(pResults.scoreDocs[docIdx].doc).getValues(mStemmed2UnstemmedIndex.KEY.s());
+					String[] unstemmedTerms=pReader.document(pResults.scoreDocs[docIdx].doc).getValues(FieldVal.KEY.s());
 					assert(unstemmedTerms.length==1);
 					System.out.println(unstemmedTerms[0]);
 				}
@@ -90,7 +72,7 @@ public class MainIndexConductus {
 				while((term=pTerms.next())!=null) {
 					//term should be unstemmed
 					String termStr=term.utf8ToString();
-					mStemmed2UnstemmedIndex.interrogate(mStemmed2UnstemmedIndex.CONTENT, termStr, relayer);
+					mStemmed2UnstemmedIndex.interrogate(FieldVal.CONTENT, termStr, relayer);
 				}
 			}
 
@@ -164,10 +146,10 @@ public class MainIndexConductus {
 		for(int i=0; i<args.length; i++) {
 			String arg=args[i];
 			switch(arg) {
-			case "--display":
+			case "--display-words":
 				list=true;
 				break;
-			case "--save":
+			case "--display-ngrams":
 				serialise=true;
 				break;
 			default:
