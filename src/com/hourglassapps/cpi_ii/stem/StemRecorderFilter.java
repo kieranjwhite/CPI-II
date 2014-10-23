@@ -81,6 +81,16 @@ public abstract class StemRecorderFilter extends TokenFilter {
 		}
 	}
 
+	public String stem() throws IOException {
+		try {
+			reset();
+			incrementToken();
+			return termAtt.toString();
+		} finally {
+			end();
+		}
+	}
+	
 	public Serialiser<MultiMap<String, Set<String>, String>> serialiser() {
 		return new AbstractSerialiser<MultiMap<String, Set<String>, String>>() {
 

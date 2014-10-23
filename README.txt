@@ -26,11 +26,14 @@ is therefore fixed for all tokens.
 
 -----------------------------------------------------------------
 
-To stem Latin terms on standard input using the Snowball Latin
-stemmer, displaying the result to standard output:
+To stem Latin terms on standard input using the Schinke Snowball Latin
+stemmer, displaying the result or noun and verb stemming to standard output:
 
 java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.stem.snowball.tartarus.MainTestApp - -
 
+The MainStemTest class will test either Stempel or Schinke stemmer (it will however only return one stem and might not therefore be suitable for testing Schinke):
+
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/lucene-analyzers-stempel-4.10.1.jar:bin:data com.hourglassapps.cpi_ii.stem.MainStemTest - -
 
 -----------------------------------------------------------------
 

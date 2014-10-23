@@ -29,6 +29,7 @@ public class MainIndexConductus {
 	
 	private boolean mListExpansions=false;
 	//private boolean mSerialiseExpansions=false;
+	private boolean mSerialiseExpansions=false;
 	
 	public MainIndexConductus(String pInput) throws IOException {
 		mInput=new File(pInput);
@@ -50,12 +51,11 @@ public class MainIndexConductus {
 		return this;
 	}
 	
-	/*
 	public MainIndexConductus setSerialiseExpansions(boolean pSer) {
 		mSerialiseExpansions=pSer;
 		return this;
 	}
-	
+/*	
 	private void displayExpansions() throws IOException {
 		final ResultRelayer stemExpansionsLister=new ResultRelayer() {
 
@@ -94,6 +94,11 @@ public class MainIndexConductus {
 		if(mListExpansions) {
 			boolean indexed=mStemmed2EprintIdIndex.displayStemGroups();
 			assert indexed;
+		}
+		
+		if(mSerialiseExpansions) {
+			boolean indexed=mStemmed2EprintIdIndex.storeStems(System.out);
+			assert indexed;			
 		}
 		
 		/*
@@ -159,6 +164,9 @@ public class MainIndexConductus {
 			case "--display-words":
 				list=true;
 				break;
+			case "--serialise":
+				serialise=true;
+				break;
 				/*
 			case "--display-ngrams":
 				serialise=true;
@@ -172,7 +180,7 @@ public class MainIndexConductus {
 			//MainIndexConductus indexer=new MainIndexConductus(inFile)
 			//.setListExpansions(list).setSerialiseExpansions(serialise);
 			MainIndexConductus indexer=new MainIndexConductus(inFile)
-			.setListExpansions(list);
+			.setListExpansions(list).setSerialiseExpansions(serialise);
 			indexer.index();
 		} catch (ParseException | IOException e) {
 			Log.e(TAG, e);
