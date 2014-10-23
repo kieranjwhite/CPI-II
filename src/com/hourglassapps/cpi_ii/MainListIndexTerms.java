@@ -79,7 +79,7 @@ public class MainListIndexTerms {
 		MultiMap<String, Set<String>, String> stem2Variants=deser.restore(in);
 		
 		final AbstractComboExpander<String, String> expander=
-				new AbstractComboExpander<String, String>(stem2Variants, null){
+				new AbstractComboExpander<String, String>(stem2Variants, new IdentityConverter<String>()){
 
 			@Override
 			public void onExpansion(List<String> pExpansions) {
