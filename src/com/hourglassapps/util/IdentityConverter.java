@@ -1,4 +1,5 @@
-package com.hourglassapps.cpi_ii;
+package com.hourglassapps.util;
+
 
 public class IdentityConverter<I> implements Converter<I, I> {
 	@Override

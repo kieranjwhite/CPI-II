@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii;
+package com.hourglassapps.cpi_ii.latin;
 
 import java.io.Reader;
 
@@ -8,8 +8,7 @@ import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 
-import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
-import com.hourglassapps.cpi_ii.latin.LatinLowerCaseFilter;
+import com.hourglassapps.cpi_ii.NumeralFilter;
 import com.hourglassapps.util.Ii;
 
 public final class StandardLatinAnalyzer extends LatinAnalyzer {

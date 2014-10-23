@@ -20,6 +20,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
+import com.hourglassapps.cpi_ii.latin.WhiteSpaceLatinAnalyzer;
 import com.hourglassapps.util.Log;
 
 public class ConductusIndex {

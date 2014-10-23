@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii;
+package com.hourglassapps.cpi_ii.latin;
 
 import java.io.Reader;
 
@@ -6,7 +6,6 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 
-import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
 import com.hourglassapps.util.Ii;
 
 public final class WhiteSpaceLatinAnalyzer extends LatinAnalyzer {

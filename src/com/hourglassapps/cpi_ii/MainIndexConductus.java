@@ -10,6 +10,7 @@ import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.BytesRef;
 
+import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
 import com.hourglassapps.serialise.JSONParser;
 import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.RemoveUnescapesReader;
