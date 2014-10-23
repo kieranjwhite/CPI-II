@@ -25,7 +25,7 @@ public class MainListTerms {
 	private ConductusIndex mIndex;
 	
 	public MainListTerms() throws IOException {
-		mIndex=new ConductusIndex(new File(MainIndexConductus.UNSTEMMED_2_EPRINT_INDEX));
+		mIndex=new ConductusIndex(new File(MainIndexConductus.STEMMED_2_EPRINT_INDEX));
 	}
 	
 	public static void main(String[] pArgs) {

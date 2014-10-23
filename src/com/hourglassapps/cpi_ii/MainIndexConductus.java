@@ -17,25 +17,32 @@ import com.hourglassapps.util.Log;
 
 public class MainIndexConductus {
 	private final static String TAG=MainIndexConductus.class.getName();
-	public final static String UNSTEMMED_2_EPRINT_INDEX="unstemmed_index";
-	public final static String STEMMED_2_UNSTEMMED_INDEX="stemmed_index";
+	public final static String STEMMED_2_EPRINT_INDEX="index";
+	//public final static String UNSTEMMED_2_EPRINT_INDEX="unstemmed_index";
+	//public final static String STEMMED_2_UNSTEMMED_INDEX="stemmed_index";
 	
-	private final ConductusIndex mUnstemmed2EprintIdIndex;
-	private final ConductusIndex mStemmed2UnstemmedIndex;
+	private final ConductusIndex mStemmed2EprintIdIndex;
+	//private final ConductusIndex mUnstemmed2EprintIdIndex;
+	//private final ConductusIndex mStemmed2UnstemmedIndex;
 	
 	private File mInput;
 	
 	private boolean mListExpansions=false;
-	private boolean mSerialiseExpansions=false;
+	//private boolean mSerialiseExpansions=false;
 	
 	public MainIndexConductus(String pInput) throws IOException {
 		mInput=new File(pInput);
+		mStemmed2EprintIdIndex=new ConductusIndex(new File(STEMMED_2_EPRINT_INDEX)).
+				setTokenizer(new StandardLatinAnalyzer()).
+				enableStemmer(true);
+		/*
 		mUnstemmed2EprintIdIndex=new ConductusIndex(new File(UNSTEMMED_2_EPRINT_INDEX)).
 				setTokenizer(new StandardLatinAnalyzer()).
 				enableStemmer(false);
 
 		mStemmed2UnstemmedIndex=new ConductusIndex(new File(STEMMED_2_UNSTEMMED_INDEX)).
 				enableStemmer(true);
+		*/
 	}
 
 	public MainIndexConductus setListExpansions(boolean pList) {
@@ -43,6 +50,7 @@ public class MainIndexConductus {
 		return this;
 	}
 	
+	/*
 	public MainIndexConductus setSerialiseExpansions(boolean pSer) {
 		mSerialiseExpansions=pSer;
 		return this;
@@ -78,24 +86,26 @@ public class MainIndexConductus {
 
 		});
 	}
-
+	 */
 	public void index() throws ParseException, IOException {
 		indexById();
-		indexByUnstemmed();
+		//indexByUnstemmed();
 
 		if(mListExpansions) {
-			boolean indexed=mStemmed2UnstemmedIndex.displayStemGroups();
+			boolean indexed=mStemmed2EprintIdIndex.displayStemGroups();
 			assert indexed;
 		}
 		
+		/*
 		if(mSerialiseExpansions) {
 			displayExpansions();
 		}
+		*/
 	}
 	
 	private void indexById() throws IOException, ParseException {
 		try(
-				Indexer indexer=new Indexer(mUnstemmed2EprintIdIndex);
+				Indexer indexer=new Indexer(mStemmed2EprintIdIndex);
 				JSONParser<Long, String, PoemRecord> parser=new JSONParser<>(
 						new RemoveUnescapesReader(
 								new BufferedReader(
@@ -115,6 +125,7 @@ public class MainIndexConductus {
 		}
 	}
 
+	/*
 	public void indexByUnstemmed() throws IOException {
 		try(Indexer indexer=new Indexer(mStemmed2UnstemmedIndex)) {
 			mUnstemmed2EprintIdIndex.visitTerms(new TermHandler(){
@@ -133,7 +144,7 @@ public class MainIndexConductus {
 			});
 		}
 	}
-	
+	*/
 	public static void main(String[] args) {
 		if(args.length<1 || args.length>3) {
 			Log.e(TAG, "Must provide filename of JSON data and at most two args");
@@ -148,16 +159,20 @@ public class MainIndexConductus {
 			case "--display-words":
 				list=true;
 				break;
+				/*
 			case "--display-ngrams":
 				serialise=true;
 				break;
+				*/
 			default:
 				inFile=args[i];
 			}
 		}
 		try {
+			//MainIndexConductus indexer=new MainIndexConductus(inFile)
+			//.setListExpansions(list).setSerialiseExpansions(serialise);
 			MainIndexConductus indexer=new MainIndexConductus(inFile)
-				.setListExpansions(list).setSerialiseExpansions(serialise);
+			.setListExpansions(list);
 			indexer.index();
 		} catch (ParseException | IOException e) {
 			Log.e(TAG, e);

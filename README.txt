@@ -7,8 +7,8 @@ switches:
 --display-words
 Lists stem groups of individual words
 
---display-ngrams
-List stem groups of n-grams
+#--display-ngrams
+#List stem groups of n-grams
 
 To give sorted list of TF-IDF scores of all tokens in poem with
 eprintid of 756:

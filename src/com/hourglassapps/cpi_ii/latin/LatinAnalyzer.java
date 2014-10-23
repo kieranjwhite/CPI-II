@@ -58,7 +58,8 @@ public abstract class LatinAnalyzer extends StopwordAnalyzerBase {
 	private final CharArraySet stemExclusionSet;
 
 	/** File containing default Latin stopwords. */
-	public final static String DEFAULT_STOPWORD_FILE = "/com/hourglassapps/cpi_ii/latin/la.stop";
+	//public final static String DEFAULT_STOPWORD_FILE = "/com/hourglassapps/cpi_ii/latin/la.stop";
+	public final static String DEFAULT_STOPWORD_FILE = "/com/hourglassapps/cpi_ii/empty.stop";
 	private StemRecorderFilter mRecorder;
 
 	public final static Factory STEMPEL_RECORDER_FACTORY=new StemRecorderFilter.Factory() {
