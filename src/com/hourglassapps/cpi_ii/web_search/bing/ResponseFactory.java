@@ -1,0 +1,31 @@
+package com.hourglassapps.cpi_ii.web_search.bing;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hourglassapps.cpi_ii.web_search.bing.response.Response;
+
+class ResponseFactory {
+	private ObjectMapper mMapper;
+	private JsonParser mParser;
+	
+	public Response inst(String pToParse) throws JsonParseException, IOException {
+		JsonFactory f=new JsonFactory();
+		try(
+				Reader reader=new StringReader(pToParse);
+				) {
+			mParser=f.createJsonParser(reader);
+		}
+		mParser.nextToken(); //advances mParser to start of array
+		JsonToken nextToken=mParser.nextToken(); //advances mParser to first element
+		assert nextToken==JsonToken.START_OBJECT;
+		Response resp=mMapper.readValue(mParser, Response.class);
+		return resp;
+	}
+}
