@@ -33,7 +33,7 @@ public class MainListIndexTerms {
 	private final static String TAG=MainListIndexTerms.class.getName();
 	public static void main(String[] args) {
 		if(args.length>1) {
-			Log.e(TAG, "Can accept at most one arg, the filename for serialised step group data");
+			Log.e(TAG, "Can accept at most one arg, the filename for serialised stem group data");
 			System.exit(-1);
 		}
 		
@@ -78,8 +78,11 @@ public class MainListIndexTerms {
 		Deserialiser<MultiMap<String, Set<String>, String>> deser=StemRecorderFilter.deserialiser();
 		MultiMap<String, Set<String>, String> stem2Variants=deser.restore(in);
 		
+		//make the 2nd argument to the AbstractComboExpander constructor null to eliminate n-grams containing '_' terms
 		final AbstractComboExpander<String, String> expander=
-				new AbstractComboExpander<String, String>(stem2Variants, new IdentityConverter<String>()){
+				new AbstractComboExpander<String, String>(stem2Variants, null){
+		//final AbstractComboExpander<String, String> expander=
+		//		new AbstractComboExpander<String, String>(stem2Variants, new IdentityConverter<String>()){
 
 			@Override
 			public void onExpansion(List<String> pExpansions) {

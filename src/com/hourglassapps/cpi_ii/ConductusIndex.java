@@ -26,7 +26,7 @@ import com.hourglassapps.util.Log;
 public class ConductusIndex {
 	private final static String TAG=ConductusIndex.class.getName();
 
-	private final static int NGRAM_SIZE=2;
+	private final static int NGRAM_SIZE=3;
 
 	private final File mIndexDir;
 	private Directory mDir;

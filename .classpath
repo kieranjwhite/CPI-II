@@ -14,5 +14,9 @@
 	<classpathentry kind="lib" path="lib/jackson-databind-2.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-analyzers-stempel-4.10.1.jar" sourcepath="/home/kieran/projects/conductus/lucene-4.10.1_src/lucene-4.10.1/analysis/stempel/src/java"/>
+	<classpathentry kind="lib" path="lib/httpclient-4.3.5.jar" sourcepath="/home/kieran/projects/conductus/httpcomponents/src/httpcomponents-client-4.3.5/httpclient/src/main/java"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="lib/httpcore-4.3.2.jar" sourcepath="/home/kieran/projects/conductus/httpcomponents/src/httpcomponents-core-4.3.3/httpcore/src/main/java"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
