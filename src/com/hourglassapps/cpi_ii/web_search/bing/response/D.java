@@ -8,7 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.hourglassapps.util.Log;
+
 public class D implements Iterable<Result> {
+	private final static String TAG=D.class.getName();
+	
 	private Result[] mResults;
 	private String mNext;
 	
@@ -22,6 +26,10 @@ public class D implements Iterable<Result> {
 	
 	public Result result(int pIdx) {
 		return mResults[pIdx];
+	}
+	
+	public void set__next(String pNext) {
+		mNext=pNext;
 	}
 	
 	public URI next() throws URISyntaxException {
@@ -58,8 +66,12 @@ public class D implements Iterable<Result> {
 	public List<URI> urls() throws URISyntaxException {
 		List<URI> urls=new ArrayList<URI>();
 		for(int i=0; i<mResults.length; i++) {
-			urls.add(mResults[i].url());
+			try {
+				urls.add(mResults[i].url());
+			} catch(URISyntaxException e) {
+				Log.i(TAG, e);
+			}
 		}
-		return null;
+		return urls;
 	}
 }

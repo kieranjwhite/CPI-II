@@ -42,7 +42,7 @@ public class Indexer extends IndexViewer implements AutoCloseable {
 	}
 	
 	public Indexer(File pDir, Analyzer pAnalyser) throws IOException {
-		this(pDir, pAnalyser, true, true);
+		this(pDir, pAnalyser, false, true);
 	}
 	
 	public void add(String pKey, String pContent) throws IOException {

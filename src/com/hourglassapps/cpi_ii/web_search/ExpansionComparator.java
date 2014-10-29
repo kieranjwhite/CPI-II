@@ -1,6 +1,7 @@
 package com.hourglassapps.cpi_ii.web_search;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +21,27 @@ import com.hourglassapps.util.Rtu;
 
 public class ExpansionComparator implements Comparator<List<String>> {
 	private final static String TAG=ExpansionComparator.class.getName();
-	
-	private Map<String, Long> mTerm2Freq=term2Freq();
+
+	public final static Comparator<List<String>> NGRAM_PRIORITISER;
+	static {
+		Comparator<List<String>> tmp;
+		try {
+			tmp=new ExpansionComparator();
+		} catch(IOException e) {
+			Log.e(TAG, e);
+			tmp=new Comparator<List<String>>() {
+
+				@Override
+				public int compare(List<String> arg0, List<String> arg1) {
+					return 0;
+				}
+				
+			};
+		}
+		NGRAM_PRIORITISER=tmp;
+	}
 	private final IndexViewer mTermIndex=new IndexViewer(MainIndexConductus.UNSTEMMED_TERM_2_EPRINT_INDEX);
+	private Map<String, Long> mTerm2Freq=term2Freq();
 	private final IndexViewer mUnstemmed2StemmedIndex=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
 	
 	public ExpansionComparator() throws IOException {
@@ -58,20 +77,18 @@ public class ExpansionComparator implements Comparator<List<String>> {
 			return mFound;
 		}
 	}
-	
+
 	private boolean presentInCollection(List<String> pToken) throws IOException {
-		StringBuilder tokenJoined=new StringBuilder();
-		
 		if(pToken.size()>=1) {
-			Rtu.join(pToken, " ");
+			String tokenJoined=Rtu.join(pToken, " ");
+			FoundRelayer relay=new FoundRelayer();
+			mUnstemmed2StemmedIndex.interrogate(FieldVal.CONTENT, tokenJoined, relay);
+			return relay.found();
 		} else {
 			return true;
 		}
-		FoundRelayer relay=new FoundRelayer();
-		mUnstemmed2StemmedIndex.interrogate(FieldVal.CONTENT, tokenJoined.toString(), relay);
-		return relay.found();
 	}
-	
+
 	private double geometricFreq(List<String> pToken) {
 		double result=1;
 		for(String term: pToken) {

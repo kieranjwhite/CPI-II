@@ -27,7 +27,7 @@ public class NGramAnalyzerBuilder {
 		} else {
 			nGramAnalyser=new ShingleAnalyzerWrapper(
 					mUnigramAnalyser,
-					mN, mN, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, true, 
+					mN, mN, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, false, 
 					ShingleFilter.DEFAULT_FILLER_TOKEN
 					);
 		}		

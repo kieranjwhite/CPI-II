@@ -14,7 +14,7 @@ import org.apache.lucene.util.BytesRef;
 
 import com.hourglassapps.cpi_ii.stem.StemRecorderFilter;
 import com.hourglassapps.serialise.Deserialiser;
-import com.hourglassapps.util.AbstractComboExpander;
+import com.hourglassapps.util.Permutator;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.ExpansionReceiver;
 import com.hourglassapps.util.Log;
@@ -95,8 +95,8 @@ public class MainListIndexTerms {
 		MultiMap<String, Set<String>, String> stem2Variants=deser.restore(in);
 		
 		//make the 2nd argument to the AbstractComboExpander constructor null to eliminate n-grams containing '_' terms
-		final AbstractComboExpander<String, String> expander=
-				new AbstractComboExpander<String, String>(stem2Variants, null, pReceiver);
+		final Permutator<String, String> expander=
+				new Permutator<String, String>(stem2Variants, null, pReceiver);
 		TermHandler comboLister=new TermHandler() {
 			@Override
 			public void run(TermsEnum pTerms) throws IOException {

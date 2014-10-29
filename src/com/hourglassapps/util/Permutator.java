@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class AbstractComboExpander<I,O> {
+public class Permutator<I,O> {
 	private final Converter<I, O> mConverter;
 	private final MultiMap<I, Set<O>, O> mOrig2Expansions;
 	private final ExpansionReceiver<O> mReceiver;
@@ -18,7 +18,7 @@ public class AbstractComboExpander<I,O> {
 	 * output value. If pConverter is null then if an input value is not found no output values will
 	 * be generated in response to an invocation of the <code>expand</code> method.
 	 */
-	public AbstractComboExpander(MultiMap<I, Set<O>, O> pOrig2Expansions, Converter<I, O> pConverter, ExpansionReceiver<O> pReceiver) {
+	public Permutator(MultiMap<I, Set<O>, O> pOrig2Expansions, Converter<I, O> pConverter, ExpansionReceiver<O> pReceiver) {
 		mConverter=pConverter;
 		mOrig2Expansions=pOrig2Expansions;
 		mReceiver=pReceiver;

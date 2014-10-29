@@ -70,7 +70,7 @@ public class IndexViewer {
 
 		TopDocs results = searcher.search(pSearchField.query(pSought), pNumResults);
 		if(results.totalHits<1) {
-			Log.i(TAG, "unrecognised key "+pSought);
+			//Log.i(TAG, "unrecognised key "+pSought);
 			return;
 		}
 		pRelayer.run(pReader, results);

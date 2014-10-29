@@ -31,11 +31,12 @@ public class MainQuery extends AbstractQuery implements Thrower {
 	private final static String SEARCH_PATH_PREFIX="/Bing/SearchWeb/Web?Query=%27";
 	private final static String SEARCH_URI_PREFIX=
 			"https://api.datamarket.azure.com"+SEARCH_PATH_PREFIX;
-	private final static String SEARCH_PATH_SUFFIX="%27&$format=Json";
+	private final static String SEARCH_PATH_SUFFIX="%27&$format=Json&$top=50";
 	
 	private final static String AUTH_HEADER="Authorization";
 	private final static String AUTH_PREFIX="Basic ";
 	
+	private final static int MAX_RESULT_PAGES=2; //in addition we currently request 50 docs per page (ie the max allowed)
 	private final static int TOTAL_QUERY_LEN=2047;
 	private final static String ENCODING=StandardCharsets.UTF_8.toString();
 
@@ -45,6 +46,7 @@ public class MainQuery extends AbstractQuery implements Thrower {
 	private ConcreteThrower<Exception> mThrower=new ConcreteThrower<Exception>();
 	private final String mAccountKey;
 	private ResponseFactory mFact=new ResponseFactory();
+	private final HttpClient mClient=new DefaultHttpClient();
 	
 	public MainQuery(String pAccountKey) {
 		mAccountKey=new String(Base64.encodeBase64((':'+pAccountKey).getBytes()));
@@ -89,14 +91,14 @@ public class MainQuery extends AbstractQuery implements Thrower {
 		return new URI(SEARCH_URI_PREFIX+mQuery.append(SEARCH_PATH_SUFFIX).toString());
 	}
 
-	private Response page(HttpClient pClient, URI pQuery) throws ClientProtocolException, IOException {
+	private Response page(URI pQuery) throws ClientProtocolException, IOException {
 		HttpGet get=new HttpGet(pQuery);
 		get.setHeader(AUTH_HEADER, AUTH_PREFIX+mAccountKey);
 		ResponseHandler<String> respHandler=new BasicResponseHandler();
-		assert false;
-		String body=pClient.execute(get, respHandler);
+		//assert false;
+		String body=mClient.execute(get, respHandler);
 		System.out.println("response: "+body);
-		return mFact.inst('{'+body+'}');		
+		return mFact.inst(body);		
 	}
 
 	@SuppressWarnings("deprecation")
@@ -105,50 +107,51 @@ public class MainQuery extends AbstractQuery implements Thrower {
 		if(mThrower.fallThrough()) {
 			return Collections.<URI>emptyList().iterator();
 		}
-
+		//return Collections.<URI>emptyList().iterator();
 		Ii<URI, List<String>> queryMoreDisjunctions;
 		try {
 			queryMoreDisjunctions = format(pDisjunctions);
-			final HttpClient client=new DefaultHttpClient();
-			try {
-				final Response resp=page(client, queryMoreDisjunctions.fst());
-				return new Iterator<URI>() {
-					private Response mResponse=resp;
-					private Iterator<URI> mPage=mResponse.urls().iterator();
+			final Response resp=page(queryMoreDisjunctions.fst());
+			return new Iterator<URI>() {
+				private int mPageNum=0;
+				private Response mResponse=resp;
+				private Iterator<URI> mPage=mResponse.urls().iterator();
 
-					@Override
-					public boolean hasNext() {
-						if(mThrower.fallThrough()) {
-							return false;
-						}
-						try {
-							return mPage.hasNext() || retrievedMore();
-						} catch (IOException | URISyntaxException e) {
-							mThrower.ctch(e);
-							return false;
-						}
+				@Override
+				public boolean hasNext() {
+					if(mThrower.fallThrough()) {
+						return false;
 					}
+					try {
+						return mPage.hasNext() || retrievedMore();
+					} catch (IOException | URISyntaxException e) {
+						mThrower.ctch(e);
+						return false;
+					}
+				}
 
-					private boolean retrievedMore() throws ClientProtocolException, IOException, URISyntaxException {
-						assert !mPage.hasNext();
-						mResponse=page(client, mResponse.next());
-						mPage=mResponse.urls().iterator();
-						return mPage.hasNext();
+				private boolean retrievedMore() throws ClientProtocolException, IOException, URISyntaxException {
+					assert !mPage.hasNext();
+					if(mPageNum+1>=MAX_RESULT_PAGES) {
+						return false;
 					}
+					mResponse=page(mResponse.next());
+					mPageNum++;
+					mPage=mResponse.urls().iterator();
+					return mPage.hasNext();
+				}
 
-					@Override
-					public URI next() {
-						return mPage.next();
-					}
+				@Override
+				public URI next() {
+					assert mPageNum<MAX_RESULT_PAGES;
+					return mPage.next();
+				}
 
-					@Override
-					public void remove() {
-						throw new UnsupportedOperationException();
-					}
-				};
-			} finally {
-				client.getConnectionManager().shutdown();
-			}
+				@Override
+				public void remove() {
+					throw new UnsupportedOperationException();
+				}
+			};
 		} catch (URISyntaxException e1) {
 			mThrower.ctch(e1);
 			return Collections.<URI>emptyList().iterator();
@@ -169,6 +172,7 @@ public class MainQuery extends AbstractQuery implements Thrower {
 	@Override
 	public void close() throws Exception {
 		mThrower.close();
+		mClient.getConnectionManager().shutdown();
 	}
 
 	@Override

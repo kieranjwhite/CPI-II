@@ -7,30 +7,24 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-/**
- * The fields in this class are populated by the Jackson JSON parser.
- * Each field corresponds to a key-value pair in corresponding JSON object.
- * <p>
- * Setter implementations are required by Jackson and are invoked to set field values.
- */
 public class Response {
 	public enum Type { WebResult };
+
+	private D mD;
 	
-	private Resp mResponse;
-	
-	public void setResponse(Resp pResponse) {
-		mResponse=pResponse;
+	public void setD(D pD) {
+		mD=pD;
 	}
 	
-	public Resp response() {
-		return mResponse;
+	public D d() {
+		return mD;
 	}
-	
+
 	public List<URI> urls() throws URISyntaxException {
-		return mResponse.urls();
+		return mD.urls();
 	}
 	
 	public URI next() throws URISyntaxException {
-		return mResponse.next();
+		return mD.next();
 	}
 }

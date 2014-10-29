@@ -1,6 +1,7 @@
 package com.hourglassapps.cpi_ii.web_search;
 
 import java.io.IOException;
+import java.net.URI;
 
 import com.hourglassapps.cpi_ii.IndexViewer;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
@@ -18,9 +19,16 @@ public class MainDownload {
 
 		try(
 				final MainQuery q=new MainQuery(MainQuery.AUTH_KEY);
-				DisjunctionRecorder receiver=new DisjunctionRecorder(q);
+				AbstractDisjunctionRecorder receiver=new AbstractDisjunctionRecorder(q){
+
+					@Override
+					public void onLink(URI pLink) {
+						System.out.println(pLink);
+					}
+					
+				};
 		) {
-			IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_EPRINT_INDEX);
+			IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
 			MainListIndexTerms.listAllTokenExpansions(index, pArgs[0], receiver);
 		} catch (Exception e) {
 			Log.e(TAG, e);

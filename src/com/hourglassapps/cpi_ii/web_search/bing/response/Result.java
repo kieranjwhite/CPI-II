@@ -3,6 +3,10 @@ package com.hourglassapps.cpi_ii.web_search.bing.response;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Result {
 	private __Metadata mMetadata;
 	private String mId;
@@ -13,7 +17,7 @@ public class Result {
 	
 	private URI mUri=null;
 	
-	public void set__Metadata(__Metadata pMetadata) {
+	public void set__metadata(__Metadata pMetadata) {
 		mMetadata=pMetadata;
 	}
 	
@@ -33,6 +37,7 @@ public class Result {
 		mDisplayUrl=pDisplayUrl;
 	}
 	
+	@JsonSetter("Url")
 	public void setUrl(String pUrl) {
 		mUrl=pUrl;
 	}

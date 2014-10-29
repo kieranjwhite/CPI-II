@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hourglassapps.cpi_ii.web_search.bing.response.Response;
 
 class ResponseFactory {
-	private ObjectMapper mMapper;
+	private ObjectMapper mMapper=new ObjectMapper();
 	private JsonParser mParser;
 	
 	public Response inst(String pToParse) throws JsonParseException, IOException {
@@ -21,11 +21,10 @@ class ResponseFactory {
 				Reader reader=new StringReader(pToParse);
 				) {
 			mParser=f.createJsonParser(reader);
+			JsonToken nextToken=mParser.nextToken(); //advances mParser to first element
+			assert nextToken==JsonToken.START_OBJECT;
+			Response resp=mMapper.readValue(mParser, Response.class);
+			return resp;
 		}
-		mParser.nextToken(); //advances mParser to start of array
-		JsonToken nextToken=mParser.nextToken(); //advances mParser to first element
-		assert nextToken==JsonToken.START_OBJECT;
-		Response resp=mMapper.readValue(mParser, Response.class);
-		return resp;
 	}
 }
