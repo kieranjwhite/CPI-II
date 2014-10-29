@@ -11,30 +11,46 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 
-public class Indexer implements AutoCloseable {
+public class Indexer extends IndexViewer implements AutoCloseable {
 	private final static String TAG=Indexer.class.getName();
 	
 	private IndexWriter mWriter=null;
 	private IndexWriterConfig mIwc;
-	private ConductusIndex mIndex;
 	
-	public Indexer(ConductusIndex index) throws IOException {
-		mIndex=index;
-		Analyzer analyzer =index.nGramAnalyser();
-		mIwc = new IndexWriterConfig(Version.LUCENE_4_10_0, analyzer);
-        mIwc.setOpenMode(OpenMode.CREATE);
-        mWriter = new IndexWriter(mIndex.dir(), mIwc);
+	private static class CustomisedFieldVal extends FieldVal {
 
+		CustomisedFieldVal(FieldVal pField, boolean pTokenise) {
+			super(pField.s(), pTokenise);
+		}
+		
+	}
+	
+	public final FieldVal mKeyField;
+	public final FieldVal mContentField;
+	
+	public Indexer(File pDir, Analyzer pAnalyser, boolean pTokeniseKey, boolean pTokeniseContent) throws IOException {
+		super(pDir);
+		mIwc = new IndexWriterConfig(Version.LUCENE_4_10_0, pAnalyser);
+        mIwc.setOpenMode(OpenMode.CREATE);
+        mWriter = new IndexWriter(dir(), mIwc);
+
+		mKeyField=new CustomisedFieldVal(FieldVal.KEY, pTokeniseKey);
+		mContentField=new CustomisedFieldVal(FieldVal.CONTENT, pTokeniseContent);
+	}
+	
+	public Indexer(File pDir, Analyzer pAnalyser) throws IOException {
+		this(pDir, pAnalyser, true, true);
 	}
 	
 	public void add(String pKey, String pContent) throws IOException {
 		Document doc = new Document();
 
-        Field idField=FieldVal.KEY.field(pKey);
+        Field idField=mKeyField.field(pKey);
         doc.add(idField);
-        doc.add(FieldVal.CONTENT.field(pContent));
+        doc.add(mContentField.field(pContent));
         mWriter.addDocument(doc);
 
 	}
@@ -45,17 +61,4 @@ public class Indexer implements AutoCloseable {
 			mWriter.close();
 		}
 	}
-	
-	public boolean storeStems(OutputStream pSave) throws IOException {
-		return mIndex.storeStems(pSave);
-	}
-	
-	public Set<String> tokenExpansions(String pToken) {
-		return mIndex.tokenExpansions(pToken);
-	}
-	
-	public boolean displayStemGroups() {
-		return mIndex.displayStemGroups();
-	}
-	
 }

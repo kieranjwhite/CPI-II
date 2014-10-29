@@ -8,8 +8,11 @@ import java.io.IOException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.BytesRef;
 
+import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
 import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
 import com.hourglassapps.serialise.JSONParser;
 import com.hourglassapps.serialise.ParseException;
@@ -18,13 +21,20 @@ import com.hourglassapps.util.Log;
 
 public class MainIndexConductus {
 	private final static String TAG=MainIndexConductus.class.getName();
-	public final static String STEMMED_2_EPRINT_INDEX="index";
-	//public final static String UNSTEMMED_2_EPRINT_INDEX="unstemmed_index";
-	//public final static String STEMMED_2_UNSTEMMED_INDEX="stemmed_index";
+	//public final static String STEMMED_2_EPRINT_INDEX="index";
 	
-	private final ConductusIndex mStemmed2EprintIdIndex;
-	//private final ConductusIndex mUnstemmed2EprintIdIndex;
-	//private final ConductusIndex mStemmed2UnstemmedIndex;
+	private final static int NGRAM_LENGTH=3;
+	
+	public final static File UNSTEMMED_TERM_2_EPRINT_INDEX=new File("unstemmed_term_index");
+	public final static File UNSTEMMED_2_EPRINT_INDEX=new File("unstemmed_index");
+	public final static File UNSTEMMED_2_STEMMED_INDEX=new File("unstemmed_to_stemmed_index");
+	
+	private final LatinAnalyzer mNonStemmingAnalyser=new StandardLatinAnalyzer();
+	private final LatinAnalyzer mStemmingAnalyser=new StandardLatinAnalyzer().setStemmer(LatinAnalyzer.STEMPEL_RECORDER_FACTORY);
+	//private final NGramAnalyzerBuilder mStemmed2EprintIdIndex;
+
+	private final NGramAnalyzerBuilder mNonStemmingBuilder=new NGramAnalyzerBuilder(mNonStemmingAnalyser, NGRAM_LENGTH);
+	private final NGramAnalyzerBuilder mStemmingBuilder=new NGramAnalyzerBuilder(mStemmingAnalyser, NGRAM_LENGTH);
 	
 	private File mInput;
 	
@@ -34,17 +44,7 @@ public class MainIndexConductus {
 	
 	public MainIndexConductus(String pInput) throws IOException {
 		mInput=new File(pInput);
-		mStemmed2EprintIdIndex=new ConductusIndex(new File(STEMMED_2_EPRINT_INDEX)).
-				setTokenizer(new StandardLatinAnalyzer()).
-				enableStemmer(true);
-		/*
-		mUnstemmed2EprintIdIndex=new ConductusIndex(new File(UNSTEMMED_2_EPRINT_INDEX)).
-				setTokenizer(new StandardLatinAnalyzer()).
-				enableStemmer(false);
-
-		mStemmed2UnstemmedIndex=new ConductusIndex(new File(STEMMED_2_UNSTEMMED_INDEX)).
-				enableStemmer(true);
-		*/
+		//mStemmed2EprintIdIndex=new NGramAnalyzerBuilder(mStemmingAnalyser, 3);
 	}
 
 	public MainIndexConductus setListExpansions(boolean pList) {
@@ -89,16 +89,22 @@ public class MainIndexConductus {
 	}
 	 */
 	public void index() throws ParseException, IOException {
-		indexById();
-		//indexByUnstemmed();
-
+		try(Indexer idIndexer=new Indexer(UNSTEMMED_2_EPRINT_INDEX, mNonStemmingBuilder.build())) {
+			indexById(idIndexer);
+			try(Indexer unstemmedIndexer=new Indexer(UNSTEMMED_2_STEMMED_INDEX, mStemmingBuilder.build(), true, false)) {
+				indexByUnstemmed(idIndexer, unstemmedIndexer);
+			}
+		}
+		try(Indexer term2IdIndexer=new Indexer(UNSTEMMED_TERM_2_EPRINT_INDEX, mNonStemmingAnalyser)) {
+			indexById(term2IdIndexer);
+		}
 		if(mListExpansions) {
-			boolean indexed=mStemmed2EprintIdIndex.displayStemGroups();
+			boolean indexed=mStemmingAnalyser.displayStemGroups();
 			assert indexed;
 		}
 		
 		if(mSerialiseExpansions) {
-			boolean indexed=mStemmed2EprintIdIndex.storeStems(System.out);
+			boolean indexed=mStemmingAnalyser.storeStems(System.out);
 			assert indexed;			
 		}
 		
@@ -109,9 +115,8 @@ public class MainIndexConductus {
 		*/
 	}
 	
-	private void indexById() throws IOException, ParseException {
+	private void indexById(Indexer pIndexer) throws IOException, ParseException {
 		try(
-				Indexer indexer=new Indexer(mStemmed2EprintIdIndex);
 				JSONParser<Long, String, PoemRecord> parser=new JSONParser<>(
 						new RemoveUnescapesReader(
 								new BufferedReader(
@@ -126,31 +131,33 @@ public class MainIndexConductus {
 				if(record.ignore()) {
 					continue;
 				}
-				indexer.add(Long.toString(record.id()), record.content());
+				pIndexer.add(Long.toString(record.id()), record.content());
 			}
 		}
 	}
 
-	/*
-	public void indexByUnstemmed() throws IOException {
-		try(Indexer indexer=new Indexer(mStemmed2UnstemmedIndex)) {
-			mUnstemmed2EprintIdIndex.visitTerms(new TermHandler(){
+	public void indexByUnstemmed(final Indexer pIndexToVisit, final Indexer pIndexer) throws IOException {
+			pIndexToVisit.visitTerms(new TermHandler(){
 
 				@Override
-				public void run(TermsEnum pTerms) throws IOException {
+				public void run(TermsEnum pTerms) {
+					
 					BytesRef term;
-					while((term=pTerms.next())!=null) {
-						//assert term is unstemmed
-						//assert term is an n-gram
-						String termStr=term.utf8ToString();
-						indexer.add(termStr, termStr);
+					try {
+						while((term=pTerms.next())!=null) {
+							//assert term is unstemmed
+							//assert term is an n-gram
+							String termStr=term.utf8ToString();
+							pIndexer.add(termStr, termStr);
+						}
+					} catch (IOException e) {
+						Log.e(TAG, e);
 					}
 				}
 				
 			});
-		}
 	}
-	*/
+
 	public static void main(String[] args) {
 		if(args.length<1 || args.length>3) {
 			Log.e(TAG, "Must provide filename of JSON data and at most two args");

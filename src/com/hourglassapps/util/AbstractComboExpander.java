@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractComboExpander<I,O> {
+public class AbstractComboExpander<I,O> {
 	private final Converter<I, O> mConverter;
 	private final MultiMap<I, Set<O>, O> mOrig2Expansions;
+	private final ExpansionReceiver<O> mReceiver;
+	
 	/**
 	 * An instance of this class will look up each element of an array in pOrig2Expansions
 	 * for possible output values and generate all permutations by returning all possible
@@ -16,16 +18,17 @@ public abstract class AbstractComboExpander<I,O> {
 	 * output value. If pConverter is null then if an input value is not found no output values will
 	 * be generated in response to an invocation of the <code>expand</code> method.
 	 */
-	public AbstractComboExpander(MultiMap<I, Set<O>, O> pOrig2Expansions, Converter<I, O> pConverter) {
+	public AbstractComboExpander(MultiMap<I, Set<O>, O> pOrig2Expansions, Converter<I, O> pConverter, ExpansionReceiver<O> pReceiver) {
 		mConverter=pConverter;
 		mOrig2Expansions=pOrig2Expansions;
+		mReceiver=pReceiver;
 	}
 	
 	//recursive
 	private int expand(I[] pTerms, final int pStartIdx, List<O> pOut) {
 		assert pTerms.length==pOut.size();
 		if(pStartIdx>=pTerms.length) {
-			onExpansion(pOut);
+			mReceiver.onExpansion(pOut);
 			return 1;
 		}
 		
@@ -62,15 +65,4 @@ public abstract class AbstractComboExpander<I,O> {
 		return expand(pTerms, 0, out);
 	}
 	
-	/**
-	 * Subclasses will override this method to handle each output permutation. Each invocation of 
-	 * onExpansion corresponds to one permutation.<p>
-	 * @param pExpansions One permutation of outputs. Each element in <code>pExpansions</code> 
-	 * corresponds to 
-	 * its respective element which was passed to the <code>expand</code> method. So 
-	 * <code>pExpansions.get(3)</code> 
-	 * is one of the values <code>pTerms[3]</code> was mapped to in the <code>pOrig2Expansions</code> 
-	 * constructor argument, assuming that there were at least 3 elements in <code>pTerms</code>.  
-	 */
-	abstract public void onExpansion(List<O> pExpansions);
 }

@@ -10,13 +10,15 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hourglassapps.cpi_ii.Record;
+import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.ThrowableIterator;
 
 public class JSONParser<I,C, R extends Record<I,C>> implements Closeable, ThrowableIterator<R> {
 	private JsonParser mParser;
 	private JsonToken mNextToken;
 	private ObjectMapper mMapper=new ObjectMapper();
-	private IOException mThrowable=null;
+	//private IOException mThrowable=null;
+	private ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();
 	private Class<R> mClass;
 	private final Reader mPreprocessor;
 	
@@ -35,6 +37,9 @@ public class JSONParser<I,C, R extends Record<I,C>> implements Closeable, Throwa
 	
 	@Override
 	public boolean hasNext() {
+		if(mThrower.fallThrough()) {
+			return false;
+		}
 		return mNextToken==JsonToken.START_OBJECT;
 	}
 
@@ -45,7 +50,7 @@ public class JSONParser<I,C, R extends Record<I,C>> implements Closeable, Throwa
 			rec = mMapper.readValue(mParser, mClass);
 			mNextToken=mParser.nextToken();
 		} catch (IOException e) {
-			mThrowable=e;
+			mThrower.ctch(e);
 			mNextToken=JsonToken.NOT_AVAILABLE;
 			return null;
 		}
@@ -58,16 +63,14 @@ public class JSONParser<I,C, R extends Record<I,C>> implements Closeable, Throwa
 	}
 
 	@Override
-	public void throwCaught() throws IOException {
-		if(mThrowable!=null) {
-			throw mThrowable;
-		}
+	public void close() throws IOException {
+		throwCaught(null);
+		mPreprocessor.close();
 	}
 
 	@Override
-	public void close() throws IOException {
-		throwCaught();
-		mPreprocessor.close();
+	public <E extends Exception> void throwCaught(Class<E> pCatchable) throws IOException {
+		mThrower.throwCaught(IOException.class);
 	}
 
 }

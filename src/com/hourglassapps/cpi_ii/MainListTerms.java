@@ -1,6 +1,5 @@
 package com.hourglassapps.cpi_ii;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +7,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.BytesRef;
 
@@ -22,10 +18,10 @@ import com.hourglassapps.util.Log;
 public class MainListTerms {
 	private final static String TAG=MainListTerms.class.getName();
 	
-	private ConductusIndex mIndex;
+	private IndexViewer mIndex;
 	
 	public MainListTerms() throws IOException {
-		mIndex=new ConductusIndex(new File(MainIndexConductus.STEMMED_2_EPRINT_INDEX));
+		mIndex=new IndexViewer(MainIndexConductus.UNSTEMMED_2_EPRINT_INDEX);
 	}
 	
 	public static void main(String[] pArgs) {

@@ -12,7 +12,7 @@ public class FieldVal {
 	public final static FieldVal KEY=new FieldVal("key", true);
 	public final static FieldVal CONTENT=new FieldVal("content", true);
 	
-	FieldVal(String pName, boolean pTokenise) {
+	protected FieldVal(String pName, boolean pTokenise) {
 		mName=pName;
 		mTokenise=pTokenise;
 	}
@@ -48,5 +48,5 @@ public class FieldVal {
 	public Term term(String termText) {
 		return new Term(s(), termText);
 	}
-	
+
 }

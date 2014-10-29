@@ -90,6 +90,14 @@ public abstract class StemRecorderFilter extends TokenFilter {
 			end();
 		}
 	}
+
+	public MultiMap<String, Set<String>, String> expansions() {
+		MultiMap<String, Set<String>, String> expansions=new HashSetMultiMap<String, String>();
+		for(String stem: mStem2Expansions.keySet()) {
+			expansions.put(stem, Collections.unmodifiableSet(mStem2Expansions.get(stem)));
+		}
+		return expansions;
+	}
 	
 	public Serialiser<MultiMap<String, Set<String>, String>> serialiser() {
 		return new AbstractSerialiser<MultiMap<String, Set<String>, String>>() {

@@ -19,13 +19,13 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.hourglassapps.cpi_ii.web_search.AbstractQuery;
-import com.hourglassapps.cpi_ii.web_search.Query;
 import com.hourglassapps.cpi_ii.web_search.bing.response.Response;
+import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
-import com.hourglassapps.util.ThrowableIterator;
+import com.hourglassapps.util.Thrower;
 
-public class MainQuery extends AbstractQuery {
+public class MainQuery extends AbstractQuery implements Thrower {
 	private final static String TAG=MainQuery.class.getName();
 	
 	private final static String SEARCH_PATH_PREFIX="/Bing/SearchWeb/Web?Query=%27";
@@ -38,8 +38,11 @@ public class MainQuery extends AbstractQuery {
 	
 	private final static int TOTAL_QUERY_LEN=2047;
 	private final static String ENCODING=StandardCharsets.UTF_8.toString();
+
+	public static final String AUTH_KEY = "xD0E++DfZY7Sbumxx2QBuvmgOGliDgHuDIm0LzIGr3E=";
 	private final StringBuilder mQuery=new StringBuilder();
 	
+	private ConcreteThrower<Exception> mThrower=new ConcreteThrower<Exception>();
 	private final String mAccountKey;
 	private ResponseFactory mFact=new ResponseFactory();
 	
@@ -59,7 +62,7 @@ public class MainQuery extends AbstractQuery {
 			return URLEncoder.encode(" OR "+pDisjunction, ENCODING);
 		}		
 	}
-	
+
 	@Override
 	protected boolean addDisjunction(String pDisjunction) throws UnsupportedEncodingException {
 		String encoded=encode(pDisjunction);
@@ -90,6 +93,7 @@ public class MainQuery extends AbstractQuery {
 		HttpGet get=new HttpGet(pQuery);
 		get.setHeader(AUTH_HEADER, AUTH_PREFIX+mAccountKey);
 		ResponseHandler<String> respHandler=new BasicResponseHandler();
+		assert false;
 		String body=pClient.execute(get, respHandler);
 		System.out.println("response: "+body);
 		return mFact.inst('{'+body+'}');		
@@ -97,61 +101,79 @@ public class MainQuery extends AbstractQuery {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public ThrowableIterator<URI> search(List<String> pDisjunctions) throws URISyntaxException, ClientProtocolException, IOException {
-		Ii<URI, List<String>> queryMoreDisjunctions=format(pDisjunctions);
-		
-		final HttpClient client=new DefaultHttpClient();
+	public Iterator<URI> search(List<String> pDisjunctions) throws IOException {
+		if(mThrower.fallThrough()) {
+			return Collections.<URI>emptyList().iterator();
+		}
+
+		Ii<URI, List<String>> queryMoreDisjunctions;
 		try {
-			final Response resp=page(client, queryMoreDisjunctions.fst());
-			return new ThrowableIterator<URI>() {
-				private Response mResponse=resp;
-				private Iterator<URI> mPage=mResponse.urls().iterator();
-				private Exception mCaught;
-				
-				@Override
-				public boolean hasNext() {
-					try {
-						return mPage.hasNext() || retrievedMore();
-					} catch (IOException | URISyntaxException e) {
-						mCaught=e;
-						return false;
+			queryMoreDisjunctions = format(pDisjunctions);
+			final HttpClient client=new DefaultHttpClient();
+			try {
+				final Response resp=page(client, queryMoreDisjunctions.fst());
+				return new Iterator<URI>() {
+					private Response mResponse=resp;
+					private Iterator<URI> mPage=mResponse.urls().iterator();
+
+					@Override
+					public boolean hasNext() {
+						if(mThrower.fallThrough()) {
+							return false;
+						}
+						try {
+							return mPage.hasNext() || retrievedMore();
+						} catch (IOException | URISyntaxException e) {
+							mThrower.ctch(e);
+							return false;
+						}
 					}
-				}
 
-				private boolean retrievedMore() throws ClientProtocolException, IOException, URISyntaxException {
-					assert !mPage.hasNext();
-					mResponse=page(client, mResponse.next());
-					mPage=mResponse.urls().iterator();
-					return mPage.hasNext();
-				}
+					private boolean retrievedMore() throws ClientProtocolException, IOException, URISyntaxException {
+						assert !mPage.hasNext();
+						mResponse=page(client, mResponse.next());
+						mPage=mResponse.urls().iterator();
+						return mPage.hasNext();
+					}
 
-				@Override
-				public URI next() {
-					return mPage.next();
-				}
+					@Override
+					public URI next() {
+						return mPage.next();
+					}
 
-				@Override
-				public void remove() {
-					throw new UnsupportedOperationException();
-				}
-
-				@Override
-				public void throwCaught() throws Exception {
-					throw mCaught;
-				}
-				
-			};
-		} finally {
-			client.getConnectionManager().shutdown();
+					@Override
+					public void remove() {
+						throw new UnsupportedOperationException();
+					}
+				};
+			} finally {
+				client.getConnectionManager().shutdown();
+			}
+		} catch (URISyntaxException e1) {
+			mThrower.ctch(e1);
+			return Collections.<URI>emptyList().iterator();
 		}
 	}
 
 	public static void main(String[] pArgs) {
-		Query<URI> q=new MainQuery("xD0E++DfZY7Sbumxx2QBuvmgOGliDgHuDIm0LzIGr3E=");
-		try {
-			q.search(Collections.singletonList("test"));
-		} catch (URISyntaxException | IOException e) {
+		try(MainQuery q=new MainQuery(AUTH_KEY);) {
+			Iterator<URI> results=q.search(Collections.singletonList("test"));
+			while(results.hasNext()) {
+				results.next();
+			}
+		} catch (Exception e) {
 			Log.e(TAG, e);
 		}
+	}
+
+	@Override
+	public void close() throws Exception {
+		mThrower.close();
+	}
+
+	@Override
+	public <E extends Exception> void throwCaught(Class<E> pCatchable)
+			throws Exception {
+		mThrower.throwCaught(pCatchable);
 	}
 }
