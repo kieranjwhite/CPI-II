@@ -1,0 +1,234 @@
+* General
+** Libraries
+*** Apache Commons
+**** Lang
+***** http://commons.apache.org/proper/commons-lang/download_lang.cgi
+**** Apache 2
+*** Lucene
+**** http://www.whoishostingthis.com/mirrors/apache/lucene/java/4.10.1/
+**** Apache 2
+**** Jars
+***** lucene-analyzers-common-4.10.1.jar
+***** lucene-expressions-4.10.1.jar
+***** lucene-core-4.10.1.jar
+***** lucene-facet-4.10.1.jar
+***** lucene-queries-4.10.1.jar
+***** lucene-queryparser-4.10.1.jar
+*** Jackson
+**** Download links
+***** http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.4.2/jackson-core-2.4.2.jar
+***** http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.4.2/jackson-annotations-2.4.2.jar
+***** http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.4.2/jackson-databind-2.4.2.jar
+**** Apache 2
+*** Snowball
+**** Download
+***** http://snowball.tartarus.org/index.php
+**** part compiler and we distribute the output
+***** http://snowball.tartarus.org/dist/snowball_code.tgz
+**** part library
+***** http://snowball.tartarus.org/dist/libstemmer_java.tgz
+**** BSD licence
+***** http://snowball.tartarus.org/license.php
+*** Schinke
+**** http://snowball.tartarus.org/otherapps/schinke/intro.html
+**** Schinke R, Greengrass M, Robertson AM and Willett P (1996) A stemming algorithm for Latin text databases. Journal of Documentation, 52: 172-187.
+**** We distribute Snowball-compiled version
+**** Licence unspecified
+** Data queries
+*** primary key seems to be eprintid
+**** DONE confirm
+     CLOSED: [2014-10-03 Fri 10:18]
+***** They can be used as primary keys
+*** Not all works have a poem_text_3
+**** eg eprintid: 3810, 4602, 4681
+***** Skip if not latin
+***** Otherwise use titles if no text
+* Meeting on 08/10/2014
+** Points
+*** Cleaning up of source data
+**** Unescaped double quotes in strings -> escape double quotes
+**** Unescaped tabs -> spaces
+**** unescape occurrences -> preprocessor replaces with escaped version of arg (although tabs are replaced with spaces)
+**** DONE Send changes upstream
+     CLOSED: [2014-10-09 Thu 10:58]
+*** Lucene provides ngram tokenisers and filters
+**** For stemming maybe have a look at stempel - a universal rule-based stemmer
+*** Return to discussion about stemming prior to searching Google with trigrams
+**** My argument is we shouldn't stem since Google anything indexed by Google won't have been stemmed
+*** Licensing
+** Nick is to look at web search api
+*** Google is out
+*** He'll look at Bing and Yahoo (BOSS)
+** Queries
+*** Case in Latin -- does it have the same significance / lack of significance as in English
+**** Currently everything is lowercased
+**** ie is it okay to downcase?
+**** Can be cases where it's significant eg: Dominus
+***** Must ask mark (TODO is below)
+*** Do trigrams across punctuation (,;.[]!) make sense?
+**** For identifying an extract of a conductus poem these might be particularly important trigrams as they most likely represent a juxtaposition of more than one distinct concept. Conversely a trigram contained within a single clause would possibly only represent one concept, and therefore would not a distinct 'fingerprint' of the work that contains it.
+*** Latin stopwords?
+**** First step
+***** http://wiki.digitalclassicist.org/Stopwords_for_Greek_and_Latin
+**** For web search stage
+***** Depends on whether exact match search can be specified to web search api I think
+* 16/10/2014
+** DONE Verify that index is correct
+   CLOSED: [2014-10-10 Fri 19:20]
+*** Iterate though
+** DONE Start work on Stemmer
+   CLOSED: [2014-10-10 Fri 19:20]
+*** Look at Stempel
+**** Forget it, requires training data -- went with Schinke algorithm instead
+***** Here's training data -- just need to reformat it to lemma variant1 variant2 etc... format
+****** Save output from these to github repository
+***** cat <(sed -nr ../../treebank/index_thomisticus/IT-TB_13-10-2014_CONLL-PML-PLS/CONLL/005_SCG_Libri-1\&2.conll -e "s/[0-9]+\t([^\t]+)\t([^\t]+).*$/\\2 \\1/p"|tr '[:upper:]' '[:lower:]') <(grep ../../treebank/perseus_treebank/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]' '[:lower:]'|sed -nr -e "s/^.* form=\"([^\"]*)\" lemma=\"([^\"]*)\".*$/\\2 \\1/p") | grep -v "[^a-z0-9 ]" | sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p"
+****** can't use this though since the same stem won't be used for a given term across both collections
+***** sed -nr ../../treebank/index_thomisticus/IT-TB_13-10-2014_CONLL-PML-PLS/CONLL/005_SCG_Libri-1\&2.conll -e "s/[0-9]+\t([^\t]+)\t([^\t]+).*$/\\2 \\1/p"|tr '[:upper:]' '[:lower:]'| grep -v "[^a-zA-Z0-9 ]" |sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p"
+****** 2619 distinct lemmas
+****** 8638 distinct variations
+***** grep ../../treebank/perseus_treebank/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]' '[:lower:]'|sed -nr -e "s/^.* form=\"([^\"]*)\" lemma=\"([^\"]*)\".*$/\\2 \\1/p"| grep -v "[^a-zA-Z0-9 ]" |sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p"
+****** 6170 distinct lemmas
+****** 14001 variations
+** Git hub link
+*** DONE Add Nick as contributer
+    CLOSED: [2014-10-24 Fri 10:03]
+** DONE Ask Mark if case in Medieval Latin can be treated as English (i.e. downcase everything)
+   CLOSED: [2014-10-16 Thu 13:56]
+*** Okay to down case
+*** First check if it's possible to match terms with different cases in Lucene -- that way we can have the best of both worlds
+** Points
+** Added stoplist la.stop from
+*** http://sourceforge.net/projects/perseus-hopper/files/perseus-hopper/hopper-20110527/hopper-source-20110527.tar.gz/download in the perseus project
+**** http://www.perseus.tufts.edu/hopper
+** Stemmer
+*** Compiled Schinke with snowball
+**** Download from http://snowball.tartarus.org/dist/snowball_code.tgz
+**** Uses java classes from http://snowball.tartarus.org/dist/libstemmer_java.tgz rather than their equivalents bundled with Lucene
+***** Lucene classes are for a different version and won't compile as is
+**** Also copied and modified Lucene's SnowballAnalyzer and SnowballFilter to ensure they use the classes from snowball.tartarus.org and not those bundled with Lucene
+**** Schinke stemer generates two stems
+***** The automatically generated version of LatinStemmer applied noun stemming first and then applied verb stemming, overwriting the noun stem in the process
+***** I modified LatinStemmer to allow the type of stemming to be specified (i.e. as either VERB stemming, NOUN stemming or UNKNOWN in which case the shorter stem was returned or verb stem where both had the same length)
+***** UNKNOWN was set as the default as this resulted in the smallest index and manual inspection of output revealed satisfactory results (a bit wishy washy -- I know)
+***** Obviously an alternative approach is to apply part-of-speech tagging -- I'd be curious to know if it led to more accurate stemming than our current default method.
+**** DONE Read Schinke paper
+     CLOSED: [2014-10-15 Wed 18:27]
+**** DONE Mail Nick with stemming update
+     CLOSED: [2014-10-15 Wed 18:27]
+**** DONE Is unspecified Schinke licence an issue?
+     CLOSED: [2014-10-16 Thu 14:20]
+***** It's BSD
+*** Hunpos might be an option if we're not happy with Stempel
+**** https://code.google.com/p/hunpos/
+** Using query expansion to increase recall at the web-search stage
+*** ie use terms to top N web pages return in response to a query
+*** not for now
+** Why trigrams?
+*** Don't really need to use tri-grams if we have a way to rank bigrams and unigrams
+** Cleaning up source data
+*** Any tabs in original json have now been escaped correctly (as \t)
+** While perusing index
+*** Vast majority of tri-grams have the same TFIDF due tri-gram only occurring once in the collection
+*** TF calcualtion
+**** Currently we use a simple count of terms in a poem
+**** TODO Would like to account for poem length
+***** Consider later
+***** ie normalise tf for length && also account for term repetition in poems due to repeated lines / chorus
+*** IDF calculation
+**** Don't worry about this till we know how many bi-grams /tri-grams
+**** Currently calculated based on total number of poems and number of poems containing a particular trigram
+***** Which is good for weighting those trigrams which can be used to distinguish one poem in the collection from the others in conductus
+***** What we want is to distinguigh a poem from irrelevant pages on the web
+****** Therefore idf calculation should be based on total number of documents indexed by search engine and total number of web-pages containing trigram
+******* Web api can probably return number of documents containing trigram
+******** (and if no web pages are returned this trigram can be skipped altogether)
+******* We also need total number of indexed pages -- alternatively use estimate by searching for disjunction of English stop-words?
+****** This will also (hopefully) result in a greater variety of tf-idfs
+** DONE Eliminate tri-grams with digits. Typically they correspond to stanza / verse numbers.
+   CLOSED: [2014-10-16 Thu 17:38]
+*** Check digit aren't used elsewhere
+**** I'll have a better idea of the best way to do this after working with the stemmer and by extension TokenFilters
+** Queries
+*** Which licence on github
+**** Apache if possible -- not fussy
+*** ToDos
+**** DONE Send sempel output to Mark and the lads
+     CLOSED: [2014-10-23 Thu 11:54]
+**** DONE Get no of distinct bi-grams / tri-grams / terms
+     CLOSED: [2014-10-16 Thu 16:21]
+***** Provide list on bi-grams if possible (ordered by frequency)
+***** Terms will result in multiple pages so might not be practical from price point of view
+***** Trigrams
+****** all: 71416
+****** removed _: 42229
+***** Bigrams
+****** all: 55954
+****** removed _: 46489
+***** Unigrams
+****** all: 15019
+****** removed _:15019
+**** DONE Familiarise myself with Bing search api
+     CLOSED: [2014-10-30 Thu 10:30]
+* 30/10/2014 14h00
+** Stopwords in ngrams might make sense
+*** Depending on language a verb - preposition bigram could increase the preciseness of the query
+**** eg in English "speak of" and "speak to" mean too different things
+**** I've these currently enabled -- this changes the unumber of distinct tokens of course
+*** For now keep stop words in
+**** TODO check it's okay later
+** The role of stemming
+**** Including all known morphological forms of the three words within a trigram (assuming trigrams are used) could result in a query which is too large for Bing to process
+***** Upper limit seems to be 2047 chars, including path in url
+****** http://stackoverflow.com/questions/15334531/what-are-the-query-length-limits-for-the-bing-websearch-api
+***** Although browser based search seems limited to 10 words (anymore are ignored)
+****** Unsure if this is relevant to api though
+**** So initially I intended to submit only different morphological variations of each ngram
+***** But these were very few in number
+***** Only accomplished the same as not having stemming to begin with
+**** Conversely expanding each term to each possible morphological variant and doing this for each term in an ngram results in a large number of queries and very long queries that must be split up it we wish to include all of them
+***** 3-grams
+****** 64553 queries
+******* 1391593 conjunctions
+******* ie ~22 disjunctions per query
+***** 2-grams
+****** 61230 queries
+******* 392109 conjunctions
+******* ie ~6 disjunctions per query
+***** An issue here is we'll be sending many queries in succession, 
+****** many returning no results 
+****** and the results they do return may contain duplicated results as a result of there being multiple similar queries
+**** A third option is to prioritise permutations and only include as many disjunctions as fit
+***** First include those that occur in the text
+***** Then rank the remainder by multiplying frequency of each term
+** Blacklisted sites
+*** Ideally I'd like to eliminate these from the initial search in Bing
+*** Variations of NOT site: and NOT domain: failed
+*** Considering using NOT in combination with keywords or phrases
+**** DIAMM for DIAMM
+**** MUSICARUM LATINARUM for TML
+**** Analecta hymnica for archive.org
+**** Conductus
+***** Cantum pulcriorem invenire
+**** DONE do this
+     CLOSED: [2014-10-30 Thu 18:55]
+** Points
+*** Need bing subscription
+*** commas in text do not result in a _ inserted in trigram
+*** Download size:
+**** assume 64553 queries and 5 hits per query 300K web page size
+***** => 1576 MB for queries
+***** => 92.344 GB files
+**** Ssh into college with file space
+***** Nick is sorting this out
+*** Meeting
+**** Nick is gong to mail Mark about this
+*** DONE query lads about feedback of stemming
+    CLOSED: [2014-10-30 Thu 17:34]
+* 7/11/2014 10h00
+** Points
+*** Some results give links with dodgy encoding prevents instantiating as a URL instance
+**** problem is either in what they're sending or the httpclient library
+**** Wireshark is no good because its encrypted and I can't seem to disable encryption
+**** 5 or the first 50 hits had this issue
+***** seems high but not when you consider the query a a e
