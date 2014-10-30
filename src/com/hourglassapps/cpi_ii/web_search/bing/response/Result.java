@@ -47,11 +47,7 @@ public class Result {
 	
 	public URI url() throws URISyntaxException {
 		if(mUri==null) {
-			try {
 			mUri=new URI(mUrl);
-			} catch(Exception e) {
-				Log.e(TAG, e);
-			}
 		}
 		return mUri;
 	}
