@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.hourglassapps.cpi_ii.web_search.bing.BingArgs;
 import com.hourglassapps.util.Log;
 
 public class D implements Iterable<Result> {
@@ -33,7 +34,7 @@ public class D implements Iterable<Result> {
 	}
 	
 	public URI next() throws URISyntaxException {
-		return new URI(mNext);
+		return new URI(mNext+BingArgs.JSON_SPECIFIER);
 	}
 
 	@Override

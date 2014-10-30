@@ -2,6 +2,8 @@ package com.hourglassapps.cpi_ii.web_search;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import com.hourglassapps.cpi_ii.IndexViewer;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
@@ -28,6 +30,20 @@ public class MainDownload {
 					
 				};
 		) {
+			if(!q.filterSites(new HashSet<String>(Arrays.<String>asList(new String[] {
+					"catalogue.conductus.ac.uk", "diamm.ac.uk", "chmtl.indiana.edu/tml",
+					"archive.org/details/analectahymnicam20drev",
+					"archive.org/details/analectahymnica21drevuoft",
+					"archive.org/details/analectahymnicam21drev"
+			})))) {
+				boolean blacklisted=q.filterPhrases(new HashSet<String>(Arrays.<String>asList(new String[] {
+						"Cantum pulcriorem invenire", "DIAMM", "MUSICARUM LATINARUM", "Analecta hymnica"
+				})));
+				if(!blacklisted) {
+					Log.e(TAG, "failed to blacklist");
+					System.out.println();
+				}
+			}
 			IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
 			MainListIndexTerms.listAllTokenExpansions(index, pArgs[0], receiver);
 		} catch (Exception e) {

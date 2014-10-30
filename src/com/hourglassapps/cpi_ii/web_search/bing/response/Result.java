@@ -5,9 +5,12 @@ import java.net.URISyntaxException;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.hourglassapps.util.Log;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Result {
+	private final static String TAG=Result.class.getName();
+	
 	private __Metadata mMetadata;
 	private String mId;
 	private String mTitle;
@@ -44,7 +47,11 @@ public class Result {
 	
 	public URI url() throws URISyntaxException {
 		if(mUri==null) {
+			try {
 			mUri=new URI(mUrl);
+			} catch(Exception e) {
+				Log.e(TAG, e);
+			}
 		}
 		return mUri;
 	}

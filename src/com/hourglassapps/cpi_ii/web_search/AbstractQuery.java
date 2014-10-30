@@ -3,20 +3,38 @@ package com.hourglassapps.cpi_ii.web_search;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.hourglassapps.util.Ii;
 
-public abstract class AbstractQuery implements Query<URI> {
+public abstract class AbstractQuery implements RestrictedQuery<URI> {
+	protected final static String ENCODING=StandardCharsets.UTF_8.toString();
+
+	protected String encode(String pString) throws UnsupportedEncodingException {
+		return URLEncoder.encode(pString, ENCODING);
+	}
 	
+	@Override
+	public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {
+		return false;
+	}
+
+	@Override
+	public boolean filterSites(Set<String> pSites) {
+		return false;
+	}
+
 	/**
 	 * 
 	 * @param pDisjunction to encode
 	 * @return encoded String that is in a form suitable for appending to current query
 	 * @throws UnsupportedEncodingException
 	 */
-	protected abstract String encode(String pDisjunction) throws UnsupportedEncodingException;
+	protected abstract String encodeDisjunction(String pDisjunction) throws UnsupportedEncodingException;
 
 	/**
 	 * Adds a new disjunction to the existing query
@@ -42,7 +60,7 @@ public abstract class AbstractQuery implements Query<URI> {
 	 * 
 	 */
 	protected int addedLen(String pDisjunction) throws UnsupportedEncodingException {
-		return encode(pDisjunction).length();
+		return encodeDisjunction(pDisjunction).length();
 	}
 	
 	/**
@@ -68,8 +86,11 @@ public abstract class AbstractQuery implements Query<URI> {
 	
 	/**
 	 * 
-	 * @param pDisjunctions each is an exact phrase to be sent to search engine possibly as part of a larger query
-	 * @return List of one or more text queries that will in turn be sent to search engine
+	 * @param pDisjunctions each element is an exact phrase for the search engine. Not all
+	 * disjunction may sent - those that are sent will be taken from the start of the provided 
+	 * <code>List</code>. 
+	 * @return First element is the <code>URI</code> representing query that is sent to search engine.
+	 * The second element is a list of any disjunctions not included in the query.
 	 * @throws UnsupportedEncodingException 
 	 * @throws URISyntaxException 
 	 */

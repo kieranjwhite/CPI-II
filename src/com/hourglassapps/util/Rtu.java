@@ -312,7 +312,7 @@ public class Rtu {
 		stringsJoined.append(pStrings.get(0));
 		for(String term: pStrings.subList(1, pStrings.size())) {
 			assert(term!=null);
-			stringsJoined.append(' ').append(term);
+			stringsJoined.append(pJoint).append(term);
 		}
 		return stringsJoined.toString();
 	}
