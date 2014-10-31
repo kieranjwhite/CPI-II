@@ -67,8 +67,11 @@ public class IndexViewer {
 
 	private void interrogate(IndexReader pReader, FieldVal pSearchField, String pSought, int pNumResults, ResultRelayer pRelayer) throws IOException {
 		IndexSearcher searcher = new IndexSearcher(pReader);
+		interrogate(pReader, searcher, pSearchField, pSought, pNumResults, pRelayer);
+	}
 
-		TopDocs results = searcher.search(pSearchField.query(pSought), pNumResults);
+	public static void interrogate(IndexReader pReader, IndexSearcher pSearcher, FieldVal pSearchField, String pSought, int pNumResults, ResultRelayer pRelayer) throws IOException {
+		TopDocs results = pSearcher.search(pSearchField.query(pSought), pNumResults);
 		if(results.totalHits<1) {
 			//Log.i(TAG, "unrecognised key "+pSought);
 			return;

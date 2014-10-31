@@ -15,17 +15,30 @@ public class MainDownload {
 	private final static String TAG=MainDownload.class.getName();
 	
 	public static void main(String pArgs[]) throws IOException {
-		if(pArgs.length!=1) {
-			System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload <STEM_FILE>");
+		if(pArgs.length<1) {
+			System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload --real <STEM_FILE>");
 		}
 
+		boolean dummyRun=true;
+		int pathIdx=0;
+		if("--real".equals(pArgs[0])) {
+			dummyRun=false;
+			pathIdx++;
+		}
+		if(dummyRun) {
+			System.out.println("Dummy run...");
+		} else {
+			System.out.println("Querying searh engine...");
+		}
+		String path=pArgs[pathIdx];
+		
 		try(
-				final MainQuery q=new MainQuery(MainQuery.AUTH_KEY);
-				AbstractDisjunctionRecorder receiver=new AbstractDisjunctionRecorder(q){
+				final MainQuery q=dummyRun?new MainQuery() : new MainQuery(MainQuery.AUTH_KEY);
+				AbstractDisjunctionRelayer receiver=new AbstractDisjunctionRelayer(q){
 
 					@Override
 					public void onLink(URI pLink) {
-						System.out.println(pLink);
+						System.out.println("link: "+pLink);
 					}
 					
 				};
@@ -45,7 +58,7 @@ public class MainDownload {
 				}
 			}
 			IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
-			MainListIndexTerms.listAllTokenExpansions(index, pArgs[0], receiver);
+			MainListIndexTerms.listAllTokenExpansions(index, path, receiver);
 		} catch (Exception e) {
 			Log.e(TAG, e);
 		}

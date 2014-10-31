@@ -1,14 +1,16 @@
 package com.hourglassapps.cpi_ii.web_search;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.FSDirectory;
 
 import com.hourglassapps.cpi_ii.AbstractTermFreqMapper;
 import com.hourglassapps.cpi_ii.FieldVal;
@@ -40,9 +42,11 @@ public class ExpansionComparator implements Comparator<List<String>> {
 		}
 		NGRAM_PRIORITISER=tmp;
 	}
+	
+	private final IndexReader mReader=DirectoryReader.open(FSDirectory.open(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX));
+	private final IndexSearcher mSearcher=new IndexSearcher(mReader);
 	private final IndexViewer mTermIndex=new IndexViewer(MainIndexConductus.UNSTEMMED_TERM_2_EPRINT_INDEX);
 	private Map<String, Long> mTerm2Freq=term2Freq();
-	private final IndexViewer mUnstemmed2StemmedIndex=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
 	
 	public ExpansionComparator() throws IOException {
 		
@@ -82,7 +86,7 @@ public class ExpansionComparator implements Comparator<List<String>> {
 		if(pToken.size()>=1) {
 			String tokenJoined=Rtu.join(pToken, " ");
 			FoundRelayer relay=new FoundRelayer();
-			mUnstemmed2StemmedIndex.interrogate(FieldVal.CONTENT, tokenJoined, relay);
+			IndexViewer.interrogate(mReader, mSearcher, FieldVal.CONTENT, tokenJoined, 1, relay);
 			return relay.found();
 		} else {
 			return true;

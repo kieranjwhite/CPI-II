@@ -72,6 +72,10 @@ public class MainQuery extends AbstractQuery implements Thrower {
 		mAccountKey=new String(Base64.encodeBase64((':'+pAccountKey).getBytes()));
 	}
 	
+	public MainQuery() {
+		mAccountKey=null;
+	}
+	
 	@Override
 	protected int maxQueryLen() {
 		int maxLen=TOTAL_QUERY_LEN-(SEARCH_PATH_PREFIX.length()+
@@ -119,10 +123,14 @@ public class MainQuery extends AbstractQuery implements Thrower {
 		HttpGet get=new HttpGet(pQuery);
 		get.setHeader(AUTH_HEADER, AUTH_PREFIX+mAccountKey);
 		ResponseHandler<String> respHandler=new BasicResponseHandler();
-		//assert false;
-		System.out.println("query: "+URLDecoder.decode(pQuery.toString(), ENCODING));
-		String body=mClient.execute(get, respHandler);
-		System.out.println("response: "+body);
+		System.out.println(URLDecoder.decode(pQuery.toString(), ENCODING));
+		final String body;
+		if(mAccountKey==null) {
+			body="{\"d\":{\"results\":[]}}";
+		} else {
+			body=mClient.execute(get, respHandler);			
+		}
+		//System.out.println("response: "+body);
 		return mFact.inst(body);		
 	}
 
@@ -132,7 +140,6 @@ public class MainQuery extends AbstractQuery implements Thrower {
 		if(mThrower.fallThrough()) {
 			return Collections.<URI>emptyList().iterator();
 		}
-		//return Collections.<URI>emptyList().iterator();
 		Ii<URI, List<String>> queryMoreDisjunctions;
 		try {
 			queryMoreDisjunctions = format(pDisjunctions);
