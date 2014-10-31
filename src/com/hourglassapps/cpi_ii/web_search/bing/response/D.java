@@ -34,6 +34,9 @@ public class D implements Iterable<Result> {
 	}
 	
 	public URI next() throws URISyntaxException {
+		if(mNext==null) {
+			return null;
+		}
 		return new URI(mNext+BingArgs.JSON_SPECIFIER);
 	}
 

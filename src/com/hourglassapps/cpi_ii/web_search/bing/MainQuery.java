@@ -65,7 +65,7 @@ public class MainQuery extends AbstractQuery implements Thrower {
 	private final String mAccountKey;
 	private ResponseFactory mFact=new ResponseFactory();
 	private final HttpClient mClient=new DefaultHttpClient();
-
+	private boolean mSearchInvoked=false;
 	private String mBlacklistedPhrases="";
 	
 	public MainQuery(String pAccountKey) {
@@ -128,6 +128,7 @@ public class MainQuery extends AbstractQuery implements Thrower {
 
 	@Override
 	public Iterator<URI> search(List<String> pDisjunctions) throws IOException {
+		mSearchInvoked=true;
 		if(mThrower.fallThrough()) {
 			return Collections.<URI>emptyList().iterator();
 		}
@@ -163,7 +164,11 @@ public class MainQuery extends AbstractQuery implements Thrower {
 					if(mPageNum+1>=MAX_RESULT_PAGES) {
 						return false;
 					}
-					mResponse=page(mResponse.next());
+					URI next=mResponse.next();
+					if(next==null) {
+						return false;
+					}
+					mResponse=page(next);
 					mPageNum++;
 					mPage=mResponse.urls().iterator();
 					return mPage.hasNext();
@@ -211,6 +216,9 @@ public class MainQuery extends AbstractQuery implements Thrower {
 
 	@Override
 	public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {
+		if(mSearchInvoked) {
+			throw new IllegalStateException("Cannot alter filter once search has been invoked");
+		}
 		String blacklisted=Rtu.join(new ArrayList<String>(pPhrases), "\" AND NOT \"");
 		if(blacklisted.length()>0) {
 			blacklisted=encode(" AND NOT \""+blacklisted+"\"");

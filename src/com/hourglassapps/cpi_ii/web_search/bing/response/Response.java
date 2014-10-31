@@ -3,6 +3,7 @@ package com.hourglassapps.cpi_ii.web_search.bing.response;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
