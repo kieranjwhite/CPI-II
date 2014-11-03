@@ -88,6 +88,7 @@ public class MainIndexConductus {
 				if(record.ignore()) {
 					continue;
 				}
+				Log.v(TAG, "content: "+record.content());
 				pIndexer.add(Long.toString(record.id()), record.content());
 			}
 		}

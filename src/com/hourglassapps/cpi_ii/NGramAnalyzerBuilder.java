@@ -25,11 +25,11 @@ public class NGramAnalyzerBuilder {
 		if(mN<2) {
 			nGramAnalyser=mUnigramAnalyser;				 
 		} else {
-			nGramAnalyser=new ShingleAnalyzerWrapper(
+			nGramAnalyser=new LoggingAnalyzer(new ShingleAnalyzerWrapper(
 					mUnigramAnalyser,
 					mN, mN, ShingleFilter.DEFAULT_TOKEN_SEPARATOR, false, false, 
 					ShingleFilter.DEFAULT_FILLER_TOKEN
-					);
+					));
 		}		
 		return nGramAnalyser;
 	}
