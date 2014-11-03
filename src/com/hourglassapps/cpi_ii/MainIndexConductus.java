@@ -53,9 +53,10 @@ public class MainIndexConductus {
 	public void index() throws ParseException, IOException {
 		try(Indexer idIndexer=new Indexer(UNSTEMMED_2_EPRINT_INDEX, mNonStemmingBuilder.build())) {
 			indexById(idIndexer);
-			try(Indexer unstemmedIndexer=new Indexer(UNSTEMMED_2_STEMMED_INDEX, mStemmingBuilder.build(), true, false)) {
-				indexByUnstemmed(idIndexer, unstemmedIndexer);
-			}
+		}
+		IndexViewer idIndexer=new Indexer(UNSTEMMED_2_EPRINT_INDEX, mNonStemmingBuilder.build());
+		try (Indexer unstemmedIndexer=new Indexer(UNSTEMMED_2_STEMMED_INDEX, mStemmingBuilder.build(), true, false)) {
+			indexByUnstemmed(idIndexer, unstemmedIndexer);
 		}
 		try(Indexer term2IdIndexer=new Indexer(UNSTEMMED_TERM_2_EPRINT_INDEX, mNonStemmingAnalyser)) {
 			indexById(term2IdIndexer);
@@ -92,7 +93,7 @@ public class MainIndexConductus {
 		}
 	}
 
-	public void indexByUnstemmed(final Indexer pIndexToVisit, final Indexer pIndexer) throws IOException {
+	public void indexByUnstemmed(final IndexViewer pIndexToVisit, final Indexer pIndexer) throws IOException {
 			pIndexToVisit.visitTerms(new TermHandler(){
 
 				@Override

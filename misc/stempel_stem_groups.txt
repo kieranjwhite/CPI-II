@@ -1,8 +1,8 @@
-1aurea
-
 a
 
 aaron
+
+ab
 
 abacuc
 
@@ -226,6 +226,8 @@ abutuntur
 
 abyssum
 
+ac
+
 accedamus
 
 accedit
@@ -271,8 +273,8 @@ accinguntur
 accipit
 accipe
 acceptus
-accepit
 accipiunt
+accepit
 accepta
 
 accipis
@@ -391,6 +393,8 @@ acum
 acutas
 
 acutis
+
+ad
 
 adam
 
@@ -828,20 +832,20 @@ agnum
 
 ago
 
-agam
-agite
-agunt
-agat
-agens
-actis
 agant
 egerat
 agis
+agam
 agit
+agite
+agunt
 agitur
+agat
 egeris
+agens
 actus
 agere
+actis
 
 agone
 
@@ -923,6 +927,7 @@ alimonia
 alioquin
 
 aliqua
+aliquis
 
 aliter
 
@@ -935,8 +940,8 @@ alitus
 alias
 alii
 alius
-aliam
 alios
+aliam
 
 allefonsus
 
@@ -1290,6 +1295,8 @@ amurcam
 
 amygdalus
 
+an
+
 ana
 
 anagogicum
@@ -1463,6 +1470,8 @@ annua
 
 ans
 
+ante
+
 antea
 
 antecedente
@@ -1546,8 +1555,8 @@ apertio
 
 aperto
 aperte
-aperta
 apertum
+aperta
 
 aperui
 
@@ -1633,6 +1642,8 @@ aptior
 aptius
 
 apto
+
+apud
 
 apulus
 
@@ -2104,6 +2115,8 @@ astutiam
 
 asylum
 
+at
+
 atri
 ater
 
@@ -2118,6 +2131,8 @@ athletas
 athlete
 
 atlante
+
+atque
 
 atramentum
 
@@ -2197,8 +2212,8 @@ aude
 audens
 
 audes
-audeat
 ausum
+audeat
 
 audere
 
@@ -2311,6 +2326,10 @@ austrum
 
 ausu
 
+aut
+
+autem
+
 autumnalis
 
 autumnali
@@ -2323,8 +2342,8 @@ auxiliantia
 
 auxilii
 
-auxilio
 auxilium
+auxilio
 auxilia
 
 avaris
@@ -2731,13 +2750,13 @@ bona
 optimum
 meliores
 bonus
-boni
 bonis
+boni
 meliorem
 bonum
 bonorum
-bono
 melior
+bono
 
 bos
 
@@ -3083,11 +3102,11 @@ capilli
 
 amus
 
-capta
 ceperat
+capta
 cepit
-capere
 ceperit
+capere
 captum
 captus
 capit
@@ -3535,11 +3554,11 @@ celicolas
 
 celico
 celice
-celica
 celici
+celica
 
-celicum
 celicus
+celicum
 
 celis
 
@@ -3684,8 +3703,8 @@ certo
 certa
 certus
 certe
-certis
 certos
+certis
 certissima
 
 cervicis
@@ -3854,8 +3873,8 @@ cignum
 
 cilicina
 
-cilicia
 cilicio
+cilicia
 
 cilicium
 
@@ -3904,8 +3923,8 @@ circulari
 
 circulum
 
-circulis
 circulus
+circulis
 circuli
 circulo
 
@@ -4000,8 +4019,8 @@ clamitat
 clamo
 clamat
 clamabat
-clamamus
 clamant
+clamamus
 clamans
 
 clamore
@@ -4728,8 +4747,8 @@ conceditur
 concede
 
 concessa
-concedam
 concessit
+concedam
 
 conceptio
 
@@ -4972,8 +4991,8 @@ conferente
 
 conferisti
 
-confer
 conferri
+confer
 conferre
 confert
 
@@ -6035,14 +6054,14 @@ credere
 credendo
 creditur
 credita
-credat
 credens
+credat
 credo
 credit
 crederes
 credite
-crede
 credimus
+crede
 
 credulitas
 
@@ -6058,8 +6077,8 @@ cremat
 
 crematus
 
-creasti
 creavit
+creasti
 creatus
 creata
 
@@ -6255,6 +6274,8 @@ culture
 
 cultus
 
+cum
+
 cumque
 
 cumulatio
@@ -6315,6 +6336,8 @@ cupiens
 cupio
 
 cupiunt
+
+cur
 
 curas
 curarum
@@ -6386,8 +6409,8 @@ curritur
 curre
 currat
 currunt
-currit
 curro
+currit
 curris
 currentium
 currere
@@ -6547,8 +6570,8 @@ dantis
 
 dati
 danti
-dante
 datura
+dante
 datos
 dator
 
@@ -6587,6 +6610,8 @@ davidicum
 
 davitica
 
+de
+
 dea
 
 dealbatio
@@ -6609,8 +6634,8 @@ debellavit
 
 debent
 
-debes
 debuit
+debes
 debitis
 debeo
 debitum
@@ -6822,8 +6847,8 @@ dedicare
 
 dedidisti
 
-dedignando
 dedignatus
+dedignando
 dedignatur
 
 dediti
@@ -6881,8 +6906,8 @@ deficiens
 
 deficient
 
-defecerunt
 deficit
+defecerunt
 deficio
 deficere
 
@@ -7338,8 +7363,8 @@ desinis
 
 desinit
 
-desinam
 desine
+desinam
 
 desipio
 
@@ -7599,16 +7624,16 @@ dictus
 dicere
 dicimus
 dixisti
-dicenti
 dicens
+dicenti
 dicat
 dixerat
 dixit
 dixisse
 dicite
 dicant
-dicetur
 dicitur
+dicetur
 dices
 dicunt
 dici
@@ -7722,8 +7747,8 @@ dignitatum
 
 digna
 dignus
-dignis
 dignos
+dignis
 digni
 dignum
 
@@ -8225,12 +8250,12 @@ dandis
 dedit
 dederat
 data
-dabit
 detur
-datis
+dabit
 dant
-date
+datis
 datum
+date
 dabo
 dabat
 dando
@@ -8238,8 +8263,8 @@ dedi
 datur
 datus
 daturus
-damus
 dabam
+damus
 dato
 demus
 dare
@@ -8252,8 +8277,8 @@ docentem
 
 docentis
 
-docet
 docuit
+docet
 doctus
 docta
 
@@ -8419,8 +8444,8 @@ domitus
 
 domans
 
-domos
 domum
+domos
 domo
 domus
 domi
@@ -8498,8 +8523,8 @@ dotatur
 dotes
 
 dracone
-draco
 draconis
+draco
 draconem
 
 dracones
@@ -8551,9 +8576,9 @@ duci
 ducat
 ducis
 duxi
-ducente
-ducit
 ducunt
+ducit
+ducente
 duxit
 ducere
 
@@ -8627,6 +8652,8 @@ dulia
 
 dulie
 
+dum
+
 dumi
 
 dummodo
@@ -8671,8 +8698,8 @@ dure
 
 durius
 dura
-duram
 duro
+duram
 durum
 durior
 
@@ -8886,6 +8913,8 @@ egi
 egisse
 
 egiptum
+
+ego
 
 mihi
 
@@ -9256,6 +9285,8 @@ engadina
 
 enigma
 
+enim
+
 enixa
 
 enituit
@@ -9401,6 +9432,8 @@ ergastulum
 
 erga
 
+ergo
+
 erigas
 
 erigens
@@ -9489,6 +9522,8 @@ erupisse
 
 eruti
 
+es
+
 estas
 esca
 
@@ -9497,6 +9532,8 @@ essentia
 esum
 
 eso
+
+est
 
 estatis
 
@@ -9527,6 +9564,8 @@ esurio
 
 estus
 esau
+
+et
 
 etas
 
@@ -9581,6 +9620,10 @@ ethereum
 etheris
 
 ethicam
+
+etiam
+
+etsi
 
 eucharistiam
 
@@ -9660,6 +9703,8 @@ evidens
 evitare
 
 evocare
+
+ex
 
 exactio
 
@@ -9779,8 +9824,8 @@ excitavit
 
 excitentur
 
-excitant
 excitas
+excitant
 excitat
 
 exclamare
@@ -10382,8 +10427,8 @@ fabricetur
 fabrice
 fabrica
 
-fabula
 fabulas
+fabula
 
 fac
 
@@ -10403,8 +10448,8 @@ facimus
 
 facinus
 
-faciet
 faciunt
+faciet
 factura
 facere
 facias
@@ -10416,13 +10461,13 @@ fecistis
 faciebat
 facturi
 faciam
-facit
 feceris
-facite
+facit
 fecit
+facite
 fecerat
-faciamus
 factus
+faciamus
 faceret
 fecisti
 fecerit
@@ -10444,8 +10489,8 @@ factore
 
 factor
 
-facti
 facto
+facti
 factum
 facta
 factis
@@ -10691,8 +10736,8 @@ fax
 
 face
 faces
-facem
 facibus
+facem
 
 fecis
 
@@ -11273,8 +11318,8 @@ flecteret
 
 flectit
 
-flecti
 flectitur
+flecti
 
 flemus
 
@@ -11872,12 +11917,12 @@ fugiendum
 fugientem
 
 fugiunt
-fugiat
 fugiendo
+fugiat
 fugiens
 fugis
-fuge
 fugit
+fuge
 fugisse
 fugi
 fugiet
@@ -12068,8 +12113,8 @@ furnos
 furens
 
 furoris
-furor
 furorem
+furor
 furori
 furore
 
@@ -12316,8 +12361,8 @@ genitura
 
 geniture
 
-gentem
 genti
+gentem
 gente
 gens
 gentibus
@@ -12446,8 +12491,8 @@ gignitio
 gignitur
 
 genitus
-geniti
 genuit
+geniti
 
 gis
 
@@ -12651,8 +12696,8 @@ gravem
 gravius
 graves
 gravi
-gravibus
 gravis
+gravibus
 grave
 
 gravitatem
@@ -12759,8 +12804,8 @@ habent
 habenti
 habui
 haberet
-habes
 haberes
+habes
 habebat
 habeo
 habe
@@ -12836,6 +12881,8 @@ harum
 has
 
 hasta
+
+haud
 
 hauriat
 
@@ -12972,6 +13019,8 @@ hiberna
 
 hibernia
 
+hic
+
 hanc
 huic
 hunc
@@ -13066,8 +13115,8 @@ honori
 honoribus
 honor
 honore
-honoris
 honorum
+honoris
 honorem
 
 honora
@@ -13328,6 +13377,8 @@ iairi
 
 iacentis
 
+iam
+
 iambus
 
 iani
@@ -13364,6 +13415,7 @@ id
 idcirco
 
 eosdem
+idem
 isdem
 eodem
 
@@ -13397,8 +13449,8 @@ ieiunabat
 
 ieiunare
 
-ieiune
 ieiuni
+ieiune
 
 ieiunio
 
@@ -13431,6 +13483,8 @@ iezi
 
 iezita
 
+igitur
+
 ignaris
 
 ignarum
@@ -13450,8 +13504,8 @@ igneum
 igniculo
 
 ignem
-igne
 ignis
+igne
 ignibus
 
 ignita
@@ -13521,12 +13575,13 @@ illacrymatus
 
 illaqueasti
 
-illo
 illud
+illo
 illorum
 illi
 illius
 illum
+ille
 illos
 illis
 illam
@@ -13929,6 +13984,8 @@ imputat
 imputatur
 
 imum
+
+in
 
 inacessibilis
 
@@ -14443,6 +14500,8 @@ infesto
 
 infecit
 
+infra
+
 infregit
 
 infremuit
@@ -14705,8 +14764,8 @@ insignia
 
 insignes
 
-insigne
 insignis
+insigne
 
 insignita
 
@@ -14876,14 +14935,16 @@ intendere
 
 intenditur
 
-intendo
 intenti
+intendo
 
 intenta
 
 intentio
 
 intentione
+
+inter
 
 intercedit
 
@@ -15102,8 +15163,8 @@ invidie
 
 invidissimi
 
-invide
 invidus
+invide
 
 invincibilis
 
@@ -15153,8 +15214,8 @@ involvi
 involvitur
 
 involutus
-involuta
 involvens
+involuta
 
 involvuntur
 
@@ -15230,14 +15291,15 @@ iosyas
 
 iota
 
-ipsam
-ipsius
 ipsum
-ipso
+ipsius
+ipsam
 ipsorum
+ipso
 ipsa
-ipsis
 ipsos
+ipsis
+ipse
 ipsi
 
 ipsique
@@ -15298,6 +15360,8 @@ irruit
 
 irruitis
 
+is
+
 eius
 eorum
 
@@ -15321,16 +15385,18 @@ ist
 
 istas
 
-istam
 istis
+istam
 istos
 isto
 ista
-iste
 istud
+iste
 isti
 
 istum
+
+ita
 
 itaque
 
@@ -15399,8 +15465,8 @@ iudaismi
 
 iudea
 iudei
-iudee
 iudex
+iudee
 
 iudeis
 
@@ -15703,8 +15769,8 @@ laboris
 labores
 laborum
 laboribus
-labore
 laborem
+labore
 
 labora
 
@@ -16765,8 +16831,8 @@ loquente
 
 loqueris
 
-loquitur
 loquor
+loquitur
 loquar
 loquatur
 loquere
@@ -17091,6 +17157,8 @@ magdalenam
 
 magdalene
 
+magis
+
 magister
 
 magistra
@@ -17129,13 +17197,13 @@ magnitudo
 
 maximus
 magna
-magno
 maior
+magno
 maiora
 magni
 magnum
-magnis
 maius
+magnis
 magne
 
 magnus
@@ -17259,11 +17327,11 @@ manens
 manentia
 
 maneat
-mane
 manebit
+mane
 manet
-manent
 manere
+manent
 
 maneria
 
@@ -17659,8 +17727,8 @@ mendax
 
 mentem
 mente
-mens
 mentis
+mens
 menti
 mentibus
 
@@ -17878,8 +17946,8 @@ meumque
 
 meis
 meos
-meam
 meum
+meam
 meus
 
 mi
@@ -18225,6 +18293,7 @@ modulis
 modulo
 moduli
 
+modo
 modus
 modum
 modis
@@ -18499,10 +18568,12 @@ movens
 moves
 
 motus
-movere
 movet
+movere
 
 move
+
+mox
 
 moyses
 moysen
@@ -18531,8 +18602,8 @@ mulieribus
 mulier
 mulieris
 mulieri
-muliere
 mulierum
+muliere
 
 multe
 
@@ -18570,8 +18641,8 @@ maxime
 plures
 multi
 multum
-multorum
 multos
+multorum
 multo
 plurima
 
@@ -18741,8 +18812,8 @@ mutet
 mutare
 muto
 mutato
-mutatur
 mutavit
+mutatur
 mutata
 mutat
 
@@ -18801,6 +18872,8 @@ nacta
 
 nalium
 
+nam
+
 namque
 
 nanique
@@ -18847,8 +18920,8 @@ nascetur
 
 nasciturum
 
-nasceretur
 nasci
+nasceretur
 nascitur
 nascendi
 natorum
@@ -18963,6 +19036,8 @@ nazareth
 
 nazareus
 
+ne
+
 neaman
 
 nebula
@@ -18971,6 +19046,8 @@ nebulas
 nebulosa
 
 nebulose
+
+nec
 
 necat
 
@@ -18997,6 +19074,8 @@ necnon
 
 nece
 neci
+
+necque
 
 nectar
 
@@ -19076,6 +19155,8 @@ nequam
 nequeo
 
 nequit
+
+neque
 
 nequissimus
 
@@ -19195,6 +19276,8 @@ nimium
 
 nisa
 
+nisi
+
 nitar
 
 nitens
@@ -19259,8 +19342,8 @@ nocentibus
 nocentes
 
 nocere
-nocebit
 nocet
+nocebit
 
 nociva
 
@@ -19310,6 +19393,8 @@ nominaris
 
 nominata
 
+non
+
 nondum
 
 nonne
@@ -19321,6 +19406,8 @@ normannia
 normula
 
 norunt
+
+nos
 
 nobiscum
 nobis
@@ -19437,8 +19524,8 @@ novo
 novis
 novi
 novam
-novas
 novus
+novas
 novissimus
 
 nox
@@ -19516,8 +19603,8 @@ nudavit
 
 nudum
 
-nudis
 nudus
+nudis
 nudos
 
 nugatoria
@@ -19534,8 +19621,8 @@ nulliusque
 
 nullius
 nullum
-nullis
 nullo
+nullis
 nulla
 nulli
 nullus
@@ -19656,6 +19743,10 @@ nympha
 
 nympharum
 
+o
+
+ob
+
 obduxisti
 
 obediens
@@ -19705,8 +19796,8 @@ obligat
 
 obliquat
 
-oblita
 oblite
+oblita
 
 oblitus
 
@@ -19748,8 +19839,8 @@ obscuritas
 obscurat
 
 obscuro
-obscure
 obscuris
+obscure
 obscura
 
 obscurum
@@ -19932,11 +20023,11 @@ ocelli
 octo
 
 oculo
-oculis
 oculus
+oculis
 oculi
-oculorum
 oculos
+oculorum
 oculum
 
 oderis
@@ -20081,8 +20172,8 @@ omnipotentie
 omni
 omnis
 omnibus
-omnia
 omnium
+omnia
 omnem
 omne
 omnes
@@ -20340,8 +20431,8 @@ ornatus
 
 ornavit
 
-ornatam
 ornato
+ornatam
 ornata
 
 orans
@@ -20746,8 +20837,8 @@ parata
 parat
 
 partem
-parte
 partes
+parte
 pars
 
 parsimonia
@@ -20805,8 +20896,8 @@ parvula
 parvulus
 
 parvis
-minoris
 minus
+minoris
 minores
 minor
 minorem
@@ -20961,8 +21052,8 @@ patiens
 passurus
 patiaris
 pateris
-passa
 patitur
+passa
 pati
 patere
 patior
@@ -21122,8 +21213,8 @@ peccat
 pecoris
 
 pectora
-pectore
 pectus
+pectore
 pectoris
 
 pecuniam
@@ -21263,6 +21354,8 @@ pepigit
 
 pepones
 
+per
+
 peracta
 
 peracto
@@ -21325,15 +21418,15 @@ perditur
 perditurus
 
 perdidit
+perditum
 perditorum
 perdere
-perditum
-perdidimus
 perdo
+perdidimus
 perditus
 perdita
-perdiderat
 perditos
+perdiderat
 perdiderunt
 
 perduc
@@ -21374,9 +21467,9 @@ perenniter
 
 periturus
 perit
+pereunt
 pereo
 pereant
-pereunt
 periit
 perire
 pereas
@@ -21427,8 +21520,8 @@ perfidis
 perfidorum
 
 perfida
-perfide
 perfidus
+perfide
 
 perflagellatus
 
@@ -21748,8 +21841,8 @@ peto
 peterem
 pete
 petere
-petenti
 petit
+petenti
 petis
 petentes
 petimus
@@ -21934,10 +22027,10 @@ placeat
 placui
 placet
 placitum
-placent
 placere
-placebat
+placent
 placens
+placebat
 
 placida
 
@@ -21953,8 +22046,8 @@ placare
 
 plaga
 plagas
-plagam
 plagis
+plagam
 
 plagatus
 
@@ -22103,8 +22196,8 @@ plenos
 plena
 plenis
 plenus
-plenas
 plenum
+plenas
 
 plexa
 
@@ -22273,8 +22366,8 @@ ponere
 positum
 poneret
 posita
-ponam
 positis
+ponam
 ponit
 pone
 posito
@@ -22388,8 +22481,8 @@ portam
 
 portari
 portabant
-portare
 portat
+portare
 
 portio
 
@@ -22427,21 +22520,23 @@ possis
 possunt
 potuisti
 potentem
-possitis
 possim
+possitis
 potest
 potero
-possint
 poteris
+possint
 poterit
 poterant
-possent
 posse
-poterat
+possent
 potuit
+poterat
 potui
-possumus
 posset
+possumus
+
+post
 
 postea
 
@@ -23318,8 +23413,8 @@ previe
 
 previus
 
-preces
 precibus
+preces
 prece
 
 pridem
@@ -23379,8 +23474,8 @@ principe
 
 prioris
 priore
-prioribus
 prius
+prioribus
 prior
 
 priorum
@@ -23427,6 +23522,8 @@ privilegio
 privata
 
 privari
+
+pro
 
 probabilem
 
@@ -23978,8 +24075,8 @@ prostrato
 
 prostravit
 
-profuit
 prosunt
+profuit
 prosint
 prodest
 
@@ -24170,8 +24267,8 @@ puelle
 
 puellulis
 
-puero
 puerum
+puero
 puer
 pueros
 pueri
@@ -24440,8 +24537,8 @@ quadrifariam
 quadrupedum
 
 quales
-quale
 qualis
+quale
 qualiter
 
 qualitatem
@@ -24466,6 +24563,8 @@ quanta
 quantum
 quantus
 quanto
+
+quare
 
 quarter
 
@@ -24567,6 +24666,13 @@ questum
 
 quesumus
 
+qui
+
+quam
+
+quia
+
+quicumque
 quoscumque
 quicunque
 
@@ -24574,6 +24680,8 @@ quiddam
 quosdam
 quidam
 quadam
+
+quidem
 
 quidquam
 
@@ -24586,6 +24694,8 @@ quiescamus
 quiete
 
 quieta
+
+quilibet
 
 quin
 
@@ -24601,11 +24711,12 @@ quippe
 
 quem
 quorum
-quas
 quibus
+quas
 cuius
 quid
 quos
+quis
 quarum
 
 quicquam
@@ -24614,8 +24725,10 @@ quemquam
 
 quodque
 quique
+quisque
 
 quidquid
+quisquis
 quicquid
 
 quovis
@@ -24623,6 +24736,8 @@ quovis
 quivis
 
 quivit
+
+quo
 
 quocumque
 
@@ -24635,6 +24750,8 @@ quodsi
 quomodo
 
 quondam
+
+quoniam
 
 quoque
 
@@ -26079,8 +26196,8 @@ revertitur
 
 rex
 
-regi
 regis
+regi
 reges
 rege
 regem
@@ -26947,8 +27064,8 @@ sceleritas
 
 scelestis
 
-scelera
 scelere
+scelera
 sceleri
 scelus
 scelerum
@@ -26994,15 +27111,15 @@ scintillet
 sciet
 scire
 scio
-sciamus
 scitis
+sciamus
 sciunt
 scies
-scimus
 scit
+scimus
+scis
 sciens
 sciat
-scis
 
 scie
 
@@ -27146,6 +27263,8 @@ secutorem
 
 secus
 
+sed
+
 seda
 
 sedans
@@ -27166,15 +27285,15 @@ sedebitis
 
 sedechyas
 
-sedentes
 sedet
+sedentes
 sederunt
 sedent
 sedit
 sedens
 sederat
-sedentibus
 sedere
+sedentibus
 
 sedibus
 sedes
@@ -27338,8 +27457,8 @@ sentina
 sentine
 
 sentire
-sensit
 sentiunt
+sensit
 sentiat
 sentit
 sentiebam
@@ -27504,8 +27623,8 @@ servabit
 servando
 
 servantur
-servans
 servantes
+servans
 
 servas
 servata
@@ -27587,8 +27706,8 @@ servum
 
 servis
 servorum
-servo
 servus
+servo
 servi
 servos
 
@@ -27632,6 +27751,8 @@ sexu
 
 sexus
 
+si
+
 sibillinis
 
 sibillam
@@ -27639,6 +27760,8 @@ sibillam
 sibilla
 
 sibimet
+
+sic
 
 sicca
 
@@ -27710,13 +27833,13 @@ signet
 significant
 
 signavit
-signati
 signatum
+signati
 
 signorum
 
-signa
 signum
+signa
 signo
 signis
 
@@ -27758,8 +27881,8 @@ simeon
 similibus
 
 similiter
-similes
 similia
+similes
 similis
 simili
 simile
@@ -27915,6 +28038,8 @@ sitiunt
 situlam
 
 siurana
+
+sive
 
 so
 
@@ -28468,8 +28593,8 @@ sponso
 
 sponsum
 
-sponsi
 sponsus
+sponsi
 
 spontanea
 
@@ -28806,6 +28931,8 @@ suavis
 
 suavi
 
+sub
+
 egit
 
 subarrhata
@@ -29141,24 +29268,28 @@ suggessit
 
 suggestio
 
+sui
+
 secum
 semet
-sese
 sibi
+sese
 
 sulphureum
 
+sum
+
 fuerant
-forent
 fuisti
+forent
 sumus
 fuissent
 estis
 fuerunt
 esto
 futurum
-fuere
 futuram
+fuere
 sunt
 erimus
 eras
@@ -29167,17 +29298,17 @@ esset
 fore
 esses
 fuisse
-esse
 sint
+esse
 fuerat
 erit
 simus
-eris
 futurus
+eris
 fuit
 erat
-futura
 sitis
+futura
 erunt
 essent
 erant
@@ -29231,6 +29362,8 @@ sumptus
 sunamitis
 
 suo
+
+super
 
 supera
 
@@ -29320,8 +29453,8 @@ superscribitur
 superstitio
 
 summam
-summum
 superior
+summum
 summa
 summo
 summis
@@ -29408,8 +29541,8 @@ surgentium
 
 surgite
 
-surge
 surgit
+surge
 surrexit
 surgere
 surget
@@ -29512,9 +29645,10 @@ sustinuit
 
 sustinui
 
+suus
 suas
-suorum
 suum
+suorum
 suis
 suarum
 suam
@@ -29536,8 +29670,8 @@ symbolo
 
 symon
 
-symphonia
 symphoniam
+symphonia
 
 synagoga
 
@@ -29611,6 +29745,10 @@ talium
 
 tallia
 
+tam
+
+tamen
+
 tamquam
 tanquam
 
@@ -29639,12 +29777,12 @@ tantorum
 
 tante
 
-tantam
 tantis
+tantam
 tantus
 tanti
-tantos
 tantum
+tantos
 tanto
 tanta
 
@@ -29701,12 +29839,12 @@ tegebatur
 tegmine
 
 tegitur
-tectus
 texerat
+tectus
 tegat
 tegere
-tectum
 tegit
+tectum
 texit
 
 teguntur
@@ -29829,8 +29967,8 @@ teneri
 tenet
 tenes
 tenens
-tenere
 tenuit
+tenere
 tenent
 
 teneor
@@ -29935,8 +30073,8 @@ tritum
 terras
 terrarum
 terris
-terra
 terram
+terra
 
 terramque
 
@@ -30169,8 +30307,8 @@ titulorum
 titulum
 
 titulo
-titulis
 titulus
+titulis
 titulos
 
 tityre
@@ -30220,8 +30358,8 @@ tolllitur
 tollere
 tollit
 sustulit
-sublata
 tollat
+sublata
 tollens
 sublato
 sublatus
@@ -30311,8 +30449,8 @@ totique
 totis
 totius
 
-totam
 totus
+totam
 toto
 totum
 tota
@@ -30387,8 +30525,8 @@ transcendens
 
 transcendit
 
-transeat
 transirent
+transeat
 transire
 transeant
 transit
@@ -30659,8 +30797,8 @@ triumphantibus
 
 triumphata
 
-triumphale
 triumphali
+triumphale
 triumphans
 
 triumphat
@@ -30725,8 +30863,10 @@ trutina
 
 trutine
 
-tecum
+tu
+
 vobis
+tecum
 vobiscum
 tibi
 
@@ -30763,6 +30903,8 @@ tullius
 
 tulit
 
+tum
+
 tumba
 
 tumbe
@@ -30795,8 +30937,8 @@ tumulo
 
 tumultus
 
-tumulos
 tumulus
+tumulos
 
 tunc
 
@@ -30851,8 +30993,8 @@ turpique
 
 turpi
 turpis
-turpe
 turpia
+turpe
 
 turpissimi
 
@@ -30903,8 +31045,8 @@ tuam
 tuorum
 tuis
 tuus
-tuas
 tuos
+tuas
 tuum
 
 tympanistria
@@ -30969,6 +31111,8 @@ ubertas
 ubertate
 
 ubertatis
+
+ubi
 
 ubique
 
@@ -31139,6 +31283,7 @@ uno
 
 unius
 unam
+unus
 unum
 
 ur
@@ -31153,8 +31298,8 @@ urbanitas
 
 urbibus
 
-urbem
 urbs
+urbem
 urbis
 
 urceus
@@ -31196,6 +31341,8 @@ usurpans
 usurpant
 
 usum
+
+ut
 
 utar
 
@@ -31330,8 +31477,8 @@ vaga
 valeas
 valeat
 valent
-vale
 valet
+vale
 valere
 
 valeo
@@ -31604,23 +31751,23 @@ venie
 
 venieque
 
-veniunt
 venturum
+veniunt
 venias
 veniat
-veniant
 venisti
+veniant
 veniet
 venies
 venerunt
 venerit
 veniam
-venerat
 venite
+venerat
 venio
 venit
-veni
 venire
+veni
 venimus
 venturus
 
@@ -32061,19 +32208,19 @@ visu
 vidi
 videt
 videtur
-videte
 vidit
+videte
 videmus
 videat
 videas
 videre
-vides
 videri
+vides
 videntur
-videret
-viderunt
 vidimus
 video
+videret
+viderunt
 
 viderant
 
@@ -32375,8 +32522,8 @@ virgis
 
 virginem
 virgine
-virgines
 virgo
+virgines
 
 virgoque
 
@@ -32501,8 +32648,8 @@ viti
 vitis
 
 vitiorum
-vitia
 vitiis
+vitia
 vitium
 
 vitream
@@ -32558,8 +32705,8 @@ victa
 vixerit
 vivit
 vixit
-vivamus
 vivere
+vivamus
 vivas
 vivendum
 
@@ -32635,8 +32782,8 @@ velle
 vult
 velint
 volens
-velis
 vellet
+velis
 vultis
 volunt
 
