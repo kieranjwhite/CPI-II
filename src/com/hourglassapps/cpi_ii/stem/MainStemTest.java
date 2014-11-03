@@ -32,7 +32,7 @@ public class MainStemTest {
 
 	private static void stemAndShow(String pTerm, PrintWriter pOut) throws IOException {
 		try(StemRecorderFilter filter=STEMMER_FACTORY.inst(new WhitespaceTokenizer(new StringReader(pTerm)))) {
-			pOut.println(pTerm+"\t"+filter.stem());
+			pOut.print(filter.stem());
 		}
 	}
 	
@@ -44,7 +44,8 @@ public class MainStemTest {
 
 		if(pArgs.length==1) {
 			try(PrintWriter out=new PrintWriter(new OutputStreamWriter(System.out))) {
-				stemAndShow(pArgs[0].toLowerCase(), out);				
+				stemAndShow(pArgs[0].toLowerCase(), out);
+				out.println();
 			}
 		} else {
 
@@ -76,9 +77,10 @@ public class MainStemTest {
 					int character;
 					while ((character = reader.read()) != -1) {
 						char ch = (char) character;
-						if (Character.isWhitespace((char) ch)) {
+						if (Character.isWhitespace(ch)) {
 							if (input.length() > 0) {
 								stemAndShow(input.toString(), out);
+								out.print(ch);
 								input.delete(0, input.length());
 							}
 						} else {

@@ -28,14 +28,6 @@ public class Log {
     }
     
     static private void printStack(String tag, Throwable e) {
-    	/*
-    	String msg=e.getMessage();
-    	if(msg!=null) {
-    		writeln(tag, e.getMessage());
-    	} else {
-    		writeln(tag, "Exception: "+e);
-    	}
-    	*/
 		writeln(tag, "Exception: "+e); //this seems to provide more information than the comment out lines above
 		for(StackTraceElement frame: e.getStackTrace()) {
 			writeln(tag, "\t"+frame.toString()+" ("+frame.getClassName()+":"+frame.getLineNumber()+")");

@@ -109,6 +109,7 @@ public abstract class StemRecorderFilter extends TokenFilter {
 					int numKeys=keys.size();
 					saver.writeInt(numKeys);
 					for(String k: keys) {
+						assert !"_".equals(k);
 						saver.writeUTF(k);
 						Set<String> expansions=mStem2Expansions.get(k);
 						saver.writeInt(expansions.size());
@@ -146,6 +147,7 @@ public abstract class StemRecorderFilter extends TokenFilter {
 					int numKeys=loader.readInt();
 					for(int keyIdx=0; keyIdx<numKeys; keyIdx++) {
 						String key=loader.readUTF();
+						assert !"_".equals(key);
 						int numExpansions=loader.readInt();
 						for(int expIdx=0; expIdx<numExpansions; expIdx++) {
 							stem2Expansions.addOne(key, loader.readUTF());

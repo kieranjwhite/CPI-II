@@ -16,7 +16,8 @@ public class MainDownload {
 	
 	public static void main(String pArgs[]) throws IOException {
 		if(pArgs.length<1) {
-			System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload --real <STEM_FILE>");
+			System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload <STEM_FILE>");
+			System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload --real <STEM_FILE>");
 		}
 
 		boolean dummyRun=true;
@@ -28,13 +29,13 @@ public class MainDownload {
 		if(dummyRun) {
 			System.out.println("Dummy run...");
 		} else {
-			System.out.println("Querying searh engine...");
+			System.out.println("Querying search engine...");
 		}
 		String path=pArgs[pathIdx];
 		
 		try(
 				final MainQuery q=dummyRun?new MainQuery() : new MainQuery(MainQuery.AUTH_KEY);
-				AbstractDisjunctionRelayer receiver=new AbstractDisjunctionRelayer(q){
+				AbstractQueryThread receiver=new AbstractQueryThread(q){
 
 					@Override
 					public void onLink(URI pLink) {
@@ -43,6 +44,7 @@ public class MainDownload {
 					
 				};
 		) {
+			receiver.start();
 			if(!q.filterSites(new HashSet<String>(Arrays.<String>asList(new String[] {
 					"catalogue.conductus.ac.uk", "diamm.ac.uk", "chmtl.indiana.edu/tml",
 					"archive.org/details/analectahymnicam20drev",

@@ -21,30 +21,23 @@ import com.hourglassapps.util.Log;
 
 public class MainIndexConductus {
 	private final static String TAG=MainIndexConductus.class.getName();
-	//public final static String STEMMED_2_EPRINT_INDEX="index";
-	
 	private final static int NGRAM_LENGTH=3;
-	
 	public final static File UNSTEMMED_TERM_2_EPRINT_INDEX=new File("unstemmed_term_index");
 	public final static File UNSTEMMED_2_EPRINT_INDEX=new File("unstemmed_index");
 	public final static File UNSTEMMED_2_STEMMED_INDEX=new File("unstemmed_to_stemmed_index");
 	
 	private final LatinAnalyzer mNonStemmingAnalyser=new StandardLatinAnalyzer();
 	private final LatinAnalyzer mStemmingAnalyser=new StandardLatinAnalyzer().setStemmer(LatinAnalyzer.STEMPEL_RECORDER_FACTORY);
-	//private final NGramAnalyzerBuilder mStemmed2EprintIdIndex;
-
+	
 	private final NGramAnalyzerBuilder mNonStemmingBuilder=new NGramAnalyzerBuilder(mNonStemmingAnalyser, NGRAM_LENGTH);
 	private final NGramAnalyzerBuilder mStemmingBuilder=new NGramAnalyzerBuilder(mStemmingAnalyser, NGRAM_LENGTH);
-	
-	private File mInput;
+	private final File mInput;
 	
 	private boolean mListExpansions=false;
-	//private boolean mSerialiseExpansions=false;
 	private boolean mSerialiseExpansions=false;
 	
 	public MainIndexConductus(String pInput) throws IOException {
 		mInput=new File(pInput);
-		//mStemmed2EprintIdIndex=new NGramAnalyzerBuilder(mStemmingAnalyser, 3);
 	}
 
 	public MainIndexConductus setListExpansions(boolean pList) {
@@ -56,38 +49,7 @@ public class MainIndexConductus {
 		mSerialiseExpansions=pSer;
 		return this;
 	}
-/*	
-	private void displayExpansions() throws IOException {
-		final ResultRelayer stemExpansionsLister=new ResultRelayer() {
 
-			@Override
-			public void run(IndexReader pReader, TopDocs pResults)
-					throws IOException {
-				for(int docIdx=0; docIdx<pResults.scoreDocs.length; docIdx++) {
-					String[] unstemmedTerms=pReader.document(pResults.scoreDocs[docIdx].doc).getValues(FieldVal.KEY.s());
-					assert(unstemmedTerms.length==1);
-					System.out.println(unstemmedTerms[0]);
-				}
-				System.out.println();
-			}
-
-		};
-
-		mStemmed2UnstemmedIndex.visitTerms(new TermHandler(){
-
-			@Override
-			public void run(TermsEnum pTerms) throws IOException {
-				BytesRef term;
-				while((term=pTerms.next())!=null) {
-					//term should be unstemmed
-					String termStr=term.utf8ToString();
-					mStemmed2UnstemmedIndex.interrogate(FieldVal.CONTENT, termStr, stemExpansionsLister);
-				}
-			}
-
-		});
-	}
-	 */
 	public void index() throws ParseException, IOException {
 		try(Indexer idIndexer=new Indexer(UNSTEMMED_2_EPRINT_INDEX, mNonStemmingBuilder.build())) {
 			indexById(idIndexer);
@@ -107,12 +69,6 @@ public class MainIndexConductus {
 			boolean indexed=mStemmingAnalyser.storeStems(System.out);
 			assert indexed;			
 		}
-		
-		/*
-		if(mSerialiseExpansions) {
-			displayExpansions();
-		}
-		*/
 	}
 	
 	private void indexById(Indexer pIndexer) throws IOException, ParseException {
@@ -175,18 +131,11 @@ public class MainIndexConductus {
 			case "--serialise":
 				serialise=true;
 				break;
-				/*
-			case "--display-ngrams":
-				serialise=true;
-				break;
-				*/
 			default:
 				inFile=args[i];
 			}
 		}
 		try {
-			//MainIndexConductus indexer=new MainIndexConductus(inFile)
-			//.setListExpansions(list).setSerialiseExpansions(serialise);
 			MainIndexConductus indexer=new MainIndexConductus(inFile)
 			.setListExpansions(list).setSerialiseExpansions(serialise);
 			indexer.index();
