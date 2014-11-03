@@ -44,7 +44,9 @@ public class MainQuery extends AbstractQuery implements Thrower {
 	private final static String AUTH_PREFIX="Basic ";
 	
 	private final static int MAX_RESULT_PAGES=2; //in addition we currently request 50 docs per page (ie the max allowed)
-	private final static int TOTAL_QUERY_LEN=2047; //from http://stackoverflow.com/questions/15334531/what-are-the-query-length-limits-for-the-bing-websearch-api
+	//A length 0f 2047 is too long. I do know from experience that a length of 2007 works though so I'll round it off to 2000 and go with that.
+	//private final static int TOTAL_QUERY_LEN=2047; //from http://stackoverflow.com/questions/15334531/what-are-the-query-length-limits-for-the-bing-websearch-api
+	private final static int TOTAL_QUERY_LEN=2000;
 	public static final String AUTH_KEY = "xD0E++DfZY7Sbumxx2QBuvmgOGliDgHuDIm0LzIGr3E=";
 
 	static {
@@ -68,6 +70,8 @@ public class MainQuery extends AbstractQuery implements Thrower {
 	private boolean mSearchInvoked=false;
 	private String mBlacklistedPhrases="";
 	
+	//private int mLongest=0;
+	
 	public MainQuery(String pAccountKey) {
 		mAccountKey=new String(Base64.encodeBase64((':'+pAccountKey).getBytes()));
 	}
@@ -77,8 +81,19 @@ public class MainQuery extends AbstractQuery implements Thrower {
 	}
 	
 	@Override
+	protected String encode(String pString) throws UnsupportedEncodingException {
+		/*
+		 * According to http://stackoverflow.com/questions/15334531/what-are-the-query-length-limits-for-the-bing-websearch-api
+		 * queries are reencoded at Microsoft's end so that +s are converted to %20s. After that the length limit of 2048
+		 * characters is applied. We therefore need to use %20s during encoding if we wish to check the length of
+		 * our queries.
+		 */
+		return super.encode(pString).replaceAll("\\+", "%20");
+	}
+	
+	@Override
 	protected int maxQueryLen() {
-		int maxLen=TOTAL_QUERY_LEN-(SEARCH_PATH_PREFIX.length()+
+		int maxLen=TOTAL_QUERY_LEN-(SEARCH_URI_PREFIX.length()+
 				CLOSING_BRACKET.length()+mBlacklistedPhrases.length()+
 				SEARCH_PATH_SUFFIX.length()+mMaxQueryLenOverhead);
 		assert(maxLen>0);
@@ -128,7 +143,11 @@ public class MainQuery extends AbstractQuery implements Thrower {
 		if(mAccountKey==null) {
 			body="{\"d\":{\"results\":[]}}";
 		} else {
-			body=mClient.execute(get, respHandler);			
+		//} else if(pQuery.toString().length()>mLongest) {
+			body=mClient.execute(get, respHandler);	
+		//	mLongest=pQuery.toString().length();
+		//} else {
+		//	body="{\"d\":{\"results\":[]}}";
 		}
 		//System.out.println("response: "+body);
 		return mFact.inst(body);		
