@@ -69,9 +69,10 @@ public class MainQuery extends AbstractQuery implements Thrower {
 	private final HttpClient mClient=new DefaultHttpClient();
 	private boolean mSearchInvoked=false;
 	private String mBlacklistedPhrases="";
+	private String mBlacklistedSites="";
 	
-	//private int mLongest=0;
-	
+	//private int mLongest=1000;
+
 	public MainQuery(String pAccountKey) {
 		mAccountKey=new String(Base64.encodeBase64((':'+pAccountKey).getBytes()));
 	}
@@ -94,7 +95,7 @@ public class MainQuery extends AbstractQuery implements Thrower {
 	@Override
 	protected int maxQueryLen() {
 		int maxLen=TOTAL_QUERY_LEN-(SEARCH_URI_PREFIX.length()+
-				CLOSING_BRACKET.length()+mBlacklistedPhrases.length()+
+				CLOSING_BRACKET.length()+mBlacklistedSites.length()+mBlacklistedPhrases.length()+
 				SEARCH_PATH_SUFFIX.length()+mMaxQueryLenOverhead);
 		assert(maxLen>0);
 		return maxLen;
@@ -131,7 +132,7 @@ public class MainQuery extends AbstractQuery implements Thrower {
 
 	@Override
 	protected URI uri() throws URISyntaxException {
-		return new URI(SEARCH_URI_PREFIX+mQuery.append(CLOSING_BRACKET).append(mBlacklistedPhrases).append(SEARCH_PATH_SUFFIX).toString());
+		return new URI(SEARCH_URI_PREFIX+mQuery.append(CLOSING_BRACKET).append(mBlacklistedSites).append(mBlacklistedPhrases).append(SEARCH_PATH_SUFFIX).toString());
 	}
 
 	private Response page(URI pQuery) throws ClientProtocolException, IOException {
@@ -240,15 +241,20 @@ public class MainQuery extends AbstractQuery implements Thrower {
 		mThrower.throwCaught(pCatchable);
 	}
 
-	@Override
-	public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {
+	private String blacklist(Set<String> pFiltered, String pJoinStart, String pJoinEnd) throws UnsupportedEncodingException {
 		if(mSearchInvoked) {
 			throw new IllegalStateException("Cannot alter filter once search has been invoked");
 		}
-		String blacklisted=Rtu.join(new ArrayList<String>(pPhrases), "\" AND NOT \"");
+		String blacklisted=Rtu.join(new ArrayList<String>(pFiltered), pJoinEnd+pJoinStart);
 		if(blacklisted.length()>0) {
-			blacklisted=encode(" AND NOT \""+blacklisted+"\"");
+			blacklisted=encode(pJoinStart+blacklisted+"\"");
 		}
+		return blacklisted;
+	}
+	
+	@Override
+	public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {
+		String blacklisted=blacklist(pPhrases, " AND NOT \"", "\"");
 		assert(maxQueryLen()>=mBlacklistedPhrases.length());
 		if(blacklisted.length()+(maxQueryLen()-mBlacklistedPhrases.length())>0) {
 			mBlacklistedPhrases=blacklisted;
@@ -258,4 +264,15 @@ public class MainQuery extends AbstractQuery implements Thrower {
 		}
 	}
 
+	@Override
+	public boolean filterSites(Set<String> pSites) throws UnsupportedEncodingException {
+		String blacklisted=blacklist(pSites, " AND NOT site:", "");
+		assert(maxQueryLen()>=mBlacklistedSites.length());
+		if(blacklisted.length()+(maxQueryLen()-mBlacklistedSites.length())>0) {
+			mBlacklistedSites=blacklisted;
+			return true;
+		} else {
+			return false;
+		}
+	}	
 }

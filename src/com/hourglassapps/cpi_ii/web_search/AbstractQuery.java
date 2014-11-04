@@ -24,7 +24,7 @@ public abstract class AbstractQuery implements RestrictedQuery<URI> {
 	}
 
 	@Override
-	public boolean filterSites(Set<String> pSites) {
+	public boolean filterSites(Set<String> pSites) throws UnsupportedEncodingException {
 		return false;
 	}
 
