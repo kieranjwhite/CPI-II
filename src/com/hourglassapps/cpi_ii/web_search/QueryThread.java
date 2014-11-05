@@ -6,48 +6,89 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
+import com.hourglassapps.cpi_ii.Journal;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.ExpansionReceiver;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
+import com.hourglassapps.util.Typed;
 
-public abstract class AbstractQueryThread extends Thread implements AutoCloseable, ExpansionReceiver<String> {
-	private final static String TAG=AbstractQueryThread.class.getName();
+public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionReceiver<String> {
+	private final static String TAG=QueryThread.class.getName();
 	
 	private final List<List<String>> mDisjunctions=new ArrayList<List<String>>();
 	private final PipedInputStream mIn=new PipedInputStream();
 	private final DataOutputStream mOut=new DataOutputStream(new BufferedOutputStream(new PipedOutputStream(mIn)));
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
-	private final Query<URI> mQ;	
+	private final SearchEngine<List<String>, K, URL, URL> mQ;	
+	private final Journal<K,URL> mJournal;
 	
-	public AbstractQueryThread(Query<URI> pQ) throws IOException {
+	public QueryThread(SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,URL> pJournal) throws IOException {
 		super("query");
 		mQ=pQ;
+		mJournal=pJournal;
 	}
 	
 	@Override
 	public void run() {
-		Iterator<URI> links;
 		try (DataInputStream in=new DataInputStream(mIn)){
 			List<String> disjunctions=new ArrayList<>();
+			boolean skipped=false;
 			while(true) {
 				int numDisjunctions=in.readInt();
 				for(int i=0; i<numDisjunctions; i++) {
 					disjunctions.add(in.readUTF());
 				}
-				
-				links=mQ.search(disjunctions);
-				URI link;
-				//System.out.println(Rtu.join(disjunctions, " OR "));
-				while(links.hasNext()){
-					link=links.next();
-					onLink(link);
+
+				Query<K,URL> query=mQ.formulate(disjunctions);
+				if(!mJournal.has(query.uniqueName())) {
+					skipped=false;
+					Iterator<URL> links=mQ.present(query);
+
+					Typed<URL> source;
+					//System.out.println(Rtu.join(disjunctions, " OR "));
+					while(links.hasNext()){
+						final URL link=links.next();
+						source=new Typed<URL>() {
+
+							@Override
+							public String extension() {
+								String path=link.getPath();
+								if("/".equals(path)) {
+									return ".html";
+								} else {
+									String extension=FilenameUtils.getExtension(link.getPath());
+									if("".equals(extension)) {
+										return "";
+									} else {
+										return "."+extension;
+									}
+								}
+							}
+
+							@Override
+							public URL get() {
+								return link;
+							}
+							
+						};
+						mJournal.add(source);
+					}
+					mJournal.commitEntry(query.uniqueName());
+				} else {
+					if(!skipped) {
+						System.out.println("Skipping over work done...");
+						skipped=true;
+					}
 				}
 
 				disjunctions.clear();
@@ -65,7 +106,7 @@ public abstract class AbstractQueryThread extends Thread implements AutoCloseabl
 	private List<String> join(List<List<String>> pDisjunctions) {
 		List<String> allJoined=new ArrayList<String>();
 		for(List<String> disjunction: pDisjunctions) {
-			allJoined.add("\""+Rtu.join(disjunction, " ")+"\"");
+			allJoined.add(Rtu.join(disjunction, " "));
 			
 		}
 		return allJoined;
@@ -95,10 +136,4 @@ public abstract class AbstractQueryThread extends Thread implements AutoCloseabl
 		mThrower.close();
 	}
 	
-	/***
-	 * onLink is invoked for each link in the results from the SearchEngine. onLink will not 
-	 * be invoked on the main thread.
-	 * @param pLink
-	 */
-	abstract public void onLink(URI pLink);
 }

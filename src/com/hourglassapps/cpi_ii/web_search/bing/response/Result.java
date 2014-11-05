@@ -1,7 +1,9 @@
 package com.hourglassapps.cpi_ii.web_search.bing.response;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -18,7 +20,7 @@ public class Result {
 	private String mDisplayUrl;
 	private String mUrl;
 	
-	private URI mUri=null;
+	private URL mUri=null;
 	
 	public void set__metadata(__Metadata pMetadata) {
 		mMetadata=pMetadata;
@@ -45,9 +47,9 @@ public class Result {
 		mUrl=pUrl;
 	}
 	
-	public URI url() throws URISyntaxException {
+	public URL url() throws MalformedURLException {
 		if(mUri==null) {
-			mUri=new URI(mUrl);
+			mUri=new URL(mUrl);
 		}
 		return mUri;
 	}

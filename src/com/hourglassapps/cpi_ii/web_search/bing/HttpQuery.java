@@ -1,22 +1,22 @@
 package com.hourglassapps.cpi_ii.web_search.bing;
 
-import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 import com.hourglassapps.cpi_ii.web_search.Query;
 import com.hourglassapps.util.Ii;
 
-public class HttpQuery<K> implements Query<K,URI> {
+public class HttpQuery<K> implements Query<K,URL> {
 
 	private final K mName;
-	private final URI mUri;
+	private final URL mUri;
 	
 	HttpQuery(K pName) {
 		mName=pName;
 		mUri=null;
 	}
 	
-	HttpQuery(K pName, Ii<URI, List<String>> pFormat) {
+	HttpQuery(K pName, Ii<URL, List<String>> pFormat) {
 		mName=pName;
 		mUri=pFormat.fst();
 	}
@@ -27,7 +27,7 @@ public class HttpQuery<K> implements Query<K,URI> {
 	}
 
 	@Override
-	public URI raw() {
+	public URL raw() {
 		return mUri;
 	}
 	

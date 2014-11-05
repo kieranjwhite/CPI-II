@@ -1,6 +1,7 @@
 package com.hourglassapps.cpi_ii.web_search;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Set;
 
 /***
@@ -13,7 +14,7 @@ import java.util.Set;
  *
  * @param <T> type of Result returned.
  */
-public interface RestrictedQuery<T> extends Query<T> {
+public interface RestrictedSearchEngine<K,Q,R> extends SearchEngine<List<String>,K,Q,R> {
 	/***
 	 * <code>RestrictedQuery<code> instance will try to ensure that search 
 	 * engine filters out pages containing specified phrases in a search.<p>

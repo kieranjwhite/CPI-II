@@ -1,8 +1,8 @@
 package com.hourglassapps.cpi_ii.web_search;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 import com.hourglassapps.util.Ii;
 
-public abstract class AbstractQuery implements RestrictedQuery<URI> {
+public abstract class AbstractSearchEngine implements RestrictedSearchEngine<String,URL,URL> {
 	protected final static String ENCODING=StandardCharsets.UTF_8.toString();
 
 	protected String encode(String pString) throws UnsupportedEncodingException {
@@ -80,9 +80,18 @@ public abstract class AbstractQuery implements RestrictedQuery<URI> {
 	/**
 	 * Generates query, returning URI
 	 * @return URI representing query
+	 * @throws MalformedURLException 
 	 * @throws URISyntaxException 
 	 */
-	protected abstract URI uri() throws URISyntaxException;
+	protected abstract URL uri() throws MalformedURLException;
+	
+	protected String uniqueName(List<String> pDisjunctions) {
+		if(pDisjunctions.size()>0) {
+			return pDisjunctions.get(0);
+		} else {
+			return "";
+		}
+	}
 	
 	/**
 	 * 
@@ -92,9 +101,11 @@ public abstract class AbstractQuery implements RestrictedQuery<URI> {
 	 * @return First element is the <code>URI</code> representing query that is sent to search engine.
 	 * The second element is a list of any disjunctions not included in the query.
 	 * @throws UnsupportedEncodingException 
+	 * @throws MalformedURLException 
 	 * @throws URISyntaxException 
 	 */
-	protected Ii<URI, List<String>> format(List<String> pDisjunctions) throws UnsupportedEncodingException, URISyntaxException {
+	protected Ii<URL, List<String>> format(List<String> pDisjunctions) 
+			throws UnsupportedEncodingException, MalformedURLException {
 		int i=0;
 		for(; i<pDisjunctions.size(); i++) {
 			String dis=pDisjunctions.get(i);
@@ -103,10 +114,9 @@ public abstract class AbstractQuery implements RestrictedQuery<URI> {
 			}
 		}
 		try {
-			return new Ii<URI, List<String>>(uri(), Collections.unmodifiableList(pDisjunctions.subList(i, pDisjunctions.size())));
+			return new Ii<URL, List<String>>(uri(), Collections.unmodifiableList(pDisjunctions.subList(i, pDisjunctions.size())));
 		} finally {
 			reset();
 		}
 	}
-	
 }

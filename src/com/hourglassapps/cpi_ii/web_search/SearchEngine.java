@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-public interface Query<T> {
-	public Iterator<T> search(List<String> pDisjunctions) throws IOException;
+import com.hourglassapps.util.Ii;
+
+public interface SearchEngine<C,K,Q,R> {
+	public Query<K,Q> formulate(C pDisjunctions) throws IOException;
+	public Iterator<R> present(Query<K,Q> pQuery) throws IOException;
 }

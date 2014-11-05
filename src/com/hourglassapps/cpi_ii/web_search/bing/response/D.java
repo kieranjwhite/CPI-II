@@ -1,5 +1,6 @@
 package com.hourglassapps.cpi_ii.web_search.bing.response;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -33,11 +34,11 @@ public class D implements Iterable<Result> {
 		mNext=pNext;
 	}
 	
-	public URI next() throws URISyntaxException {
+	public URL next() throws MalformedURLException {
 		if(mNext==null) {
 			return null;
 		}
-		return new URI(mNext+BingArgs.JSON_SPECIFIER);
+		return new URL(mNext+BingArgs.JSON_SPECIFIER);
 	}
 
 	@Override
@@ -67,12 +68,12 @@ public class D implements Iterable<Result> {
 		};
 	}
 
-	public List<URI> urls() throws URISyntaxException {
-		List<URI> urls=new ArrayList<URI>();
+	public List<URL> urls() {
+		List<URL> urls=new ArrayList<URL>();
 		for(int i=0; i<mResults.length; i++) {
 			try {
 				urls.add(mResults[i].url());
-			} catch(URISyntaxException e) {
+			} catch(MalformedURLException e) {
 				Log.i(TAG, e);
 			}
 		}
