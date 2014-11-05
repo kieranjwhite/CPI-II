@@ -1,9 +1,8 @@
-package com.hourglassapps.cpi_ii.web_search.bing;
+package com.hourglassapps.cpi_ii.web_search;
 
 import java.net.URL;
 import java.util.List;
 
-import com.hourglassapps.cpi_ii.web_search.Query;
 import com.hourglassapps.util.Ii;
 
 public class HttpQuery<K> implements Query<K,URL> {
@@ -11,12 +10,12 @@ public class HttpQuery<K> implements Query<K,URL> {
 	private final K mName;
 	private final URL mUri;
 	
-	HttpQuery(K pName) {
+	public HttpQuery(K pName) {
 		mName=pName;
 		mUri=null;
 	}
 	
-	HttpQuery(K pName, Ii<URL, List<String>> pFormat) {
+	public HttpQuery(K pName, Ii<URL, List<String>> pFormat) {
 		mName=pName;
 		mUri=pFormat.fst();
 	}

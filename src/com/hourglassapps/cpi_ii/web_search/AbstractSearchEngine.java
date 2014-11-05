@@ -85,7 +85,7 @@ public abstract class AbstractSearchEngine implements RestrictedSearchEngine<Str
 	 */
 	protected abstract URL uri() throws MalformedURLException;
 	
-	protected String uniqueName(List<String> pDisjunctions) {
+	protected static String uniqueName(List<String> pDisjunctions) {
 		if(pDisjunctions.size()>0) {
 			return pDisjunctions.get(0);
 		} else {

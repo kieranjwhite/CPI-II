@@ -20,7 +20,6 @@ import com.hourglassapps.cpi_ii.IndexViewer;
 import com.hourglassapps.cpi_ii.Journal;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
 import com.hourglassapps.cpi_ii.MainListIndexTerms;
-import com.hourglassapps.cpi_ii.web_search.bing.HttpQuery;
 import com.hourglassapps.cpi_ii.web_search.bing.BingSearchEngine;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.FileJournal;

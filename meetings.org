@@ -213,7 +213,7 @@
       CLOSED: [2014-11-04 Tue 11:23]
 ****** Yes it does. Not only but the Bing api also accepts a path as well as a domain as an argument to site: 
 ******* Encountered a site (in archive.org) that Gregorio might want to blacklist. Unfortunately I never took note of what it was exactly
-******** TODO There are bound to be more so it'd be nice if these could be blacklisted at a later stage.
+******** TODO There are bound to be more so it'd be nice if these could be blacklisted at a later stage too.
 **** DIAMM for DIAMM
 **** MUSICARUM LATINARUM for TML
 **** Analecta hymnica for archive.org

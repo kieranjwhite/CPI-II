@@ -24,6 +24,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.lucene.util.BytesRefHash.MaxBytesLengthExceededException;
 
 import com.hourglassapps.cpi_ii.web_search.AbstractSearchEngine;
+import com.hourglassapps.cpi_ii.web_search.HttpQuery;
 import com.hourglassapps.cpi_ii.web_search.Query;
 import com.hourglassapps.cpi_ii.web_search.bing.response.Response;
 import com.hourglassapps.util.ConcreteThrower;
@@ -49,7 +50,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	//A length 0f 2047 is too long. I do know from experience that a length of 2007 works though so I'll round it off to 2000 and go with that.
 	//private final static int TOTAL_QUERY_LEN=2047; //from http://stackoverflow.com/questions/15334531/what-are-the-query-length-limits-for-the-bing-websearch-api
 	private final static int TOTAL_QUERY_LEN=2000;
-	private final static Query<String,URL> NULL_QUERY=new HttpQuery<String>("");
+	private final static Query<String,URL> NULL_QUERY=new HttpQuery<String>(uniqueName(Collections.<String>emptyList()));
 	public static final String AUTH_KEY = "xD0E++DfZY7Sbumxx2QBuvmgOGliDgHuDIm0LzIGr3E=";
 
 	static {

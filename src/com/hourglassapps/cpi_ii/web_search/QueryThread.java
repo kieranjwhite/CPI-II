@@ -3,6 +3,7 @@ package com.hourglassapps.cpi_ii.web_search;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -93,8 +94,10 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 
 				disjunctions.clear();
 			}
+		} catch(EOFException e) {
+			Log.i(TAG, "quitting thread");
 		} catch(IOException e) {
-			Log.i(TAG, e, "quitting thread");
+			Log.e(TAG, e);
 		}
 	}
 
