@@ -7,12 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.hourglassapps.cpi_ii.Journal;
 
@@ -20,6 +23,7 @@ public class FileJournal<K,C> implements Journal<K, C> {
 	private final static String TAG=FileJournal.class.getName();
 	private final static String PARTIAL_DIR_NAME="partial";
 	private final static String COMPLETED_DIR_NAME="completed";
+	private final static long FIRST_FILENAME=1;
 	
 	private final File mDirectory;
 	private final File mPartialDir;
@@ -28,7 +32,8 @@ public class FileJournal<K,C> implements Journal<K, C> {
 	private final Converter<K,String> mFilenameGenerator;
 	private final Converter<C,ReadableByteChannel> mContentGenerator;
 	
-	private long mFilename=0;
+	private long mFilename=FIRST_FILENAME;
+	private final List<C> mTrail=new ArrayList<C>();
 	
 	public FileJournal(File pDirectory, Converter<K,String> pFilenameGenerator, Converter<C,ReadableByteChannel> pContentGenerator) throws IOException {
 		mDirectory=pDirectory;
@@ -81,16 +86,12 @@ public class FileJournal<K,C> implements Journal<K, C> {
 	@Override
 	public void add(Typed<C> pContent) throws IOException {
 		C source=pContent.get();
+		mTrail.add(source);
 		ReadableByteChannel channel=mContentGenerator.convert(source);
 		if(channel==null) {
 			mFilename++;
 			return;
 		}
-		/*
-		try(BufferedWriter out=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(mPartialDir, Long.toString(mFilename++)+pContent.extension()))))) {
-			out.append(content);
-		}
-		*/
 		File dest=new File(mPartialDir, Long.toString(mFilename++)+pContent.extension());
 		assert !dest.exists();
 		try(FileChannel out=FileChannel.open(dest.toPath(), StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW)) {
@@ -98,9 +99,18 @@ public class FileJournal<K,C> implements Journal<K, C> {
 		}
 	}
 
+	private void saveTrail(File pDest) throws IOException {
+		try(PrintWriter out=new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(mPartialDir, '_'+pDest.getName())))))) {
+			for(C source: mTrail) {
+				out.println(source);
+			}
+		}
+	}
+	
 	@Override
 	public void commitEntry(K pKey) throws IOException {
 		File dest=destDir(pKey);
+		saveTrail(dest);
 		assert !dest.exists();
 		Files.move(mPartialDir.toPath(), dest.toPath(), StandardCopyOption.ATOMIC_MOVE);
 		startEntry();
@@ -122,7 +132,8 @@ public class FileJournal<K,C> implements Journal<K, C> {
 	@Override
 	public void startEntry() throws IOException {
 		setupPartial(mPartialDir);
-		mFilename=0;
+		mFilename=FIRST_FILENAME;
+		mTrail.clear();
 	}
 
 }

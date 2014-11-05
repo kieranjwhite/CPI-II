@@ -89,7 +89,7 @@ public abstract class AbstractSearchEngine implements RestrictedSearchEngine<Str
 		if(pDisjunctions.size()>0) {
 			return pDisjunctions.get(0);
 		} else {
-			return "";
+			return "_NULL_";
 		}
 	}
 	

@@ -94,7 +94,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 				disjunctions.clear();
 			}
 		} catch(IOException e) {
-			Log.i(TAG, "quitting thread");
+			Log.i(TAG, e, "quitting thread");
 		}
 	}
 
