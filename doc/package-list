@@ -1,8 +1,1 @@
-com.hourglassapps.cpi_ii
-com.hourglassapps.cpi_ii.latin
-com.hourglassapps.cpi_ii.stem
-com.hourglassapps.cpi_ii.stem.snowball.lucene
-com.hourglassapps.cpi_ii.stem.snowball.tartarus
-com.hourglassapps.cpi_ii.stem.stempel.egothor
-com.hourglassapps.serialise
-com.hourglassapps.util
+org.jdeferred

@@ -36,6 +36,9 @@
 **** Schinke R, Greengrass M, Robertson AM and Willett P (1996) A stemming algorithm for Latin text databases. Journal of Documentation, 52: 172-187.
 **** We distribute Snowball-compiled version
 **** Licence unspecified
+*** jdeferred
+**** https://github.com/jdeferred/jdeferred
+**** Apache 2
 ** Data queries
 *** primary key seems to be eprintid
 **** DONE confirm
@@ -252,9 +255,11 @@
     CLOSED: [2014-11-03 Mon 15:46]
 **** Stem groups are generated from unstemmed trigrams. Currently we do not allow partial trigrams. Consequently there are fewer distinct terms when indexing with trigrams compared to indexing with (for example) unigrams.
 *** Some results give links with dodgy encoding prevents instantiating as a URL instance
-**** problem is either in what they're sending or the httpclient library
-**** Wireshark is no good because its encrypted and I can't seem to disable encryption
-**** 5 or the first 50 hits had this issue
-***** seems high but not when you consider the query: a a e
+**** Ignore as it seems to be working now (only explanation I can think of is that now I use URL constructor initially rather than URI constructor)
+**** Original problem described below
+***** problem is either in what they're sending or the httpclient library
+***** Wireshark is no good because its encrypted and I can't seem to disable encryption
+***** 5 or the first 50 hits had this issue
+****** seems high but not when you consider the query: a a e
 
 #  LocalWords:  unstemmed unigrams serialised bigrams Bing txt

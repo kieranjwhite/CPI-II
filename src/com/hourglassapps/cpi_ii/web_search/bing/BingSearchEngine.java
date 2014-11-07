@@ -75,7 +75,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	private String mBlacklistedPhrases="";
 	private String mBlacklistedSites="";
 		
-	private int mLongest=1000;
+	private int mLongest=0;
 
 	public BingSearchEngine(String pAccountKey) {
 		mAccountKey=new String(Base64.encodeBase64((':'+pAccountKey).getBytes()));

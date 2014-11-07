@@ -3,16 +3,23 @@ package com.hourglassapps.cpi_ii.web_search;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.jdeferred.Promise;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -21,14 +28,16 @@ import com.hourglassapps.cpi_ii.Journal;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
 import com.hourglassapps.cpi_ii.MainListIndexTerms;
 import com.hourglassapps.cpi_ii.web_search.bing.BingSearchEngine;
+import com.hourglassapps.persist.FileSaver;
+import com.hourglassapps.persist.LocalFileJournal;
+import com.hourglassapps.persist.NonBlockingFileJournal;
 import com.hourglassapps.util.Converter;
-import com.hourglassapps.util.FileJournal;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Typed;
 
 public class MainDownload {
 	private final static String TAG=MainDownload.class.getName();
-	private final static File JOURNAL=new File("journal");
+	private final static Path JOURNAL=Paths.get("journal");
 	private final static String PATH_ENCODING=StandardCharsets.UTF_8.toString();
 	private final static Journal<String,URL> NULL_JOURNAL=new Journal<String,URL>() {
 
@@ -75,7 +84,7 @@ public class MainDownload {
 		String path=pArgs[pathIdx];
 
 		try(final BingSearchEngine q=dummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY)) {
-			Journal<String,URL> journal=dummyRun?NULL_JOURNAL:new FileJournal<String,URL>(JOURNAL, 
+			Journal<String,URL> journal=dummyRun?NULL_JOURNAL:new NonBlockingFileJournal<String,URL,SocketChannel>(JOURNAL, 
 					new Converter<String, String>() {
 
 				@Override
@@ -89,21 +98,25 @@ public class MainDownload {
 						return null;
 					}
 				}
-			},
-			new Converter<URL, ReadableByteChannel>() {
+			}, new Converter<URL, SocketChannel>(){
 
 				@Override
-				public ReadableByteChannel convert(URL pIn) {
-					//Creates a channel through which a link can be downloaded
+				public SocketChannel convert(URL pIn) {
+					//Creates a channel through which a web page can be downloaded
 					try {
-						return Channels.newChannel(pIn.openStream());
+						SocketChannel chanIn=SocketChannel.open();
+						chanIn.configureBlocking(false);
+						//InetSocketAddress addr=new InetSocketAddress(pIn.toString(), 80);
+						InetSocketAddress addr=new InetSocketAddress("jenkov.com", 80);
+						//Socket s=new Socket("www.aetv.com", 80);
+						chanIn.connect(addr);
+						return chanIn;
 					} catch(IOException e) {
 						Log.e(TAG, e);
 						return null;
 					}
-				}
-			}
-					);	
+				}});
+
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
 				receiver.start();
 				if(!q.filterSites(new HashSet<String>(Arrays.<String>asList(new String[] {
@@ -117,7 +130,6 @@ public class MainDownload {
 					})));
 					if(!blacklisted) {
 						Log.e(TAG, "failed to blacklist");
-						System.out.println();
 					}
 				}
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
