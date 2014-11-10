@@ -39,6 +39,9 @@
 *** jdeferred
 **** https://github.com/jdeferred/jdeferred
 **** Apache 2
+*** AsyncHttpClient
+**** http://www.whoishostingthis.com/mirrors/apache//httpcomponents/httpasyncclient/binary/httpcomponents-asyncclient-4.0.2-bin.zip
+**** Apache 2
 ** Data queries
 *** primary key seems to be eprintid
 **** DONE confirm

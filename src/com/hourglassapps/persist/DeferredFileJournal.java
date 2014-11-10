@@ -22,12 +22,15 @@ import org.jdeferred.multiple.MultipleResults;
 
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
+import com.hourglassapps.util.Downloader;
+import com.hourglassapps.util.Ii;
+import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Typed;
 
-public class DeferredFileJournal<K,C,S> extends AbstractFileJournal<K,C,Promise<S,IOException,Void>> {
+public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader<C>> {
 	private final static String TAG=DeferredFileJournal.class.getName(); 
 	
-	private final Set<Promise<Void,IOException,Void>> mDeferred=new HashSet<>();
+	private final Set<Promise<Void,IOException,Void>> mPromised;
 	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();
 	private final DeferredManager mDeferredMgr=new DefaultDeferredManager();
 	@SuppressWarnings("rawtypes")
@@ -35,69 +38,99 @@ public class DeferredFileJournal<K,C,S> extends AbstractFileJournal<K,C,Promise<
 
 	public DeferredFileJournal(Path pDirectory,
 			Converter<K, String> pFilenameGenerator,
-			Converter<C, Promise<S, IOException, Void>> pContentGenerator)
+			Downloader<C> pDownloader)
 			throws IOException {
-		super(pDirectory, pFilenameGenerator, pContentGenerator,0);
+		super(pDirectory, pFilenameGenerator, pDownloader,0);
+		mPromised=new HashSet<>();
+		assert nonePending(mPromised);
+		mPromised.clear();
 	}
-	
+
 	@Override
 	public void add(final Typed<C> pLink) throws IOException {
 		incFilename();
-		mDeferred.add(source(pLink).then(new DonePipe<S,Void,IOException,Void>(){
-
-			@Override
-			public Promise<Void, IOException, Void> pipeDone(S pContent) {
-				Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
-				if(pContent==null) {
-					deferred.resolve(null);
-				} else {
-					try {
-						Path dest=dest(pLink);
-						try(PrintWriter out=new PrintWriter(new BufferedWriter(new FileWriter(dest.toFile())))) {
-							out.print(pContent);
-						}
-						deferred.resolve(null);
-					} catch(IOException e) {
-						deferred.reject(e);
-					}
-				}
-				return deferred;
-			}
-			
-		}));
+		C source=pLink.get();
+		trailAdd(source);
+		mPromised.add(mContentGenerator.download(source, dest(pLink)));
 	}
-	
+
+	/*
+} else {
+	try {
+		Path dest=dest(pLink);
+		try(PrintWriter out=new PrintWriter(new BufferedWriter(new FileWriter(dest.toFile())))) {
+			out.print(pContent);
+		}
+		deferred.resolve(null);
+	} catch(IOException e) {
+		deferred.reject(e);
+	}
+}
+*/
 	@Override
 	public void commitEntry(final K pKey) throws IOException {
-		Promise<S, IOException, Void> p=mDeferredMgr.when(mDeferred.toArray(mPendingArr)).then(
-				new DonePipe<MultipleResults,S,IOException,Void>(){
+		if(mPromised.size()>0) {
+			Promise<Void, IOException, Void> p=mDeferredMgr.when(mPromised.toArray(mPendingArr)).then(
+					new DonePipe<MultipleResults,Void,IOException,Void>(){
 
-			@Override
-			public Promise<S, IOException, Void> pipeDone(
-					MultipleResults result) {
-						Deferred<S,IOException,Void> deferred=new DeferredObject<S,IOException,Void>();
-						Path dest=destDir(pKey);
-						try {
-							tidyUp(dest);
-							deferred.resolve(null);
-						} catch(IOException e) {
-							deferred.reject(e);
+						@Override
+						public Promise<Void, IOException, Void> pipeDone(
+								MultipleResults result) {
+							Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
+							Path dest=destDir(pKey);
+							try {
+								tidyUp(dest);
+								deferred.resolve(null);
+							} catch(IOException e) {
+								deferred.reject(e);
+							}
+							return deferred;
 						}
-						return deferred;
-					}
-			}).fail(new FailCallback<IOException>(){
+					}).fail(new FailCallback<IOException>(){
 
-				@Override
-				public void onFail(IOException e) {
-					mThrower.ctch(e);
-				}});	
-		try {
-			p.waitSafely();
-		} catch (InterruptedException i) {
-			mThrower.ctch(new IOException(i));
+						@Override
+						public void onFail(IOException e) {
+							mThrower.ctch(e);
+						}});	
+			try {
+				/*
+				p.waitSafely(1000*180);
+				for(Promise<?,?,?> initialPromise:mPromised) {
+					if(initialPromise.isPending()) {
+						Log.e(TAG, initialPromise.toString());
+					}
+				}
+				*/
+				p.waitSafely();
+			} catch (InterruptedException i) {
+				mThrower.ctch(new IOException(i));
+			}
+		} else {
+			try {
+				Path dest=destDir(pKey);
+				tidyUp(dest);
+			} catch(IOException e) {
+				mThrower.ctch(e);
+			}
 		}
 		startEntry(); //Note this is invoked even if there's an exception
 		mThrower.throwCaught(null);
+	}
+
+	private static boolean nonePending(Set<Promise<Void,IOException,Void>> pPromised) {
+		for(Promise<?,?,?> p: pPromised) {
+			if(p.isPending()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public void startEntry() throws IOException {
+		assert nonePending(mPromised);
+		mPromised.clear();
+		super.startEntry();
 	}
 
 }

@@ -35,11 +35,11 @@ import com.hourglassapps.util.Thrower;
 
 public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	private final static String TAG=BingSearchEngine.class.getName();
+	public final static int RESULTS_PER_PAGE=50;
 	
 	private final static String SEARCH_PATH_PREFIX="/Bing/SearchWeb/Web?Query=%27%28";
 	private final static String SEARCH_URI_PREFIX=
 			"https://api.datamarket.azure.com"+SEARCH_PATH_PREFIX;
-	private final static int RESULTS_PER_PAGE=50;
 	private final static String CLOSING_BRACKET="%29";
 	private final static String SEARCH_PATH_SUFFIX="%27&$top="+RESULTS_PER_PAGE+BingArgs.JSON_SPECIFIER;
 	

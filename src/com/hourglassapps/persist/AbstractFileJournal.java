@@ -33,17 +33,18 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 	private final Path mCompletedDir;
 	
 	private final Converter<K,String> mFilenameGenerator;
-	private final Converter<C,S> mContentGenerator;	
+	protected final S mContentGenerator;	
 	private final long mFirstFilename;
 	
 	private long mFilename;
-	private final List<C> mTrail=new ArrayList<C>();
+	private final List<C> mTrail;
 
-	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, Converter<C,S> pContentGenerator) throws IOException {
+	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, S pContentGenerator) throws IOException {
 		this(pDirectory, pFilenameGenerator, pContentGenerator, FIRST_FILENAME);
 	}
 
-	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, Converter<C,S> pContentGenerator, long pFirstFilename) throws IOException {
+	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
+			S pContentGenerator, long pFirstFilename) throws IOException {
 		mFirstFilename=pFirstFilename;
 		mDirectory=pDirectory;
 		mkdir(mDirectory);
@@ -52,9 +53,16 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 		mkdir(mCompletedDir);
 		mFilenameGenerator=pFilenameGenerator;
 		mContentGenerator=pContentGenerator;
-		startEntry();
+		mTrail=new ArrayList<C>();
+		setupPartial(mPartialDir);
+		mFilename=mFirstFilename;
+		mTrail.clear();
 	}
 
+	protected void trailAdd(C pSource) {
+		mTrail.add(pSource);
+	}
+	
 	private static void setupPartial(Path pPartialDir) throws IOException {
 		if(Files.exists(pPartialDir)) {
 			deleteFlatDir(pPartialDir);
@@ -90,12 +98,6 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 		return Files.exists(destDir(pKey));
 	}
 
-	protected S source(Typed<C> pContent) {
-		C source=pContent.get();
-		mTrail.add(source);
-		return mContentGenerator.convert(source);
-	}
-	
 	protected void incFilename() {
 		mFilename++;
 	}
