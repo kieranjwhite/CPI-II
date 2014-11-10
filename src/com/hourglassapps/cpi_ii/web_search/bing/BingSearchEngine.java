@@ -28,6 +28,7 @@ import com.hourglassapps.cpi_ii.web_search.HttpQuery;
 import com.hourglassapps.cpi_ii.web_search.Query;
 import com.hourglassapps.cpi_ii.web_search.bing.response.Response;
 import com.hourglassapps.util.ConcreteThrower;
+import com.hourglassapps.util.Filter;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
@@ -74,8 +75,14 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	private boolean mSearchInvoked=false;
 	private String mBlacklistedPhrases="";
 	private String mBlacklistedSites="";
+	private Filter<URL> mFilter=new Filter<URL>(){
+
+		@Override
+		public boolean accept(URL pArg) {
+			return true;
+		}
 		
-	private int mLongest=0;
+	};
 
 	public BingSearchEngine(String pAccountKey) {
 		mAccountKey=new String(Base64.encodeBase64((':'+pAccountKey).getBytes()));
@@ -83,6 +90,11 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	
 	public BingSearchEngine() {
 		mAccountKey=null;
+	}
+	
+	public BingSearchEngine setFilter(Filter<URL> pFilter) {
+		mFilter=pFilter;
+		return this;
 	}
 	
 	@Override
@@ -138,23 +150,21 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	protected URL uri() throws MalformedURLException {
 		return new URL(SEARCH_URI_PREFIX+mQuery.append(CLOSING_BRACKET).append(mBlacklistedSites).append(mBlacklistedPhrases).append(SEARCH_PATH_SUFFIX).toString());
 	}
-
+	
 	private Response page(URL pQuery) throws ClientProtocolException, IOException, URISyntaxException {
 		HttpGet get=new HttpGet(pQuery.toURI());
 		get.setHeader(AUTH_HEADER, AUTH_PREFIX+mAccountKey);
 		ResponseHandler<String> respHandler=new BasicResponseHandler();
-		System.out.println(URLDecoder.decode(pQuery.toString(), ENCODING));
 		final String body;
 		if(mAccountKey==null) {
+			System.out.println(URLDecoder.decode(pQuery.toString(), ENCODING));
 			body="{\"d\":{\"results\":[]}}";
-		//} else {
-		} else if(pQuery.toString().length()>mLongest) {
+		} else if(mFilter.accept(pQuery)) {
+			Log.i(TAG, URLDecoder.decode(pQuery.toString(), ENCODING));
 			body=mClient.execute(get, respHandler);	
-			mLongest=pQuery.toString().length();
 		} else {
 			body="{\"d\":{\"results\":[]}}";
 		}
-		//System.out.println("response: "+body);
 		return mFact.inst(body);		
 	}
 
