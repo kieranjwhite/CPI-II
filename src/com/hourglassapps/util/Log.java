@@ -158,4 +158,7 @@ public class Log {
         }
     }
 
+    static public String esc(String pToEscape) {
+    	return pToEscape.replace("%", "%%");
+    }
 }

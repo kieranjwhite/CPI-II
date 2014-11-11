@@ -93,15 +93,16 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 							mThrower.ctch(e);
 						}});	
 			try {
-				/*
+				
 				p.waitSafely(1000*180);
 				for(Promise<?,?,?> initialPromise:mPromised) {
 					if(initialPromise.isPending()) {
-						Log.e(TAG, initialPromise.toString());
+						Log.e(TAG, Log.esc("Promise timed out: "+initialPromise.toString()));
+						System.exit(-1);
 					}
 				}
-				*/
-				p.waitSafely();
+				
+				//p.waitSafely();
 			} catch (InterruptedException i) {
 				mThrower.ctch(new IOException(i));
 			}

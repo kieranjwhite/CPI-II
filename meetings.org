@@ -264,5 +264,15 @@
 ***** Wireshark is no good because its encrypted and I can't seem to disable encryption
 ***** 5 or the first 50 hits had this issue
 ****** seems high but not when you consider the query: a a e
-
+**** Problem resurfaced when I started using CloseableHttpAsyncClient
+***** Ignoring for now as problem seems to be quite when dealing with most trigrams (a a e what the specific trigram that caused trouble)
+*** Issues with downloads
+**** Timeouts (>3 mins in somecases)
+***** http://www.cairn.info/revue-archives-d-histoire-doctrinale-et-litteraire-du-moyen-age-2005-1-page-105.htm
+****** for hec+est+fides
+****** Worked with browser and problem went away after retrying on a subsequent run
+***** http://ldysinger.stjohnsem.edu/@magist/1930_Pius11/Pi11%20casti-connubii-Lat-Engl.doc
+****** for proles+et+hominis
+****** Didn't even work for browser (but that got a HTTP 404). Subsequent run didn't work either.
+**** URL without www prefix caused a problem. Could ping and download when I added www. prefix
 #  LocalWords:  unstemmed unigrams serialised bigrams Bing txt

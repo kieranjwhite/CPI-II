@@ -34,6 +34,7 @@ public class FileJournal<K,C,S extends ReadableByteChannel> extends AbstractFile
 			return;
 		}
 		Path dest=dest(pContent);
+		incFilename();
 		try(FileChannel out=FileChannel.open(dest, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW)) {
 			out.transferFrom(channel, 0, Long.MAX_VALUE);
 		}

@@ -73,9 +73,9 @@ public class MainDownloader implements AutoCloseable {
 						ContentType contentType) {
 					if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 						//Event if this happens don't reject deferred as that would abort entire query
-						Log.e(TAG, "Download failed: "+pSource+" http reponse: "+response.getStatusLine().getStatusCode());
+						Log.e(TAG, Log.esc("Download failed: "+pSource+" http reponse: "+response.getStatusLine().getStatusCode()));
 					} else {
-						Log.i(TAG, "resolved: "+deferred);						
+						Log.i(TAG, Log.esc("resolved: "+deferred));						
 					}
 					deferred.resolve(null);
 					return file;
@@ -90,7 +90,7 @@ public class MainDownloader implements AutoCloseable {
 					super.releaseResources();
 					if(deferred.isPending()) {
 						deferred.resolve(null);
-						Log.e(TAG, "Unknown error for: "+deferred);
+						Log.e(TAG, Log.esc("Unknown error for: "+deferred));
 					}
 				}
 			};
@@ -99,14 +99,14 @@ public class MainDownloader implements AutoCloseable {
 			return deferred;
 		} catch(Exception e) {
 			deferred.resolve(null);
-			Log.e(TAG, e, "Exception for: "+deferred);
+			Log.e(TAG, e, Log.esc("Exception for: "+deferred));
 			throw new IOException(e);
 		}
 	}
 	
 	public void downloadAll(boolean pDummyRun, String pPath) {
 		try(final BingSearchEngine q=(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
-				setFilter(new RandomFilter<URL>(123456l, 0.0015385))) {
+				setFilter(new RandomFilter<URL>(0.0015385))) {
 			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL>(JOURNAL, 
 					new Converter<String, String>() {
 

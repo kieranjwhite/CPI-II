@@ -103,7 +103,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 	}
 	
 	protected Path dest(Typed<C> pContent) throws IOException {
-		return mPartialDir.resolve(Long.toString(mFilename++)+pContent.extension());
+		return mPartialDir.resolve(Long.toString(mFilename)+pContent.extension());
 	}
 	
 	@Override
