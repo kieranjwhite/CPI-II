@@ -316,4 +316,15 @@ public class Rtu {
 		}
 		return stringsJoined.toString();
 	}
+	
+	public static void continuePrompt() {
+		System.out.print("\nContinue? [yY]");
+		try {
+			while("yY".indexOf(System.in.read())==-1);
+		} catch (IOException e) {
+			Log.e(TAG, e);
+			System.exit(-1);
+		}
+		System.out.println();
+	}
 }

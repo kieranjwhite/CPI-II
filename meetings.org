@@ -268,11 +268,30 @@
 ***** Ignoring for now as problem seems to be quite when dealing with most trigrams (a a e what the specific trigram that caused trouble)
 *** Issues with downloads
 **** Timeouts (>3 mins in somecases)
+***** http://www.agenziaradicale.com/?id=2808:avant-retro-opere-inutili-di-un-uomo-inutile-mostra-di-giuseppe-vittorio-scapigliatiindex.php/rassegnaweb/
+****** Ignoring as browser can't download it either
+****** for totum+traxit+tonans
 ***** http://www.cairn.info/revue-archives-d-histoire-doctrinale-et-litteraire-du-moyen-age-2005-1-page-105.htm
 ****** for hec+est+fides
 ****** Worked with browser and problem went away after retrying on a subsequent run
 ***** http://ldysinger.stjohnsem.edu/@magist/1930_Pius11/Pi11%20casti-connubii-Lat-Engl.doc
 ****** for proles+et+hominis
 ****** Didn't even work for browser (but that got a HTTP 404). Subsequent run didn't work either.
-**** URL without www prefix caused a problem. Could ping and download when I added www. prefix
+**** Other failed downloads
+***** URL without www prefix caused a problem. Could ping and download when I added www. prefix
+***** http://www.gutenberg.org/files/17859/17859-h/files/colloquium1.html
+****** in silentium+deus+in
+****** http 403
+***** http://www.ex.ua/get/4508132
+****** Unknown error (in DeferredZeroCopyConsumer)
+***** http://www.itweb.co.za/index.php?option=com_content&view=article&id=139211
+****** Unknown error
+***** http://www.archive.org/stream/anessayonorigin01crokgoog/anessayonorigin01crokgoog_djvu.txt
+****** in velut+torrentem+lacrimas
+***** Incorrectly encoded URL in results
+****** DONE eg http://documentacatholicaomnia.eu/03d/0354-0430,_Augustinus,_Sermones_[5]_de_Diversis_(Serm._341-396),_LT.doc
+       CLOSED: [2014-11-11 Tue 17:59]
+***** Cooke rejected warning from org.apache.http.client.protocol.ResponseProcessCookies processCookies
+*** Possible additions to blacklisted sites:
+**** http://www.archive.org/stream/analectahymnica21drevuoft/analectahymnica21drevuoft_djvu.txt
 #  LocalWords:  unstemmed unigrams serialised bigrams Bing txt

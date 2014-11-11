@@ -33,6 +33,7 @@ import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Thrower;
+import com.hourglassapps.util.URLUtils;
 
 public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	private final static String TAG=BingSearchEngine.class.getName();
@@ -157,10 +158,10 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 		ResponseHandler<String> respHandler=new BasicResponseHandler();
 		final String body;
 		if(mAccountKey==null) {
-			System.out.println(URLDecoder.decode(pQuery.toString(), ENCODING));
+			System.out.println(URLDecoder.decode(pQuery.toString(), URLUtils.ENCODING));
 			body="{\"d\":{\"results\":[]}}";
 		} else if(mFilter.accept(pQuery)) {
-			Log.i(TAG, URLDecoder.decode(pQuery.toString(), ENCODING));
+			Log.i(TAG, URLDecoder.decode(pQuery.toString(), URLUtils.ENCODING));
 			body=mClient.execute(get, respHandler);	
 		} else {
 			body="{\"d\":{\"results\":[]}}";

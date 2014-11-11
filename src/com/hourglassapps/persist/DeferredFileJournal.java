@@ -25,16 +25,19 @@ import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
+import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Typed;
 
 public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader<C>> {
-	private final static String TAG=DeferredFileJournal.class.getName(); 
-	
+	private final static String TAG=DeferredFileJournal.class.getName();
+	//TIMEOUT is in ms
+	private final static int DEFAULT_TIMEOUT=1000*3*60;
 	private final Set<Promise<Void,IOException,Void>> mPromised;
 	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();
 	private final DeferredManager mDeferredMgr=new DefaultDeferredManager();
 	@SuppressWarnings("rawtypes")
 	private final Promise[] mPendingArr=new Promise[]{};
+	private int mTimeout=DEFAULT_TIMEOUT;
 
 	public DeferredFileJournal(Path pDirectory,
 			Converter<K, String> pFilenameGenerator,
@@ -46,6 +49,11 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 		mPromised.clear();
 	}
 
+	public DeferredFileJournal<K,C> setTimeout(int pTimeout) {
+		mTimeout=pTimeout;
+		return this;
+	}
+	
 	@Override
 	public void add(final Typed<C> pLink) throws IOException {
 		incFilename();
@@ -94,15 +102,18 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 						}});	
 			try {
 				
-				p.waitSafely(1000*180);
+				p.waitSafely(mTimeout);
 				for(Promise<?,?,?> initialPromise:mPromised) {
 					if(initialPromise.isPending()) {
 						Log.e(TAG, Log.esc("Promise timed out: "+initialPromise.toString()));
-						System.exit(-1);
+						mContentGenerator.reset();
+						Rtu.continuePrompt();
 					}
 				}
 				
 				//p.waitSafely();
+			} catch(IOException e) {
+				mThrower.ctch(e);
 			} catch (InterruptedException i) {
 				mThrower.ctch(new IOException(i));
 			}

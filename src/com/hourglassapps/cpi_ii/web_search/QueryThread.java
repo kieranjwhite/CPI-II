@@ -44,7 +44,6 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 		try (DataInputStream in=new DataInputStream(mIn)){
 			List<String> disjunctions=new ArrayList<>();
 			boolean skipped=false;
-			//String lastSkipped="";
 			while(true) {
 				int numDisjunctions=in.readInt();
 				for(int i=0; i<numDisjunctions; i++) {
@@ -54,7 +53,6 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 				Query<K,URL> query=mQ.formulate(disjunctions);
 				K name=query.uniqueName();
 				if(!mJournal.has(name)) {
-					//Log.i(TAG, "lastSkipped: "+lastSkipped+" current: "+name);
 					skipped=false;
 					Iterator<URL> links=mQ.present(query);
 
@@ -93,13 +91,6 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 					}
 					mJournal.commitEntry(query.uniqueName());
 				} else {
-					/*
-					if(name!=null) {
-						lastSkipped=query.uniqueName().toString();
-					} else {
-						lastSkipped="";
-					}
-					*/
 					if(!skipped) {
 						System.out.println("Skipping over work done...");
 						skipped=true;
@@ -120,7 +111,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 		mDisjunctions.add(new ArrayList<String>(pExpansions));
 	}
 
-	private List<String> join(List<List<String>> pDisjunctions) {
+	private List<String> concat(List<List<String>> pDisjunctions) {
 		List<String> allJoined=new ArrayList<String>();
 		for(List<String> disjunction: pDisjunctions) {
 			allJoined.add(Rtu.join(disjunction, " "));
@@ -133,7 +124,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 	public void onGroupDone(int pNumExpansions) {
 		try {
 			Collections.sort(mDisjunctions, ExpansionComparator.NGRAM_PRIORITISER);
-			List<String> joinedDisjunctions=join(mDisjunctions);
+			List<String> joinedDisjunctions=concat(mDisjunctions);
 			if(mThrower.fallThrough()) {
 				return;
 			}
@@ -150,6 +141,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 	@Override
 	public void close() throws Exception {
 		mOut.close();
+		join();
 		mThrower.close();
 	}
 	

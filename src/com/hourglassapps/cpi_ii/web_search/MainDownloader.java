@@ -3,6 +3,7 @@ package com.hourglassapps.cpi_ii.web_search;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -10,43 +11,27 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.concurrent.Future;
 
-import org.apache.http.HttpException;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.entity.ContentType;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
-import org.apache.http.nio.IOControl;
-import org.apache.http.nio.client.methods.AsyncCharConsumer;
 import org.apache.http.nio.client.methods.HttpAsyncMethods;
 import org.apache.http.nio.client.methods.ZeroCopyConsumer;
-import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
-import org.apache.http.protocol.HttpContext;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.hourglassapps.cpi_ii.IndexViewer;
 import com.hourglassapps.cpi_ii.Journal;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
 import com.hourglassapps.cpi_ii.MainListIndexTerms;
 import com.hourglassapps.cpi_ii.web_search.bing.BingSearchEngine;
 import com.hourglassapps.persist.DeferredFileJournal;
-import com.hourglassapps.persist.FileSaver;
-import com.hourglassapps.persist.LocalFileJournal;
 import com.hourglassapps.persist.NullJournal;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
 import com.hourglassapps.util.Log;
-import com.hourglassapps.util.Typed;
+import com.hourglassapps.util.URLUtils;
 
-public class MainDownloader implements AutoCloseable {
+public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	private final static String TAG=MainDownloader.class.getName();
 	private final static Path JOURNAL=Paths.get("journal");
 	private final static String PATH_ENCODING=StandardCharsets.UTF_8.toString();
@@ -58,44 +43,13 @@ public class MainDownloader implements AutoCloseable {
 		mClient.start();
 	}
 	
-	
+	@Override
 	public Promise<Void,IOException,Void> download(final URL pSource, final Path pDest) throws IOException {
-		final Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>() {
-			@Override
-			public String toString() {
-				return "DeferredObject: "+pSource.toString()+" to "+pDest.toString();
-			}
-		};
+		URL encoded=URLUtils.reencode(pSource);
+		final Deferred<Void,IOException,Void> deferred=new DownloadableDeferredObject<Void,IOException,Void>(encoded, pDest);
 		try {
-			ZeroCopyConsumer<File> consumer=new ZeroCopyConsumer<File>(pDest.toFile()){
-				@Override
-				protected File process(HttpResponse response, File file,
-						ContentType contentType) {
-					if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-						//Event if this happens don't reject deferred as that would abort entire query
-						Log.e(TAG, Log.esc("Download failed: "+pSource+" http reponse: "+response.getStatusLine().getStatusCode()));
-					} else {
-						Log.i(TAG, Log.esc("resolved: "+deferred));						
-					}
-					deferred.resolve(null);
-					return file;
-				}
-
-				@Override
-				protected void releaseResources() {
-					// Needed for Unknown Host errors
-					// Connection Closed Exception
-					// Connection Reset by Peer 
-					//
-					super.releaseResources();
-					if(deferred.isPending()) {
-						deferred.resolve(null);
-						Log.e(TAG, Log.esc("Unknown error for: "+deferred));
-					}
-				}
-			};
-			Future<File> future=mClient.execute(HttpAsyncMethods.createGet(pSource.toString()), consumer, null);
-			//future.get();
+			ZeroCopyConsumer<File> consumer=new DeferredZeroCopyConsumer(pDest.toFile(), deferred);
+			mClient.execute(HttpAsyncMethods.createGet(encoded.toString()), consumer, null);
 			return deferred;
 		} catch(Exception e) {
 			deferred.resolve(null);
@@ -106,7 +60,7 @@ public class MainDownloader implements AutoCloseable {
 	
 	public void downloadAll(boolean pDummyRun, String pPath) {
 		try(final BingSearchEngine q=(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
-				setFilter(new RandomFilter<URL>(0.0015385))) {
+				setFilter(new RandomFilter<URL>(123456, 0.0015385))) {
 			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL>(JOURNAL, 
 					new Converter<String, String>() {
 
@@ -121,15 +75,7 @@ public class MainDownloader implements AutoCloseable {
 						return null;
 					}
 				}
-			}, new Downloader<URL>(){
-
-				@Override
-				public Promise<Void, IOException, Void> download(URL pSrc,
-						Path pDst) throws IOException {
-					return MainDownloader.this.download(pSrc, pDst);
-				}
-
-			});
+			}, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
 				receiver.start();
@@ -156,31 +102,61 @@ public class MainDownloader implements AutoCloseable {
 	}
 	
 	@Override
+	public void reset() throws IOException {
+		mClient.close();
+		mClient=HttpAsyncClients.createDefault();
+	}
+
+	@Override
 	public void close() throws IOException {
 		mClient.close();
 	}
 
-	public static void main(String pArgs[]) throws IOException {
-		if(pArgs.length<1) {
-			System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload <STEM_FILE>");
-			System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload --real <STEM_FILE>");
+	private static void usage() {
+		System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload all <STEM_FILE>");
+		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload all --real <STEM_FILE>");
+		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload one <URL> <FILENAME>");
+	}
+	
+	public static void main(String pArgs[]) throws IOException, InterruptedException {
+		if(pArgs.length<2) {
+			usage();
 		}
 
-		boolean dummyRun=true;
-		int pathIdx=0;
-		if("--real".equals(pArgs[0])) {
-			dummyRun=false;
-			pathIdx++;
-		}
-		if(dummyRun) {
-			System.out.println("Dummy run...");
-		} else {
-			System.out.println("Querying search engine...");
-		}
-		String path=pArgs[pathIdx];
+		boolean all=false;
+		int lastIdx=0;
 
+		switch(pArgs[lastIdx]) {
+		case "all":
+			all=true;
+			break;
+		case "one":
+			all=false;
+			break;
+		default:
+			usage();
+			System.exit(-1);
+		}
+		lastIdx++;
 		try(MainDownloader downloader=new MainDownloader()) {
-			downloader.downloadAll(dummyRun, path);
+			if(all) {
+				boolean dummyRun=true;
+				if("--real".equals(pArgs[lastIdx])) {
+					dummyRun=false;
+					lastIdx++;
+				}
+				String stemPath=pArgs[lastIdx++];
+				if(dummyRun) {
+					System.out.println("Dummy run...");
+				} else {
+					System.out.println("Querying search engine...");
+				}
+				downloader.downloadAll(dummyRun, stemPath);
+			} else {
+				URL url=new URL(pArgs[lastIdx++]);
+				Path dest=Paths.get(pArgs[lastIdx++]);
+				downloader.download(url, dest).waitSafely();;
+			}
 		}
 	}
 

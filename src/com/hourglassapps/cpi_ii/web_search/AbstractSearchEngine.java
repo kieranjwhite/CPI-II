@@ -10,19 +10,18 @@ import java.util.List;
 import java.util.Set;
 
 import com.hourglassapps.util.Ii;
+import com.hourglassapps.util.URLUtils;
 
 public abstract class AbstractSearchEngine implements RestrictedSearchEngine<String,URL,URL> {
-	protected final static String ENCODING=StandardCharsets.UTF_8.toString();
-
-	protected String encode(String pString) throws UnsupportedEncodingException {
-		return URLEncoder.encode(pString, ENCODING);
-	}
-	
 	@Override
 	public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {
 		return false;
 	}
 
+	protected String encode(String pString) throws UnsupportedEncodingException {
+		return URLUtils.encode(pString);
+	}
+	
 	@Override
 	public boolean filterSites(Set<String> pSites) throws UnsupportedEncodingException {
 		return false;
