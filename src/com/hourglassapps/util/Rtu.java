@@ -325,6 +325,5 @@ public class Rtu {
 			Log.e(TAG, e);
 			System.exit(-1);
 		}
-		System.out.println();
 	}
 }

@@ -60,7 +60,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	
 	public void downloadAll(boolean pDummyRun, String pPath) {
 		try(final BingSearchEngine q=(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
-				setFilter(new RandomFilter<URL>(123456, 0.0015385))) {
+				setFilter(new RandomFilter<URL>(234567, 0.0015385))) {
 			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL>(JOURNAL, 
 					new Converter<String, String>() {
 
@@ -105,6 +105,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	public void reset() throws IOException {
 		mClient.close();
 		mClient=HttpAsyncClients.createDefault();
+		mClient.start();
 	}
 
 	@Override

@@ -62,23 +62,10 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 		mPromised.add(mContentGenerator.download(source, dest(pLink)));
 	}
 
-	/*
-} else {
-	try {
-		Path dest=dest(pLink);
-		try(PrintWriter out=new PrintWriter(new BufferedWriter(new FileWriter(dest.toFile())))) {
-			out.print(pContent);
-		}
-		deferred.resolve(null);
-	} catch(IOException e) {
-		deferred.reject(e);
-	}
-}
-*/
 	@Override
 	public void commitEntry(final K pKey) throws IOException {
 		if(mPromised.size()>0) {
-			Promise<Void, IOException, Void> p=mDeferredMgr.when(mPromised.toArray(mPendingArr)).then(
+			Promise<Void, IOException, Void> commitment=mDeferredMgr.when(mPromised.toArray(mPendingArr)).then(
 					new DonePipe<MultipleResults,Void,IOException,Void>(){
 
 						@Override
@@ -100,23 +87,7 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 						public void onFail(IOException e) {
 							mThrower.ctch(e);
 						}});	
-			try {
-				
-				p.waitSafely(mTimeout);
-				for(Promise<?,?,?> initialPromise:mPromised) {
-					if(initialPromise.isPending()) {
-						Log.e(TAG, Log.esc("Promise timed out: "+initialPromise.toString()));
-						mContentGenerator.reset();
-						Rtu.continuePrompt();
-					}
-				}
-				
-				//p.waitSafely();
-			} catch(IOException e) {
-				mThrower.ctch(e);
-			} catch (InterruptedException i) {
-				mThrower.ctch(new IOException(i));
-			}
+			hold(commitment);
 		} else {
 			try {
 				Path dest=destDir(pKey);
@@ -129,6 +100,30 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 		mThrower.throwCaught(null);
 	}
 
+	private void hold(Promise<Void,IOException,Void> pCommitment) {
+		try {
+			pCommitment.waitSafely(mTimeout);
+			boolean pending=false;
+			for(Promise<?,?,?> initialPromise:mPromised) {
+				if(initialPromise.isPending()) {
+					Log.e(TAG, Log.esc("Promise timed out: "+initialPromise.toString()));
+					pending=true;
+				}
+			}
+			if(pending) {
+				Rtu.continuePrompt();
+				mContentGenerator.reset();
+				mPromised.clear();					
+			}
+			
+			//p.waitSafely();
+		} catch(IOException e) {
+			mThrower.ctch(e);
+		} catch (InterruptedException i) {
+			mThrower.ctch(new IOException(i));
+		}		
+	}
+	
 	private static boolean nonePending(Set<Promise<Void,IOException,Void>> pPromised) {
 		for(Promise<?,?,?> p: pPromised) {
 			if(p.isPending()) {

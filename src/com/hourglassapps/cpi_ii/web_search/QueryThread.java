@@ -103,7 +103,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 			Log.i(TAG, "quitting thread");
 		} catch(IOException e) {
 			Log.e(TAG, e);
-		}
+		} 
 	}
 
 	@Override
