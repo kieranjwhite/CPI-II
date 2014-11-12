@@ -31,13 +31,17 @@ import com.hourglassapps.util.Typed;
 public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader<C>> {
 	private final static String TAG=DeferredFileJournal.class.getName();
 	//TIMEOUT is in ms
-	private final static int DEFAULT_TIMEOUT=1000*3*60;
+	private final static int DEFAULT_BASE_TIMEOUT=1000*60;
+	private final static int DEFAULT_EXTRA_TIMEOUT=1000*4;
+	
 	private final Set<Promise<Void,IOException,Void>> mPromised;
 	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();
 	private final DeferredManager mDeferredMgr=new DefaultDeferredManager();
 	@SuppressWarnings("rawtypes")
 	private final Promise[] mPendingArr=new Promise[]{};
-	private int mTimeout=DEFAULT_TIMEOUT;
+
+	private int mBaseTimeout=DEFAULT_BASE_TIMEOUT;
+	private int mExtraTimeout=DEFAULT_EXTRA_TIMEOUT;
 
 	public DeferredFileJournal(Path pDirectory,
 			Converter<K, String> pFilenameGenerator,
@@ -49,8 +53,9 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 		mPromised.clear();
 	}
 
-	public DeferredFileJournal<K,C> setTimeout(int pTimeout) {
-		mTimeout=pTimeout;
+	public DeferredFileJournal<K,C> setTimeout(int pBase, int pExtra) {
+		mBaseTimeout=pBase;
+		mExtraTimeout=pExtra;
 		return this;
 	}
 	
@@ -87,7 +92,7 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 						public void onFail(IOException e) {
 							mThrower.ctch(e);
 						}});	
-			hold(commitment);
+			hold(pKey, commitment);
 		} else {
 			try {
 				Path dest=destDir(pKey);
@@ -100,18 +105,26 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 		mThrower.throwCaught(null);
 	}
 
-	private void hold(Promise<Void,IOException,Void> pCommitment) {
+	private int calcTimeout(int pNumTransactionDownloads) {
+		return mBaseTimeout+pNumTransactionDownloads*mExtraTimeout;
+	}
+	
+	private void hold(final K pKey, Promise<Void,IOException,Void> pCommitment) {
+		//TODO call tidyup
 		try {
-			pCommitment.waitSafely(mTimeout);
+			int timeout=calcTimeout(mPromised.size());
+			pCommitment.waitSafely(timeout);
 			boolean pending=false;
 			for(Promise<?,?,?> initialPromise:mPromised) {
 				if(initialPromise.isPending()) {
-					Log.e(TAG, Log.esc("Promise timed out: "+initialPromise.toString()));
+					Log.e(TAG, Log.esc("Promise timed out after +"+(timeout/1000)+"s: "+initialPromise.toString()));
 					pending=true;
 				}
 			}
+			if(false) {
+				Rtu.continuePrompt();				
+			}
 			if(pending) {
-				Rtu.continuePrompt();
 				mContentGenerator.reset();
 				mPromised.clear();					
 			}
