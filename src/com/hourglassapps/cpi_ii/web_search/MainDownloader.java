@@ -124,7 +124,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	private static void usage() {
 		System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload all <STEM_FILE>");
 		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload all --real <STEM_FILE>");
-		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload one <URL> <KEY_NAME>");
+		System.out.println("      echo <URL_QUERY> | java com.hourglassapps.cpi_ii.web_search.MainDownload one <KEY_NAME>");
 		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload download <URL> <FILENAME>");
 	}
 	
