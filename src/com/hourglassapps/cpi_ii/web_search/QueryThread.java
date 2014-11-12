@@ -39,6 +39,21 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 		mJournal=pJournal;
 	}
 	
+	public void search(Query<K,URL> pQuery) throws IOException {
+		Iterator<URL> links=mQ.present(pQuery);
+		Typed<URL> source;
+		while(links.hasNext()){
+			try {
+				final URL link=links.next();
+				source=new TypedLink(link);
+				mJournal.add(source);
+			} catch(IOException e) {
+				Log.e(TAG, e); //we just want to skip over this link, not abort the whole thing
+			}
+		}
+		mJournal.commitEntry(pQuery.uniqueName());		
+	}
+	
 	@Override
 	public void run() {
 		try (DataInputStream in=new DataInputStream(mIn)){
@@ -54,42 +69,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 				K name=query.uniqueName();
 				if(!mJournal.has(name)) {
 					skipped=false;
-					Iterator<URL> links=mQ.present(query);
-
-					Typed<URL> source;
-					//System.out.println(Rtu.join(disjunctions, " OR "));
-					while(links.hasNext()){
-						try {
-							final URL link=links.next();
-							source=new Typed<URL>() {
-
-								@Override
-								public String extension() {
-									String path=link.getPath();
-									if("/".equals(path)) {
-										return ".html";
-									} else {
-										String extension=FilenameUtils.getExtension(link.getPath());
-										if("".equals(extension)) {
-											return "";
-										} else {
-											return "."+extension;
-										}
-									}
-								}
-
-								@Override
-								public URL get() {
-									return link;
-								}
-
-							};
-							mJournal.add(source);
-						} catch(IOException e) {
-							Log.e(TAG, e); //we just want to skip over this link, not abort the whole thing
-						}
-					}
-					mJournal.commitEntry(query.uniqueName());
+					search(query);
 				} else {
 					if(!skipped) {
 						System.out.println("Skipping over work done...");

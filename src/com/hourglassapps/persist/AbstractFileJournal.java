@@ -120,9 +120,16 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 	}
 
 	protected void tidyUp(Path pDest) throws IOException {
-		saveTrail(pDest);
-		assert !Files.exists(pDest);
-		Files.move(mPartialDir, pDest, StandardCopyOption.ATOMIC_MOVE);
+		if(Files.exists(mPartialDir)) { 
+			/*
+			 * tidyUp will be invoked more than once for a query if a download times out and
+			 * subsequent closing of the HttpAsyncClient results in any pending mPromises 
+			 * being resolved. 
+			 */
+			saveTrail(pDest);
+			assert !Files.exists(pDest);
+			Files.move(mPartialDir, pDest, StandardCopyOption.ATOMIC_MOVE);
+		}
 	}
 	
 	@Override

@@ -2,5 +2,6 @@ bin/
 *~
 *index/
 journal/
+*_journal/
 \#*\#
 .attach_pid*

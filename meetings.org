@@ -267,6 +267,8 @@
 **** Problem resurfaced when I started using CloseableHttpAsyncClient
 ***** Ignoring for now as problem seems to be quite when dealing with most trigrams (a a e what the specific trigram that caused trouble)
 *** Issues with downloads
+**** Slow downloads can result in a timeout before completion
+***** occurred 2/743 download
 **** Timeouts (>3 mins in somecases)
 ***** http://www.agenziaradicale.com/?id=2808:avant-retro-opere-inutili-di-un-uomo-inutile-mostra-di-giuseppe-vittorio-scapigliatiindex.php/rassegnaweb/
 ****** Ignoring as browser can't download it either

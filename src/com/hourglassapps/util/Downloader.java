@@ -9,5 +9,5 @@ import org.jdeferred.Promise;
 
 public interface Downloader<S> {
 	public void reset() throws IOException;
-	public Promise<Void,IOException,Void> download(S pSrc, Path pDst) throws IOException;
+	public Promise<Void,IOException,Void> downloadLink(S pSrc, Path pDst) throws IOException;
 }

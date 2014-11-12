@@ -64,7 +64,7 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 		incFilename();
 		C source=pLink.get();
 		trailAdd(source);
-		mPromised.add(mContentGenerator.download(source, dest(pLink)));
+		mPromised.add(mContentGenerator.downloadLink(source, dest(pLink)));
 	}
 
 	@Override
@@ -109,8 +109,7 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 		return mBaseTimeout+pNumTransactionDownloads*mExtraTimeout;
 	}
 	
-	private void hold(final K pKey, Promise<Void,IOException,Void> pCommitment) {
-		//TODO call tidyup
+	private void hold(final K pKey, Promise<Void,IOException,Void> pCommitment) throws IOException {
 		try {
 			int timeout=calcTimeout(mPromised.size());
 			pCommitment.waitSafely(timeout);
@@ -125,13 +124,20 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 				Rtu.continuePrompt();				
 			}
 			if(pending) {
-				mContentGenerator.reset();
-				mPromised.clear();					
+				/*
+				 * reset() will close the HttpAsyncClient, causing all pending associated download operations to fail.
+				 * The close method contains a join call on the HttpAsyncClient's reactor thread. Therefore
+				 * it will behave synchronously. TODO verify.
+				 */
+				mContentGenerator.reset(); 
+				mPromised.clear();	
+				Path dest=destDir(pKey);
+				/* 
+				 * We need to invoke tidyUp here in case at least one of the query's downloads aborted 
+				 * without our code knowing about it -- this is the problem with using a ZeroCopyConsumer. 
+				 */
+				tidyUp(dest);
 			}
-			
-			//p.waitSafely();
-		} catch(IOException e) {
-			mThrower.ctch(e);
 		} catch (InterruptedException i) {
 			mThrower.ctch(new IOException(i));
 		}		

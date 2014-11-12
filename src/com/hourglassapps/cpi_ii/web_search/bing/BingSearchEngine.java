@@ -43,7 +43,8 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	private final static String SEARCH_URI_PREFIX=
 			"https://api.datamarket.azure.com"+SEARCH_PATH_PREFIX;
 	private final static String CLOSING_BRACKET="%29";
-	private final static String SEARCH_PATH_SUFFIX="%27&$top="+RESULTS_PER_PAGE+BingArgs.JSON_SPECIFIER;
+	public final static String GENERAL_SUFFIX="&$top="+RESULTS_PER_PAGE+BingArgs.JSON_SPECIFIER;
+	private final static String SEARCH_PATH_SUFFIX="%27"+GENERAL_SUFFIX;
 	
 	private final static String AUTH_HEADER="Authorization";
 	private final static String AUTH_PREFIX="Basic ";
@@ -152,7 +153,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 		return new URL(SEARCH_URI_PREFIX+mQuery.append(CLOSING_BRACKET).append(mBlacklistedSites).append(mBlacklistedPhrases).append(SEARCH_PATH_SUFFIX).toString());
 	}
 	
-	private Response page(URL pQuery) throws ClientProtocolException, IOException, URISyntaxException {
+	private Response page(String pName, URL pQuery) throws ClientProtocolException, IOException, URISyntaxException {
 		HttpGet get=new HttpGet(pQuery.toURI());
 		get.setHeader(AUTH_HEADER, AUTH_PREFIX+mAccountKey);
 		ResponseHandler<String> respHandler=new BasicResponseHandler();
@@ -161,7 +162,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 			System.out.println(URLDecoder.decode(pQuery.toString(), URLUtils.ENCODING));
 			body="{\"d\":{\"results\":[]}}";
 		} else if(mFilter.accept(pQuery)) {
-			Log.i(TAG, URLDecoder.decode(pQuery.toString(), URLUtils.ENCODING));
+			Log.i(TAG, Log.esc(pName+" - "+pQuery.toString()));				
 			body=mClient.execute(get, respHandler);	
 		} else {
 			body="{\"d\":{\"results\":[]}}";
@@ -181,22 +182,22 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 		if(pDisjunctions.size()==queryRemainder.snd().size() || pDisjunctions.size()==0) {
 			return NULL_QUERY;
 		}
-		return new HttpQuery<String>(uniqueName, queryRemainder);
+		return new HttpQuery<String>(uniqueName, queryRemainder.fst());
 	}
 
 	@Override
-	public Iterator<URL> present(Query<String,URL> pQuery) throws IOException {
+	public Iterator<URL> present(final Query<String,URL> pQuery) throws IOException {
 		mSearchInvoked=true;
 		if(mThrower.fallThrough()) {
 			return Collections.<URL>emptyList().iterator();
 		}
-		if(pQuery.done()) {
+		if(pQuery.empty()) {
 			//no room for disjunctions in query
 			return Collections.<URL>emptyList().iterator();
 		}
 		assert(pQuery.raw()!=null);
 		try {
-			final Response resp = page(pQuery.raw());
+			final Response resp = page(pQuery.uniqueName(), pQuery.raw());
 			return new Iterator<URL>() {
 				private int mPageNum=0;
 				private Response mResponse=resp;
@@ -224,7 +225,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 					if(next==null) {
 						return false;
 					}
-					mResponse=page(next);
+					mResponse=page(pQuery.uniqueName(), next);
 					mPageNum++;
 					mPage=mResponse.urls().iterator();
 					return mPage.hasNext();

@@ -8,26 +8,26 @@ import com.hourglassapps.util.Ii;
 public class HttpQuery<K> implements Query<K,URL> {
 
 	private final K mName;
-	private final URL mUri;
+	private final URL mUrl;
 	
 	public HttpQuery(K pName) {
 		mName=pName;
-		mUri=null;
+		mUrl=null;
 	}
 	
-	public HttpQuery(K pName, Ii<URL, List<String>> pFormat) {
+	public HttpQuery(K pName, URL pUrl) {
 		mName=pName;
-		mUri=pFormat.fst();
+		mUrl=pUrl;
 	}
 
 	@Override
-	public boolean done() {
-		return mUri==null;
+	public boolean empty() {
+		return mUrl==null;
 	}
 
 	@Override
 	public URL raw() {
-		return mUri;
+		return mUrl;
 	}
 	
 	@Override
