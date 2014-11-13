@@ -78,4 +78,6 @@ echo https://api.datamarket.azure.com/Bing/SearchWeb/Web?Query=%27%28%22communis
 Generating the file misc/links.txt
 ==================================
 
+First create journal by invoking "MainDownloader all" as described above with a RNG seed of 234567. Then:
+
 find correct_journal/completed/ -iname "_*"| xargs cat | sed -r -e "s/https/http/"|sort > misc/correct_links.txt
