@@ -61,11 +61,15 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	}
 	
 	public static void setupBlacklist(RestrictedSearchEngine<String,URL,URL>  pSearchEngine) throws UnsupportedEncodingException {
+		/*
 		if(!pSearchEngine.filterSites(new HashSet<String>(Arrays.<String>asList(new String[] {
 				"catalogue.conductus.ac.uk", "diamm.ac.uk", "chmtl.indiana.edu/tml",
 				"archive.org/details/analectahymnicam20drev",
 				"archive.org/details/analectahymnica21drevuoft",
-				"archive.org/details/analectahymnicam21drev"
+				"archive.org/details/analectahymnicam21drev",
+				"archive.org/stream/analectahymnicam20drev",
+				"archive.org/stream/analectahymnica21drevuoft",
+				"archive.org/stream/analectahymnicam21drev"
 		})))) {
 			boolean blacklisted=pSearchEngine.filterPhrases(new HashSet<String>(Arrays.<String>asList(new String[] {
 					"Cantum pulcriorem invenire", "DIAMM", "MUSICARUM LATINARUM", "Analecta hymnica"
@@ -73,7 +77,21 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 			if(!blacklisted) {
 				Log.e(TAG, "failed to blacklist");
 			}
-		}		
+		}
+		*/		
+		if(!pSearchEngine.filterSites(new HashSet<String>(Arrays.<String>asList(new String[] {
+				"catalogue.conductus.ac.uk", "diamm.ac.uk", "chmtl.indiana.edu/tml",
+				"archive.org/stream/analectahymnicam20drev",
+				"archive.org/stream/analectahymnica21drevuoft",
+				"archive.org/stream/analectahymnicam21drev"
+		})))) {
+			boolean blacklisted=pSearchEngine.filterPhrases(new HashSet<String>(Arrays.<String>asList(new String[] {
+					"Cantum pulcriorem invenire", "DIAMM", "MUSICARUM LATINARUM", "Analecta hymnica"
+			})));
+			if(!blacklisted) {
+				Log.e(TAG, "failed to blacklist");
+			}
+		}
 	}
 	
 	public void downloadAll(boolean pDummyRun, String pPath) {
