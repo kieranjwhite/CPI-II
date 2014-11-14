@@ -318,7 +318,7 @@ public class Rtu {
 	}
 	
 	public static void continuePrompt() {
-		System.out.print("\nContinue? [yY]");
+		System.out.print("\nContinue? [yY] ");
 		try {
 			while("yY".indexOf(System.in.read())==-1);
 		} catch (IOException e) {

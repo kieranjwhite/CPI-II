@@ -32,6 +32,7 @@ import com.hourglassapps.persist.NullJournal;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
 import com.hourglassapps.util.Log;
+import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.URLUtils;
 
@@ -96,15 +97,35 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 		}
 	}
 	
-	public void downloadAll(boolean pDummyRun, String pPath) {
-		try(final AbstractSearchEngine q=(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
-				setFilter(new RandomFilter<URL>(234567, 0.0015385))) {
+	public void downloadAll(String pPath, boolean pDummyRun) {
+		System.out.println("About to download results for all queries.");
+		Rtu.continuePrompt();
+		try(final AbstractSearchEngine q=(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY))) {
 			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL>(JOURNAL,
 					JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
 				//We'll limit our downloads to 15 every 1 sec
-				receiver.setThrottle(new Throttle(15, 1, TimeUnit.SECONDS));
+				receiver.setThrottle(new Throttle(5, 1, TimeUnit.SECONDS));
+				receiver.start();
+				setupBlacklist(q);
+				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
+				MainListIndexTerms.listAllTokenExpansions(index, pPath, receiver);
+			}
+		} catch (Exception e) {
+			Log.e(TAG, e);
+		}
+
+	}
+	
+	public void downloadRandom(String pPath, int pSeed) {
+		try(final AbstractSearchEngine q=(new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
+				setFilter(new RandomFilter<URL>(pSeed, 0.0015385))) {
+			Journal<String,URL> journal=new DeferredFileJournal<String,URL>(JOURNAL, JournalKeyConverter.SINGLETON, this);
+
+			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
+				//We'll limit our downloads to 15 every 1 sec
+				receiver.setThrottle(new Throttle(5, 1, TimeUnit.SECONDS));
 				receiver.start();
 				setupBlacklist(q);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
@@ -146,6 +167,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	private static void usage() {
 		System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload all <STEM_FILE>");
 		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload all --real <STEM_FILE>");
+		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload random <STEM_FILE> <SEED>");
 		System.out.println("      echo <URL_QUERY> | java com.hourglassapps.cpi_ii.web_search.MainDownload one <KEY_NAME>");
 		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload download <URL> <FILENAME>");
 	}
@@ -160,6 +182,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 		try {
 			Cmd cmd=Cmd.inst(pArgs[lastIdx++]);
 			try(MainDownloader downloader=new MainDownloader()) {
+				String stemPath;
 				switch(cmd) {
 				case ALL:
 					if(pArgs.length!=2 && pArgs.length!=3) {
@@ -170,13 +193,23 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 						dummyRun=false;
 						lastIdx++;
 					}
-					String stemPath=pArgs[lastIdx++];
+					stemPath=pArgs[lastIdx++];
 					if(dummyRun) {
 						System.out.println("Dummy run...");
 					} else {
-						System.out.println("Querying search engine...");
+						System.out.println("Querying search engine with all queries...");
 					}
-					downloader.downloadAll(dummyRun, stemPath);
+					
+					downloader.downloadAll(stemPath, dummyRun);
+					break;
+				case RANDOM:
+					if(pArgs.length!=3) {
+						throw new UnrecognisedSyntaxException();
+					}
+					stemPath=pArgs[lastIdx++];
+					int seed=Integer.valueOf(pArgs[lastIdx++]);
+					System.out.println("Querying search engine with random queries...");
+					downloader.downloadRandom(stemPath, seed);						
 					break;
 				case ONE:
 					if(pArgs.length!=2) {

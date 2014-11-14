@@ -63,13 +63,12 @@ public class Throttle {
 	}
 	
 	/**
-	 * May block in order to throttle a thread.
+	 * May block in order to throttle calling thread.
 	 */
 	public void choke() {
 		if(mDurationTemplate!=null) {
 			assert(mInFlight!=null);
 			try {
-				Log.i(TAG, "Capacity: "+(mMaxElements-mInFlight.size()));
 				if(mInFlight.size()>=mMaxElements) {
 					mInFlight.take();
 				}
