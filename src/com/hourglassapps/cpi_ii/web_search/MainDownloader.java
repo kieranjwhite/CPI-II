@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
@@ -31,6 +32,7 @@ import com.hourglassapps.persist.NullJournal;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
 import com.hourglassapps.util.Log;
+import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.URLUtils;
 
 public class MainDownloader implements AutoCloseable, Downloader<URL> {
@@ -101,6 +103,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 					JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
+				//We'll limit our downloads to 15 every 1 sec
+				receiver.setThrottle(new Throttle(15, 1, TimeUnit.SECONDS));
 				receiver.start();
 				setupBlacklist(q);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);

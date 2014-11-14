@@ -12,7 +12,10 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -21,10 +24,11 @@ import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.ExpansionReceiver;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
+import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.Typed;
 
 public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionReceiver<String> {
-	private final static String TAG=QueryThread.class.getName();
+	final static String TAG=QueryThread.class.getName();
 	
 	private final List<List<String>> mDisjunctions=new ArrayList<List<String>>();
 	private final PipedInputStream mIn=new PipedInputStream();
@@ -32,6 +36,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
 	private final SearchEngine<List<String>, K, URL, URL> mQ;	
 	private final Journal<K,URL> mJournal;
+	private Throttle mThrottle=Throttle.NULL_THROTTLE;
 	
 	public QueryThread(SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,URL> pJournal) throws IOException {
 		super("query");
@@ -39,11 +44,21 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 		mJournal=pJournal;
 	}
 	
+	public QueryThread<K> setThrottle(Throttle pThrottle) {
+		if(getState()==Thread.State.NEW) {
+			mThrottle=pThrottle;
+		} else {
+			throw new IllegalStateException("Can only change throttle setting prior to starting thread");
+		}
+		return this;
+	}
+
 	public void search(Query<K,URL> pQuery) throws IOException {
 		Iterator<URL> links=mQ.present(pQuery);
 		Typed<URL> source;
 		while(links.hasNext()){
 			try {
+				mThrottle.choke();
 				final URL link=links.next();
 				source=new TypedLink(link);
 				mJournal.add(source);
