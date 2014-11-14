@@ -3,16 +3,42 @@ package com.hourglassapps.cpi_ii.web_search;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import com.hourglassapps.util.Filter;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.URLUtils;
 
-public abstract class AbstractSearchEngine implements RestrictedSearchEngine<String,URL,URL> {
+public abstract class AbstractSearchEngine implements RestrictedSearchEngine<String,URL,URL>, AutoCloseable {
+	protected final Query<String,URL> NULL_QUERY=new HttpQuery<String>(uniqueName(Collections.<String>emptyList()));
+	protected Filter<URL> mFilter=new Filter<URL>(){
+
+		@Override
+		public boolean accept(URL pArg) {
+			return true;
+		}
+		
+	};
+
+	public AbstractSearchEngine setFilter(Filter<URL> pFilter) {
+		mFilter=pFilter;
+		return this;
+	}
+	
+	@Override
+	public Query<String,URL> formulate(List<String> pDisjunctions) 
+			throws UnsupportedEncodingException, MalformedURLException {
+		String uniqueName=uniqueName(pDisjunctions);
+		Ii<URL, List<String>> queryRemainder=format(pDisjunctions);
+		if(pDisjunctions.size()==queryRemainder.snd().size() || pDisjunctions.size()==0) {
+			return NULL_QUERY;
+		}
+		return new HttpQuery<String>(uniqueName, queryRemainder.fst());
+	}
+
+
 	@Override
 	public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {
 		return false;
@@ -84,7 +110,7 @@ public abstract class AbstractSearchEngine implements RestrictedSearchEngine<Str
 	 */
 	protected abstract URL uri() throws MalformedURLException;
 	
-	protected static String uniqueName(List<String> pDisjunctions) {
+	protected String uniqueName(List<String> pDisjunctions) {
 		if(pDisjunctions.size()>0) {
 			return pDisjunctions.get(0);
 		} else {

@@ -95,7 +95,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	}
 	
 	public void downloadAll(boolean pDummyRun, String pPath) {
-		try(final BingSearchEngine q=(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
+		try(final AbstractSearchEngine q=(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
 				setFilter(new RandomFilter<URL>(234567, 0.0015385))) {
 			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL>(JOURNAL,
 					JournalKeyConverter.SINGLETON, this);

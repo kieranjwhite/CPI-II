@@ -6,8 +6,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -21,20 +19,17 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.lucene.util.BytesRefHash.MaxBytesLengthExceededException;
 
 import com.hourglassapps.cpi_ii.web_search.AbstractSearchEngine;
-import com.hourglassapps.cpi_ii.web_search.HttpQuery;
 import com.hourglassapps.cpi_ii.web_search.Query;
 import com.hourglassapps.cpi_ii.web_search.bing.response.Response;
 import com.hourglassapps.util.ConcreteThrower;
-import com.hourglassapps.util.Filter;
-import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Thrower;
 import com.hourglassapps.util.URLUtils;
 
+@SuppressWarnings("deprecation")
 public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	private final static String TAG=BingSearchEngine.class.getName();
 	public final static int RESULTS_PER_PAGE=50;
@@ -53,7 +48,6 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	//A length 0f 2047 is too long. I do know from experience that a length of 2007 works though so I'll round it off to 2000 and go with that.
 	//private final static int TOTAL_QUERY_LEN=2047; //from http://stackoverflow.com/questions/15334531/what-are-the-query-length-limits-for-the-bing-websearch-api
 	private final static int TOTAL_QUERY_LEN=2000;
-	private final static Query<String,URL> NULL_QUERY=new HttpQuery<String>(uniqueName(Collections.<String>emptyList()));
 	public static final String AUTH_KEY = "xD0E++DfZY7Sbumxx2QBuvmgOGliDgHuDIm0LzIGr3E=";
 
 	static {
@@ -70,21 +64,13 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	private final int mMaxQueryLenOverhead=("&$skip="+Integer.toString((MAX_RESULT_PAGES-1)*RESULTS_PER_PAGE)).length();  
 	private final StringBuilder mQuery=new StringBuilder();
 	
-	private ConcreteThrower<Exception> mThrower=new ConcreteThrower<Exception>();
+	protected ConcreteThrower<Exception> mThrower=new ConcreteThrower<Exception>();
+	protected boolean mSearchInvoked=false;
 	private final String mAccountKey;
 	private ResponseFactory mFact=new ResponseFactory();
 	private final HttpClient mClient=new DefaultHttpClient();
-	private boolean mSearchInvoked=false;
 	private String mBlacklistedPhrases="";
 	private String mBlacklistedSites="";
-	private Filter<URL> mFilter=new Filter<URL>(){
-
-		@Override
-		public boolean accept(URL pArg) {
-			return true;
-		}
-		
-	};
 
 	public BingSearchEngine(String pAccountKey) {
 		mAccountKey=new String(Base64.encodeBase64((':'+pAccountKey).getBytes()));
@@ -92,11 +78,6 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	
 	public BingSearchEngine() {
 		mAccountKey=null;
-	}
-	
-	public BingSearchEngine setFilter(Filter<URL> pFilter) {
-		mFilter=pFilter;
-		return this;
 	}
 	
 	@Override
@@ -127,6 +108,15 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 		}		
 	}
 
+	@Override
+	public Query<String,URL> formulate(List<String> pDisjunctions) 
+			throws UnsupportedEncodingException, MalformedURLException {
+		mSearchInvoked=true;
+		if(mThrower.fallThrough()) {
+			return NULL_QUERY;
+		}
+		return super.formulate(pDisjunctions);
+	}
 	@Override
 	protected boolean addDisjunction(String pDisjunction) throws UnsupportedEncodingException {
 		String encoded=encodeDisjunction("\""+pDisjunction+"\"");
@@ -168,21 +158,6 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 			body="{\"d\":{\"results\":[]}}";
 		}
 		return mFact.inst(body);		
-	}
-
-	@Override
-	public Query<String,URL> formulate(List<String> pDisjunctions) 
-			throws UnsupportedEncodingException, MalformedURLException {
-		mSearchInvoked=true;
-		if(mThrower.fallThrough()) {
-			return NULL_QUERY;
-		}
-		String uniqueName=uniqueName(pDisjunctions);
-		Ii<URL, List<String>> queryRemainder=format(pDisjunctions);
-		if(pDisjunctions.size()==queryRemainder.snd().size() || pDisjunctions.size()==0) {
-			return NULL_QUERY;
-		}
-		return new HttpQuery<String>(uniqueName, queryRemainder.fst());
 	}
 
 	@Override
