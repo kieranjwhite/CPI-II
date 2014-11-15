@@ -25,7 +25,6 @@ import org.jdeferred.Promise;
 import com.hourglassapps.cpi_ii.IndexViewer;
 import com.hourglassapps.cpi_ii.Journal;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
-import com.hourglassapps.cpi_ii.MainListIndexTerms;
 import com.hourglassapps.cpi_ii.web_search.bing.BingSearchEngine;
 import com.hourglassapps.persist.DeferredFileJournal;
 import com.hourglassapps.persist.NullJournal;
@@ -106,12 +105,12 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 					JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
-				//We'll limit our downloads to 15 every 1 sec
+				//We'll limit our downloads to 5 every 1 sec
 				receiver.setThrottle(new Throttle(5, 1, TimeUnit.SECONDS));
 				receiver.start();
 				setupBlacklist(q);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
-				MainListIndexTerms.listAllTokenExpansions(index, pPath, receiver);
+				index.listAllTokenExpansions(pPath, receiver);
 			}
 		} catch (Exception e) {
 			Log.e(TAG, e);
@@ -125,12 +124,12 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 			Journal<String,URL> journal=new DeferredFileJournal<String,URL>(JOURNAL, JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
-				//We'll limit our downloads to 15 every 1 sec
+				//We'll limit our downloads to 5 every 1 sec
 				receiver.setThrottle(new Throttle(5, 1, TimeUnit.SECONDS));
 				receiver.start();
 				setupBlacklist(q);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
-				MainListIndexTerms.listAllTokenExpansions(index, pPath, receiver);
+				index.listAllTokenExpansions(pPath, receiver);
 			}
 		} catch (Exception e) {
 			Log.e(TAG, e);
