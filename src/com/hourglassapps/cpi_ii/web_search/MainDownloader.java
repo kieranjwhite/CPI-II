@@ -31,6 +31,7 @@ import com.hourglassapps.persist.DeferredFileJournal;
 import com.hourglassapps.persist.NullJournal;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
+import com.hourglassapps.util.Filter;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Throttle;
@@ -118,9 +119,9 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 
 	}
 	
-	public void downloadRandom(String pPath, int pSeed) {
+	public void downloadFiltered(String pPath, Filter<URL> pFilter) {
 		try(final AbstractSearchEngine q=(new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
-				setFilter(new RandomFilter<URL>(pSeed, 0.0015385))) {
+				setFilter(pFilter)) {
 			Journal<String,URL> journal=new DeferredFileJournal<String,URL>(JOURNAL, JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
@@ -168,6 +169,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 		System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload all <STEM_FILE>");
 		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload all --real <STEM_FILE>");
 		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload random <STEM_FILE> <SEED>");
+		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload partition <STEM_FILE> <MOD_RESULT> <NUM_PROCESSES>");
 		System.out.println("      echo <URL_QUERY> | java com.hourglassapps.cpi_ii.web_search.MainDownload one <KEY_NAME>");
 		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload download <URL> <FILENAME>");
 	}
@@ -202,6 +204,16 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 					
 					downloader.downloadAll(stemPath, dummyRun);
 					break;
+				case PARTITION:
+					if(pArgs.length!=4) {
+						throw new UnrecognisedSyntaxException();
+					}
+					stemPath=pArgs[lastIdx++];
+					int modResult=Integer.valueOf(pArgs[lastIdx++]);
+					int numProcesses=Integer.valueOf(pArgs[lastIdx++]);
+					System.out.println("Querying search engine with partitioned queries ("+modResult+"/"+numProcesses+")...");
+					downloader.downloadFiltered(stemPath, new HashFilter(modResult, numProcesses));						
+					break;
 				case RANDOM:
 					if(pArgs.length!=3) {
 						throw new UnrecognisedSyntaxException();
@@ -209,7 +221,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 					stemPath=pArgs[lastIdx++];
 					int seed=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println("Querying search engine with random queries...");
-					downloader.downloadRandom(stemPath, seed);						
+					downloader.downloadFiltered(stemPath, new RandomFilter<URL>(seed, 0.0015385));						
 					break;
 				case ONE:
 					if(pArgs.length!=2) {

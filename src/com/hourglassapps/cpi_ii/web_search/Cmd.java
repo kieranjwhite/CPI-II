@@ -1,7 +1,14 @@
 package com.hourglassapps.cpi_ii.web_search;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 enum Cmd {
-	ALL("all"), RANDOM("random"), ONE("one"), DOWNLOAD("download");
+	ALL("all"), PARTITION("partition"), RANDOM("random"), ONE("one"), DOWNLOAD("download");
+	
+	private final static Set<Cmd> CMDS=new HashSet<Cmd>(Arrays.asList(
+			new Cmd[]{ALL, PARTITION, RANDOM, ONE, DOWNLOAD}));
 	
 	private final String mName;
 	
@@ -14,16 +21,11 @@ enum Cmd {
 	}
 	
 	public static Cmd inst(String pArg) throws UnrecognisedSyntaxException {
-		if(Cmd.ALL.s().equals(pArg)) {
-			return Cmd.ALL;
-		} else if(Cmd.RANDOM.s().equals(pArg)) {
-			return Cmd.RANDOM;
-		} else if(Cmd.ONE.s().equals(pArg)) {
-			return Cmd.ONE;
-		} else if(Cmd.DOWNLOAD.s().equals(pArg)) {
-			return Cmd.DOWNLOAD;
-		} else {
-			throw new UnrecognisedSyntaxException();
-		}			
+		for(Cmd c: CMDS) {
+			if(c.s().equals(pArg)) {
+				return c;
+			}
+		}
+		throw new UnrecognisedSyntaxException();
 	}
 }
