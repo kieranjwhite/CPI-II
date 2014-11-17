@@ -1,0 +1,14 @@
+5 application/pdf
+8 text/plain
+9 text/html; charset=utf-8
+12 text/html
+10 text/html; charset=UTF-8
+7 text/html; charset=iso-8859-1
+6 text/html
+3 text/html; charset=utf-8
+13 text/html; charset=UTF-8
+4 text/html; charset=utf-8
+11 text/html; charset=UTF-8
+1 text/html; charset=UTF-8
+2 text/html; charset=UTF-8
+14 text/plain;charset=UTF-8

@@ -52,13 +52,14 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	public Promise<ContentTypeSourceable, IOException, Void> downloadLink(
 			URL pSource, long pDstKey, Path pDst) throws IOException {
 		URL encoded=URLUtils.reencode(pSource);
-		final Deferred<ContentTypeSourceable,IOException,Void> deferred=new DownloadableDeferredObject<ContentTypeSourceable,IOException,Void>(encoded, pDst);
+		final Deferred<ContentTypeSourceable,IOException,Void> deferred=
+				new DownloadableDeferredObject<ContentTypeSourceable,IOException,Void>(encoded, pDst);
 		try {
 			ZeroCopyConsumer<File> consumer=new DeferredZeroCopyConsumer(pDstKey, pDst.toFile(), deferred);
 			mClient.execute(HttpAsyncMethods.createGet(encoded.toString()), consumer, null);
 			return deferred;
 		} catch(Exception e) {
-			deferred.resolve(null);
+			deferred.resolve(new ContentTypeSourceable(pDstKey, null));
 			Log.e(TAG, e, Log.esc("Exception for: "+deferred));
 			throw new IOException(e);
 		}

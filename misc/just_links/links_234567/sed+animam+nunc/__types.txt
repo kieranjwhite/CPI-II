@@ -1,0 +1,25 @@
+3 text/html
+1 text/html; charset=UTF-8
+10 text/html
+2 text/html
+6 text/html
+11 text/html
+15 text/html
+16 text/html
+13 text/html
+17 text/html; charset=utf-8
+5 text/html; charset=utf-8
+8 text/html
+7 text/html; charset=UTF-8
+12 application/msword
+20 text/html; charset=UTF-8
+9 text/html; charset=UTF-8
+4 text/html; charset=utf-8
+22 application/vnd.oasis.opendocument.text
+14 text/plain
+25 text/html
+21 application/msword
+19 text/html; charset=UTF-8
+18 text/html; charset=windows-1251
+24 text/html; charset=utf-8
+23 application/msword

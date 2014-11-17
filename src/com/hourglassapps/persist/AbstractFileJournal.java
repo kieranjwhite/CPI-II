@@ -27,15 +27,16 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 	private final static String TAG=AbstractFileJournal.class.getName();
 	private final static String PARTIAL_DIR_NAME="partial";
 	private final static String COMPLETED_DIR_NAME="completed";
-	private final static long FIRST_FILENAME=1;
-	protected final static char META_PREFIX='_';
+	protected final static int FIRST_FILENAME=1;
+	private final static char META_PREFIX='_';
+	protected final static String CUSTOM_PREFIX=META_PREFIX+"_";
 	
 	private final Path mDirectory;
 	private final Path mCompletedDir;
 	private final Converter<K,String> mFilenameGenerator;
-	private final long mFirstFilename;
+	private final int mFirstFilename;
 	private final List<C> mTrail;
-	private long mFilename;
+	private int mFilename;
 
 	protected final Path mPartialDir;
 	protected final S mContentGenerator;	
@@ -45,7 +46,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 	}
 
 	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
-			S pContentGenerator, long pFirstFilename) throws IOException {
+			S pContentGenerator, int pFirstFilename) throws IOException {
 		mFirstFilename=pFirstFilename;
 		mDirectory=pDirectory;
 		mkdir(mDirectory);
@@ -99,7 +100,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 		return Files.exists(destDir(pKey));
 	}
 
-	protected long filename() {
+	protected int filename() {
 		return mFilename;
 	}
 	

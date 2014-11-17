@@ -22,4 +22,9 @@ public class ContentTypeSourceable implements Sourceable {
 	public String src() {
 		return mContentType;
 	}
+	
+	@Override
+	public String toString() {
+		return "src: "+mFilename; 
+	}
 }

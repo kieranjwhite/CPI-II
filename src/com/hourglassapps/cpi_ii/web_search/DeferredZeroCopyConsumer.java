@@ -17,7 +17,8 @@ public class DeferredZeroCopyConsumer extends ZeroCopyConsumer<File> {
 	private final Deferred<ContentTypeSourceable,?,?> mDeferred;
 	private long mDestKey;
 	
-	public DeferredZeroCopyConsumer(long pDestKey, File pDest, Deferred<ContentTypeSourceable,?,?> pDeferred) throws FileNotFoundException {
+	public DeferredZeroCopyConsumer(long pDestKey, File pDest, Deferred<ContentTypeSourceable,?,?> pDeferred) 
+			throws FileNotFoundException {
 		super(pDest);
 		mDestKey=pDestKey;
 		mDeferred=pDeferred;
@@ -52,7 +53,7 @@ public class DeferredZeroCopyConsumer extends ZeroCopyConsumer<File> {
 		//
 		super.releaseResources();
 		if(mDeferred.isPending()) {
-			mDeferred.resolve(null);
+			mDeferred.resolve(new ContentTypeSourceable(mDestKey, null));
 			Log.e(TAG, Log.esc("Unknown error for: "+mDeferred));
 		}
 	}

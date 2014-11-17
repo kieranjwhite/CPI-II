@@ -1,0 +1,36 @@
+3 text/html; charset=utf8
+1 text/html; charset=ISO-8859-1
+7 text/html
+2 text/html; charset=UTF-8
+10 text/html
+6 text/html; charset=UTF-8
+11 text/html
+8 text/html; charset=utf-8
+14 text/html
+12 text/html
+17 text/html
+20 application/xml
+21 text/html
+18 text/html
+23 application/msword
+9 "application/pdf"
+16 application/msword
+27 text/html; charset=utf-8
+29 text/html; charset=utf-8
+22 text/html
+4 text/plain
+36 text/html; charset=utf-8
+33 text/html; charset=windows-1251
+35 text/html; charset=windows-1251
+26 text/html
+30 application/msword
+34 text/html
+13 text/html; charset=ISO-8859-1
+24 text/plain
+32 text/html
+25 application/msword
+15 text/html
+31 text/rtf
+28 text/html
+19 application/pdf
+5 text/html; charset=UTF-8

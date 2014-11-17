@@ -1,0 +1,14 @@
+2 text/html
+1 text/html
+3 application/pdf
+5 text/html; charset=UTF-8
+4 text/html
+8 application/msword
+9 text/html; charset=utf-8
+13 text/html; charset=UTF-8
+10 text/html; charset=utf-8
+12 text/html; charset=utf-8
+7 text/html; charset=UTF-8
+6 text/html
+14 text/plain
+11 text/html; charset=utf-8

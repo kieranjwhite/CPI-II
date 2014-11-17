@@ -1,0 +1,35 @@
+3 text/html; charset=iso-8859-1
+2 text/html; charset=utf-8
+4 text/html; charset=UTF-8
+1 text/html; charset=UTF-8
+5 text/html; charset=UTF-8
+7 text/html; charset=UTF-8
+10 text/html; charset=UTF-8
+13 text/html
+9 text/html; charset=UTF-8
+14 text/html
+11 text/html; charset=UTF-8
+17 text/html; charset=utf-8
+6 text/html; charset=UTF-8
+20 text/html; charset=utf-8
+21 text/html; charset=utf-8
+12 text/html; charset=UTF-8
+23 text/html; charset=utf-8
+22 text/html; charset=UTF-8
+16 text/html; charset=UTF-8
+19 text/html; charset=utf-8
+15 text/html; charset=UTF-8
+26 text/html; charset=utf-8
+25 text/html; charset=UTF-8
+18 text/html; charset=UTF-8
+24 text/html; charset=utf-8
+28 text/html; charset=UTF-8
+27 text/html; Charset=windows-1254
+30 text/html
+32 text/html; charset=UTF-8
+29 text/html; charset=utf-8
+31 text/html; charset=UTF-8
+35 text/html; charset=utf-8
+33 text/html; charset=UTF-8
+34 text/html; charset=UTF-8
+8 text/html; charset=UTF-8

@@ -1,0 +1,28 @@
+3 UNKNOWN
+4 text/html
+2 application/pdf;charset=UTF-8
+6 application/pdf
+9 text/html; charset=windows-1252
+7 application/pdf
+10 application/pdf
+1 text/html; charset=UTF-8
+13 text/html; charset=windows-1252
+17 text/html; charset=windows-1252
+12 text/html; charset=UTF-8
+5 text/html; charset=utf-8
+19 text/html;
+18 text/html; charset=windows-1252
+21 text/html
+20 text/html
+8 text/html; charset=UTF-8
+23 text/html
+22 text/xml
+26 application/msword
+27 text/html
+14 application/pdf
+25 text/html; charset=UTF-8
+28 application/rdf+xml
+24 text/html; charset=UTF-8
+16 application/pdf
+11 application/pdf
+15 application/pdf

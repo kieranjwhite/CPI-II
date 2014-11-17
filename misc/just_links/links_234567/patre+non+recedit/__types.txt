@@ -1,0 +1,50 @@
+4 text/html; charset=ISO-8859-1
+5 text/html
+10 text/html
+14 text/html
+12 text/html
+13 text/html
+18 text/html
+19 text/html
+17 text/html
+1 text/html
+21 text/html
+16 text/html; charset=UTF-8
+24 text/html
+25 text/html
+6 text/html; charset=utf-8
+7 text/html; charset=UTF-8
+27 text/html
+29 text/html
+36 text/html
+28 text/plain
+31 application/msword
+2 text/html
+23 text/html; charset=utf-8
+22 text/html; charset=utf-8
+15 text/html; charset=UTF-8
+35 application/msword
+32 text/html; charset=windows-1251
+41 text/xml
+3 text/html; charset=UTF-8
+47 text/xml
+40 text/html
+8 text/html; charset=utf-8
+50 application/msword
+9 text/html; charset=utf-8
+30 application/xml
+49 text/plain; charset=UTF-8
+43 text/html
+39 text/html; charset=utf-8
+42 text/plain
+45 text/html; charset=utf-8
+48 application/msword
+33 text/rtf
+26 text/html
+11 text/html; charset=utf-8
+37 text/html; charset=UTF-8
+46 application/msword
+34 application/msword
+44 text/html
+20 text/html; charset=UTF-8
+38 text/html; charset=UTF-8

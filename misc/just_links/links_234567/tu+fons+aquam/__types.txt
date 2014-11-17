@@ -1,0 +1,4 @@
+1 text/html; charset=UTF-8
+3 text/html
+4 application/rtf
+2 text/html; charset=UTF-8

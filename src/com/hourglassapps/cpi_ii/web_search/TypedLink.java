@@ -17,18 +17,14 @@ public class TypedLink implements Typed<URL> {
 	@Override
 	public String extension() {
 		String path=mLink.getPath();
-		if("/".equals(path)) {
-			return ".html";
+		String extension=FilenameUtils.getExtension(path);
+		if(extension.length()>MAX_EXTENSION_LENGTH) {
+			return "";
+		}
+		if("".equals(extension)) {
+			return "";
 		} else {
-			String extension=FilenameUtils.getExtension(mLink.getPath());
-			if(extension.length()>MAX_EXTENSION_LENGTH) {
-				return "";
-			}
-			if("".equals(extension)) {
-				return "";
-			} else {
-				return "."+extension;
-			}
+			return "."+extension;
 		}
 	}
 

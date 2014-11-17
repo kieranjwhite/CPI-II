@@ -1,0 +1,12 @@
+1 text/html; charset=utf-8
+2 text/html; charset=UTF-8
+4 text/xml; charset=UTF-8
+10 text/html;charset=iso-8859-2
+8 text/html;charset=iso-8859-2
+7 text/html; charset=UTF-8
+9 text/html; ISO-8859-2; charset=ISO-8859-2
+12 text/html; ISO-8859-2; charset=ISO-8859-2
+11 text/html; charset=UTF-8
+5 text/html; charset=utf-8
+6 text/html; charset=UTF-8
+3 text/html; charset=UTF-8

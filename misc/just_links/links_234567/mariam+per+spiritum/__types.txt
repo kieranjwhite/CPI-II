@@ -1,0 +1,25 @@
+1 text/html
+9 text/html
+8 text/html; charset=utf-8
+2 text/html; charset=UTF-8
+11 text/html; charset=utf-8
+10 text/html
+13 text/html; charset=utf-8
+18 text/html; charset=utf-8
+22 text/html; charset=utf-8
+14 text/html
+12 text/html
+20 text/html; charset=utf-8
+7 text/html; charset=utf-8
+5 text/plain
+23 text/html; charset=utf-8
+17 text/html; charset=utf-8
+21 text/xml
+19 application/msword
+25 application/vnd.openxmlformats-officedocument.wordprocessingml.document
+3 text/html; charset=UTF-8
+24 text/html
+6 text/html; charset=utf-8
+4 text/html; charset=UTF-8
+15 application/msword
+16 application/msword

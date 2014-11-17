@@ -1,0 +1,49 @@
+6 text/html; charset=utf-8
+2 text/html; charset=UTF-8
+3 text/html
+1 text/html
+4 text/html; charset=UTF-8
+5 text/html
+12 text/html; charset=utf-8
+9 text/html
+15 text/html; charset=utf-8
+18 text/html;charset=UTF-8
+10 text/html; charset=UTF-8
+7 text/plain; charset=UTF-8
+21 text/html
+23 text/html
+20 text/html; charset=utf-8
+22 text/html; charset=utf-8
+19 text/html; charset=utf-8
+14 text/html
+16 text/html; charset=UTF-8
+27 text/html
+25 text/html; charset=UTF-8
+29 application/pdf
+8 text/html; charset=UTF-8
+26 text/html
+36 text/html; charset=UTF-8
+31 text/html; charset=windows-1252
+33 application/pdf
+34 text/html
+42 text/html
+43 text/html
+40 text/html
+45 text/html; charset=UTF-8
+37 text/html; charset=UTF-8
+47 text/html
+13 text/html; charset=UTF-8
+49 text/html
+39 text/html; charset=utf-8
+35 text/html; charset=utf-8
+48 text/html; charset=utf-8
+24 text/html
+50 text/html; charset=ISO-8859-1
+46 text/html; charset=UTF-8
+38 text/html; charset=utf-8
+11 text/html
+41 text/html; charset=iso-8859-1
+30 text/html; charset=utf-8
+28 application/msword
+32 text/html; charset=iso-8859-1
+44 application/pdf

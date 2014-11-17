@@ -7,7 +7,10 @@ import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.jdeferred.Deferred;
@@ -20,6 +23,7 @@ import org.jdeferred.impl.DefaultDeferredManager;
 import org.jdeferred.impl.DeferredObject;
 import org.jdeferred.multiple.MultipleResults;
 
+import com.hourglassapps.cpi_ii.web_search.DownloadableDeferredObject;
 import com.hourglassapps.cpi_ii.web_search.Sourceable;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
@@ -32,10 +36,10 @@ import com.hourglassapps.util.Typed;
 public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJournal<K,C,Downloader<C,R>> {
 	private final static String TAG=DeferredFileJournal.class.getName();
 	//TIMEOUT is in ms
-	private final static int DEFAULT_BASE_TIMEOUT=1000*60;
+	private final static int DEFAULT_BASE_TIMEOUT=1000*70;
 	private final static int DEFAULT_EXTRA_TIMEOUT=1000*4;
 	
-	private final Set<Promise<Void,IOException,Void>> mPromised;
+	private final List<Promise<Void,IOException,Void>> mPromised;
 	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();
 	private final DeferredManager mDeferredMgr=new DefaultDeferredManager();
 	@SuppressWarnings("rawtypes")
@@ -50,7 +54,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 			Downloader<C,R> pDownloader)
 			throws IOException {
 		super(pDirectory, pFilenameGenerator, pDownloader,0);
-		mPromised=new HashSet<>();
+		mPromised=new ArrayList<>();
 		assert nonePending(mPromised);
 		mPromised.clear();
 	}
@@ -64,29 +68,33 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	@Override
 	public void add(final Typed<C> pLink) throws IOException {
 		if(mTypesWriter==null) {
-			mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(META_PREFIX+"types.txt").toString())));
+			mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(CUSTOM_PREFIX+"types.txt").toString())));
 		}
 
 		incFilename();
-		C source=pLink.get();
+		final C source=pLink.get();
 		trailAdd(source);
-		Promise<Void,IOException,Void> p=mContentGenerator.downloadLink(source, filename(), dest(pLink)).then(
+		int destKey=filename();
+		final Promise<R,IOException,Void> download=mContentGenerator.downloadLink(source, destKey, dest(pLink));
+		Promise<Void,IOException,Void> logContentType=download.then(
 				new DonePipe<R,Void,IOException,Void>() {
 
 					@Override
 					public Promise<Void, IOException, Void> pipeDone(R pTypeInfo) {
-						Promise<Void,IOException,Void> prom=new DeferredObject<>();
+						Deferred<Void,IOException,Void> def=new DeferredObject<Void,IOException,Void>();
+						
 						String src=pTypeInfo.src();
 						if(src==null) {
 							src="UNKNOWN";
 						}
-						mTypesWriter.print(pTypeInfo.dstKey()+" "+src);
-						return prom;
+						mTypesWriter.println(pTypeInfo.dstKey()+" "+src);
+						def.resolve(null);
+						return def;
 					}
 				}
 
 				);
-		mPromised.add(p);
+		mPromised.add(destKey-FIRST_FILENAME, logContentType);
 	}
 
 	@Override
@@ -112,12 +120,21 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 
 						@Override
 						public void onFail(IOException e) {
-							mThrower.ctch(e);
-							/* A fail results in an entire query being skipped, so current client of this
-							 * class was written to avoid that occurrence
+							/*
+							 * e is any IOException thrown during the async download that is not caught
+							 * By invoking mThrow.ctch(e) and later mThrower.throwCaught we cause the process
+							 * to exit without committing the transaction. This is the desired outcome for any
+							 * IOException triggered by a local issue.
+							 * 
+							 * IOExceptions caused by trouble communicating with a remote server should
+							 * be caught and handled in a manner that should not cause the exception to
+							 * bubble-up to this method. The desired outcome for these is that the download
+							 * is skipped but the rest of the transaction and subsequent downloads should
+							 * otherwise proceed as normal.
 							 */
-							assert(false);
+							mThrower.ctch(e);
 						}});	
+			mThrower.throwCaught(null);
 			hold(pKey, commitment);
 		} else {
 			try {
@@ -140,11 +157,13 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 			int timeout=calcTimeout(mPromised.size());
 			pCommitment.waitSafely(timeout);
 			boolean pending=false;
+			int i=0;
 			for(Promise<?,?,?> initialPromise:mPromised) {
 				if(initialPromise.isPending()) {
-					Log.e(TAG, Log.esc("Promise timed out after +"+(timeout/1000)+"s: "+initialPromise.toString()));
+					Log.e(TAG, Log.esc("Promise timed out after +"+(timeout/1000)+"s: "+(i+FIRST_FILENAME)));
 					pending=true;
 				}
+				i++;
 			}
 			if(false) {
 				Rtu.continuePrompt();				
@@ -169,7 +188,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		}		
 	}
 	
-	private static <R> boolean nonePending(Set<Promise<R,IOException,Void>> pPromised) {
+	private static <R> boolean nonePending(Collection<Promise<R,IOException,Void>> pPromised) {
 		for(Promise<?,?,?> p: pPromised) {
 			if(p.isPending()) {
 				return false;
@@ -189,6 +208,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	protected void tidyUp(Path pDest) throws IOException {
 		if(mTypesWriter!=null) {
 			mTypesWriter.close();
+			mTypesWriter=null;
 		} //else we're committing a transaction with no downloads, so don't worry about it
 
 		super.tidyUp(pDest);
