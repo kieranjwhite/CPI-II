@@ -36,7 +36,7 @@ import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.URLUtils;
 
-public class MainDownloader implements AutoCloseable, Downloader<URL> {
+public class MainDownloader implements AutoCloseable, Downloader<URL,ContentTypeSourceable> {
 	private final static String TAG=MainDownloader.class.getName();
 	private final static Path JOURNAL=Paths.get("journal");
 	private final static Path TEST_JOURNAL=Paths.get("test_journal");
@@ -47,13 +47,14 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	public MainDownloader() {
 		mClient.start();
 	}
-	
+
 	@Override
-	public Promise<Void,IOException,Void> downloadLink(final URL pSource, final Path pDest) throws IOException {
+	public Promise<ContentTypeSourceable, IOException, Void> downloadLink(
+			URL pSource, long pDstKey, Path pDst) throws IOException {
 		URL encoded=URLUtils.reencode(pSource);
-		final Deferred<Void,IOException,Void> deferred=new DownloadableDeferredObject<Void,IOException,Void>(encoded, pDest);
+		final Deferred<ContentTypeSourceable,IOException,Void> deferred=new DownloadableDeferredObject<ContentTypeSourceable,IOException,Void>(encoded, pDst);
 		try {
-			ZeroCopyConsumer<File> consumer=new DeferredZeroCopyConsumer(pDest.toFile(), deferred);
+			ZeroCopyConsumer<File> consumer=new DeferredZeroCopyConsumer(pDstKey, pDst.toFile(), deferred);
 			mClient.execute(HttpAsyncMethods.createGet(encoded.toString()), consumer, null);
 			return deferred;
 		} catch(Exception e) {
@@ -61,7 +62,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 			Log.e(TAG, e, Log.esc("Exception for: "+deferred));
 			throw new IOException(e);
 		}
-	}
+	}	
 	
 	public static void setupBlacklist(RestrictedSearchEngine<String,URL,URL>  pSearchEngine) throws UnsupportedEncodingException {
 		/*
@@ -101,7 +102,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 		System.out.println("About to download results for all queries.");
 		Rtu.continuePrompt();
 		try(final AbstractSearchEngine q=(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY))) {
-			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL>(JOURNAL,
+			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL,ContentTypeSourceable>(JOURNAL,
 					JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
@@ -121,7 +122,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	public void downloadFiltered(String pPath, Filter<URL> pFilter) {
 		try(final AbstractSearchEngine q=(new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
 				setFilter(pFilter)) {
-			Journal<String,URL> journal=new DeferredFileJournal<String,URL>(JOURNAL, JournalKeyConverter.SINGLETON, this);
+			Journal<String,URL> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(
+					JOURNAL, JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
 				//We'll limit our downloads to 5 every 1 sec
@@ -139,7 +141,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 	
 	public void downloadOne(String pQueryName, URL pURL) {
 		try(final BingSearchEngine q=new BingSearchEngine(BingSearchEngine.AUTH_KEY)) {
-			Journal<String,URL> journal=new DeferredFileJournal<String,URL>(TEST_JOURNAL, 
+			Journal<String,URL> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(TEST_JOURNAL, 
 					JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
@@ -243,7 +245,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL> {
 					}
 					URL downloadUrl=new URL(pArgs[lastIdx++]);
 					Path dest=Paths.get(pArgs[lastIdx++]);
-					downloader.downloadLink(downloadUrl, dest).waitSafely();;
+					downloader.downloadLink(downloadUrl, 0, dest).waitSafely();;
 					break;
 				}
 			}

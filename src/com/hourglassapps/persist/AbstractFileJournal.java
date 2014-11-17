@@ -3,6 +3,7 @@ package com.hourglassapps.persist;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -27,18 +28,18 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 	private final static String PARTIAL_DIR_NAME="partial";
 	private final static String COMPLETED_DIR_NAME="completed";
 	private final static long FIRST_FILENAME=1;
+	protected final static char META_PREFIX='_';
 	
 	private final Path mDirectory;
-	private final Path mPartialDir;
 	private final Path mCompletedDir;
-	
 	private final Converter<K,String> mFilenameGenerator;
-	protected final S mContentGenerator;	
 	private final long mFirstFilename;
-	
-	private long mFilename;
 	private final List<C> mTrail;
+	private long mFilename;
 
+	protected final Path mPartialDir;
+	protected final S mContentGenerator;	
+	
 	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, S pContentGenerator) throws IOException {
 		this(pDirectory, pFilenameGenerator, pContentGenerator, FIRST_FILENAME);
 	}
@@ -98,12 +99,16 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 		return Files.exists(destDir(pKey));
 	}
 
-	protected void incFilename() {
-		mFilename++;
+	protected long filename() {
+		return mFilename;
 	}
 	
-	protected Path dest(Typed<C> pContent) throws IOException {
-		return mPartialDir.resolve(Long.toString(mFilename)+pContent.extension());
+	public Path dest(Typed<C> pContent) throws IOException {
+		return mPartialDir.resolve(Long.toString(filename())+pContent.extension());
+	}
+	
+	protected void incFilename() {
+		mFilename++;
 	}
 	
 	@Override
@@ -111,31 +116,35 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 
 	protected void saveTrail(Path pDest) throws IOException {
 		try(PrintWriter out=
-				new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-						new FileOutputStream(mPartialDir.resolve('_'+pDest.getFileName().toString()).toString()))))) {
+				new PrintWriter(new BufferedWriter(
+						new FileWriter(mPartialDir.resolve(META_PREFIX+pDest.getFileName().toString()).toString())))) {
 			for(C source: mTrail) {
 				out.println(source);
 			}
 		}
 	}
 
-	protected void tidyUp(Path pDest) throws IOException {
-		if(Files.exists(mPartialDir)) { 
+	protected final void tryTidy(Path pDest) throws IOException {
+		if(Files.exists(mPartialDir)) {
 			/*
 			 * tidyUp will be invoked more than once for a query if a download times out and
 			 * subsequent closing of the HttpAsyncClient results in any pending mPromises 
 			 * being resolved. 
 			 */
-			saveTrail(pDest);
-			assert !Files.exists(pDest);
-			Files.move(mPartialDir, pDest, StandardCopyOption.ATOMIC_MOVE);
-		}
+			tidyUp(pDest);
+		}		
+	}
+	
+	protected void tidyUp(Path pDest) throws IOException {
+		saveTrail(pDest);
+		assert !Files.exists(pDest);
+		Files.move(mPartialDir, pDest, StandardCopyOption.ATOMIC_MOVE);
 	}
 	
 	@Override
 	public void commitEntry(final K pKey) throws IOException {
 		Path dest=destDir(pKey);
-		tidyUp(dest);
+		tryTidy(dest);
 		startEntry(); //Note this is invoked even if there's an exception
 	}
 

@@ -57,14 +57,10 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 		Iterator<URL> links=mQ.present(pQuery);
 		Typed<URL> source;
 		while(links.hasNext()){
-			try {
-				mThrottle.choke();
-				final URL link=links.next();
-				source=new TypedLink(link);
-				mJournal.add(source);
-			} catch(IOException e) {
-				Log.e(TAG, e); //we just want to skip over this link, not abort the whole thing
-			}
+			mThrottle.choke();
+			final URL link=links.next();
+			source=new TypedLink(link);
+			mJournal.add(source);
 		}
 		mJournal.commitEntry(pQuery.uniqueName());		
 	}

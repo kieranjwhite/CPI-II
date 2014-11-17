@@ -3,6 +3,7 @@ package com.hourglassapps.cpi_ii.web_search;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
@@ -13,10 +14,12 @@ import com.hourglassapps.util.Log;
 
 public class DeferredZeroCopyConsumer extends ZeroCopyConsumer<File> {
 	private final static String TAG=DeferredZeroCopyConsumer.class.getName();
-	private final Deferred<?,?,?> mDeferred;
+	private final Deferred<ContentTypeSourceable,?,?> mDeferred;
+	private long mDestKey;
 	
-	public DeferredZeroCopyConsumer(File pDest, Deferred<?,?,?> pDeferred) throws FileNotFoundException {
+	public DeferredZeroCopyConsumer(long pDestKey, File pDest, Deferred<ContentTypeSourceable,?,?> pDeferred) throws FileNotFoundException {
 		super(pDest);
+		mDestKey=pDestKey;
 		mDeferred=pDeferred;
 	}
 	
@@ -29,10 +32,18 @@ public class DeferredZeroCopyConsumer extends ZeroCopyConsumer<File> {
 		} else {
 			Log.i(TAG, Log.esc("Resolved: "+mDeferred));						
 		}
-		mDeferred.resolve(null);
+		mDeferred.resolve(result(response));
 		return file;
 	}
 
+	private ContentTypeSourceable result(HttpResponse pResponse) {
+		Header contentType=pResponse.getFirstHeader("Content-Type");
+		if(contentType!=null) {
+			return new ContentTypeSourceable(mDestKey, contentType.getValue());
+		}
+		return new ContentTypeSourceable(mDestKey, null);
+	}
+	
 	@Override
 	protected void releaseResources() {
 		// Needed for Unknown Host errors

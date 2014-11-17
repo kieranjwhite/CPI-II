@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 import org.jdeferred.Promise;
 
-public interface Downloader<S> {
+public interface Downloader<S,R> {
 	public void reset() throws IOException;
-	public Promise<Void,IOException,Void> downloadLink(S pSrc, Path pDst) throws IOException;
+	public Promise<R,IOException,Void> downloadLink(S pSrc, long pDstKey, Path pDst) throws IOException;
 }

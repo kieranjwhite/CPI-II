@@ -20,6 +20,7 @@ import org.jdeferred.impl.DefaultDeferredManager;
 import org.jdeferred.impl.DeferredObject;
 import org.jdeferred.multiple.MultipleResults;
 
+import com.hourglassapps.cpi_ii.web_search.Sourceable;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
@@ -28,7 +29,7 @@ import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Typed;
 
-public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader<C>> {
+public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJournal<K,C,Downloader<C,R>> {
 	private final static String TAG=DeferredFileJournal.class.getName();
 	//TIMEOUT is in ms
 	private final static int DEFAULT_BASE_TIMEOUT=1000*60;
@@ -42,10 +43,11 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 
 	private int mBaseTimeout=DEFAULT_BASE_TIMEOUT;
 	private int mExtraTimeout=DEFAULT_EXTRA_TIMEOUT;
-
+	private PrintWriter mTypesWriter=null;
+	
 	public DeferredFileJournal(Path pDirectory,
 			Converter<K, String> pFilenameGenerator,
-			Downloader<C> pDownloader)
+			Downloader<C,R> pDownloader)
 			throws IOException {
 		super(pDirectory, pFilenameGenerator, pDownloader,0);
 		mPromised=new HashSet<>();
@@ -53,7 +55,7 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 		mPromised.clear();
 	}
 
-	public DeferredFileJournal<K,C> setTimeout(int pBase, int pExtra) {
+	public DeferredFileJournal<K,C,R> setTimeout(int pBase, int pExtra) {
 		mBaseTimeout=pBase;
 		mExtraTimeout=pExtra;
 		return this;
@@ -61,10 +63,30 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 	
 	@Override
 	public void add(final Typed<C> pLink) throws IOException {
+		if(mTypesWriter==null) {
+			mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(META_PREFIX+"types.txt").toString())));
+		}
+
 		incFilename();
 		C source=pLink.get();
 		trailAdd(source);
-		mPromised.add(mContentGenerator.downloadLink(source, dest(pLink)));
+		Promise<Void,IOException,Void> p=mContentGenerator.downloadLink(source, filename(), dest(pLink)).then(
+				new DonePipe<R,Void,IOException,Void>() {
+
+					@Override
+					public Promise<Void, IOException, Void> pipeDone(R pTypeInfo) {
+						Promise<Void,IOException,Void> prom=new DeferredObject<>();
+						String src=pTypeInfo.src();
+						if(src==null) {
+							src="UNKNOWN";
+						}
+						mTypesWriter.print(pTypeInfo.dstKey()+" "+src);
+						return prom;
+					}
+				}
+
+				);
+		mPromised.add(p);
 	}
 
 	@Override
@@ -79,7 +101,7 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 							Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
 							Path dest=destDir(pKey);
 							try {
-								tidyUp(dest);
+								tryTidy(dest);
 								deferred.resolve(null);
 							} catch(IOException e) {
 								deferred.reject(e);
@@ -91,12 +113,16 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 						@Override
 						public void onFail(IOException e) {
 							mThrower.ctch(e);
+							/* A fail results in an entire query being skipped, so current client of this
+							 * class was written to avoid that occurrence
+							 */
+							assert(false);
 						}});	
 			hold(pKey, commitment);
 		} else {
 			try {
 				Path dest=destDir(pKey);
-				tidyUp(dest);
+				tryTidy(dest);
 			} catch(IOException e) {
 				mThrower.ctch(e);
 			}
@@ -136,14 +162,14 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 				 * We need to invoke tidyUp here in case at least one of the query's downloads aborted 
 				 * without our code knowing about it -- this is the problem with using a ZeroCopyConsumer. 
 				 */
-				tidyUp(dest);
+				tryTidy(dest);
 			}
 		} catch (InterruptedException i) {
 			mThrower.ctch(new IOException(i));
 		}		
 	}
 	
-	private static boolean nonePending(Set<Promise<Void,IOException,Void>> pPromised) {
+	private static <R> boolean nonePending(Set<Promise<R,IOException,Void>> pPromised) {
 		for(Promise<?,?,?> p: pPromised) {
 			if(p.isPending()) {
 				return false;
@@ -159,4 +185,14 @@ public class DeferredFileJournal<K,C> extends AbstractFileJournal<K,C,Downloader
 		super.startEntry();
 	}
 
+	@Override
+	protected void tidyUp(Path pDest) throws IOException {
+		if(mTypesWriter!=null) {
+			mTypesWriter.close();
+		} //else we're committing a transaction with no downloads, so don't worry about it
+
+		super.tidyUp(pDest);
+	}
+
+	
 }
