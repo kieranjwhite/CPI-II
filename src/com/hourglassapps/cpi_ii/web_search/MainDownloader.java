@@ -65,6 +65,10 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		}
 	}	
 	
+	public void downloadSynchronous(URL pSource, Path pDst) throws IOException, InterruptedException {
+		downloadLink(pSource, 0, pDst).waitSafely();
+	}
+	
 	public static void setupBlacklist(RestrictedSearchEngine<String,URL,URL>  pSearchEngine) throws UnsupportedEncodingException {
 		/*
 		if(!pSearchEngine.filterSites(new HashSet<String>(Arrays.<String>asList(new String[] {
@@ -246,7 +250,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					}
 					URL downloadUrl=new URL(pArgs[lastIdx++]);
 					Path dest=Paths.get(pArgs[lastIdx++]);
-					downloader.downloadLink(downloadUrl, 0, dest).waitSafely();;
+					downloader.downloadSynchronous(downloadUrl, dest);
 					break;
 				}
 			}
