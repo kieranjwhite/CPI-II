@@ -32,6 +32,7 @@ import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
 import com.hourglassapps.util.Filter;
 import com.hourglassapps.util.Log;
+import com.hourglassapps.util.MainHeartBeat;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.URLUtils;
@@ -70,30 +71,15 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 	
 	public static void setupBlacklist(RestrictedSearchEngine<String,URL,URL>  pSearchEngine) throws UnsupportedEncodingException {
-		/*
-		if(!pSearchEngine.filterSites(new HashSet<String>(Arrays.<String>asList(new String[] {
-				"catalogue.conductus.ac.uk", "diamm.ac.uk", "chmtl.indiana.edu/tml",
-				"archive.org/details/analectahymnicam20drev",
-				"archive.org/details/analectahymnica21drevuoft",
-				"archive.org/details/analectahymnicam21drev",
+		String blacklistedSites[]=new String[] {
+				"catalogue.conductus.ac.uk",
+				"diamm.ac.uk", 
+				"chmtl.indiana.edu/tml",
 				"archive.org/stream/analectahymnicam20drev",
 				"archive.org/stream/analectahymnica21drevuoft",
 				"archive.org/stream/analectahymnicam21drev"
-		})))) {
-			boolean blacklisted=pSearchEngine.filterPhrases(new HashSet<String>(Arrays.<String>asList(new String[] {
-					"Cantum pulcriorem invenire", "DIAMM", "MUSICARUM LATINARUM", "Analecta hymnica"
-			})));
-			if(!blacklisted) {
-				Log.e(TAG, "failed to blacklist");
-			}
-		}
-		*/		
-		if(!pSearchEngine.filterSites(new HashSet<String>(Arrays.<String>asList(new String[] {
-				"catalogue.conductus.ac.uk", "diamm.ac.uk", "chmtl.indiana.edu/tml",
-				"archive.org/stream/analectahymnicam20drev",
-				"archive.org/stream/analectahymnica21drevuoft",
-				"archive.org/stream/analectahymnicam21drev"
-		})))) {
+		};
+		if(!pSearchEngine.filterSites(new HashSet<String>(Arrays.<String>asList(blacklistedSites)))) {
 			boolean blacklisted=pSearchEngine.filterPhrases(new HashSet<String>(Arrays.<String>asList(new String[] {
 					"Cantum pulcriorem invenire", "DIAMM", "MUSICARUM LATINARUM", "Analecta hymnica"
 			})));

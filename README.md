@@ -81,6 +81,12 @@ To download results for a single query to test_journal/:
 
 echo https://api.datamarket.azure.com/Bing/SearchWeb/Web?Query=%27%28%22communis%20est%20utilitas%22%20OR%20%22commune%20est%20utilitas%22%20OR%20%22communem%20est%20utilitas%22%29%20AND%20NOT%20site%3Aarchive.org%2Fdetails%2Fanalectahymnica21drevuoft%20AND%20NOT%20site%3Adiamm.ac.uk%20AND%20NOT%20site%3Aarchive.org%2Fdetails%2Fanalectahymnicam21drev%20AND%20NOT%20site%3Aarchive.org%2Fdetails%2Fanalectahymnicam20drev%20AND%20NOT%20site%3Acatalogue.conductus.ac.uk%20AND%20NOT%20site%3Achmtl.indiana.edu%2Ftml%22%27 | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:bin:data com.hourglassapps.cpi_ii.web_search.MainDownloader one "communis est utilitas"
 
+Ping google regularly to check for local network issues.
+=======================================================
+This relies on the jpingy library, which only works on unix-like systems. Running this might not be required on Windows as I believe if a network interface goes down on Windows any TCP connections are closed, quitting any MainDownloader process. The arguments below correspond to PIDs of processes you wish to kill if a ping fails.
+
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:bin:data com.hourglassapps.util.MainHeartBeat <PID_1> <PID_2> <PID_3>
+
 --------------------------------------------------------
 
 Generating the file misc/links.txt

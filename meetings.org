@@ -1,5 +1,9 @@
 * General
 ** Libraries
+*** jpingy
+**** https://code.google.com/p/jpingy/downloads/detail?name=jpingy0_1-alpha.jar&can=2&q=
+**** MIT License
+***** http://www.opensource.org/licenses/mit-license.php
 *** Apache Commons
 **** Lang
 ***** http://commons.apache.org/proper/commons-lang/download_lang.cgi
@@ -269,6 +273,20 @@
 ******* seems high but not when you consider the query: a a e
 ***** Problem resurfaced when I started using CloseableHttpAsyncClient
 ****** Ignoring for now as problem seems to be quite when dealing with most trigrams (a a e what the specific trigram that caused trouble)
+**** Including sites blacklist sometimes seems to affect which results are returned
+***** quam dulces remedium
+***** Sans blacklist the 4th result (of 11) was 
+****** https://auramundi.wordpress.com/category/ars-antiqua/perotinus-magister/
+******* This does contain the trigram quam dulces remedium
+****** With a blacklist this link is completely missing. 12 links were returned
+****** On closer inspected I discovered the following:
+******* I searched for "qum dulces remedium" with only one site (catalogue.conductus.ac.uk) blacklisted ie:
+******** https://api.datamarket.azure.com/Bing/SearchWeb/Web?Query='("quam dulce remedium") AND (NOT site:catalogue.conductus.ac.uk)'
+******* One site was returned: http://catalogue.conductus.ac.uk/ so apparently in this case the blacklist wasn't working
+******** DONE Downloading from sites with forms or ajax content (eg http://catalogue.conductus.ac.uk/)
+	 CLOSED: [2014-11-19 Wed 14:56]
+********* Don't worry about this as the URL wasn't returned in response to the query, but because it thought I was searching for the terms catalogue conductus ac uk
+********** I know this becuse putting in gibberish for the trigram (ie "quadfsdfdsm dulce remedium") also returned the same site
 **** Some links don't contain the exact trigram or even all terms in the trigram
 ***** eg calore+nec+mutat
 ***** 36 links returned and one seems possibly relevant -- the 36th
@@ -289,6 +307,7 @@
 ******** Adding one of these back resulted in all the dodgy results being returned once again.
 ******* In conclusion I'd suggest keeping things as they are.
 ******** I considered limiting query length somehow but this would have led to us missing out on the successful morphological variation at the end
+***** Also similar dei+piissima+cuius 
 **** Slow downloads can result in a timeout before completion
 ***** occurred 2/743 download
 **** Timeouts (>3 mins in somecases)
@@ -339,4 +358,5 @@
 ***** P(X<748.690)==99.0
 *** Many links downloaded are from archive.org 
 **** 9/45
+*** Added heartbeat to kill downloading processes if another website (ie google.com) becomes unreachable.
 #  LocalWords:  unstemmed unigrams serialised bigrams Bing txt

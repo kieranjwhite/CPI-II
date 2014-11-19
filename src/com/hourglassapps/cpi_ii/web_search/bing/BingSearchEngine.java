@@ -32,6 +32,7 @@ import com.hourglassapps.util.URLUtils;
 @SuppressWarnings("deprecation")
 public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	private final static String TAG=BingSearchEngine.class.getName();
+	private final static boolean FILTER_BY_SITE=false;
 	public final static int RESULTS_PER_PAGE=50;
 	
 	private final static String SEARCH_PATH_PREFIX="/Bing/SearchWeb/Web?Query=%27%28";
@@ -260,11 +261,15 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 
 	@Override
 	public boolean filterSites(Set<String> pSites) throws UnsupportedEncodingException {
-		String blacklisted=blacklist(pSites, " AND NOT site:", "");
-		assert(maxQueryLen()>=mBlacklistedSites.length());
-		if(blacklisted.length()+(maxQueryLen()-mBlacklistedSites.length())>0) {
-			mBlacklistedSites=blacklisted;
-			return true;
+		if(FILTER_BY_SITE) {
+			String blacklisted=blacklist(pSites, " AND NOT site:", "");
+			assert(maxQueryLen()>=mBlacklistedSites.length());
+			if(blacklisted.length()+(maxQueryLen()-mBlacklistedSites.length())>0) {
+				mBlacklistedSites=blacklisted;
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
