@@ -11,7 +11,7 @@ public class MainHeartBeat {
 	private final static String TAG=MainHeartBeat.class.getName();
 
 	//In seconds
-	private final static int TIMEOUT=60;
+	private final static int TIMEOUT=120;
 	//In ms
 	private final static int PERIOD=60*1000;
 	private final static String TARGET="google.com";
@@ -19,20 +19,26 @@ public class MainHeartBeat {
 	private final int mPids[];
 	
 	private final static PingArguments mPingArgs=new PingArguments.Builder().url(TARGET).
-			timeout(TIMEOUT).bytes(4).count(1).ttl(60).interval(60*1000).build();
+			timeout(TIMEOUT).bytes(4).count(3).ttl(60).interval(60*1000).build();
 	
 	public MainHeartBeat(int[] pPids) {
 		mPids=pPids;
 	}
 
 	public void signal() throws IOException {
-		String cmdArgs[]=new String[]{"kill", "-HUP",""};
-		for(int pid: mPids) {
-			cmdArgs[2]=Integer.toString(pid);
-			Runtime.getRuntime().exec(cmdArgs);
+		try(ConcreteThrower<IOException> thrower=new ConcreteThrower<IOException>()) {
+			String cmdArgs[]=new String[]{"kill", "-HUP",""};
+			for(int pid: mPids) {
+				cmdArgs[2]=Integer.toString(pid);
+				try {
+					Runtime.getRuntime().exec(cmdArgs);
+				} catch(IOException e) {
+					thrower.ctch(e);
+				}
+			}
 		}
 	}
-	
+
 	public void beat() {
 		while(true) {
 			try {

@@ -216,6 +216,7 @@
 ***** Then rank the remainder by multiplying frequency of each term
 ** Blacklisted sites
 *** Ideally I'd like to eliminate these from the initial search in Bing
+**** It'll save us downloading these links again and again. Some of these blacklisted urls point to longish documents not only wasting bandwidth but increasing the likelihood that desired links time out due to the time spending downloading these links
 *** Variations of NOT site: and NOT domain: failed
 *** Considering using NOT in combination with keywords or phrases
 **** Might be an idea to confirm that these are actually sufficiently distinctive - we don't want to filter out more sites than specified by Gregorio
@@ -223,13 +224,27 @@
       CLOSED: [2014-11-04 Tue 11:23]
 ****** Yes it does. Not only but the Bing api also accepts a path as well as a domain as an argument to site: 
 ******* Encountered a site (in archive.org) that Gregorio might want to blacklist. Unfortunately I never took note of what it was exactly
-******** TODO There are bound to be more so it'd be nice if these could be blacklisted at a later stage too.
+******** DONE There are bound to be more so it'd be nice if these could be blacklisted at a later stage too.
+	 CLOSED: [2014-11-21 Fri 00:09]
+********* I believe this site was one of the archive.org/stream sites. I contacted Gregorio about this. See below.
 **** DIAMM for DIAMM
+***** Entered this phrase into Bing browser interface and any links returned that I checked either related to this TML or to something completely off topic
 **** MUSICARUM LATINARUM for TML
+***** Entered this phrase into Bing browser interface and any links returned that I checked related to this TML
 **** Analecta hymnica for archive.org
-***** I'm suspicious that this will filter out too many sites
+***** DONE I'm suspicious that this will filter out too many sites
+      CLOSED: [2014-11-21 Fri 13:08]
+****** Replaced this blacklisted phrase with three
+******* "Galler Schule Processionshymnen dichten"
+******* "Binnenreime betrachtet werden k6nnten"
+******* "CANT10NE8 ET MUTETE"
+******* Each only returns one link in Bing's browser api -- the full text link of the URL I'm trying to exclude so that's okay.
+******* Note the apparent OCR error in two of these phrases
 **** Conductus
 ***** Cantum pulcriorem invenire
+****** No longer exclude this as conductus URLs don't seem to be returned by Bing (or at least its browser interface)
+******* Sought a quoted trigram from conductus and conductus was not in results even when is specified site:catalogue.conductus.ac.uk
+******* Repeated with another trigram and conductus wasn't returned either
 **** DONE do this
      CLOSED: [2014-10-30 Thu 18:55]
 ** Points
@@ -264,6 +279,24 @@
     CLOSED: [2014-11-03 Mon 15:46]
 **** Stem groups are generated from unstemmed trigrams. Currently we do not allow partial trigrams. Consequently there are fewer distinct terms when indexing with trigrams compared to indexing with (for example) unigrams.
 *** Issues with downloads
+**** Dynamic content
+***** Youtube links
+****** nunc sancte nobis
+******* http://www.youtube.com/watch?v=wxLJxHKaDu0
+******** changing comments
+***** Scribed
+****** tibi+cogor+obsequi
+******* http://www.scribd.com/doc/193904560/Analecta-Hymnica-Medii-Aevi-January-1-1895
+****** There is a proper match to the first trigram on this page, however not in the html you download
+***** academia.edu
+****** same story as Scribed
+******* sola+mederis+morte
+******** http://www.academia.edu/2638762/Josef_TRUHLAR_O_staroceskych_dramatech_velikonocnich
+***** Other sites with databases
+****** nunc sancte nobis
+******* http://cantusbohemiae.cz/
+******** recently added chants are constantly being updated
+***** Presumeably trigram was present when indexed
 **** Some results give links with dodgy encoding prevents instantiating as a URL instance
 ***** Ignore as it seems to be working now (only explanation I can think of is that now I use URL constructor initially rather than URI constructor)
 ***** Original problem described below
@@ -280,13 +313,19 @@
 ******* This does contain the trigram quam dulces remedium
 ****** With a blacklist this link is completely missing. 12 links were returned
 ****** On closer inspected I discovered the following:
-******* I searched for "qum dulces remedium" with only one site (catalogue.conductus.ac.uk) blacklisted ie:
+******* I searched for "quam dulce remedium" with only one site (catalogue.conductus.ac.uk) blacklisted ie:
 ******** https://api.datamarket.azure.com/Bing/SearchWeb/Web?Query='("quam dulce remedium") AND (NOT site:catalogue.conductus.ac.uk)'
 ******* One site was returned: http://catalogue.conductus.ac.uk/ so apparently in this case the blacklist wasn't working
 ******** DONE Downloading from sites with forms or ajax content (eg http://catalogue.conductus.ac.uk/)
 	 CLOSED: [2014-11-19 Wed 14:56]
 ********* Don't worry about this as the URL wasn't returned in response to the query, but because it thought I was searching for the terms catalogue conductus ac uk
 ********** I know this becuse putting in gibberish for the trigram (ie "quadfsdfdsm dulce remedium") also returned the same site
+**** adding an extra disjunction leads to a result being removed -- should never happen (two other results are added but that's beside the point)
+***** "vita gaudia nos" OR "vita gaudio nos" OR "vitam gaudia nos" -- no blacklist. Results
+****** http://archive.org/stream/analectahymnicam4647drev/analectahymnicam4647drev_djvu.txt
+***** "vita gaudium nos" OR "vita gaudia nos" OR "vita gaudio nos" OR "vitam gaudia nos" -- no blacklist. Results:
+****** http://www.archive.org/stream/patrologiaecurs119unkngoog/patrologiaecurs119unkngoog_djvu.txt
+****** http://www.archive.org/stream/patrologiaecurs119unkngoog/patrologiaecurs119unkngoog_djvu.txt&q=video+xxx+de+maria+stola&ei=uLK2T-LOCOO-0QXizPXRBw&sa=X&ct=res&resnum=3&ved=0CBsQFjAC
 **** Some links don't contain the exact trigram or even all terms in the trigram
 ***** eg calore+nec+mutat
 ***** 36 links returned and one seems possibly relevant -- the 36th
@@ -308,6 +347,13 @@
 ******* In conclusion I'd suggest keeping things as they are.
 ******** I considered limiting query length somehow but this would have led to us missing out on the successful morphological variation at the end
 ***** Also similar dei+piissima+cuius 
+***** Also cute quasi pro
+****** Only two results when we applied keyword blacklist
+******* One of which did not contain either tri-gram in query
+******** However it was a Latin text and matched two consecutive terms from trigram
+******* Removing one disjunction
+******** Single actual matching result returned
+******** Or (removing other disjunction) no results
 **** Slow downloads can result in a timeout before completion
 ***** occurred 2/743 download
 **** Timeouts (>3 mins in somecases)
@@ -341,6 +387,7 @@
 *** Possible additions to blacklisted sites:
 **** http://www.archive.org/stream/analectahymnica21drevuoft/analectahymnica21drevuoft_djvu.txt
 **** I contacted Gregorio about this (on 13/11/2014)
+***** He agreed that I could add these archive.org/stream variations of the archive.org URL he listed and remove the originals (as they never seemed to be returned)
 *** Estimate of download size
 **** Range of 400-600MB
 ***** 400

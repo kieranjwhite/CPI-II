@@ -96,7 +96,18 @@ First create journal by invoking "MainDownloader all" as described above with a 
 
 find correct_journal/completed/ -iname "_*"| xargs cat | sed -r -e "s/https/http/"|sort > misc/correct_links.txt
 
-Listing files containing downloaded links
+Listing queries containing downloaded links
 =========================================
 
-find journal/completed -iname "_*"|xargs ls -l |egrep -e "kieran +[1-9]"|sed -nr -e "s/^.* ([^ ]+)\$/\1/p"
+find journal/completed -iname "_[a-z]*"|xargs ls -l |egrep -e "kieran +[1-9]"|sed -nr -e "s/^.* ([^ ]+)\$/\1/p"
+
+Display random query in a journal directory
+===========================================
+
+We are assuming 60 queries containing downloaded links...
+find ./ -iname "_[a-z]*"|xargs ls -l |egrep -e "kieran +[1-9]"|sed -nr -e "s/^.* ([^ ]+)\$/\1/p"|rnd_line 60
+
+Decode a percent-encoded string
+===============================
+
+java -ea -cp bin:data com.hourglassapps.util.URLUtils decode %27%28%22vita%20gaudium%20nos%22%20OR%20%22vita%20gaudia%20nos%22%20OR%20%22vita%20gaudio%20nos%22%20OR%20%22vitam%20gaudia%20nos%22%20OR%20%22vitam%20gaudio%20nos%22%20OR%20%22vitam%20gaudium%20nos%22%20OR%20%22vita%20gaudiis%20nos%22%20OR%20%22vitam%20gaudiis%20nos%22%29%27

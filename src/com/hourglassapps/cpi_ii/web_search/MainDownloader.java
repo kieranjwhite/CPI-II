@@ -79,14 +79,21 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 				"archive.org/stream/analectahymnica21drevuoft",
 				"archive.org/stream/analectahymnicam21drev"
 		};
+		/*
 		if(!pSearchEngine.filterSites(new HashSet<String>(Arrays.<String>asList(blacklistedSites)))) {
 			boolean blacklisted=pSearchEngine.filterPhrases(new HashSet<String>(Arrays.<String>asList(new String[] {
-					"Cantum pulcriorem invenire", "DIAMM", "MUSICARUM LATINARUM", "Analecta hymnica"
+					//"Cantum pulcriorem invenire", //sites from Conductus don't seem to be returned 
+					"DIAMM", 
+					"MUSICARUM LATINARUM",
+					"Galler Schule Processionshymnen dichten", //corresponding to analectahymnicam20drev
+					"Binnenreime betrachtet werden k6nnten", //corresponding to analectahymnica21drevuoft
+					"CANT10NE8 ET MUTETE" //corresponding to analectahymnicam21drev
 			})));
 			if(!blacklisted) {
 				Log.e(TAG, "failed to blacklist");
 			}
 		}
+		*/
 	}
 	
 	public void downloadAll(String pPath, boolean pDummyRun) {
@@ -232,6 +239,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					break;
 				case DOWNLOAD:
 					if(pArgs.length!=3) {
+						System.out.println("num args: "+pArgs.length);
 						throw new UnrecognisedSyntaxException();
 					}
 					URL downloadUrl=new URL(pArgs[lastIdx++]);

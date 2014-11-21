@@ -23,7 +23,7 @@ public class URLUtils {
 	
 	public static URL reencode(URL pSource) throws UnsupportedEncodingException, MalformedURLException {
 		String file=pSource.getFile();
-		String newFile=file.replace("[", "%5B").replace("]", "%5D");
+		String newFile=file.replace("[", "%5B").replace("]", "%5D").replace("\"", "%22");
 		return new URL(pSource.getProtocol(), pSource.getHost(), pSource.getPort(), 
 				newFile);
 	}
