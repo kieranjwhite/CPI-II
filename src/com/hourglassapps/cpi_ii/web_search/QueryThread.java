@@ -60,7 +60,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 			mThrottle.choke();
 			final URL link=links.next();
 			source=new TypedLink(link);
-			mJournal.add(source);
+			mJournal.addNew(source);
 		}
 		mJournal.commit(pQuery.uniqueName());		
 	}
@@ -78,7 +78,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 
 				Query<K,URL> query=mQ.formulate(disjunctions);
 				K name=query.uniqueName();
-				if(!mJournal.has(name)) {
+				if(!mJournal.addExisting(name)) {
 					skipped=false;
 					search(query);
 				} else {

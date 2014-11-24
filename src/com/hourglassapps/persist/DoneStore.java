@@ -81,7 +81,7 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 	}
 	
 	@Override
-	public boolean has(Ii<String,String> pSrcDst) throws IOException {
+	public boolean addExisting(Ii<String,String> pSrcDst) throws IOException {
 		if(mPending.containsKey(pSrcDst.fst())) {
 			link(Paths.get(pSrcDst.snd()), Paths.get(mPending.get(pSrcDst.fst())));
 			return true;
@@ -94,7 +94,7 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 	}
 
 	@Override
-	public void add(Ii<String,String> pSrcDst) {
+	public void addNew(Ii<String,String> pSrcDst) {
 		if(pSrcDst==null) {
 			return;
 		}

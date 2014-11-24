@@ -24,7 +24,7 @@ public class FileJournal<K,C,S extends ReadableByteChannel> extends AbstractFile
 	}
 	
 	@Override
-	public void add(Typed<C> pContent) throws IOException {
+	public void addNew(Typed<C> pContent) throws IOException {
 		S channel=source(pContent);
 		if(channel instanceof SelectableChannel && ((SelectableChannel)channel).isBlocking()) {
 			throw new IOException("channel must be blocking");

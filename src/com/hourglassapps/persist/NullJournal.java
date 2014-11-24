@@ -8,12 +8,12 @@ import com.hourglassapps.util.Typed;
 public class NullJournal<K,C> implements Journal<K,C> {
 
 	@Override
-	public boolean has(K pKey) {
+	public boolean addExisting(K pKey) {
 		return false;
 	}
 
 	@Override
-	public void add(C pContent) throws IOException {
+	public void addNew(C pContent) throws IOException {
 	}
 
 	@Override

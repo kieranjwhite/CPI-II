@@ -115,7 +115,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>>
 	}
 	
 	@Override
-	public boolean has(K pKey) {
+	public boolean addExisting(K pKey) {
 		return Files.exists(destDir(pKey));
 	}
 
@@ -132,7 +132,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>>
 	}
 	
 	@Override
-	public abstract void add(Typed<C> pContent) throws IOException;
+	public abstract void addNew(Typed<C> pContent) throws IOException;
 
 	protected void saveTrail(Path pDest) throws IOException {
 		try(PrintWriter out=

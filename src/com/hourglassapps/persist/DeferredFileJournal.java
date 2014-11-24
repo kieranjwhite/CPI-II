@@ -81,14 +81,14 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	}
 	
 	@Override
-	public void add(final Typed<C> pLink) throws IOException {
+	public void addNew(final Typed<C> pLink) throws IOException {
 		incFilename();
 		final C source=pLink.get();
 		trailAdd(source);
 		int destKey=filename();
 
 		final Path dest=dest(pLink);
-		if(mDone.has(new Ii<>(pLink.get().toString(), dest.toString()))) {
+		if(mDone.addExisting(new Ii<>(pLink.get().toString(), dest.toString()))) {
 			Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
 			deferred.resolve(null);
 			mPromised.add(deferred);
@@ -111,7 +111,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 							src="UNKNOWN";
 						}
 						mTypesWriter.println(pTypeInfo.dstKey()+" "+src);
-						mDone.add(new Ii<>(source.toString(), dest.toString()));
+						mDone.addNew(new Ii<>(source.toString(), dest.toString()));
 						def.resolve(null);
 						return def;
 					}
