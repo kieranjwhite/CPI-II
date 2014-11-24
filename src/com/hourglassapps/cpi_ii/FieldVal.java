@@ -9,10 +9,7 @@ public class FieldVal {
 	private final String mName;
 	private final boolean mTokenise;
 	
-	public final static FieldVal KEY=new FieldVal("key", true);
-	public final static FieldVal CONTENT=new FieldVal("content", true);
-	
-	protected FieldVal(String pName, boolean pTokenise) {
+	public FieldVal(String pName, boolean pTokenise) {
 		mName=pName;
 		mTokenise=pTokenise;
 	}

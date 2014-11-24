@@ -4,18 +4,15 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.jdeferred.Deferred;
 import org.jdeferred.DeferredManager;
-import org.jdeferred.DoneCallback;
 import org.jdeferred.DonePipe;
 import org.jdeferred.FailCallback;
 import org.jdeferred.Promise;
@@ -25,6 +22,7 @@ import org.jdeferred.multiple.MultipleResults;
 
 import com.hourglassapps.cpi_ii.web_search.DownloadableDeferredObject;
 import com.hourglassapps.cpi_ii.web_search.Sourceable;
+import com.hourglassapps.persist.DoneStore;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
@@ -35,6 +33,7 @@ import com.hourglassapps.util.Typed;
 
 public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJournal<K,C,Downloader<C,R>> {
 	private final static String TAG=DeferredFileJournal.class.getName();
+	private final static String DONE_INDEX="done_index";
 	//TIMEOUT is in ms
 	private final static int DEFAULT_BASE_TIMEOUT=1000*70;
 	private final static int DEFAULT_EXTRA_TIMEOUT=1000*4;
@@ -48,12 +47,28 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	private int mBaseTimeout=DEFAULT_BASE_TIMEOUT;
 	private int mExtraTimeout=DEFAULT_EXTRA_TIMEOUT;
 	private PrintWriter mTypesWriter=null;
+	private final Path mPartialDoneDir;
+	private final Path mBetweenDoneDir;
+	private final DoneStore mDone;
 	
-	public DeferredFileJournal(Path pDirectory,
+	public DeferredFileJournal(final Path pDirectory,
 			Converter<K, String> pFilenameGenerator,
 			Downloader<C,R> pDownloader)
 			throws IOException {
-		super(pDirectory, pFilenameGenerator, pDownloader,0);
+		super(pDirectory, pFilenameGenerator, pDownloader,0, new PreDeleteAction() {
+
+			@Override
+			public void run() throws IOException {
+				Path partialDoneDir=partialDir(pDirectory).resolve(DONE_INDEX);
+				if(Files.exists(partialDoneDir)) {
+					AbstractFileJournal.deleteFlatDir(partialDoneDir);
+				}
+			}
+			
+		});
+		mPartialDoneDir=mPartialDir.resolve(DONE_INDEX);
+		mBetweenDoneDir=pDirectory.resolve(DONE_INDEX);
+		mDone=new DoneStore(mPartialDoneDir);
 		mPromised=new ArrayList<>();
 		assert nonePending(mPromised);
 		mPromised.clear();
@@ -67,15 +82,23 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	
 	@Override
 	public void add(final Typed<C> pLink) throws IOException {
-		if(mTypesWriter==null) {
-			mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(CUSTOM_PREFIX+"types.txt").toString())));
-		}
-
 		incFilename();
 		final C source=pLink.get();
 		trailAdd(source);
 		int destKey=filename();
-		final Promise<R,IOException,Void> download=mContentGenerator.downloadLink(source, destKey, dest(pLink));
+
+		final Path dest=dest(pLink);
+		if(mDone.has(new Ii<>(pLink.get().toString(), dest.toString()))) {
+			Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
+			deferred.resolve(null);
+			mPromised.add(deferred);
+			return;
+		}
+		assert(Files.exists(mPartialDoneDir));
+		if(mTypesWriter==null) {
+			mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(CUSTOM_PREFIX+"types.txt").toString())));
+		}
+		final Promise<R,IOException,Void> download=mContentGenerator.downloadLink(source, destKey, dest);
 		Promise<Void,IOException,Void> logContentType=download.then(
 				new DonePipe<R,Void,IOException,Void>() {
 
@@ -88,6 +111,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 							src="UNKNOWN";
 						}
 						mTypesWriter.println(pTypeInfo.dstKey()+" "+src);
+						mDone.add(new Ii<>(source.toString(), dest.toString()));
 						def.resolve(null);
 						return def;
 					}
@@ -98,7 +122,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	}
 
 	@Override
-	public void commitEntry(final K pKey) throws IOException {
+	public void commit(final K pKey) throws IOException {
 		if(mPromised.size()>0) {
 			Promise<Void, IOException, Void> commitment=mDeferredMgr.when(mPromised.toArray(mPendingArr)).then(
 					new DonePipe<MultipleResults,Void,IOException,Void>(){
@@ -152,6 +176,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		return mBaseTimeout+pNumTransactionDownloads*mExtraTimeout;
 	}
 	
+	@SuppressWarnings("unused")
 	private void hold(final K pKey, Promise<Void,IOException,Void> pCommitment) throws IOException {
 		try {
 			int timeout=calcTimeout(mPromised.size());
@@ -169,11 +194,6 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 				Rtu.continuePrompt();				
 			}
 			if(pending) {
-				/*
-				 * reset() will close the HttpAsyncClient, causing all pending associated download operations to fail.
-				 * The close method contains a join call on the HttpAsyncClient's reactor thread. Therefore
-				 * it will behave synchronously. TODO verify.
-				 */
 				mContentGenerator.reset(); 
 				mPromised.clear();	
 				Path dest=destDir(pKey);
@@ -198,21 +218,35 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	}
 	
 	@Override
-	public void startEntry() throws IOException {
-		assert nonePending(mPromised);
-		mPromised.clear();
-		super.startEntry();
-	}
-
-	@Override
 	protected void tidyUp(Path pDest) throws IOException {
 		if(mTypesWriter!=null) {
 			mTypesWriter.close();
 			mTypesWriter=null;
 		} //else we're committing a transaction with no downloads, so don't worry about it
 
+		assert(mPartialDoneDir.toFile().exists());
+		mDone.commit(pDest);
 		super.tidyUp(pDest);
+		Path src=pDest.resolve(DONE_INDEX);
+		Log.i(TAG, "move to parent src: "+Log.esc(src)+" dst: "+Log.esc(mBetweenDoneDir));
+		Files.move(src, mBetweenDoneDir, StandardCopyOption.ATOMIC_MOVE);
+		Log.i(TAG, "move to parent done");
 	}
 
+	@Override
+	protected void startEntry() throws IOException {
+		assert nonePending(mPromised);
+		mPromised.clear();
+		super.startEntry();
+		Log.i(TAG, "move to partial src: "+Log.esc(mBetweenDoneDir)+" dst: "+Log.esc(mPartialDoneDir));
+		Files.move(mBetweenDoneDir, mPartialDoneDir, StandardCopyOption.ATOMIC_MOVE);
+		Log.i(TAG, "move to partial done");
+	}
 	
+	@Override
+	public void reset() throws IOException {
+		mDone.reset();
+		super.reset();
+	}
+
 }

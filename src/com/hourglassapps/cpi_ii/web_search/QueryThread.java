@@ -35,10 +35,10 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 	private final DataOutputStream mOut=new DataOutputStream(new BufferedOutputStream(new PipedOutputStream(mIn)));
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
 	private final SearchEngine<List<String>, K, URL, URL> mQ;	
-	private final Journal<K,URL> mJournal;
+	private final Journal<K,Typed<URL>> mJournal;
 	private Throttle mThrottle=Throttle.NULL_THROTTLE;
 	
-	public QueryThread(SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,URL> pJournal) throws IOException {
+	public QueryThread(SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,Typed<URL>> pJournal) throws IOException {
 		super("query");
 		mQ=pQ;
 		mJournal=pJournal;
@@ -62,7 +62,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 			source=new TypedLink(link);
 			mJournal.add(source);
 		}
-		mJournal.commitEntry(pQuery.uniqueName());		
+		mJournal.commit(pQuery.uniqueName());		
 	}
 	
 	@Override
@@ -92,8 +92,9 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 			}
 		} catch(EOFException e) {
 			Log.i(TAG, "quitting thread");
-		} catch(IOException e) {
+		} catch(Throwable e) {
 			Log.e(TAG, e);
+			System.exit(-1);
 		}
 	}
 

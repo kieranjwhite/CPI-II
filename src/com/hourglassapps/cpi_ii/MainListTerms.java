@@ -49,14 +49,14 @@ public class MainListTerms {
 	private void showDocTerms(IndexReader reader, int pDocId, int pTotalDocs) throws IOException {
 		SortedMap<Double, List<String>> scores=new TreeMap<>();
 		
-	    Terms termVector = reader.getTermVector(pDocId, FieldVal.CONTENT.s());
+	    Terms termVector = reader.getTermVector(pDocId, CPIFields.CONTENT.fieldVal().s());
 	    TermsEnum itr = termVector.iterator(null);
 	    BytesRef term = null;
 
 	    while ((term = itr.next()) != null) {               
 	        String termText = term.utf8ToString();                              
 	        long tf = itr.totalTermFreq(); //yup just using raw tf right now
-	        int termDocs = reader.docFreq(FieldVal.CONTENT.term(termText));
+	        int termDocs = reader.docFreq(CPIFields.CONTENT.fieldVal().term(termText));
 	        
 	        Double tfIdf=tfIdf(pTotalDocs, termDocs, tf);
 	        
@@ -79,7 +79,7 @@ public class MainListTerms {
 	}
 
 	public void showTerms(String pKey) throws IOException {
-		mIndex.interrogate(FieldVal.KEY, pKey, 1, new ResultRelayer() {
+		mIndex.interrogate(CPIFields.KEY.fieldVal(), pKey, 1, new ResultRelayer() {
 
 			@Override
 			public void run(IndexReader pReader, TopDocs pResults) throws IOException {

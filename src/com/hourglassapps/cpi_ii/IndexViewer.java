@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Set;
 
 import org.apache.lucene.index.AtomicReader;
@@ -30,6 +31,10 @@ public class IndexViewer {
 	
 	private Directory mDir;
 	
+	public IndexViewer(Path pDir) throws IOException {
+		mDir=FSDirectory.open(pDir.toFile());
+	}
+	
 	public IndexViewer(File pDir) throws IOException {
 		mDir=FSDirectory.open(pDir);
 	}
@@ -38,10 +43,6 @@ public class IndexViewer {
 		return mDir;
 	}
 	
-	public void visitTerms(TermHandler pConsumer) throws IOException {
-		visit(FieldVal.CONTENT, pConsumer);
-	}
-
 	public void visit(FieldVal pField, TermHandler pConsumer) throws IOException {
 		try(AtomicReader reader=AtomicReader.open(dir()).leaves().get(0).reader()) {
 			Fields fields=reader.fields();
@@ -79,40 +80,8 @@ public class IndexViewer {
 		interrogate(pReader, searcher, pSearchField, pSought, pNumResults, pRelayer);
 	}
 
-	public void listAllTokenExpansions(String pStemFile, 
-			final ExpansionReceiver<String> pReceiver) 
-			throws IOException {
-		InputStream in;
-		if("-".equals(pStemFile)) {
-			in=System.in;
-		} else {
-			in=new BufferedInputStream(new FileInputStream(new File(pStemFile)));
-		}
-		
-		MultiMap<String, Set<String>, String> stem2Variants=StemRecorderFilter.deserialiser().restore(in);
-		
-		/* A null 2nd argument to the AbstractComboExpander constructor eliminates n-grams containing '_' terms
-		 * An IdentityConverter instance retains these n-grams.
-		 */
-		final Combinator<String, String> expander=
-				new Combinator<String, String>(stem2Variants, null, pReceiver);
-		TermHandler comboLister=new TermHandler() {
-			@Override
-			public void run(TermsEnum pTerms) throws IOException {
-				BytesRef term;
-				while((term=pTerms.next())!=null) {
-					String ngram=term.utf8ToString();
-					String terms[]=ngram.split(" ");
-					int numPermutations=expander.expand(terms);
-					pReceiver.onGroupDone(numPermutations);
-				}
-			}
-		};
-		visit(FieldVal.KEY, comboLister);
-	}
-
 	public static void interrogate(IndexReader pReader, IndexSearcher pSearcher, FieldVal pSearchField, String pSought, int pNumResults, ResultRelayer pRelayer) throws IOException {
-		TopDocs results = pSearcher.search(pSearchField.query(pSought), pNumResults);
+		TopDocs results = pSearcher.search(pSearchField.query(pSought), Math.max(pNumResults,1));
 		if(results.totalHits<1) {
 			//Log.i(TAG, "unrecognised key "+pSought);
 			return;

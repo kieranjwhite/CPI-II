@@ -13,19 +13,14 @@ public class NullJournal<K,C> implements Journal<K,C> {
 	}
 
 	@Override
-	public void startEntry() throws IOException {
+	public void add(C pContent) throws IOException {
 	}
 
 	@Override
-	public void add(Typed<C> pContent) throws IOException {
-	}
-
-	@Override
-	public void commitEntry(K pKey) throws IOException {
+	public void commit(K pKey) throws IOException {
 	}
 
 	@Override
 	public void reset() throws IOException {
 	}
-	
 }

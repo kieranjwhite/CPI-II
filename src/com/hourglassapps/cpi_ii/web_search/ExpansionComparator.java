@@ -13,6 +13,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 
 import com.hourglassapps.cpi_ii.AbstractTermFreqMapper;
+import com.hourglassapps.cpi_ii.CPIFields;
 import com.hourglassapps.cpi_ii.FieldVal;
 import com.hourglassapps.cpi_ii.IndexViewer;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
@@ -61,7 +62,7 @@ public class ExpansionComparator implements Comparator<List<String>> {
 				term2Freq.put(pTerm, pFreq);
 			}
 		};
-		mTermIndex.visitTerms(mapper);
+		mTermIndex.visit(CPIFields.CONTENT.fieldVal(), mapper);
 		return term2Freq;
 	}
 	
@@ -86,7 +87,7 @@ public class ExpansionComparator implements Comparator<List<String>> {
 		if(pToken.size()>=1) {
 			String tokenJoined=Rtu.join(pToken, " ");
 			FoundRelayer relay=new FoundRelayer();
-			IndexViewer.interrogate(mReader, mSearcher, FieldVal.CONTENT, tokenJoined, 1, relay);
+			IndexViewer.interrogate(mReader, mSearcher, CPIFields.CONTENT.fieldVal(), tokenJoined, 1, relay);
 			return relay.found();
 		} else {
 			return true;

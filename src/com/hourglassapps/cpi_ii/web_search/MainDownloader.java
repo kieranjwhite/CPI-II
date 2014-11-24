@@ -5,14 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -22,6 +17,7 @@ import org.apache.http.nio.client.methods.ZeroCopyConsumer;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 
+import com.hourglassapps.cpi_ii.CPIUtils;
 import com.hourglassapps.cpi_ii.IndexViewer;
 import com.hourglassapps.cpi_ii.Journal;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
@@ -35,13 +31,14 @@ import com.hourglassapps.util.Log;
 import com.hourglassapps.util.MainHeartBeat;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Throttle;
+import com.hourglassapps.util.Typed;
 import com.hourglassapps.util.URLUtils;
 
 public class MainDownloader implements AutoCloseable, Downloader<URL,ContentTypeSourceable> {
 	private final static String TAG=MainDownloader.class.getName();
 	private final static Path JOURNAL=Paths.get("journal");
 	private final static Path TEST_JOURNAL=Paths.get("test_journal");
-	private final static Journal<String,URL> NULL_JOURNAL=new NullJournal<String,URL>();
+	private final static Journal<String,Typed<URL>> NULL_JOURNAL=new NullJournal<String,Typed<URL>>();
 	
 	private CloseableHttpAsyncClient mClient=HttpAsyncClients.createDefault();
 	
@@ -100,7 +97,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		System.out.println("About to download results for all queries.");
 		Rtu.continuePrompt();
 		try(final AbstractSearchEngine q=(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY))) {
-			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL,ContentTypeSourceable>(JOURNAL,
+			Journal<String,Typed<URL>> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL,ContentTypeSourceable>(JOURNAL,
 					JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
@@ -109,7 +106,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 				receiver.start();
 				setupBlacklist(q);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
-				index.listAllTokenExpansions(pPath, receiver);
+				CPIUtils.listAllTokenExpansions(index, pPath, receiver);
 			}
 		} catch (Exception e) {
 			Log.e(TAG, e);
@@ -120,7 +117,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	public void downloadFiltered(String pPath, Filter<URL> pFilter) {
 		try(final AbstractSearchEngine q=(new BingSearchEngine(BingSearchEngine.AUTH_KEY)).
 				setFilter(pFilter)) {
-			Journal<String,URL> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(
+			Journal<String,Typed<URL>> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(
 					JOURNAL, JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {
@@ -129,7 +126,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 				receiver.start();
 				setupBlacklist(q);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
-				index.listAllTokenExpansions(pPath, receiver);
+				CPIUtils.listAllTokenExpansions(index, pPath, receiver);
 			}
 		} catch (Exception e) {
 			Log.e(TAG, e);
@@ -139,7 +136,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	
 	public void downloadOne(String pQueryName, URL pURL) {
 		try(final BingSearchEngine q=new BingSearchEngine(BingSearchEngine.AUTH_KEY)) {
-			Journal<String,URL> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(TEST_JOURNAL, 
+			Journal<String,Typed<URL>> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(TEST_JOURNAL, 
 					JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(q, journal)) {

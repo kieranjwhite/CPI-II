@@ -51,14 +51,18 @@ public class MainIndexConductus {
 	}
 
 	public void index() throws ParseException, IOException {
-		try(Indexer idIndexer=new Indexer(UNSTEMMED_2_EPRINT_INDEX, mNonStemmingBuilder.build())) {
+		try(Indexer idIndexer=new Indexer(
+				UNSTEMMED_2_EPRINT_INDEX, mNonStemmingBuilder.build())) {
 			indexById(idIndexer);
 		}
-		IndexViewer idIndexer=new Indexer(UNSTEMMED_2_EPRINT_INDEX, mNonStemmingBuilder.build());
-		try (Indexer unstemmedIndexer=new Indexer(UNSTEMMED_2_STEMMED_INDEX, mStemmingBuilder.build(), true, false)) {
+		IndexViewer idIndexer=new Indexer(
+				UNSTEMMED_2_EPRINT_INDEX, mNonStemmingBuilder.build());
+		try (Indexer unstemmedIndexer=new Indexer(
+				UNSTEMMED_2_STEMMED_INDEX, mStemmingBuilder.build())) {
 			indexByUnstemmed(idIndexer, unstemmedIndexer);
 		}
-		try(Indexer term2IdIndexer=new Indexer(UNSTEMMED_TERM_2_EPRINT_INDEX, mNonStemmingAnalyser)) {
+		try(Indexer term2IdIndexer=new Indexer(
+				UNSTEMMED_TERM_2_EPRINT_INDEX, mNonStemmingAnalyser)) {
 			indexById(term2IdIndexer);
 		}
 		if(mListExpansions) {
@@ -89,13 +93,16 @@ public class MainIndexConductus {
 					continue;
 				}
 				Log.v(TAG, "content: "+record.content());
-				pIndexer.add(Long.toString(record.id()), record.content());
+				pIndexer.add(CPIFields.KEY.fieldVal().field(Long.toString(record.id())), 
+						CPIFields.CONTENT.fieldVal().field(record.content()));
 			}
 		}
 	}
 
 	public void indexByUnstemmed(final IndexViewer pIndexToVisit, final Indexer pIndexer) throws IOException {
-			pIndexToVisit.visitTerms(new TermHandler(){
+			pIndexToVisit.visit(
+					CPIFields.CONTENT.fieldVal(),
+					new TermHandler(){
 
 				@Override
 				public void run(TermsEnum pTerms) {
@@ -106,7 +113,8 @@ public class MainIndexConductus {
 							//assert term is unstemmed
 							//assert term is an n-gram
 							String termStr=term.utf8ToString();
-							pIndexer.add(termStr, termStr);
+							pIndexer.add(CPIFields.KEY.fieldVal().field(termStr), 
+									CPIFields.CONTENT.fieldVal().field(termStr));
 						}
 					} catch (IOException e) {
 						Log.e(TAG, e);

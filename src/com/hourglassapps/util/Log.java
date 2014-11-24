@@ -158,7 +158,10 @@ public class Log {
         }
     }
 
-    static public String esc(String pToEscape) {
-    	return pToEscape.replace("%", "%%");
+    static public String esc(Object pToEscape) {
+    	if(pToEscape==null) {
+    		return "null";
+    	}
+    	return pToEscape.toString().replace("%", "%%");
     }
 }

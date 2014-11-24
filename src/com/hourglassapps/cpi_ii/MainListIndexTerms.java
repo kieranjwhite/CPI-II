@@ -32,12 +32,12 @@ public class MainListIndexTerms {
 			final IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
 			if(freqs) {
 				Freq2TermMapper mapper=new Freq2TermMapper();
-				index.visit(FieldVal.KEY, mapper);
+				index.visit(CPIFields.KEY.fieldVal(), mapper);
 				mapper.display();
 			}
 			
 			if(stemFile!=null) {
-				index.listAllTokenExpansions(stemFile, new ExpansionReceiver<String>(){
+				CPIUtils.listAllTokenExpansions(index, stemFile, new ExpansionReceiver<String>(){
 					//final AbstractComboExpander<String, String> expander=
 					//		new AbstractComboExpander<String, String>(stem2Variants, new IdentityConverter<String>()){
 

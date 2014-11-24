@@ -11,7 +11,7 @@ public class MainHeartBeat {
 	private final static String TAG=MainHeartBeat.class.getName();
 
 	//In seconds
-	private final static int TIMEOUT=120;
+	private final static int TIMEOUT=60;
 	//In ms
 	private final static int PERIOD=60*1000;
 	private final static String TARGET="google.com";

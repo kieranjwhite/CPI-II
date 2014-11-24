@@ -23,7 +23,7 @@ import com.hourglassapps.cpi_ii.Journal;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Typed;
 
-public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
+public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>> {
 	private final static String TAG=AbstractFileJournal.class.getName();
 	private final static String PARTIAL_DIR_NAME="partial";
 	private final static String COMPLETED_DIR_NAME="completed";
@@ -37,9 +37,13 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 	private final int mFirstFilename;
 	private final List<C> mTrail;
 	private int mFilename;
-
+	private final PreDeleteAction mPreDelete;
 	protected final Path mPartialDir;
 	protected final S mContentGenerator;	
+	
+	protected interface PreDeleteAction {
+		public void run() throws IOException;
+	}
 	
 	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, S pContentGenerator) throws IOException {
 		this(pDirectory, pFilenameGenerator, pContentGenerator, FIRST_FILENAME);
@@ -47,20 +51,35 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 
 	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
 			S pContentGenerator, int pFirstFilename) throws IOException {
+		this(pDirectory, pFilenameGenerator, pContentGenerator, pFirstFilename, new PreDeleteAction(
+				){
+					@Override
+					public void run() {
+					}});
+	}
+	
+	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
+			S pContentGenerator, int pFirstFilename, PreDeleteAction pPreDelete) throws IOException {
 		mFirstFilename=pFirstFilename;
 		mDirectory=pDirectory;
 		mkdir(mDirectory);
-		mPartialDir=mDirectory.resolve(PARTIAL_DIR_NAME);
+		mPartialDir=partialDir(mDirectory);
 		mCompletedDir=mDirectory.resolve(COMPLETED_DIR_NAME);
 		mkdir(mCompletedDir);
 		mFilenameGenerator=pFilenameGenerator;
 		mContentGenerator=pContentGenerator;
 		mTrail=new ArrayList<C>();
+		mPreDelete=pPreDelete;
+		mPreDelete.run();
 		setupPartial(mPartialDir);
 		mFilename=mFirstFilename;
 		mTrail.clear();
 	}
 
+	protected static Path partialDir(Path pParent) {
+		return pParent.resolve(PARTIAL_DIR_NAME);
+	}
+	
 	protected void trailAdd(C pSource) {
 		mTrail.add(pSource);
 	}
@@ -78,7 +97,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 		}
 	}
 	
-	private static void deleteFlatDir(Path pDir) throws IOException {
+	protected static void deleteFlatDir(Path pDir) throws IOException {
 	    File[] files = pDir.toFile().listFiles();
 	    if(files!=null) {
 	        for(File f: files) {
@@ -143,7 +162,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 	}
 	
 	@Override
-	public void commitEntry(final K pKey) throws IOException {
+	public void commit(final K pKey) throws IOException {
 		Path dest=destDir(pKey);
 		tryTidy(dest);
 		startEntry(); //Note this is invoked even if there's an exception
@@ -162,8 +181,8 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, C> {
 		}
 	}
 
-	@Override
-	public void startEntry() throws IOException {
+	protected void startEntry() throws IOException {
+		mPreDelete.run();
 		setupPartial(mPartialDir);
 		mFilename=mFirstFilename;
 		mTrail.clear();
