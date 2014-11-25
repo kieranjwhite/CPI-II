@@ -12,13 +12,13 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 
-import com.hourglassapps.cpi_ii.AbstractTermFreqMapper;
 import com.hourglassapps.cpi_ii.CPIFields;
-import com.hourglassapps.cpi_ii.FieldVal;
-import com.hourglassapps.cpi_ii.IndexViewer;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
-import com.hourglassapps.cpi_ii.ResultRelayer;
-import com.hourglassapps.cpi_ii.TermHandler;
+import com.hourglassapps.cpi_ii.lucene.AbstractTermFreqMapper;
+import com.hourglassapps.cpi_ii.lucene.FieldVal;
+import com.hourglassapps.cpi_ii.lucene.IndexViewer;
+import com.hourglassapps.cpi_ii.lucene.ResultRelayer;
+import com.hourglassapps.cpi_ii.lucene.TermHandler;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 

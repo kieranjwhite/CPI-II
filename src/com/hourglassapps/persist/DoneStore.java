@@ -18,9 +18,9 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.BytesRef;
 
 import com.hourglassapps.cpi_ii.CPIFields;
-import com.hourglassapps.cpi_ii.FieldVal;
-import com.hourglassapps.cpi_ii.Indexer;
-import com.hourglassapps.cpi_ii.ResultGenerator;
+import com.hourglassapps.cpi_ii.lucene.FieldVal;
+import com.hourglassapps.cpi_ii.lucene.Indexer;
+import com.hourglassapps.cpi_ii.lucene.ResultGenerator;
 import com.hourglassapps.util.Ii;
 
 public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path> {

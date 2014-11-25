@@ -5,6 +5,7 @@ import org.apache.lucene.analysis.shingle.ShingleAnalyzerWrapper;
 import org.apache.lucene.analysis.shingle.ShingleFilter;
 
 import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
+import com.hourglassapps.cpi_ii.lucene.LoggingAnalyzer;
 
 public class NGramAnalyzerBuilder {
 	private final static String TAG=NGramAnalyzerBuilder.class.getName();

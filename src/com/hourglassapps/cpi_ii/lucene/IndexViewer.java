@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii;
+package com.hourglassapps.cpi_ii.lucene;
 
 import java.io.BufferedInputStream;
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii;
+package com.hourglassapps.cpi_ii.lucene;
 
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;

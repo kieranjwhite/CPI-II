@@ -3,6 +3,8 @@ package com.hourglassapps.cpi_ii;
 import java.io.IOException;
 import java.util.List;
 
+import com.hourglassapps.cpi_ii.lucene.Freq2TermMapper;
+import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.util.ExpansionReceiver;
 import com.hourglassapps.util.Log;
 

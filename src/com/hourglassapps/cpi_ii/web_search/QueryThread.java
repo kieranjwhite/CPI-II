@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FilenameUtils;
 
-import com.hourglassapps.cpi_ii.Journal;
+import com.hourglassapps.persist.Journal;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.ExpansionReceiver;
 import com.hourglassapps.util.Log;

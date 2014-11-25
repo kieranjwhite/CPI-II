@@ -14,6 +14,9 @@ import org.apache.lucene.util.BytesRef;
 
 import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
 import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
+import com.hourglassapps.cpi_ii.lucene.IndexViewer;
+import com.hourglassapps.cpi_ii.lucene.Indexer;
+import com.hourglassapps.cpi_ii.lucene.TermHandler;
 import com.hourglassapps.serialise.JSONParser;
 import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.RemoveUnescapesReader;

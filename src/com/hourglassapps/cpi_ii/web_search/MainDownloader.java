@@ -20,11 +20,11 @@ import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 
 import com.hourglassapps.cpi_ii.CPIUtils;
-import com.hourglassapps.cpi_ii.IndexViewer;
-import com.hourglassapps.cpi_ii.Journal;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
+import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.web_search.bing.BingSearchEngine;
 import com.hourglassapps.persist.DeferredFileJournal;
+import com.hourglassapps.persist.Journal;
 import com.hourglassapps.persist.NullJournal;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
@@ -62,6 +62,14 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	public Promise<ContentTypeSourceable, IOException, Void> downloadLink(
 			URL pSource, long pDstKey, Path pDst) throws IOException {
 		URL encoded=URLUtils.reencode(pSource);
+
+		/*
+		 * This deferred should be rejected for any exceptions that are caused by local issues. That should
+		 * cause the QueryThread and consequently the process to quit.
+		 * Where there's an exception due to a failed download due to a HTTP error or other network / remote site
+		 * issues the deferred should be accepted causing only that download to be skipped. Remaining downloads
+		 * for the same query, and later queries, will continue as normal. 
+		 */
 		final Deferred<ContentTypeSourceable,IOException,Void> deferred=
 				new DownloadableDeferredObject<ContentTypeSourceable,IOException,Void>(encoded, pDst);
 		try {

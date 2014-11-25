@@ -2,7 +2,6 @@ package com.hourglassapps.persist;
 
 import java.io.IOException;
 
-import com.hourglassapps.cpi_ii.Journal;
 import com.hourglassapps.util.Typed;
 
 public class NullJournal<K,C> implements Journal<K,C> {

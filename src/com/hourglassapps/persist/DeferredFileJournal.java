@@ -35,17 +35,12 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	private final static String TAG=DeferredFileJournal.class.getName();
 	private final static String DONE_INDEX="done_index";
 	//TIMEOUT is in ms
-	private final static int DEFAULT_BASE_TIMEOUT=1000*70;
-	private final static int DEFAULT_EXTRA_TIMEOUT=1000*4;
-	
 	private final List<Promise<Void,IOException,Void>> mPromised;
 	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();
 	private final DeferredManager mDeferredMgr=new DefaultDeferredManager();
 	@SuppressWarnings("rawtypes")
 	private final Promise[] mPendingArr=new Promise[]{};
 
-	private int mBaseTimeout=DEFAULT_BASE_TIMEOUT;
-	private int mExtraTimeout=DEFAULT_EXTRA_TIMEOUT;
 	private PrintWriter mTypesWriter=null;
 	private final Path mPartialDoneDir;
 	private final Path mBetweenDoneDir;
@@ -72,12 +67,6 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		mPromised=new ArrayList<>();
 	}
 
-	public DeferredFileJournal<K,C,R> setTimeout(int pBase, int pExtra) {
-		mBaseTimeout=pBase;
-		mExtraTimeout=pExtra;
-		return this;
-	}
-	
 	@Override
 	public void addNew(final Typed<C> pLink) throws IOException {
 		incFilename();
@@ -89,7 +78,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		synchronized(this) {
 			Ii<String,String> srcDst=new Ii<>(pLink.get().toString(), dest.toString());
 			if(mDone.addExisting(srcDst)) {
-				//If we return without adding to mPromised commit() might not commit the transaction properly
+				//If we return without adding to mPromised, commit() might not commit the transaction properly
 				Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
 				deferred.resolve(null);
 				mPromised.add(deferred);
@@ -202,37 +191,10 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		mThrower.throwCaught(null);
 	}
 
-	private int calcTimeout(int pNumTransactionDownloads) {
-		return mBaseTimeout+pNumTransactionDownloads*mExtraTimeout;
-	}
-	
 	@SuppressWarnings("unused")
 	private void hold(final K pKey, Promise<Void,IOException,Void> pCommitment) throws IOException {
 		try {
-			//int timeout=calcTimeout(mPromised.size());
 			pCommitment.waitSafely();
-			/*
-			pCommitment.waitSafely(timeout);
-			boolean pending=false;
-			int i=0;
-			for(Promise<?,?,?> initialPromise:mPromised) {
-				if(initialPromise.isPending()) {
-					Log.e(TAG, Log.esc("Promise timed out after +"+(timeout/1000)+"s: "+(i+FIRST_FILENAME)));
-					pending=true;
-				}
-				i++;
-			}
-			if(false) {
-				Rtu.continuePrompt();				
-			}
-			if(pending) {
-				mContentGenerator.reset(); 
-				pCommitment.waitSafely();
-				//mPromised.clear();	
-				//Path dest=destDir(pKey);
-				//tryTidy(dest);
-			}
-			*/
 		} catch (InterruptedException i) {
 			synchronized(this) {
 				mThrower.ctch(new IOException(i));

@@ -13,6 +13,8 @@ import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.BytesRef;
 
+import com.hourglassapps.cpi_ii.lucene.IndexViewer;
+import com.hourglassapps.cpi_ii.lucene.ResultRelayer;
 import com.hourglassapps.util.Log;
 
 public class MainListTerms {

@@ -11,6 +11,8 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.util.BytesRef;
 
+import com.hourglassapps.cpi_ii.lucene.IndexViewer;
+import com.hourglassapps.cpi_ii.lucene.TermHandler;
 import com.hourglassapps.cpi_ii.stem.StemRecorderFilter;
 import com.hourglassapps.util.Combinator;
 import com.hourglassapps.util.ExpansionReceiver;
