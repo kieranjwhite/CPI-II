@@ -388,6 +388,27 @@
 **** http://www.archive.org/stream/analectahymnica21drevuoft/analectahymnica21drevuoft_djvu.txt
 **** I contacted Gregorio about this (on 13/11/2014)
 ***** He agreed that I could add these archive.org/stream variations of the archive.org URL he listed and remove the originals (as they never seemed to be returned)
+*** I considered eliminating blacklist (at least while downloading)
+**** up to 16 of 298 queries I tried might be affected
+***** ie they returned 100 results and so might have missed out interesting urls due to presence of blacklisted links
+**** In more depth (the following queries has 100 results)
+***** query -- why aren't I finding more blacklisted urls?
+***** vult+et+quotquot
+****** 2 blacklisted urls (tml)
+***** theone+vel+in
+****** 0 blacklisted urls
+***** superne+syon+filie
+****** 0 blacklisted urls
+****** results in general here seem to be of a poor quality
+***** sola+gratia+o
+****** 0 blacklisted urls
+****** results in general also seem to be rubbish
+***** salute+non+manibus
+****** 0 blacklisted urls
+***** quod+in+virginali
+****** 0 blacklisted urls
+***** pro+me+mori
+****** 0 blacklisted urls
 *** Estimate of download size
 **** Range of 400-600MB
 ***** 400
