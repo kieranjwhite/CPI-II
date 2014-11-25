@@ -44,7 +44,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	
 	private final static int CONNECT_TIMEOUT=10*1000;
 	private final static int SOCKET_TIMEOUT=10*1000;
-	private final static int COMPLETION_TIMEOUT=120*1000;
+	private final static int COMPLETION_TIMEOUT=180*1000;
 	
 	private final RequestConfig mRequestConfig;
 
@@ -234,7 +234,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					stemPath=pArgs[lastIdx++];
 					int seed=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println("Querying search engine with random queries...");
-					downloader.downloadFiltered(stemPath, new RandomFilter<URL>(seed, 0.0015385));						
+					//downloader.downloadFiltered(stemPath, new RandomFilter<URL>(seed, 0.0015385));						
+					downloader.downloadFiltered(stemPath, new RandomFilter<URL>(seed, 0.0046155));						
 					break;
 				case ONE:
 					if(pArgs.length!=2) {

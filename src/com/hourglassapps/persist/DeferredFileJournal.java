@@ -79,24 +79,36 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	}
 	
 	@Override
-	public synchronized void addNew(final Typed<C> pLink) throws IOException {
+	public void addNew(final Typed<C> pLink) throws IOException {
 		incFilename();
 		final C source=pLink.get();
 		trailAdd(source);
 		int destKey=filename();
 
 		final Path dest=dest(pLink);
-		if(mDone.addExisting(new Ii<>(pLink.get().toString(), dest.toString()))) {
-			//If we return without adding to mPromised commit() might not commit the transaction properly
-			Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
-			deferred.resolve(null);
-			mPromised.add(deferred);
-			return;
+		synchronized(this) {
+			if(mDone.addExisting(new Ii<>(pLink.get().toString(), dest.toString()))) {
+				//If we return without adding to mPromised commit() might not commit the transaction properly
+				Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
+				deferred.resolve(null);
+				mPromised.add(deferred);
+				return;
+			}
+			assert(Files.exists(mPartialDoneDir));
+			if(mTypesWriter==null) {
+				mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(CUSTOM_PREFIX+"types.txt").toString())));
+			}
 		}
-		assert(Files.exists(mPartialDoneDir));
-		if(mTypesWriter==null) {
-			mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(CUSTOM_PREFIX+"types.txt").toString())));
-		}
+		
+		/*
+		 * Careful now -- be aware that holding a lock on this journal instance (which we don't) while invoking downloadLink could
+		 * result in deadlock since downloadLink uses the HttpClient library for async downloads which itself acquires another
+		 * lock from time to time, including in the HttpAsyncClient execute method and the completion callback. 
+		 * If resolving a promise in one of the completion callbacks invokes code
+		 * in this class via a 'then' callback that attempts to acquire a journal lock we could have a problem.
+		 * 
+		 * This is all hypothetical since we are not holding a journal lock when invoking downloadLink.
+		 */
 		final Promise<R,IOException,Void> download=mContentGenerator.downloadLink(source, destKey, dest);
 		Promise<Void,IOException,Void> logContentType=download.then(
 				new DonePipe<R,Void,IOException,Void>() {
@@ -134,43 +146,43 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		}
 		if(mPromised.size()>0) {
 			Promise<Void, IOException, Void> commitment;
-			synchronized(this) {
-				commitment=mDeferredMgr.when(mPromised.toArray(mPendingArr)).then(
-						new DonePipe<MultipleResults,Void,IOException,Void>(){
+			commitment=mDeferredMgr.when(mPromised.toArray(mPendingArr)).then(
+					new DonePipe<MultipleResults,Void,IOException,Void>(){
 
-							@Override
-							public Promise<Void, IOException, Void> pipeDone(
-									MultipleResults result) {
-								Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
-								Path dest=destDir(pKey);
-								try {
-									tryTidy(dest);
-									deferred.resolve(null);
-								} catch(IOException e) {
-									deferred.reject(e);
-								}
-								return deferred;
+						@Override
+						public Promise<Void, IOException, Void> pipeDone(
+								MultipleResults result) {
+							Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
+							Path dest=destDir(pKey);
+							try {
+								tryTidy(dest);
+								deferred.resolve(null);
+							} catch(IOException e) {
+								deferred.reject(e);
 							}
-						}).fail(new FailCallback<IOException>(){
+							return deferred;
+						}
+					}).fail(new FailCallback<IOException>(){
 
-							@Override
-							public void onFail(IOException e) {
-								/*
-								 * e is any IOException thrown during the async download that is not caught
-								 * By invoking mThrow.ctch(e) and later mThrower.throwCaught we cause the process
-								 * to exit without committing the transaction. This is the desired outcome for any
-								 * IOException triggered by a local issue.
-								 * 
-								 * IOExceptions caused by trouble communicating with a remote server should
-								 * be caught and handled in a manner that should not cause the exception to
-								 * bubble-up to this method. The desired outcome for these is that the download
-								 * is skipped but the rest of the transaction and subsequent downloads should
-								 * otherwise proceed as normal.
-								 */
-								synchronized(DeferredFileJournal.this) {
-									mThrower.ctch(e);
-								}
-							}});	
+						@Override
+						public void onFail(IOException e) {
+							/*
+							 * e is any IOException thrown during the async download that is not caught
+							 * By invoking mThrow.ctch(e) and later mThrower.throwCaught we cause the process
+							 * to exit without committing the transaction. This is the desired outcome for any
+							 * IOException triggered by a local issue.
+							 * 
+							 * IOExceptions caused by trouble communicating with a remote server should
+							 * be caught and handled in a manner that should not cause the exception to
+							 * bubble-up to this method. The desired outcome for these is that the download
+							 * is skipped but the rest of the transaction and subsequent downloads should
+							 * otherwise proceed as normal.
+							 */
+							synchronized(DeferredFileJournal.this) {
+								mThrower.ctch(e);
+							}
+						}});	
+			synchronized(this) {
 				mThrower.throwCaught(null);
 			}
 			hold(pKey, commitment);
