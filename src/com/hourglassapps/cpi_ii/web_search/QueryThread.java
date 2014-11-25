@@ -94,7 +94,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 			Log.i(TAG, "quitting thread");
 		} catch(Throwable e) {
 			Log.e(TAG, e);
-			System.exit(-1);
+			System.exit(-1); //TODO find out why this is necessary in order to quit process immediately. Surely the closing of in would cause main thread to generate a fatal exception
 		}
 	}
 

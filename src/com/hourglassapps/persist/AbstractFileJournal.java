@@ -144,7 +144,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>>
 		}
 	}
 
-	protected final void tryTidy(Path pDest) throws IOException {
+	protected void tryTidy(Path pDest) throws IOException {
 		if(Files.exists(mPartialDir)) {
 			/*
 			 * tidyUp will be invoked more than once for a query if a download times out and

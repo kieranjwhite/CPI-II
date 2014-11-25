@@ -70,8 +70,6 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		mBetweenDoneDir=pDirectory.resolve(DONE_INDEX);
 		mDone=new DoneStore(mPartialDoneDir);
 		mPromised=new ArrayList<>();
-		assert nonePending(mPromised);
-		mPromised.clear();
 	}
 
 	public DeferredFileJournal<K,C,R> setTimeout(int pBase, int pExtra) {
@@ -81,7 +79,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	}
 	
 	@Override
-	public void addNew(final Typed<C> pLink) throws IOException {
+	public synchronized void addNew(final Typed<C> pLink) throws IOException {
 		incFilename();
 		final C source=pLink.get();
 		trailAdd(source);
@@ -89,6 +87,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 
 		final Path dest=dest(pLink);
 		if(mDone.addExisting(new Ii<>(pLink.get().toString(), dest.toString()))) {
+			//If we return without adding to mPromised commit() might not commit the transaction properly
 			Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
 			deferred.resolve(null);
 			mPromised.add(deferred);
@@ -110,8 +109,10 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 						if(src==null) {
 							src="UNKNOWN";
 						}
-						mTypesWriter.println(pTypeInfo.dstKey()+" "+src);
-						mDone.addNew(new Ii<>(source.toString(), dest.toString()));
+						synchronized(DeferredFileJournal.this) {
+							mTypesWriter.println(pTypeInfo.dstKey()+" "+src);
+							mDone.addNew(new Ii<>(source.toString(), dest.toString()));
+						}
 						def.resolve(null);
 						return def;
 					}
@@ -122,50 +123,65 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	}
 
 	@Override
+	protected synchronized void tryTidy(Path pDest) throws IOException {
+		super.tryTidy(pDest);
+	}
+
+	@Override
 	public void commit(final K pKey) throws IOException {
+		if(mQueryTid==-1) {
+			mQueryTid=Thread.currentThread().getId();
+		}
 		if(mPromised.size()>0) {
-			Promise<Void, IOException, Void> commitment=mDeferredMgr.when(mPromised.toArray(mPendingArr)).then(
-					new DonePipe<MultipleResults,Void,IOException,Void>(){
+			Promise<Void, IOException, Void> commitment;
+			synchronized(this) {
+				commitment=mDeferredMgr.when(mPromised.toArray(mPendingArr)).then(
+						new DonePipe<MultipleResults,Void,IOException,Void>(){
 
-						@Override
-						public Promise<Void, IOException, Void> pipeDone(
-								MultipleResults result) {
-							Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
-							Path dest=destDir(pKey);
-							try {
-								tryTidy(dest);
-								deferred.resolve(null);
-							} catch(IOException e) {
-								deferred.reject(e);
+							@Override
+							public Promise<Void, IOException, Void> pipeDone(
+									MultipleResults result) {
+								Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
+								Path dest=destDir(pKey);
+								try {
+									tryTidy(dest);
+									deferred.resolve(null);
+								} catch(IOException e) {
+									deferred.reject(e);
+								}
+								return deferred;
 							}
-							return deferred;
-						}
-					}).fail(new FailCallback<IOException>(){
+						}).fail(new FailCallback<IOException>(){
 
-						@Override
-						public void onFail(IOException e) {
-							/*
-							 * e is any IOException thrown during the async download that is not caught
-							 * By invoking mThrow.ctch(e) and later mThrower.throwCaught we cause the process
-							 * to exit without committing the transaction. This is the desired outcome for any
-							 * IOException triggered by a local issue.
-							 * 
-							 * IOExceptions caused by trouble communicating with a remote server should
-							 * be caught and handled in a manner that should not cause the exception to
-							 * bubble-up to this method. The desired outcome for these is that the download
-							 * is skipped but the rest of the transaction and subsequent downloads should
-							 * otherwise proceed as normal.
-							 */
-							mThrower.ctch(e);
-						}});	
-			mThrower.throwCaught(null);
+							@Override
+							public void onFail(IOException e) {
+								/*
+								 * e is any IOException thrown during the async download that is not caught
+								 * By invoking mThrow.ctch(e) and later mThrower.throwCaught we cause the process
+								 * to exit without committing the transaction. This is the desired outcome for any
+								 * IOException triggered by a local issue.
+								 * 
+								 * IOExceptions caused by trouble communicating with a remote server should
+								 * be caught and handled in a manner that should not cause the exception to
+								 * bubble-up to this method. The desired outcome for these is that the download
+								 * is skipped but the rest of the transaction and subsequent downloads should
+								 * otherwise proceed as normal.
+								 */
+								synchronized(DeferredFileJournal.this) {
+									mThrower.ctch(e);
+								}
+							}});	
+				mThrower.throwCaught(null);
+			}
 			hold(pKey, commitment);
 		} else {
-			try {
-				Path dest=destDir(pKey);
-				tryTidy(dest);
-			} catch(IOException e) {
-				mThrower.ctch(e);
+			synchronized(this) {
+				try {
+					Path dest=destDir(pKey);
+					tryTidy(dest);
+				} catch(IOException e) {
+					mThrower.ctch(e);
+				}
 			}
 		}
 		startEntry(); //Note this is invoked even if there's an exception
@@ -179,7 +195,9 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	@SuppressWarnings("unused")
 	private void hold(final K pKey, Promise<Void,IOException,Void> pCommitment) throws IOException {
 		try {
-			int timeout=calcTimeout(mPromised.size());
+			//int timeout=calcTimeout(mPromised.size());
+			pCommitment.waitSafely();
+			/*
 			pCommitment.waitSafely(timeout);
 			boolean pending=false;
 			int i=0;
@@ -195,17 +213,17 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 			}
 			if(pending) {
 				mContentGenerator.reset(); 
-				mPromised.clear();	
-				Path dest=destDir(pKey);
-				/* 
-				 * We need to invoke tidyUp here in case at least one of the query's downloads aborted 
-				 * without our code knowing about it -- this is the problem with using a ZeroCopyConsumer. 
-				 */
-				tryTidy(dest);
+				pCommitment.waitSafely();
+				//mPromised.clear();	
+				//Path dest=destDir(pKey);
+				//tryTidy(dest);
 			}
+			*/
 		} catch (InterruptedException i) {
-			mThrower.ctch(new IOException(i));
-		}		
+			synchronized(this) {
+				mThrower.ctch(new IOException(i));
+			}
+		}	
 	}
 	
 	private static <R> boolean nonePending(Collection<Promise<R,IOException,Void>> pPromised) {
@@ -217,8 +235,9 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		return true;
 	}
 	
+	private volatile long mQueryTid=-1;
 	@Override
-	protected void tidyUp(Path pDest) throws IOException {
+	protected synchronized void tidyUp(Path pDest) throws IOException {
 		if(mTypesWriter!=null) {
 			mTypesWriter.close();
 			mTypesWriter=null;
@@ -228,9 +247,9 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		mDone.commit(pDest);
 		super.tidyUp(pDest);
 		Path src=pDest.resolve(DONE_INDEX);
-		Log.i(TAG, "move to parent src: "+Log.esc(src)+" dst: "+Log.esc(mBetweenDoneDir));
+		Log.v(TAG, "move to parent src ("+Thread.currentThread().getId()+"): "+Log.esc(src)+" dst: "+Log.esc(mBetweenDoneDir));
 		Files.move(src, mBetweenDoneDir, StandardCopyOption.ATOMIC_MOVE);
-		Log.i(TAG, "move to parent done");
+		Log.v(TAG, "move to parent done");
 	}
 
 	@Override
@@ -238,13 +257,14 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		assert nonePending(mPromised);
 		mPromised.clear();
 		super.startEntry();
-		Log.i(TAG, "move to partial src: "+Log.esc(mBetweenDoneDir)+" dst: "+Log.esc(mPartialDoneDir));
+		assert(Thread.currentThread().getId()==mQueryTid);
+		Log.v(TAG, "move to partial src ("+Thread.currentThread().getId()+"): "+Log.esc(mBetweenDoneDir)+" dst: "+Log.esc(mPartialDoneDir));
 		Files.move(mBetweenDoneDir, mPartialDoneDir, StandardCopyOption.ATOMIC_MOVE);
-		Log.i(TAG, "move to partial done");
+		Log.v(TAG, "move to partial done");
 	}
 	
 	@Override
-	public void reset() throws IOException {
+	public synchronized void reset() throws IOException {
 		mDone.reset();
 		super.reset();
 	}

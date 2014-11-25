@@ -10,8 +10,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.http.nio.client.methods.HttpAsyncMethods;
 import org.apache.http.nio.client.methods.ZeroCopyConsumer;
 import org.jdeferred.Deferred;
@@ -40,10 +42,20 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	private final static Path TEST_JOURNAL=Paths.get("test_journal");
 	private final static Journal<String,Typed<URL>> NULL_JOURNAL=new NullJournal<String,Typed<URL>>();
 	
-	private CloseableHttpAsyncClient mClient=HttpAsyncClients.createDefault();
+	private final static int CONNECT_TIMEOUT=10*1000;
+	private final static int SOCKET_TIMEOUT=10*1000;
+	private final static int COMPLETION_TIMEOUT=120*1000;
+	
+	private final RequestConfig mRequestConfig;
+
+	private CloseableHttpAsyncClient mClient;
 	
 	public MainDownloader() {
-		mClient.start();
+		 mRequestConfig= RequestConfig.custom()
+		            .setConnectTimeout(CONNECT_TIMEOUT)
+		            .setSocketTimeout(SOCKET_TIMEOUT)
+		            .build();
+		mClient=client(mRequestConfig);
 	}
 
 	@Override
@@ -53,7 +65,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		final Deferred<ContentTypeSourceable,IOException,Void> deferred=
 				new DownloadableDeferredObject<ContentTypeSourceable,IOException,Void>(encoded, pDst);
 		try {
-			ZeroCopyConsumer<File> consumer=new DeferredZeroCopyConsumer(pDstKey, pDst.toFile(), deferred);
+			ZeroCopyConsumer<File> consumer=new DeferredZeroCopyConsumer(pDstKey, pDst.toFile(), deferred, COMPLETION_TIMEOUT);
 			mClient.execute(HttpAsyncMethods.createGet(encoded.toString()), consumer, null);
 			return deferred;
 		} catch(Exception e) {
@@ -149,11 +161,16 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 
 	}
 	
+	private static CloseableHttpAsyncClient client(RequestConfig pRequestConfig) {
+		CloseableHttpAsyncClient client=HttpAsyncClients.custom().setDefaultRequestConfig(pRequestConfig).build();
+		client.start();	
+		return client;
+	}
+	
 	@Override
 	public void reset() throws IOException {
 		mClient.close();
-		mClient=HttpAsyncClients.createDefault();
-		mClient.start();
+		mClient=client(mRequestConfig);
 	}
 
 	@Override
