@@ -87,11 +87,13 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 
 		final Path dest=dest(pLink);
 		synchronized(this) {
-			if(mDone.addExisting(new Ii<>(pLink.get().toString(), dest.toString()))) {
+			Ii<String,String> srcDst=new Ii<>(pLink.get().toString(), dest.toString());
+			if(mDone.addExisting(srcDst)) {
 				//If we return without adding to mPromised commit() might not commit the transaction properly
 				Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
 				deferred.resolve(null);
 				mPromised.add(deferred);
+				Log.i(TAG, Log.esc("Already downloaded: "+srcDst));
 				return;
 			}
 			assert(Files.exists(mPartialDoneDir));
