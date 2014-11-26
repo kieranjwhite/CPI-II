@@ -99,8 +99,9 @@ public class TextContentReaderFactory implements FileReaderFactory {
 			throw new IllegalStateException(fileNum+" missing from directory's types map");
 		}
 		try(InputStream in=new FileInputStream(pFile.toFile())) {
-			return new TikaReader(in, mFileNumToType.get(fileNum));
-		} catch (SAXException | TikaException e) {
+			//return new TikaReader(in, mFileNumToType.get(fileNum));
+			return new TikaReader(in, null);
+		} catch (TikaException e) {
 			throw new IOException(e);
 		}
 	}

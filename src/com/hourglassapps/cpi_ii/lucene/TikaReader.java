@@ -24,7 +24,7 @@ public class TikaReader extends Reader {
 	
 	private final StringReader mDelegate;
 	
-	public TikaReader(InputStream pInput, String pMimeType) throws IOException, SAXException, TikaException {
+	public TikaReader(InputStream pInput, String pMimeType) throws IOException, TikaException {
 		// Copied mostly from http://stackoverflow.com/questions/6713927/extract-the-contenttext-of-a-url-using-tika
 		ContentHandler handler=new BodyContentHandler(MAX_CONTENT_SIZE);
 		Metadata metadata=new Metadata();
