@@ -18,19 +18,8 @@ import org.apache.lucene.util.Version;
 public class Indexer extends IndexViewer implements AutoCloseable {
 	private final static String TAG=Indexer.class.getName();
 	
-	private IndexWriter mWriter=null;
+	private final IndexWriter mWriter;
 	private IndexWriterConfig mIwc;
-	
-	private static class CustomisedFieldVal extends FieldVal {
-
-		CustomisedFieldVal(FieldVal pField, boolean pTokenise) {
-			super(pField.s(), pTokenise);
-		}
-		
-	}
-	
-	//public final FieldVal mKeyField;
-	//public final FieldVal mContentField;
 	
 	public Indexer(File pDir, Analyzer pAnalyser, boolean pForceCreate) throws IOException {
 		super(pDir);
@@ -38,6 +27,10 @@ public class Indexer extends IndexViewer implements AutoCloseable {
         mIwc.setOpenMode(pForceCreate?OpenMode.CREATE:OpenMode.CREATE_OR_APPEND);
         mWriter = new IndexWriter(dir(), mIwc);
 
+	}
+
+	public IndexWriter writer() {
+		return mWriter;
 	}
 	
 	public Indexer(File pDir, Analyzer pAnalyser) throws IOException {
@@ -66,9 +59,7 @@ public class Indexer extends IndexViewer implements AutoCloseable {
 	
 	@Override
 	public void close() throws IOException {
-		if(mWriter!=null) {
-			mWriter.close();
-		}
+		mWriter.close();
 	}
 
 	public void wipe() throws IOException {

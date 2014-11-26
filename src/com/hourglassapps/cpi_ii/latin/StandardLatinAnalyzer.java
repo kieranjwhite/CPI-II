@@ -1,5 +1,6 @@
 package com.hourglassapps.cpi_ii.latin;
 
+import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.lucene.analysis.TokenStream;
@@ -12,6 +13,13 @@ import com.hourglassapps.cpi_ii.NumeralFilter;
 import com.hourglassapps.util.Ii;
 
 public final class StandardLatinAnalyzer extends LatinAnalyzer {
+	public StandardLatinAnalyzer() {
+		super();
+	}
+	
+	public StandardLatinAnalyzer(String pPackageFile) throws IOException {
+		super(pPackageFile);
+	}
 
 	@Override
 	protected Ii<Tokenizer, TokenStream> underlyingTokeniser(Reader pReader) {

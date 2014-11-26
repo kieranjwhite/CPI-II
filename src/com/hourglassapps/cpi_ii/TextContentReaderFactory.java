@@ -28,13 +28,11 @@ import com.hourglassapps.util.Log;
 public class TextContentReaderFactory implements FileReaderFactory {
 	private final static String TAG=TextContentReaderFactory.class.getName();
 	private final static String TYPE_DELIMITER=Character.toString(DeferredFileJournal.TYPE_COLUMN_DELIMITER);
-	private final Path mRoot;
 	private final static TypeFileFinder TYPE_FINDER=new TypeFileFinder();
 	private Path mLastTypesParent=null;
 	private final Map<Integer,String> mFileNumToType=new HashMap<>();
 	
-	public TextContentReaderFactory(Path pRoot) {
-		mRoot=pRoot;
+	public TextContentReaderFactory() {
 	}
 
 	private boolean reloadedTypes(Path pParent) throws IOException {
@@ -55,10 +53,8 @@ public class TextContentReaderFactory implements FileReaderFactory {
 				assert parts.length==2;
 				int fileNum=Integer.parseInt(parts[0]);
 				String mimeType=parts[1];
-				if(mimeType.equals(DeferredFileJournal.TYPE_UNKNOWN)) {
-					mimeType=null;
-				}
-				if(mimeType.equals(DeferredFileJournal.TYPE_SYMLINK)) {
+				if(DeferredFileJournal.TYPE_UNKNOWN.equals(mimeType) ||
+						DeferredFileJournal.TYPE_SYMLINK.equals(mimeType)) {
 					mimeType=null;
 				}
 				mFileNumToType.put(fileNum, mimeType);
@@ -96,7 +92,7 @@ public class TextContentReaderFactory implements FileReaderFactory {
 		}
 		fileNum=Integer.parseInt(start);
 		
-		if(!Files.isSameFile(parent, mLastTypesParent) && !reloadedTypes(parent)) {
+		if((mLastTypesParent==null || !Files.isSameFile(parent, mLastTypesParent)) && !reloadedTypes(parent)) {
 			return null;
 		}
 		if(!mFileNumToType.containsKey(fileNum)) {

@@ -57,8 +57,11 @@ public abstract class LatinAnalyzer extends StopwordAnalyzerBase {
 	private final static String TAG=LatinAnalyzer.class.getName();
 	private final CharArraySet stemExclusionSet;
 
-	/** File containing default Latin stopwords. */
-	//public final static String DEFAULT_STOPWORD_FILE = "/com/hourglassapps/cpi_ii/latin/la.stop";
+	/* File containing 92 Latin stopwords from the Perseus project:
+	 * http://sourceforge.net/projects/perseus-hopper/files/perseus-hopper/hopper-20110527/hopper-source-20110527.tar.gz/download
+	 */
+	public final static String PERSEUS_STOPWORD_FILE = "/com/hourglassapps/cpi_ii/latin/la.stop";
+	
 	public final static String DEFAULT_STOPWORD_FILE = "/com/hourglassapps/cpi_ii/empty.stop";
 	private StemRecorderFilter mRecorder;
 
@@ -156,6 +159,10 @@ public abstract class LatinAnalyzer extends StopwordAnalyzerBase {
 		this(stopwords, CharArraySet.EMPTY_SET);
 	}
 
+	public LatinAnalyzer(String pPackageFile) throws IOException {
+		this(loadStopwordSet(true, LatinAnalyzer.class, DEFAULT_STOPWORD_FILE, "#"), CharArraySet.EMPTY_SET);
+	}
+	
 	/**
 	 * Builds an analyzer with the given stop words. If a non-empty stem exclusion set is
 	 * provided this analyzer will add a {@link SetKeywordMarkerFilter} before

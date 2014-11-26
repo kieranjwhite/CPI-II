@@ -26,7 +26,7 @@ public class FieldVal {
 		return s();
 	}
 
-	public Field field(String pKey) {
+	public Field field(String pVal) {
 		FieldType type = new FieldType();
 	    type.setIndexed(true);
 	    type.setStored(true);
@@ -35,7 +35,7 @@ public class FieldVal {
 		type.setStoreTermVectors(tokenised());
 	    
 	    type.freeze();
-		return new Field(s(), pKey, type);
+		return new Field(s(), pVal, type);
 	}
 	
 	public TermQuery query(String pTerm) {
