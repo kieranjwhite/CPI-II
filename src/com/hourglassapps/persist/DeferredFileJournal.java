@@ -33,7 +33,11 @@ import com.hourglassapps.util.Typed;
 
 public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJournal<K,C,Downloader<C,R>> {
 	private final static String TAG=DeferredFileJournal.class.getName();
-	private final static String DONE_INDEX="done_index";
+	public final static String DONE_INDEX="done_index";
+	public final static char TYPE_COLUMN_DELIMITER=' ';
+	public final static String TYPE_UNKNOWN="UNKNOWN";
+	public final static String TYPE_SYMLINK="SYMLINK";
+	public final static String TYPES_FILENAME=CUSTOM_PREFIX+"types.txt";
 	//TIMEOUT is in ms
 	private final List<Promise<Void,IOException,Void>> mPromised;
 	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();
@@ -76,18 +80,21 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 
 		final Path dest=dest(pLink);
 		synchronized(this) {
+			assert(Files.exists(mPartialDoneDir));
+			if(mTypesWriter==null) {
+				mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(TYPES_FILENAME).toString())));
+			}
+
 			Ii<String,String> srcDst=new Ii<>(pLink.get().toString(), dest.toString());
 			if(mDone.addExisting(srcDst)) {
 				//If we return without adding to mPromised, commit() might not commit the transaction properly
+				mTypesWriter.println(destKey+Character.toString(TYPE_COLUMN_DELIMITER)+TYPE_SYMLINK);
+				
 				Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
 				deferred.resolve(null);
 				mPromised.add(deferred);
 				Log.i(TAG, Log.esc("Already downloaded: "+srcDst));
 				return;
-			}
-			assert(Files.exists(mPartialDoneDir));
-			if(mTypesWriter==null) {
-				mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(CUSTOM_PREFIX+"types.txt").toString())));
 			}
 		}
 		
@@ -110,10 +117,10 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 						
 						String src=pTypeInfo.src();
 						if(src==null) {
-							src="UNKNOWN";
+							src=TYPE_UNKNOWN;
 						}
 						synchronized(DeferredFileJournal.this) {
-							mTypesWriter.println(pTypeInfo.dstKey()+" "+src);
+							mTypesWriter.println(pTypeInfo.dstKey()+Character.toString(TYPE_COLUMN_DELIMITER)+src);
 							mDone.addNew(new Ii<>(source.toString(), dest.toString()));
 						}
 						def.resolve(null);

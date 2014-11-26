@@ -18,7 +18,7 @@ import com.hourglassapps.util.Log;
 public class DeferredZeroCopyConsumer extends ZeroCopyConsumer<File> {
 	private final static String TAG=DeferredZeroCopyConsumer.class.getName();
 	private final Deferred<ContentTypeSourceable,?,?> mDeferred;
-	private long mDestKey;
+	private int mDestKey;
 	private final long mTimeToDie;
 	private boolean mAborted=false;
 	
@@ -30,7 +30,7 @@ public class DeferredZeroCopyConsumer extends ZeroCopyConsumer<File> {
 	 * @param pTimeout in ms
 	 * @throws FileNotFoundException
 	 */
-	public DeferredZeroCopyConsumer(long pDestKey, File pDest, Deferred<ContentTypeSourceable,?,?> pDeferred, long pTimeout) 
+	public DeferredZeroCopyConsumer(int pDestKey, File pDest, Deferred<ContentTypeSourceable,?,?> pDeferred, long pTimeout) 
 			throws FileNotFoundException {
 		super(pDest);
 		mDestKey=pDestKey;

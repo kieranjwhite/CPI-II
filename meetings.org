@@ -1,5 +1,9 @@
 * General
 ** Libraries
+*** Apache Tika
+**** Extracts text from files with different mime types
+**** Apache 2
+**** https://tika.apache.org/download.html
 *** jpingy
 **** https://code.google.com/p/jpingy/downloads/detail?name=jpingy0_1-alpha.jar&can=2&q=
 **** MIT License

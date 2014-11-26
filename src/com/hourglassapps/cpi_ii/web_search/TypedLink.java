@@ -7,6 +7,7 @@ import org.apache.commons.io.FilenameUtils;
 import com.hourglassapps.util.Typed;
 
 public class TypedLink implements Typed<URL> {
+	public final static char FILE_EXTENSION_DELMITER='.';
 	private final static int MAX_EXTENSION_LENGTH=64;
 	private final URL mLink;
 	
@@ -24,7 +25,7 @@ public class TypedLink implements Typed<URL> {
 		if("".equals(extension)) {
 			return "";
 		} else {
-			return "."+extension;
+			return FILE_EXTENSION_DELMITER+extension;
 		}
 	}
 

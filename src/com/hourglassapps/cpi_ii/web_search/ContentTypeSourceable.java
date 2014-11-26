@@ -1,16 +1,16 @@
 package com.hourglassapps.cpi_ii.web_search;
 
 public class ContentTypeSourceable implements Sourceable {
-	private final long mFilename;
+	private final int mFilename;
 	private final String mContentType;
 	
-	public ContentTypeSourceable(long pFilename, String pContentType) {
+	public ContentTypeSourceable(int pFilename, String pContentType) {
 		mFilename=pFilename;
 		mContentType=pContentType;
 	}
 	
 	@Override
-	public long dstKey() {
+	public int dstKey() {
 		return mFilename;
 	}
 

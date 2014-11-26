@@ -60,7 +60,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 
 	@Override
 	public Promise<ContentTypeSourceable, IOException, Void> downloadLink(
-			URL pSource, long pDstKey, Path pDst) throws IOException {
+			URL pSource, int pDstKey, Path pDst) throws IOException {
 		URL encoded=URLUtils.reencode(pSource);
 
 		/*

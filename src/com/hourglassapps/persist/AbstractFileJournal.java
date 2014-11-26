@@ -27,7 +27,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>>
 	private final static String PARTIAL_DIR_NAME="partial";
 	private final static String COMPLETED_DIR_NAME="completed";
 	protected final static int FIRST_FILENAME=1;
-	private final static char META_PREFIX='_';
+	public final static char META_PREFIX='_';
 	protected final static String CUSTOM_PREFIX=META_PREFIX+"_";
 	
 	private final Path mDirectory;
