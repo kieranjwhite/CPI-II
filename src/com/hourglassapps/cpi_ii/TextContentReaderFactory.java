@@ -74,7 +74,7 @@ public class TextContentReaderFactory implements FileReaderFactory {
 			throw new IllegalArgumentException(pFile+" has no parent");
 		}
 		if(Files.isSymbolicLink(pFile) ||
-				DeferredFileJournal.DONE_INDEX.equals(parent.getFileName())) {
+				DeferredFileJournal.DONE_INDEX.equals(parent.getFileName().toString())) {
 			return null;
 		}
 		String leaf=pFile.getFileName().toString();
@@ -82,7 +82,7 @@ public class TextContentReaderFactory implements FileReaderFactory {
 				leaf.charAt(0)==AbstractFileJournal.META_PREFIX) {
 			return null;
 		}
-		
+
 		int fileNum, extensionIdx=leaf.lastIndexOf(TypedLink.FILE_EXTENSION_DELMITER);
 		String start;
 		if(extensionIdx==-1) {
@@ -90,20 +90,23 @@ public class TextContentReaderFactory implements FileReaderFactory {
 		} else {
 			start=leaf.substring(0, extensionIdx);
 		}
-		fileNum=Integer.parseInt(start);
-		
-		if((mLastTypesParent==null || !Files.isSameFile(parent, mLastTypesParent)) && !reloadedTypes(parent)) {
-			return null;
-		}
-		if(!mFileNumToType.containsKey(fileNum)) {
-			throw new IllegalStateException(fileNum+" missing from directory's types map");
-		}
-		try(InputStream in=new FileInputStream(pFile.toFile())) {
-			//return new TikaReader(in, mFileNumToType.get(fileNum));
-			return new TikaReader(in, null);
-		} catch (TikaException e) {
-			throw new IOException(e);
+		try {
+			fileNum=Integer.parseInt(start);
+
+			if((mLastTypesParent==null || !Files.isSameFile(parent, mLastTypesParent)) && !reloadedTypes(parent)) {
+				return null;
+			}
+			if(!mFileNumToType.containsKey(fileNum)) {
+				throw new IllegalStateException(fileNum+" missing from directory's types map");
+			}
+			try(InputStream in=new FileInputStream(pFile.toFile())) {
+				//return new TikaReader(in, mFileNumToType.get(fileNum));
+				return new TikaReader(in, null);
+			} catch (TikaException e) {
+				throw new IOException(e);
+			}
+		} catch(NumberFormatException e) {
+			throw new IOException("Path: "+pFile.toString(),e);
 		}
 	}
-
 }

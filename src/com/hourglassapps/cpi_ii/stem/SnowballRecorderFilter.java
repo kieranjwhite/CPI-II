@@ -12,15 +12,15 @@ import com.hourglassapps.util.MultiMap;
 
 public final class SnowballRecorderFilter extends StemRecorderFilter {
 	private SnowballProgram mStemmer;
-	public SnowballRecorderFilter(TokenStream pInput, SnowballProgram pStemmer) throws IOException {
-		super(pInput);
+	public SnowballRecorderFilter(TokenStream pInput, boolean pRecord, SnowballProgram pStemmer) throws IOException {
+		super(pInput, pRecord);
 		mStemmer=pStemmer;
 	}
 
 
-	public <C extends Set<String>> SnowballRecorderFilter(TokenStream pInput,
+	public <C extends Set<String>> SnowballRecorderFilter(TokenStream pInput, boolean pRecord,
 			MultiMap<String, C, String> stem2Expansions, SnowballProgram pStemmer) throws IOException {
-		super(pInput, stem2Expansions);
+		super(pInput, pRecord, stem2Expansions);
 		mStemmer=pStemmer;
 	}
 

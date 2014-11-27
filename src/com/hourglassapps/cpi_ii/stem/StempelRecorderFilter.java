@@ -16,15 +16,15 @@ import com.hourglassapps.util.MultiMap;
 public final class StempelRecorderFilter extends StemRecorderFilter {
 	private File mModel;
 	
-	public StempelRecorderFilter(TokenStream pInput, File pModel) throws IOException {
-		super(pInput);
+	public StempelRecorderFilter(TokenStream pInput, boolean pRecord, File pModel) throws IOException {
+		super(pInput, pRecord);
 		mModel=pModel;
 	}
 
 
-	public <C extends Set<String>> StempelRecorderFilter(TokenStream pInput,
+	public <C extends Set<String>> StempelRecorderFilter(TokenStream pInput, boolean pRecord,
 			MultiMap<String, C, String> stem2Expansions, File pModel) throws IOException {
-		super(pInput, stem2Expansions);
+		super(pInput, pRecord, stem2Expansions);
 		mModel=pModel;
 	}
 

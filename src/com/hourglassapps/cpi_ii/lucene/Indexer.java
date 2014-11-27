@@ -15,18 +15,21 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 
+import com.hourglassapps.util.Log;
+
 public class Indexer extends IndexViewer implements AutoCloseable {
 	private final static String TAG=Indexer.class.getName();
-	
+	private final static double RAM_BUFFER_SIZE_MB=64;
 	private final IndexWriter mWriter;
 	private IndexWriterConfig mIwc;
 	
 	public Indexer(File pDir, Analyzer pAnalyser, boolean pForceCreate) throws IOException {
 		super(pDir);
-		mIwc = new IndexWriterConfig(Version.LUCENE_4_10_0, pAnalyser);
+		mIwc = new IndexWriterConfig(Version.LUCENE_4_10_0, pAnalyser).
+		setRAMBufferSizeMB(RAM_BUFFER_SIZE_MB).setUseCompoundFile(false);
+		//		setUseCompoundFile(false);
         mIwc.setOpenMode(pForceCreate?OpenMode.CREATE:OpenMode.CREATE_OR_APPEND);
         mWriter = new IndexWriter(dir(), mIwc);
-
 	}
 
 	public IndexWriter writer() {
@@ -59,6 +62,7 @@ public class Indexer extends IndexViewer implements AutoCloseable {
 	
 	@Override
 	public void close() throws IOException {
+		Log.i(TAG, "closing index writer");
 		mWriter.close();
 	}
 

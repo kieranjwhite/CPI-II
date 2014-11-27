@@ -25,12 +25,12 @@ import org.apache.lucene.index.Term;
 
 import com.hourglassapps.util.Log;
 
-public class FileCrawler implements FileVisitor<Path> {
-	private final static String TAG=FileCrawler.class.getName();
+public class LuceneVisitor implements FileVisitor<Path> {
+	private final static String TAG=LuceneVisitor.class.getName();
 	private final IndexWriter mIndexWriter;
 	private final FileReaderFactory mPath2Reader;
 
-	public FileCrawler(IndexWriter pIndexWriter, FileReaderFactory pPath2Reader) {
+	public LuceneVisitor(IndexWriter pIndexWriter, FileReaderFactory pPath2Reader) {
 		mIndexWriter=pIndexWriter;
 		mPath2Reader=pPath2Reader;
 	}
@@ -81,15 +81,6 @@ public class FileCrawler implements FileVisitor<Path> {
 					// or positional information:
 					Field pathField = new StringField("path", pPath.toString(), Field.Store.YES);
 					doc.add(pathField);
-
-					// Add the last modified date of the file a field named "modified".
-					// Use a LongField that is indexed (i.e. efficiently filterable with
-					// NumericRangeFilter).  This indexes to milli-second resolution, which
-					// is often too fine.  You could instead create a number based on
-					// year/month/day/hour/minutes/seconds, down the resolution you require.
-					// For example the long value 2011021714 would mean
-					// February 17, 2011, 2-3 PM.
-					doc.add(new LongField("modified", Files.getLastModifiedTime(pPath).toMillis(), Field.Store.NO));
 
 					// Add the contents of the file to a field named "contents".  Specify a Reader,
 					// so that the text of the file is tokenized and indexed, but not stored.

@@ -26,21 +26,24 @@ public abstract class StemRecorderFilter extends TokenFilter {
 	private TokenStream mStemmer;
 	private final MultiMap<String, Set<String>, String> mStem2Expansions;
 	private final CharTermAttribute termAtt=addAttribute(CharTermAttribute.class);
-
+	private final boolean mRecord;
+	
 	public static abstract class Factory {
 		public abstract StemRecorderFilter inst(TokenStream result) throws IOException;
 	}
 	
-	public StemRecorderFilter(TokenStream pInput) throws IOException {
+	public StemRecorderFilter(TokenStream pInput, boolean pRecord) throws IOException {
 		super(pInput);
 		mStem2Expansions=new HashSetMultiMap<String, String>();
 		mUnderlying=new Underlying(pInput);
+		mRecord=pRecord;
 	}
 
-	public <C extends Set<String>> StemRecorderFilter(TokenStream pInput, MultiMap<String,C,String> stem2Expansions) throws IOException {
+	public <C extends Set<String>> StemRecorderFilter(TokenStream pInput, boolean pRecord, MultiMap<String,C,String> stem2Expansions) throws IOException {
 		super(pInput);
 		mStem2Expansions=new HashSetMultiMap<String, String>(stem2Expansions);
 		mUnderlying=new Underlying(pInput);
+		mRecord=pRecord;
 	}
 
 	private final static class Underlying extends TokenFilter implements PreFilter {
@@ -74,7 +77,9 @@ public abstract class StemRecorderFilter extends TokenFilter {
 			mStemmer=stemmer(mUnderlying);
 		}
 		if(mStemmer.incrementToken()) {
-			mStem2Expansions.addOne(termAtt.toString(), mUnderlying.priorToken().toString());
+			if(mRecord) {
+				mStem2Expansions.addOne(termAtt.toString(), mUnderlying.priorToken().toString());
+			}
 			return true;
 		} else {
 			return false;

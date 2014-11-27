@@ -437,3 +437,13 @@
 **** No longer provide mime type provided by remote server to Tika as sometimes it's incorrect
 ***** eg journals/random_no_blacklist_300_234567_journal/completed/cursum+vite+me/1.SGM
 ***** TODO find study demonstrating accuracy of Tika's automagical filetype detection algorithm
+***** TODO How long will it take to index and how much space is required
+****** 11m07s to index 298 queries (from journals/random_no_blacklist_300_234567_journal/)
+******* full collection is based on downloads for 64553 queries (ie 216.62 times as many)
+******** assuming nlog_2(n) growth rate => 12.97 days
+********* assuming branching factor of 2
+********** http://comments.gmane.org/gmane.comp.db.cassandra.user/7693
+****** 309MB to index 298 queries
+******* Assuming linear growth 65GBs will be required for index
+
+

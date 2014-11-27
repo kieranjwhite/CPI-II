@@ -69,7 +69,7 @@ public abstract class LatinAnalyzer extends StopwordAnalyzerBase {
 
 		@Override
 		public StemRecorderFilter inst(TokenStream pInput) throws IOException {
-			return new StempelRecorderFilter(pInput, new File("data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out"));
+			return new StempelRecorderFilter(pInput, true, new File("data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out"));
 		}
 
 	};
@@ -78,7 +78,7 @@ public abstract class LatinAnalyzer extends StopwordAnalyzerBase {
 
 		@Override
 		public StemRecorderFilter inst(TokenStream pInput) throws IOException {
-			return new SnowballRecorderFilter(pInput, new LatinStemmer());
+			return new SnowballRecorderFilter(pInput, true, new LatinStemmer());
 		}
 
 	};

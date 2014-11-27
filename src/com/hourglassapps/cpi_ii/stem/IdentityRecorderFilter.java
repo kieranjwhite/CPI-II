@@ -12,13 +12,13 @@ import com.hourglassapps.util.MultiMap;
 
 public final class IdentityRecorderFilter extends StemRecorderFilter {
 	public IdentityRecorderFilter(TokenStream pInput) throws IOException {
-		super(pInput);
+		super(pInput, false);
 	}
 
 
 	public <C extends Set<String>> IdentityRecorderFilter(TokenStream pInput,
 			MultiMap<String, C, String> stem2Expansions, SnowballProgram pStemmer) throws IOException {
-		super(pInput, stem2Expansions);
+		super(pInput, false, stem2Expansions);
 	}
 
 	@Override
