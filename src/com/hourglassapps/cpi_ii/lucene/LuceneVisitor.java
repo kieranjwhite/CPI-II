@@ -11,7 +11,9 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.apache.lucene.document.Document;
@@ -19,19 +21,36 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
 
 import com.hourglassapps.util.Log;
 
 public class LuceneVisitor implements FileVisitor<Path> {
 	private final static String TAG=LuceneVisitor.class.getName();
-	private final IndexWriter mIndexWriter;
+	
+	//progress is saved every 300 queries approximately
+	private final static int PROGRESS_INTERVAL=300;
+	private final Indexer mIndexer;
+	private final IndexWriter mWriter;
 	private final FileReaderFactory mPath2Reader;
-
-	public LuceneVisitor(IndexWriter pIndexWriter, FileReaderFactory pPath2Reader) {
-		mIndexWriter=pIndexWriter;
+	private String mLastParent=null;
+	private final IndexReader mReader;
+	private boolean mLastFound=false;
+	
+	private final static FieldVal PATH=DownloadedFields.PATH.fieldVal(); 
+	private final static FieldVal POSITION=DownloadedFields.POSITION.fieldVal(); 
+	private final static FieldVal CONTENT=DownloadedFields.CONTENT.fieldVal(); 
+	
+	public LuceneVisitor(Indexer pIndex, FileReaderFactory pPath2Reader) throws IOException {
+		mIndexer=pIndex;
+		mReader=DirectoryReader.open(mIndexer.dir());
+		mWriter=mIndexer.writer();
 		mPath2Reader=pPath2Reader;
 	}
 
@@ -45,6 +64,70 @@ public class LuceneVisitor implements FileVisitor<Path> {
 	public FileVisitResult preVisitDirectory(Path arg0,
 			BasicFileAttributes arg1) throws IOException {
 		return FileVisitResult.CONTINUE;
+	}
+
+	private boolean indexed(Path pPath) throws IOException {
+		String parent=pPath.getParent().getFileName().toString();
+		if(mLastParent==null || !parent.equals(mLastParent)) {
+			if(mLastParent==null) {
+				mLastParent=parent;
+			}
+			mLastFound=indexedFullCheck(pPath);
+		}
+		return mLastFound;
+		
+	}
+	
+	private boolean indexedFullCheck(Path pPath) throws IOException {
+		String parent=pPath.getParent().getFileName().toString();
+		ResultGenerator<Boolean> resGen=new ResultGenerator<Boolean>() {
+			private Boolean mFound=Boolean.FALSE;
+
+			@Override
+			public void run(IndexReader pReader, TopDocs pResults)
+					throws IOException {
+				if(pReader.numDocs()>0) {
+					mFound=Boolean.TRUE;
+				}
+			}
+
+			@Override
+			public Boolean result() {
+				return mFound;
+			}
+
+		};
+		mIndexer.interrogate(mReader, POSITION, parent, 1, resGen);
+		boolean present=resGen.result();
+		try {
+			if(present) {
+				Log.i(TAG, "found: "+parent);
+				return true;
+			}
+
+			//mLastParent is done
+			Document complete=new Document();
+			Field query=POSITION.field(mLastParent);
+			complete.add(query);
+			/*
+			 * Note (kw) We always call mWriter.addDocument / mWriter.updateDocument
+			 * on the first new query found, even though that actually marks the previous
+			 * query as being complete -- something we had previously done and didn't need
+			 * to repeat. That's okay though.  
+			 */
+			if (mWriter.getConfig().getOpenMode() == OpenMode.CREATE) {
+				// New index, so we just add the document (no old document can be there):
+				mWriter.addDocument(complete);
+			} else {
+				// Existing index (an old copy of this document may have been indexed) so 
+				// we use updateDocument instead to replace the old one matching the exact 
+				// path, if present:
+				mWriter.updateDocument(POSITION.term(mLastParent), complete);
+			}
+			return false;
+		} finally {
+			mLastParent=parent;
+		}
 	}
 
 	/**
@@ -68,36 +151,38 @@ public class LuceneVisitor implements FileVisitor<Path> {
 	public FileVisitResult visitFile(Path pPath, BasicFileAttributes arg1)
 			throws IOException {
 		try {
-			Reader inner=mPath2Reader.reader(pPath);
-			if(inner!=null) {
+			if(mPath2Reader.indexable(pPath) && !indexed(pPath)) {
+				Reader inner=mPath2Reader.reader(pPath);
+				assert inner!=null;
 				try(Reader reader=new BufferedReader(inner)) {
 
 					// make a new, empty document
 					Document doc = new Document();
+					String pathStr=pPath.toString();
 
 					// Add the path of the file as a field named "path".  Use a
 					// field that is indexed (i.e. searchable), but don't tokenize 
 					// the field into separate words and don't index term frequency
 					// or positional information:
-					Field pathField = new StringField("path", pPath.toString(), Field.Store.YES);
+					Field pathField = PATH.field(pathStr);
 					doc.add(pathField);
 
 					// Add the contents of the file to a field named "contents".  Specify a Reader,
 					// so that the text of the file is tokenized and indexed, but not stored.
 					// Note that FileReader expects the file to be in UTF-8 encoding.
 					// If that's not the case searching for special characters will fail.
-					doc.add(new TextField("contents", reader));
+					doc.add(CONTENT.field(reader));
 
-					if (mIndexWriter.getConfig().getOpenMode() == OpenMode.CREATE) {
+					if (mWriter.getConfig().getOpenMode() == OpenMode.CREATE) {
 						// New index, so we just add the document (no old document can be there):
 						System.out.println("adding " + pPath);
-						mIndexWriter.addDocument(doc);
+						mWriter.addDocument(doc);
 					} else {
 						// Existing index (an old copy of this document may have been indexed) so 
 						// we use updateDocument instead to replace the old one matching the exact 
 						// path, if present:
-						System.out.println("updating " + pPath);
-						mIndexWriter.updateDocument(new Term("path", pPath.toString()), doc);
+						System.out.println("updating " + pathStr);
+						mWriter.updateDocument(PATH.term(pathStr), doc);
 					}
 
 				}

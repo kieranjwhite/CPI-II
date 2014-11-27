@@ -5,5 +5,6 @@ import java.io.Reader;
 import java.nio.file.Path;
 
 public interface FileReaderFactory {
-	Reader reader(Path pFile) throws IOException;
+	public Reader reader(Path pFile) throws IOException;
+	public boolean indexable(Path pFile);
 }

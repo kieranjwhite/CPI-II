@@ -27,12 +27,15 @@ import com.hourglassapps.util.Log;
 
 public class TextContentReaderFactory implements FileReaderFactory {
 	private final static String TAG=TextContentReaderFactory.class.getName();
+
 	private final static String TYPE_DELIMITER=Character.toString(DeferredFileJournal.TYPE_COLUMN_DELIMITER);
 	private final static TypeFileFinder TYPE_FINDER=new TypeFileFinder();
 	private Path mLastTypesParent=null;
 	private final Map<Integer,String> mFileNumToType=new HashMap<>();
+	private final boolean mSpecifyTypes;
 	
-	public TextContentReaderFactory() {
+	public TextContentReaderFactory(boolean pSpecifyTypes) {
+		mSpecifyTypes=pSpecifyTypes;
 	}
 
 	private boolean reloadedTypes(Path pParent) throws IOException {
@@ -60,12 +63,49 @@ public class TextContentReaderFactory implements FileReaderFactory {
 				mFileNumToType.put(fileNum, mimeType);
 			}
 		}
-		
+
 		return true;
 	}
+
+	public String type(Path pFile) throws IOException {
+		Path parent=pFile.getParent();
+		int fileNum=fileNum(pFile);
+		if((mLastTypesParent==null || !Files.isSameFile(parent, mLastTypesParent)) && !reloadedTypes(parent)) {
+			return null;
+		}
+		if(!mFileNumToType.containsKey(fileNum)) {
+			throw new IllegalStateException(fileNum+" missing from directory's types map");
+		}
+		return mFileNumToType.get(fileNum(pFile));
+	}
 	
+	public static String leaf(Path pFile) {
+		String leaf=pFile.getFileName().toString();
+		if(leaf.length()==0 ||
+				leaf.charAt(0)==AbstractFileJournal.META_PREFIX) {
+			return null;
+		}
+		return leaf;
+	}
+	
+	public static int fileNum(Path pFilename) throws IOException {
+		String leaf=pFilename.toString();
+		int extensionIdx=leaf.lastIndexOf(TypedLink.FILE_EXTENSION_DELMITER);
+		String start;
+		if(extensionIdx==-1) {
+			start=leaf;
+		} else {
+			start=leaf.substring(0, extensionIdx);
+		}
+		try {
+			return Integer.parseInt(start);
+		} catch(NumberFormatException e) {
+			throw new IOException("Leaf: "+leaf,e);
+		}
+	}
+
 	@Override
-	public Reader reader(Path pFile) throws IOException {
+	public boolean indexable(Path pFile) {
 		if(pFile==null) {
 			throw new IllegalArgumentException("null path");
 		}
@@ -75,38 +115,24 @@ public class TextContentReaderFactory implements FileReaderFactory {
 		}
 		if(Files.isSymbolicLink(pFile) ||
 				DeferredFileJournal.DONE_INDEX.equals(parent.getFileName().toString())) {
+			return false;
+		}
+		return leaf(pFile)!=null;
+	}
+	
+	@Override
+	public Reader reader(Path pFile) throws IOException {
+		if(!indexable(pFile)) {
 			return null;
 		}
-		String leaf=pFile.getFileName().toString();
-		if(leaf.length()==0 ||
-				leaf.charAt(0)==AbstractFileJournal.META_PREFIX) {
-			return null;
-		}
-
-		int fileNum, extensionIdx=leaf.lastIndexOf(TypedLink.FILE_EXTENSION_DELMITER);
-		String start;
-		if(extensionIdx==-1) {
-			start=leaf;
-		} else {
-			start=leaf.substring(0, extensionIdx);
-		}
-		try {
-			fileNum=Integer.parseInt(start);
-
-			if((mLastTypesParent==null || !Files.isSameFile(parent, mLastTypesParent)) && !reloadedTypes(parent)) {
-				return null;
-			}
-			if(!mFileNumToType.containsKey(fileNum)) {
-				throw new IllegalStateException(fileNum+" missing from directory's types map");
-			}
-			try(InputStream in=new FileInputStream(pFile.toFile())) {
-				//return new TikaReader(in, mFileNumToType.get(fileNum));
+		try(InputStream in=new FileInputStream(pFile.toFile())) {
+			if(mSpecifyTypes) {
+				return new TikaReader(in, type(pFile));
+			} else {
 				return new TikaReader(in, null);
-			} catch (TikaException e) {
-				throw new IOException(e);
 			}
-		} catch(NumberFormatException e) {
-			throw new IOException("Path: "+pFile.toString(),e);
+		} catch (TikaException e) {
+			throw new IOException(e);
 		}
 	}
 }
