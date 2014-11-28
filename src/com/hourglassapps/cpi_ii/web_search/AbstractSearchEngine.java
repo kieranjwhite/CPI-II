@@ -13,20 +13,7 @@ import com.hourglassapps.util.URLUtils;
 
 public abstract class AbstractSearchEngine implements RestrictedSearchEngine<String,URL,URL>, AutoCloseable {
 	protected final Query<String,URL> NULL_QUERY=new HttpQuery<String>(uniqueName(Collections.<String>emptyList()));
-	protected Filter<URL> mFilter=new Filter<URL>(){
 
-		@Override
-		public boolean accept(URL pArg) {
-			return true;
-		}
-		
-	};
-
-	public AbstractSearchEngine setFilter(Filter<URL> pFilter) {
-		mFilter=pFilter;
-		return this;
-	}
-	
 	@Override
 	public Query<String,URL> formulate(List<String> pDisjunctions) 
 			throws UnsupportedEncodingException, MalformedURLException {

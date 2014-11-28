@@ -144,7 +144,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 		return new URL(SEARCH_URI_PREFIX+mQuery.append(CLOSING_BRACKET).append(mBlacklistedSites).append(mBlacklistedPhrases).append(SEARCH_PATH_SUFFIX).toString());
 	}
 	
-	private Response page(String pName, URL pQuery, boolean pApplyFilter) throws ClientProtocolException, IOException, URISyntaxException {
+	private Response page(String pName, URL pQuery) throws ClientProtocolException, IOException, URISyntaxException {
 		HttpGet get=new HttpGet(pQuery.toURI());
 		get.setHeader(AUTH_HEADER, AUTH_PREFIX+mAccountKey);
 		ResponseHandler<String> respHandler=new BasicResponseHandler();
@@ -152,19 +152,13 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 		if(mAccountKey==null) {
 			System.out.println(URLDecoder.decode(pQuery.toString(), URLUtils.ENCODING));
 			body="{\"d\":{\"results\":[]}}";
-		} else if(!pApplyFilter || mFilter.accept(pQuery)) {
+		} else {
 			Log.i(TAG, Log.esc(pName+" - "+pQuery.toString()));				
 			body=mClient.execute(get, respHandler);	
-		} else {
-			body="{\"d\":{\"results\":[]}}";
 		}
 		return mFact.inst(body);				
 	}
 	
-	private Response page(String pName, URL pQuery) throws ClientProtocolException, IOException, URISyntaxException {
-		return page(pName, pQuery, true);
-	}
-
 	@Override
 	public Iterator<URL> present(final Query<String,URL> pQuery) throws IOException {
 		mSearchInvoked=true;
@@ -205,7 +199,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 					if(next==null) {
 						return false;
 					}
-					mResponse=page(pQuery.uniqueName(), next, false);
+					mResponse=page(pQuery.uniqueName(), next);
 					mPageNum++;
 					mPage=mResponse.urls().iterator();
 					return mPage.hasNext();

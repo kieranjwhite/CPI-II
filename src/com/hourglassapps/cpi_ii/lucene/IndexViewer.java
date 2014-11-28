@@ -26,7 +26,7 @@ import com.hourglassapps.util.ExpansionReceiver;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.MultiMap;
 
-public class IndexViewer {
+public class IndexViewer implements AutoCloseable {
 	private final static String TAG=IndexViewer.class.getName();
 	
 	private Directory mDir;
@@ -88,6 +88,11 @@ public class IndexViewer {
 		}
 		pRelayer.run(pReader, results);
 		
+	}
+
+	@Override
+	public void close() throws Exception {
+		mDir.close();
 	}
 
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.hourglassapps.util.Ii;
 
-public interface SearchEngine<C,K,Q,R> {
+public interface SearchEngine<C,K,Q,R> extends AutoCloseable {
 	public Query<K,Q> formulate(C pDisjunctions) throws IOException;
 	public Iterator<R> present(Query<K,Q> pQuery) throws IOException;
 }

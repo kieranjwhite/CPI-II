@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 enum Cmd {
-	ALL("all"), PARTITION("partition"), RANDOM("random"), ONE("one"), DOWNLOAD("download");
+	ALL("all"), THREADS("threads"), PARTITION("partition"), RANDOM("random"), ONE("one"), DOWNLOAD("download");
 	
 	private final static Set<Cmd> CMDS=new HashSet<Cmd>(Arrays.asList(
-			new Cmd[]{ALL, PARTITION, RANDOM, ONE, DOWNLOAD}));
+			new Cmd[]{ALL, THREADS, PARTITION, RANDOM, ONE, DOWNLOAD}));
 	
 	private final String mName;
 	

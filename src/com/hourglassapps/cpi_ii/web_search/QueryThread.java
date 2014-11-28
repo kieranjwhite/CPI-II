@@ -8,16 +8,10 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.io.FilenameUtils;
 
 import com.hourglassapps.persist.Journal;
 import com.hourglassapps.util.ConcreteThrower;
@@ -132,9 +126,20 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 	
 	@Override
 	public void close() throws Exception {
-		mOut.close();
-		join();
-		mThrower.close();
+		try {
+			mOut.close();
+		} finally {
+			try {
+				join();				
+			} finally {
+				try {
+					mThrower.close();					
+				} finally {
+					mQ.close();					
+				}
+			}
+		}
+
 	}
 	
 }
