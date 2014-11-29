@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -53,7 +54,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	private final static String TAG=MainDownloader.class.getName();
 	private final static String JOURNAL_NAME="journal";
 	private final static Path JOURNAL=Paths.get(JOURNAL_NAME);
-	private final static String THREAD_JOURNAL_NAME=JOURNAL_NAME+'_';
+	private final static String THREAD_JOURNAL_NAME='_'+JOURNAL_NAME;
 	private final static Path TEST_JOURNAL=Paths.get("test_journal");
 	private final static boolean BLACKLISTING=false;
 	private final static Journal<String,Typed<URL>> NULL_JOURNAL=new NullJournal<String,Typed<URL>>();
@@ -91,12 +92,16 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		try {
 			ZeroCopyConsumer<File> consumer=new DeferredZeroCopyConsumer(pDstKey, pDst.toFile(), deferred, COMPLETION_TIMEOUT);
 			mClient.execute(HttpAsyncMethods.createGet(encoded.toString()), consumer, null);
-			return deferred;
+		} catch(IllegalArgumentException e) {
+			//This will be caused by a URISyntaxException triggered by illegal characters in some download links
+			deferred.resolve(new ContentTypeSourceable(pDstKey, null));
+			Log.e(TAG, e);
 		} catch(Exception e) {
 			deferred.resolve(new ContentTypeSourceable(pDstKey, null));
 			Log.e(TAG, e, Log.esc("Exception for: "+deferred));
 			throw new IOException(e);
 		}
+		return deferred;
 	}	
 	
 	public void downloadSynchronous(URL pSource, Path pDst) throws IOException, InterruptedException {
@@ -138,7 +143,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 			Journal<String,Typed<URL>> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL,ContentTypeSourceable>(JOURNAL,
 					JournalKeyConverter.SINGLETON, this);
 
-			try(QueryThread<String> receiver=new QueryThread<String>(setupBlacklist(
+			try(QueryThread<String> receiver=new QueryThread<String>(1,setupBlacklist(
 							(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY))), journal);
 					IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);) {
 				//We'll limit our downloads to 5 every 1 sec
@@ -152,11 +157,11 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 
 	}
 	
-	public QueryThread<String> setupQuery(Path pJournalDir) throws Exception {
+	public QueryThread<String> setupQuery(int pNumThreads, Path pJournalDir) throws Exception {
 		Journal<String,Typed<URL>> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(
 				pJournalDir, JournalKeyConverter.SINGLETON, this);
 
-		QueryThread<String> receiver=new QueryThread<String>(
+		QueryThread<String> receiver=new QueryThread<String>(pNumThreads,
 				setupBlacklist(new BingSearchEngine(BingSearchEngine.AUTH_KEY)), journal);
 
 		//We'll limit our downloads to 5 every 1 sec
@@ -166,7 +171,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 
 	public void downloadFiltered(String pStemPath, Filter<List<List<String>>> pFilter) throws Exception {
-		try(QueryThread<String> receiver=setupQuery(JOURNAL);
+		try(QueryThread<String> receiver=setupQuery(1,JOURNAL);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);							
 				) {
 			ExpansionDistributor<String> dist=ExpansionDistributor.relay(receiver, pFilter);
@@ -179,7 +184,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 			Journal<String,Typed<URL>> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(TEST_JOURNAL, 
 					JournalKeyConverter.SINGLETON, this);
 
-			try(QueryThread<String> receiver=new QueryThread<String>(
+			try(QueryThread<String> receiver=new QueryThread<String>(1,
 					setupBlacklist(new BingSearchEngine(BingSearchEngine.AUTH_KEY)), journal)) {
 				receiver.search(new HttpQuery<String>(pQueryName, pURL));
 			}
@@ -260,7 +265,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 								new JobDelegator<List<List<String>>>(numThreads, new HashTemplate<List<List<String>>>()).filters();
 						for(int t=0; t<numThreads; t++) {
 							try {
-								receiver=downloader.setupQuery(Paths.get(THREAD_JOURNAL_NAME+Integer.toString(t)));
+								receiver=downloader.setupQuery(numThreads, Paths.get(Integer.toString(t)+THREAD_JOURNAL_NAME));
 								receivers.add(receiver);
 							} finally {
 								c.after(receiver);
@@ -280,7 +285,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					int numProcesses=Integer.valueOf(pArgs[lastIdx++]);
 					int modResult=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println("Querying search engine with partitioned queries ("+modResult+"/"+numProcesses+")...");
-					downloader.downloadFiltered(stemPath, new JobDelegator<List<List<String>>>(numProcesses, new HashTemplate<List<List<String>>>()).filter(modResult));
+					downloader.downloadFiltered(stemPath, 
+							new JobDelegator<List<List<String>>>(numProcesses, new HashTemplate<List<List<String>>>()).filter(modResult));
 					break;
 				case RANDOM:
 					if(pArgs.length!=3) {

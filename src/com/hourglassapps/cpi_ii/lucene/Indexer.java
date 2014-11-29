@@ -62,7 +62,6 @@ public class Indexer extends IndexViewer implements AutoCloseable {
 	
 	@Override
 	public void close() throws IOException {
-		Log.i(TAG, "closing index writer");
 		mWriter.close();
 	}
 

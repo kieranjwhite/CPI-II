@@ -93,7 +93,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	}
 	
 	@Override
-	protected int maxQueryLen() {
+	public int maxQueryLen() {
 		int maxLen=TOTAL_QUERY_LEN-(SEARCH_URI_PREFIX.length()+
 				CLOSING_BRACKET.length()+mBlacklistedSites.length()+mBlacklistedPhrases.length()+
 				SEARCH_PATH_SUFFIX.length()+mMaxQueryLenOverhead);

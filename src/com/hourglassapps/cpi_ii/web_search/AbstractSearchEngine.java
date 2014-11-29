@@ -57,13 +57,6 @@ public abstract class AbstractSearchEngine implements RestrictedSearchEngine<Str
 	protected abstract boolean addDisjunction(String pDisjunction) throws UnsupportedEncodingException;
 	
 	/**
-	 * 
-	 * @return maximum length of string that can be send as query to search engine excluding 
-	 * parts of the query such as the path in a URL.
-	 */
-	protected abstract int maxQueryLen();
-	
-	/**
 	 * Determines the actual length of a a query if pDisjunction was be packaged up and <code>add</code>ed.
 	 * @param pQuery
 	 * @return how long pQuery will be when suitably escaped and formatted for sending to the

@@ -8,6 +8,7 @@ import java.util.Set;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Filter;
 import com.hourglassapps.util.Ii;
+import com.hourglassapps.util.Rtu;
 
 /***
  * Intended for the purpose of partitioning work between multiple threads a <code>ConverterReceiver<I></code> instance
@@ -18,10 +19,11 @@ import com.hourglassapps.util.Ii;
  * @param <I>
  */
 public class JobDelegator<I> {
-	private final Converter<Ii<Integer, Integer>, Converter<I, Set<Integer>>> mTemplate;
+	private final FilterTemplate<I> mTemplate;
 	private final int mNumThreads;
-	private Set<Integer> mLastFilters=Collections.emptySet();
-	private I mLastInput=null;
+	
+	private I mLastI;
+	private ThreadFunction mLastTF;
 	
 	public JobDelegator(int pNumThreads, FilterTemplate<I> pTemplate) {
 		if(pNumThreads<=0) {
@@ -44,22 +46,18 @@ public class JobDelegator<I> {
 		return output;
 	}
 
-	public Filter<I> filter(int pFilterNum) {
-		final Converter<I, Set<Integer>> inputMatcher=
-				mTemplate.convert(new Ii<Integer,Integer>(pFilterNum, mNumThreads));
-
-		final Integer fixed=Integer.valueOf(pFilterNum);
-		return new Filter<I>(){
+	public Filter<I> filter(final int pFilterNum) {
+		return new Filter<I>() {
 
 			@Override
 			public boolean accept(I pArg) {
-				if(pArg!=mLastInput && !pArg.equals(mLastInput)) {
-					mLastFilters=inputMatcher.convert(pArg);
-					mLastInput=pArg;
+				if(!Rtu.safeEq(mLastI, pArg)) {
+					mLastTF=mTemplate.convert(pArg);
+					mLastI=pArg;
 				}
-				return mLastFilters.contains(fixed);
+				return mLastTF.accept(pFilterNum, mNumThreads);
 			}
-
+			
 		};
 	}
 }

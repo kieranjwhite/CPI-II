@@ -47,7 +47,8 @@ public class DeferredZeroCopyConsumer extends ZeroCopyConsumer<File> {
 				//Event if this happens don't reject deferred as that would abort entire query
 				Log.e(TAG, Log.esc("Download failed: "+mDeferred+" http reponse: "+response.getStatusLine().getStatusCode()));
 			} else {
-				Log.i(TAG, Log.esc("Resolved: "+mDeferred));						
+				//Log.i(TAG, Log.esc("Resolved: "+mDeferred));
+				//System.out.print('.');
 			}
 			mDeferred.resolve(result(response));
 		} catch(Exception e) {

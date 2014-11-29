@@ -1,15 +1,11 @@
 package com.hourglassapps.cpi_ii.web_search;
 
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,18 +18,17 @@ import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.Typed;
 
 public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionReceiver<String> {
-	final static String TAG=QueryThread.class.getName();
-	
+	private final static String TAG=QueryThread.class.getName();
+	private static int NAME=0;
 	private final List<List<String>> mDisjunctions=new ArrayList<List<String>>();
-	private final PipedInputStream mIn=new PipedInputStream();
-	private final DataOutputStream mOut=new DataOutputStream(new BufferedOutputStream(new PipedOutputStream(mIn)));
+	private final Deque<List<String>> mInbox=new ArrayDeque<>();
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
 	private final SearchEngine<List<String>, K, URL, URL> mQ;	
 	private final Journal<K,Typed<URL>> mJournal;
 	private Throttle mThrottle=Throttle.NULL_THROTTLE;
 	
-	public QueryThread(SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,Typed<URL>> pJournal) throws IOException {
-		super("query");
+	public QueryThread(int pNumThreads, SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,Typed<URL>> pJournal) throws IOException {
+		super("query "+NAME++);
 		mQ=pQ;
 		mJournal=pJournal;
 	}
@@ -56,39 +51,51 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 			source=new TypedLink(link);
 			mJournal.addNew(source);
 		}
+		Log.i(TAG, "committing: "+pQuery.uniqueName()+" tid: "+Thread.currentThread().getId());
 		mJournal.commit(pQuery.uniqueName());		
+	}
+	
+	private synchronized List<String> unshift() {
+		List<String> disjunctions=null;
+		while((disjunctions=mInbox.pollFirst())==null) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+			}
+		}
+		return disjunctions; 
+	}
+	
+	private synchronized void push(List<String> pDisjunctions) {
+		mInbox.addLast(pDisjunctions);
+		notify();
 	}
 	
 	@Override
 	public void run() {
-		try (DataInputStream in=new DataInputStream(mIn)){
-			List<String> disjunctions=new ArrayList<>();
+		try {
 			boolean skipped=false;
+			List<String> disjunctions=unshift();
 			while(true) {
-				int numDisjunctions=in.readInt();
-				for(int i=0; i<numDisjunctions; i++) {
-					disjunctions.add(in.readUTF());
-				}
-
+				Log.i(TAG, "query tid: "+Thread.currentThread().getId()+" "+disjunctions.toString());
 				Query<K,URL> query=mQ.formulate(disjunctions);
 				K name=query.uniqueName();
 				if(!mJournal.addExisting(name)) {
 					skipped=false;
 					search(query);
 				} else {
+					Log.i(TAG, "skipping: "+name+" tid: "+Thread.currentThread().getId());
 					if(!skipped) {
 						System.out.println("Skipping over work done...");
 						skipped=true;
 					}
 				}
-
-				disjunctions.clear();
+				disjunctions=unshift();
 			}
-		} catch(EOFException e) {
-			Log.i(TAG, "quitting thread");
 		} catch(Throwable e) {
 			Log.e(TAG, e);
-			System.exit(-1); //TODO find out why this is necessary in order to quit process immediately. Surely the closing of in would cause main thread to generate a fatal exception
+		} finally {
+			Log.i(TAG, "Quitting query thread: "+Thread.currentThread().getId());
 		}
 	}
 
@@ -105,41 +112,32 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 		}
 		return allJoined;
 	}
-	
+
 	@Override
 	public void onGroupDone(int pNumExpansions) {
 		try {
-			Collections.sort(mDisjunctions, ExpansionComparator.NGRAM_PRIORITISER);
-			List<String> joinedDisjunctions=concat(mDisjunctions);
 			if(mThrower.fallThrough()) {
 				return;
 			}
-			mOut.writeInt(joinedDisjunctions.size());
-			for(String dis: joinedDisjunctions) {
-				mOut.writeUTF(dis);
-			}
-		} catch (IOException e) {
-			mThrower.ctch(e);
+			Collections.sort(mDisjunctions, ExpansionComparator.NGRAM_PRIORITISER);
+			List<String> joinedDisjunctions=concat(mDisjunctions);
+			push(joinedDisjunctions);
+		} finally {
+			mDisjunctions.clear();
 		}
-		mDisjunctions.clear();
 	}
 	
 	@Override
 	public void close() throws Exception {
 		try {
-			mOut.close();
+			join();				
 		} finally {
 			try {
-				join();				
+				mThrower.close();					
 			} finally {
-				try {
-					mThrower.close();					
-				} finally {
-					mQ.close();					
-				}
+				mQ.close();					
 			}
 		}
-
 	}
 	
 }

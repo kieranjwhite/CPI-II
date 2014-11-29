@@ -1,17 +1,31 @@
 package com.hourglassapps.threading;
 
-import com.hourglassapps.util.Filter;
+import java.util.Random;
 
-public class HashTemplate<I> extends AbstractFilterTemplate<I> {
+import com.hourglassapps.util.Log;
 
+public class HashTemplate<I> implements FilterTemplate<I> {
+	private final static String TAG=HashTemplate.class.getName();
+	private final Random mRng=new Random();
+	//private int mLines=0;
+	
 	@Override
-	public Filter<I> filter(final int pFilterNumber, final int pTotal) {
-		return new Filter<I>() {
-
+	public ThreadFunction convert(final I pIn) {
+		final int hash=pIn.hashCode();
+		return new ThreadFunction() {
 			@Override
-			public boolean accept(I pArg) {
-				int hash=pArg.hashCode();
-				return (hash % pTotal)==pFilterNumber;
+			public boolean accept(int pTid, int pNumThreads) {
+				mRng.setSeed(hash);
+				int tidResponsible=mRng.nextInt(pNumThreads);
+
+				boolean accepted=tidResponsible==pTid;
+				/*
+				if(accepted && mLines<500) {
+					Log.i(TAG, "accepted for "+pTid+" "+pIn.toString());
+					mLines++;
+				}
+				*/
+				return accepted;
 			}
 			
 		};

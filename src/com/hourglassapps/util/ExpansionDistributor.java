@@ -8,7 +8,7 @@ public class ExpansionDistributor<T> implements ExpansionReceiver<T> {
 	private final static String TAG=ExpansionReceiver.class.getName();
 	private final List<ExpansionReceiver<T>> mReceivers;
 	private final List<Filter<List<List<T>>>> mFilters;
-	private final List<List<T>> mAllExpansions=new ArrayList<>();
+	private List<List<T>> mAllExpansions=new ArrayList<>();
 	
 	public ExpansionDistributor(
 			List<Ii<ExpansionReceiver<T>, Filter<List<List<T>>>>> pReceiverFilters) {
@@ -25,7 +25,7 @@ public class ExpansionDistributor<T> implements ExpansionReceiver<T> {
 	
 	@Override
 	public void onExpansion(List<T> pExpansions) {
-		mAllExpansions.add(pExpansions);
+		mAllExpansions.add(new ArrayList<T>(pExpansions));
 	}
 
 	@Override
@@ -35,6 +35,7 @@ public class ExpansionDistributor<T> implements ExpansionReceiver<T> {
 		if(mFilters==null) {
 			for(List<T> expansions: unmodifiableExpansions) {
 				mReceivers.get(i).onExpansion(expansions);
+				i++;
 			}
 			mReceivers.get(i).onGroupDone(mAllExpansions.size());				
 		} else {
@@ -48,6 +49,6 @@ public class ExpansionDistributor<T> implements ExpansionReceiver<T> {
 				i++;
 			}
 		}
-		mAllExpansions.clear();
+		mAllExpansions=new ArrayList<>();
 	}	
 }
