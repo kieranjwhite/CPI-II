@@ -9,7 +9,14 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
+
 import com.hourglassapps.persist.Journal;
+import com.hourglassapps.threading.Consumer;
+import com.hourglassapps.util.AsyncExpansionReceiver;
+import com.hourglassapps.util.Closer;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.ExpansionReceiver;
 import com.hourglassapps.util.Log;
@@ -17,20 +24,24 @@ import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.Typed;
 
-public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionReceiver<String> {
+public class QueryThread<K> extends Thread implements AutoCloseable, AsyncExpansionReceiver<String,K>, Consumer<List<List<String>>> {
 	private final static String TAG=QueryThread.class.getName();
 	private static int NAME=0;
 	private final List<List<String>> mDisjunctions=new ArrayList<List<String>>();
-	private final Deque<List<String>> mInbox=new ArrayDeque<>();
+	private final Deque<List<List<String>>> mInbox=new ArrayDeque<>();
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
 	private final SearchEngine<List<String>, K, URL, URL> mQ;	
 	private final Journal<K,Typed<URL>> mJournal;
 	private Throttle mThrottle=Throttle.NULL_THROTTLE;
+	private final Deferred<Void, IOException, K> mDeferred=new DeferredObject<>();
+	private boolean mRunning=true;
+	private Closer mCloser=new Closer();
 	
 	public QueryThread(int pNumThreads, SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,Typed<URL>> pJournal) throws IOException {
 		super("query "+NAME++);
 		mQ=pQ;
 		mJournal=pJournal;
+		mCloser.after(mJournal).after(mQ).after(mThrower);
 	}
 	
 	public QueryThread<K> setThrottle(Throttle pThrottle) {
@@ -51,12 +62,12 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 			source=new TypedLink(link);
 			mJournal.addNew(source);
 		}
-		Log.i(TAG, "committing: "+pQuery.uniqueName()+" tid: "+Thread.currentThread().getId());
+		//Log.i(TAG, "committing: "+pQuery.uniqueName()+" tid: "+Thread.currentThread().getId());
 		mJournal.commit(pQuery.uniqueName());		
 	}
 	
-	private synchronized List<String> unshift() {
-		List<String> disjunctions=null;
+	private synchronized List<List<String>> unshift() {
+		List<List<String>> disjunctions=null;
 		while((disjunctions=mInbox.pollFirst())==null) {
 			try {
 				wait();
@@ -66,8 +77,9 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 		return disjunctions; 
 	}
 	
-	private synchronized void push(List<String> pDisjunctions) {
-		mInbox.addLast(pDisjunctions);
+	@Override
+	public synchronized void push(List<List<String>> pDisjunctions) {
+		mInbox.addLast(new ArrayList<>(pDisjunctions));
 		notify();
 	}
 	
@@ -75,22 +87,24 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 	public void run() {
 		try {
 			boolean skipped=false;
-			List<String> disjunctions=unshift();
-			while(true) {
-				Log.i(TAG, "query tid: "+Thread.currentThread().getId()+" "+disjunctions.toString());
+			List<List<String>> booleanQuery=unshift();
+			List<String> disjunctions=concat(booleanQuery);
+			while(runnable()) {
+				//Log.i(TAG, "query tid: "+Thread.currentThread().getId()+" "+disjunctions.toString());
 				Query<K,URL> query=mQ.formulate(disjunctions);
 				K name=query.uniqueName();
 				if(!mJournal.addExisting(name)) {
 					skipped=false;
 					search(query);
 				} else {
-					Log.i(TAG, "skipping: "+name+" tid: "+Thread.currentThread().getId());
+					//Log.i(TAG, "skipping: "+name+" tid: "+Thread.currentThread().getId());
 					if(!skipped) {
 						System.out.println("Skipping over work done...");
 						skipped=true;
 					}
 				}
-				disjunctions=unshift();
+				mDeferred.notify(name);
+				booleanQuery=unshift();
 			}
 		} catch(Throwable e) {
 			Log.e(TAG, e);
@@ -99,6 +113,14 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 		}
 	}
 
+	private synchronized boolean runnable() {
+		return mRunning || mInbox.size()>0;
+	}
+	
+	private synchronized void quit() {
+		mRunning=false;
+	}
+	
 	@Override
 	public void onExpansion(List<String> pExpansions) {
 		mDisjunctions.add(new ArrayList<String>(pExpansions));
@@ -119,25 +141,35 @@ public class QueryThread<K> extends Thread implements AutoCloseable, ExpansionRe
 			if(mThrower.fallThrough()) {
 				return;
 			}
-			Collections.sort(mDisjunctions, ExpansionComparator.NGRAM_PRIORITISER);
-			List<String> joinedDisjunctions=concat(mDisjunctions);
-			push(joinedDisjunctions);
+			push(mDisjunctions);
 		} finally {
 			mDisjunctions.clear();
 		}
 	}
-	
+
 	@Override
 	public void close() throws Exception {
 		try {
-			join();				
-		} finally {
 			try {
-				mThrower.close();					
+				quit();
+				join();
 			} finally {
-				mQ.close();					
+				try {
+					mCloser.close();
+				} finally {
+					mJournal.close();
+					mDeferred.resolve(null);
+				}
 			}
+		} catch(Exception e) {
+			mDeferred.reject(null);
+			throw e;
 		}
+	}
+
+	@Override
+	public Promise<Void, IOException, K> promise() {
+		return mDeferred;
 	}
 	
 }

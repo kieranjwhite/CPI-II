@@ -131,4 +131,8 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 		mIndex.wipe();
 		newTrans();
 	}
+
+	@Override
+	public void close() {
+	}
 }

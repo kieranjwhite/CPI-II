@@ -120,11 +120,7 @@ public class TextContentReaderFactory implements FileReaderFactory {
 		return leaf(pFile)!=null;
 	}
 	
-	@Override
-	public Reader reader(Path pFile) throws IOException {
-		if(!indexable(pFile)) {
-			return null;
-		}
+	protected Reader readerAlways(Path pFile) throws IOException {
 		try(InputStream in=new FileInputStream(pFile.toFile())) {
 			if(mSpecifyTypes) {
 				return new TikaReader(in, type(pFile));
@@ -133,6 +129,14 @@ public class TextContentReaderFactory implements FileReaderFactory {
 			}
 		} catch (TikaException e) {
 			throw new IOException(e);
+		}		
+	}
+	
+	@Override
+	public Reader reader(Path pFile) throws IOException {
+		if(!indexable(pFile)) {
+			return null;
 		}
+		return readerAlways(pFile);
 	}
 }

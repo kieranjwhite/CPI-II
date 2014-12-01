@@ -39,4 +39,8 @@ public class FileJournal<K,C,S extends ReadableByteChannel> extends AbstractFile
 			out.transferFrom(channel, 0, Long.MAX_VALUE);
 		}
 	}
+
+	@Override
+	public void close() {
+	}
 }

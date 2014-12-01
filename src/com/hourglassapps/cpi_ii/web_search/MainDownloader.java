@@ -24,11 +24,14 @@ import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.http.nio.client.methods.HttpAsyncMethods;
 import org.apache.http.nio.client.methods.ZeroCopyConsumer;
 import org.jdeferred.Deferred;
+import org.jdeferred.ProgressCallback;
 import org.jdeferred.Promise;
 
 import com.hourglassapps.cpi_ii.CPIUtils;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
+import com.hourglassapps.cpi_ii.MainIndexDownloaded;
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
+import com.hourglassapps.cpi_ii.lucene.IndexingThread;
 import com.hourglassapps.cpi_ii.web_search.bing.BingSearchEngine;
 import com.hourglassapps.persist.DeferredFileJournal;
 import com.hourglassapps.persist.Journal;
@@ -36,6 +39,7 @@ import com.hourglassapps.persist.NullJournal;
 import com.hourglassapps.threading.JobDelegator;
 import com.hourglassapps.threading.HashTemplate;
 import com.hourglassapps.threading.RandomTemplate;
+import com.hourglassapps.util.AsyncExpansionReceiver;
 import com.hourglassapps.util.Closer;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
@@ -52,6 +56,7 @@ import com.hourglassapps.util.URLUtils;
 
 public class MainDownloader implements AutoCloseable, Downloader<URL,ContentTypeSourceable> {
 	private final static String TAG=MainDownloader.class.getName();
+	private final static Converter<String,String> KEY_CONVERTER=JournalKeyConverter.SINGLETON;
 	private final static String JOURNAL_NAME="journal";
 	private final static Path JOURNAL=Paths.get(JOURNAL_NAME);
 	private final static String THREAD_JOURNAL_NAME='_'+JOURNAL_NAME;
@@ -157,12 +162,9 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 
 	}
 	
-	public QueryThread<String> setupQuery(int pNumThreads, Path pJournalDir) throws Exception {
-		Journal<String,Typed<URL>> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(
-				pJournalDir, JournalKeyConverter.SINGLETON, this);
-
+	public QueryThread<String> setupQuery(int pNumThreads, Journal<String,Typed<URL>> pJournal) throws Exception {
 		QueryThread<String> receiver=new QueryThread<String>(pNumThreads,
-				setupBlacklist(new BingSearchEngine(BingSearchEngine.AUTH_KEY)), journal);
+				setupBlacklist(new BingSearchEngine(BingSearchEngine.AUTH_KEY)), pJournal);
 
 		//We'll limit our downloads to 5 every 1 sec
 		receiver.setThrottle(new Throttle(5, 1, TimeUnit.SECONDS));
@@ -171,10 +173,13 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 
 	public void downloadFiltered(String pStemPath, Filter<List<List<String>>> pFilter) throws Exception {
-		try(QueryThread<String> receiver=setupQuery(1,JOURNAL);
-				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);							
+		Journal<String,Typed<URL>> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(
+				JOURNAL, KEY_CONVERTER, this);
+
+		try(QueryThread<String> receiver=setupQuery(1,journal);
+				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
+				ExpansionDistributor<String,String> dist=ExpansionDistributor.relay(receiver, pFilter, ExpansionComparator.NGRAM_PRIORITISER);
 				) {
-			ExpansionDistributor<String> dist=ExpansionDistributor.relay(receiver, pFilter);
 			CPIUtils.listAllTokenExpansions(index, pStemPath, dist);
 		}		
 	}
@@ -258,24 +263,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					stemPath=pArgs[lastIdx++];
 					int numThreads=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println("Querying search engine with "+numThreads+" threads...");
-					try(Closer c=new Closer()) {
-						QueryThread<String> receiver=null;
-						List<ExpansionReceiver<String>> receivers=new ArrayList<>();
-						List<Filter<List<List<String>>>> filters=
-								new JobDelegator<List<List<String>>>(numThreads, new HashTemplate<List<List<String>>>()).filters();
-						for(int t=0; t<numThreads; t++) {
-							try {
-								receiver=downloader.setupQuery(numThreads, Paths.get(Integer.toString(t)+THREAD_JOURNAL_NAME));
-								receivers.add(receiver);
-							} finally {
-								c.after(receiver);
-							}
-						}
-						try(IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX)) {
-							ExpansionDistributor<String> dist=new ExpansionDistributor<String>(Ii.zip(receivers, filters));
-							CPIUtils.listAllTokenExpansions(index, stemPath, dist);
-						}
-					}
+					downloader.downloadAndIndex(stemPath, numThreads);
 					break;
 				case PARTITION:
 					if(pArgs.length!=4) {
@@ -298,7 +286,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					//downloader.downloadFiltered(stemPath, 
 					//		new ConverterReceiver<List<List<String>>>(new RandomConverter<List<List<String>>>(seed, 0.0015385)).filter());
 					downloader.downloadFiltered(stemPath, 
-							new JobDelegator<List<List<String>>>(1, new RandomTemplate<List<List<String>>>(seed, 0.0046155)).filter());
+							new JobDelegator<List<List<String>>>(1, new RandomTemplate<List<List<String>>>(1, seed, 0.0046155)).filter());
 					break;
 				case ONE:
 					if(pArgs.length!=2) {
@@ -331,6 +319,52 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 			System.exit(-1);
 		} catch(Exception e) {
 			Log.e(TAG, e);
+		}
+	}
+
+	private void downloadAndIndex(String stemPath, int numThreads) throws Exception {
+		//TODO fix leak
+		
+		try(
+				final IndexingThread indexer=new IndexingThread(Paths.get(MainIndexDownloaded.INDEX_PATH), numThreads); 
+				Closer c=new Closer();
+				) {
+			
+			indexer.start();
+			QueryThread<String> receiver=null;
+			final List<AsyncExpansionReceiver<String, String>> receivers=new ArrayList<>();
+			final List<DeferredFileJournal<String,URL,ContentTypeSourceable>> journals=new ArrayList<>();
+			List<Filter<List<List<String>>>> filters=
+					new JobDelegator<List<List<String>>>(numThreads, new HashTemplate<List<List<String>>>()).filters();
+			for(int t=0; t<numThreads; t++) {
+				try {
+					DeferredFileJournal<String,URL,ContentTypeSourceable> journal=
+							new DeferredFileJournal<String,URL,ContentTypeSourceable>(
+									Paths.get(Integer.toString(t)+THREAD_JOURNAL_NAME), KEY_CONVERTER, this);
+					receiver=setupQuery(numThreads, journal);
+					journals.add(journal);
+					receivers.add(receiver);
+				} finally {
+					c.after(receiver);
+				}
+			}
+			
+			try(IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
+				ExpansionDistributor<String,String> dist=
+						new ExpansionDistributor<String,String>(
+								Ii.zip(receivers, filters), 
+								ExpansionComparator.NGRAM_PRIORITISER);
+					) {
+				dist.promise().progress(new ProgressCallback<Ii<Integer,String>>(){
+
+					@Override
+					public void onProgress(
+							Ii<Integer, String> pTidDir) {
+						indexer.push(new QueryRecord<String>(pTidDir.fst(), pTidDir.snd(), journals.get(pTidDir.fst()).path(KEY_CONVERTER.convert(pTidDir.snd()))));
+					}
+				});
+				CPIUtils.listAllTokenExpansions(index, stemPath, dist);
+			}
 		}
 	}
 

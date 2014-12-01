@@ -9,15 +9,14 @@ import java.util.Map;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 
 import com.hourglassapps.cpi_ii.CPIFields;
 import com.hourglassapps.cpi_ii.MainIndexConductus;
 import com.hourglassapps.cpi_ii.lucene.AbstractTermFreqMapper;
 import com.hourglassapps.cpi_ii.lucene.FieldVal;
+import com.hourglassapps.cpi_ii.lucene.FoundGenerator;
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
-import com.hourglassapps.cpi_ii.lucene.ResultRelayer;
 import com.hourglassapps.cpi_ii.lucene.TermHandler;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
@@ -66,29 +65,12 @@ public class ExpansionComparator implements Comparator<List<String>> {
 		return term2Freq;
 	}
 	
-	private static class FoundRelayer implements ResultRelayer {
-		public boolean mFound=false;
-		
-		@Override
-		public void run(IndexReader pReader, TopDocs pResults)
-				throws IOException {
-			assert(pResults.scoreDocs.length<=1);
-			if(pResults.scoreDocs.length>=1) {
-				mFound=true;
-			}
-		}
-		
-		public boolean found() {
-			return mFound;
-		}
-	}
-
 	private boolean presentInCollection(List<String> pToken) throws IOException {
 		if(pToken.size()>=1) {
 			String tokenJoined=Rtu.join(pToken, " ");
-			FoundRelayer relay=new FoundRelayer();
+			FoundGenerator relay=new FoundGenerator();
 			IndexViewer.interrogate(mReader, mSearcher, CPIFields.CONTENT.fieldVal(), tokenJoined, 1, relay);
-			return relay.found();
+			return relay.result();
 		} else {
 			return true;
 		}

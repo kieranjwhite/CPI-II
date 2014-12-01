@@ -7,4 +7,6 @@ import org.jdeferred.Promise;
 import com.hourglassapps.util.Typed;
 
 public interface Journal<K,A> extends Store<K,A,K> {
+	@Override
+	public void commit(K pKey) throws IOException;
 }

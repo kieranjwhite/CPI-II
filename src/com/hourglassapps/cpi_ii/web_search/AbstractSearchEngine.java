@@ -25,6 +25,12 @@ public abstract class AbstractSearchEngine implements RestrictedSearchEngine<Str
 		return new HttpQuery<String>(uniqueName, queryRemainder.fst());
 	}
 
+	/**
+	 * 
+	 * @return maximum length of string that can be send as query to search engine excluding 
+	 * parts of the query such as the path in a URL.
+	 */
+	public abstract int maxQueryLen();
 
 	@Override
 	public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {
@@ -90,7 +96,8 @@ public abstract class AbstractSearchEngine implements RestrictedSearchEngine<Str
 	 */
 	protected abstract URL uri() throws MalformedURLException;
 	
-	protected String uniqueName(List<String> pDisjunctions) {
+	@Override
+	public String uniqueName(List<String> pDisjunctions) {
 		if(pDisjunctions.size()>0) {
 			return pDisjunctions.get(0);
 		} else {

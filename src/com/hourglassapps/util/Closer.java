@@ -1,5 +1,6 @@
 package com.hourglassapps.util;
 
+import java.io.Closeable;
 import java.util.Deque;
 import java.util.LinkedList;
 

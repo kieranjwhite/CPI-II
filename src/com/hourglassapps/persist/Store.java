@@ -2,7 +2,7 @@ package com.hourglassapps.persist;
 
 import java.io.IOException;
 
-public interface Store<K,A,C> {
+public interface Store<K,A,C> extends AutoCloseable {
 	/**
 	 * Adds existing entry to Store
 	 * @param pKey entry to add

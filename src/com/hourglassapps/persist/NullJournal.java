@@ -22,4 +22,8 @@ public class NullJournal<K,C> implements Journal<K,C> {
 	@Override
 	public void reset() throws IOException {
 	}
+
+	@Override
+	public void close() {
+	}
 }

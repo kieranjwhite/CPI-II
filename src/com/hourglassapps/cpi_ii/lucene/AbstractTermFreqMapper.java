@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.util.BytesRef;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.SortedMultiMap;
@@ -25,7 +28,6 @@ public abstract class AbstractTermFreqMapper implements TermHandler {
 		} catch (IOException e) {
 			Log.e(TAG, e);
 		}
-		
 	}
 	
 	public abstract void add(String pTerm, Long pFreq);

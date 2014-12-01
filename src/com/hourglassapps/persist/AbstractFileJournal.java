@@ -75,6 +75,10 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>>
 		mTrail.clear();
 	}
 
+	public Path path(String pCompletedName) {
+		return mCompletedDir.resolve(pCompletedName);
+	}
+	
 	protected static Path partialDir(Path pParent) {
 		return pParent.resolve(PARTIAL_DIR_NAME);
 	}

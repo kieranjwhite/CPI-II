@@ -1,6 +1,9 @@
 package com.hourglassapps.util;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.jdeferred.Promise;
 
 public interface ExpansionReceiver<O> {
 	/**

@@ -252,4 +252,8 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 		super.reset();
 	}
 
+	@Override
+	public void close() {
+	}
+
 }

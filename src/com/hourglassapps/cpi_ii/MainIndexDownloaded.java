@@ -23,7 +23,7 @@ import com.hourglassapps.util.Log;
 
 public class MainIndexDownloaded {
 	private final static String TAG=MainIndexDownloaded.class.getName();
-	private final static String INDEX_PATH="downloaded_index";
+	public final static String INDEX_PATH="downloaded_index";
 
 	public static void main(String[] pDirs) throws IOException {
 		Thread closer;
