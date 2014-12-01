@@ -49,7 +49,11 @@ public abstract class AbstractLuceneJournal<C> implements Journal<String, C> {
 		mWriter=mIndexer.writer();
 		mReader=DirectoryReader.open(pIndexer.dir());
 	}
-
+	
+	protected Indexer indexer() {
+		return mIndexer;
+	}
+	
 	@Override
 	public void close() throws IOException {
 		mReader.close();

@@ -18,13 +18,7 @@ public class HashTemplate<I> implements FilterTemplate<I> {
 				mRng.setSeed(hash);
 				int tidResponsible=mRng.nextInt(pNumThreads);
 
-				boolean accepted=tidResponsible==pTid;
-				/*
-				if(accepted && mLines<500) {
-					Log.i(TAG, "accepted for "+pTid+" "+pIn.toString());
-					mLines++;
-				}
-				*/
+				boolean accepted=(tidResponsible==pTid);
 				return accepted;
 			}
 			

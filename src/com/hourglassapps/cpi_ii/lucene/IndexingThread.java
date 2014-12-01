@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.document.Document;
 
 import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
 import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
@@ -30,7 +31,7 @@ import com.hourglassapps.util.Log;
 
 public class IndexingThread extends Thread implements Consumer<QueryRecord<String>>, AutoCloseable {
 	private final static String TAG=IndexingThread.class.getName();
-	private final static int NUM_SKIPS_BEFORE_COMMIT=300; //a commit is slow so we don't do it for each query
+	private final static int NUM_SKIPS_BEFORE_COMMIT=200; //a commit is slow so we don't do it for each query
 	private final Deque<QueryRecord<String>> mInbox=new ArrayDeque<>();
 	private final Closer mCloser=new Closer();
 	private final List<Journal<String,Path>> mJournals=new ArrayList<>();
@@ -70,9 +71,9 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 				@Override
 				public void run() {
 					try {
-						indexer.close();
-					} catch (IOException e) {
-						Log.e(TAG, e);
+						close();
+					} catch (Exception e) {
+						Log.e(TAG,e);
 					}
 				}
 
@@ -87,22 +88,6 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 		} catch(IOException|RuntimeException e) {
 			mCloser.close();
 			throw e;
-		}
-	}
-	
-	private static class DownloadedIndexJournal extends AbstractLuceneJournal<Path> {
-		public DownloadedIndexJournal(Indexer pIndexer) throws IOException {
-			super(pIndexer);
-		}
-		
-		@Override
-		public void addNew(Path pContent) throws IOException {
-			
-		}
-		
-		@Override
-		public void reset() {
-			throw new UnsupportedOperationException();
 		}
 	}
 	

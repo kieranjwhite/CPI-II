@@ -323,8 +323,6 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 
 	private void downloadAndIndex(String stemPath, int numThreads) throws Exception {
-		//TODO fix leak
-		
 		try(
 				final IndexingThread indexer=new IndexingThread(Paths.get(MainIndexDownloaded.INDEX_PATH), numThreads); 
 				Closer c=new Closer();

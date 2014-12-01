@@ -65,7 +65,7 @@ public class LuceneVisitor implements FileVisitor<Path> {
 			BasicFileAttributes arg1) throws IOException {
 		return FileVisitResult.CONTINUE;
 	}
-
+	/*
 	private boolean indexed(Path pPath) throws IOException {
 		String parent=pPath.getParent().getFileName().toString();
 		if(mLastParent==null || !parent.equals(mLastParent)) {
@@ -77,7 +77,7 @@ public class LuceneVisitor implements FileVisitor<Path> {
 		return mLastFound;
 		
 	}
-	
+
 	private boolean indexedFullCheck(Path pPath) throws IOException {
 		String parent=pPath.getParent().getFileName().toString();
 		ResultGenerator<Boolean> resGen=new ResultGenerator<Boolean>() {
@@ -109,12 +109,12 @@ public class LuceneVisitor implements FileVisitor<Path> {
 			Document complete=new Document();
 			Field query=POSITION.field(mLastParent);
 			complete.add(query);
-			/*
-			 * Note (kw) We always call mWriter.addDocument / mWriter.updateDocument
-			 * on the first new query found, even though that actually marks the previous
-			 * query as being complete -- something we had previously done and didn't need
-			 * to repeat. That's okay though.  
-			 */
+			
+			// Note (kw) We always call mWriter.addDocument / mWriter.updateDocument
+			// on the first new query found, even though that actually marks the previous
+			// query as being complete -- something we had previously done and didn't need
+			// to repeat. That's okay though.  
+			 
 			if (mWriter.getConfig().getOpenMode() == OpenMode.CREATE) {
 				// New index, so we just add the document (no old document can be there):
 				mWriter.addDocument(complete);
@@ -129,7 +129,7 @@ public class LuceneVisitor implements FileVisitor<Path> {
 			mLastParent=parent;
 		}
 	}
-
+	*/
 	/**
 	 * kw 25/11/2014: copied from org.apache.lucene.demo.IndexFiles
 	 * 
@@ -151,7 +151,8 @@ public class LuceneVisitor implements FileVisitor<Path> {
 	public FileVisitResult visitFile(Path pPath, BasicFileAttributes arg1)
 			throws IOException {
 		try {
-			if(mPath2Reader.indexable(pPath) && !indexed(pPath)) {
+			//if(mPath2Reader.indexable(pPath) && !indexed(pPath)) {
+			if(mPath2Reader.indexable(pPath)) {
 				Reader inner=mPath2Reader.reader(pPath);
 				assert inner!=null;
 				try(Reader reader=new BufferedReader(inner)) {
@@ -173,17 +174,8 @@ public class LuceneVisitor implements FileVisitor<Path> {
 					// If that's not the case searching for special characters will fail.
 					doc.add(CONTENT.field(reader));
 
-					if (mWriter.getConfig().getOpenMode() == OpenMode.CREATE) {
-						// New index, so we just add the document (no old document can be there):
-						System.out.println("adding " + pPath);
-						mWriter.addDocument(doc);
-					} else {
-						// Existing index (an old copy of this document may have been indexed) so 
-						// we use updateDocument instead to replace the old one matching the exact 
-						// path, if present:
-						System.out.println("updating " + pathStr);
-						mWriter.updateDocument(PATH.term(pathStr), doc);
-					}
+					System.out.println("updating " + pathStr);
+					mWriter.updateDocument(PATH.term(pathStr), doc);
 
 				}
 			}
