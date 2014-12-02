@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ import com.hourglassapps.util.URLUtils;
 public class MainDownloader implements AutoCloseable, Downloader<URL,ContentTypeSourceable> {
 	private final static String TAG=MainDownloader.class.getName();
 	private final static Converter<String,String> KEY_CONVERTER=JournalKeyConverter.SINGLETON;
+	private final static Path DOCUMENT_DIR=Paths.get("documents");
 	private final static String JOURNAL_NAME="journal";
 	private final static Path JOURNAL=Paths.get(JOURNAL_NAME);
 	private final static String THREAD_JOURNAL_NAME='_'+JOURNAL_NAME;
@@ -262,7 +264,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					}
 					stemPath=pArgs[lastIdx++];
 					int numThreads=Integer.valueOf(pArgs[lastIdx++]);
-					System.out.println("Querying search engine with "+numThreads+" threads...");
+					System.out.println(numThreads+" thread download beginning...");
 					downloader.downloadAndIndex(stemPath, numThreads);
 					break;
 				case PARTITION:
@@ -323,7 +325,14 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 
 	private void downloadAndIndex(String stemPath, int numThreads) throws Exception {
-		try(final IndexingThread indexer=new IndexingThread(Paths.get(MainIndexDownloaded.INDEX_PATH), numThreads)) {
+		if(!Files.exists(DOCUMENT_DIR)) {
+			Files.createDirectories(DOCUMENT_DIR);
+		} else {
+			if(!Files.isDirectory(DOCUMENT_DIR) || !Files.isWritable(DOCUMENT_DIR) || !Files.isReadable(DOCUMENT_DIR)) {
+				throw new IOException(DOCUMENT_DIR.toString()+" must be a readable/writeable directory");
+			}
+		}
+		try(final IndexingThread indexer=new IndexingThread(DOCUMENT_DIR.resolve(MainIndexDownloaded.INDEX_PATH), numThreads)) {
 			
 			indexer.start();
 			QueryThread<String> receiver=null;
@@ -334,7 +343,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 			for(int t=0; t<numThreads; t++) {
 				DeferredFileJournal<String,URL,ContentTypeSourceable> journal=
 						new DeferredFileJournal<String,URL,ContentTypeSourceable>(
-								Paths.get(Integer.toString(t)+THREAD_JOURNAL_NAME), KEY_CONVERTER, this);
+								DOCUMENT_DIR.resolve(Integer.toString(t)+THREAD_JOURNAL_NAME), KEY_CONVERTER, this);
 				receiver=setupQuery(numThreads, journal);
 				journals.add(journal);
 				receivers.add(receiver);

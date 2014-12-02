@@ -11,8 +11,11 @@ import java.nio.file.Path;
 import com.hourglassapps.cpi_ii.TextContentReaderFactory;
 
 class DownloadedIndexJournal extends AbstractLuceneJournal<Path> {
-	public DownloadedIndexJournal(Indexer pIndexer) throws IOException {
-		super(pIndexer);
+	private final int mTid;
+	
+	public DownloadedIndexJournal(Indexer pIndexer, int pTid) throws IOException {
+		super(pIndexer, (POSITION_TAG+'_')+pTid);
+		mTid=pTid;
 	}
 	
 	@Override

@@ -25,6 +25,7 @@ public abstract class AbstractLuceneJournal<C> implements Journal<String, C> {
 	public final static String POSITION_TAG="position";
 	private final IndexReader mReader;
 	private final IndexWriter mWriter;
+	private final String mTagName;
 	
 	public enum LuceneTransactionFields {
 		DOC_TAG(new FieldVal("tag", false)),
@@ -41,13 +42,19 @@ public abstract class AbstractLuceneJournal<C> implements Journal<String, C> {
 		}
 	}
 
-	public AbstractLuceneJournal(Indexer pIndexer) throws IOException {
+	public AbstractLuceneJournal(Indexer pIndexer, String pTagName) throws IOException {
 		if(pIndexer.writer().getConfig().getOpenMode()==OpenMode.CREATE) {
 			throw new IllegalArgumentException("Index should not be opened in create mode");
 		}
 		mIndexer=pIndexer;
 		mWriter=mIndexer.writer();
+		mWriter.commit();
 		mReader=DirectoryReader.open(pIndexer.dir());
+		if(pTagName==null) {
+			mTagName=pTagName;
+		} else {
+			mTagName=POSITION_TAG;
+		}
 	}
 	
 	protected Indexer indexer() {
@@ -80,7 +87,7 @@ public abstract class AbstractLuceneJournal<C> implements Journal<String, C> {
 			}
 
 		};
-		mIndexer.interrogate(mReader, DOC_TAG, POSITION_TAG, 1, resGen);
+		mIndexer.interrogate(mReader, DOC_TAG, mTagName, 1, resGen);
 		if(resGen.result()==null) {
 			return false;
 		}
@@ -90,9 +97,9 @@ public abstract class AbstractLuceneJournal<C> implements Journal<String, C> {
 	@Override
 	public void commit(String pKey) throws IOException {
 		Document marker=new Document();
-		marker.add(DOC_TAG.field(POSITION_TAG));
+		marker.add(DOC_TAG.field(mTagName));
 		marker.add(KEY.field(pKey));
-		mWriter.updateDocument(DOC_TAG.term(POSITION_TAG), marker);
+		mWriter.updateDocument(DOC_TAG.term(mTagName), marker);
 		mWriter.addDocument(marker);
 		mWriter.commit();
 	}

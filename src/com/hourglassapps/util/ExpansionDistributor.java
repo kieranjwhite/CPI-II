@@ -76,7 +76,7 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 			}
 			throw e;
 		}
-
+		System.out.println("Generating queries (this will take about 5 mins)...");
 	}
 
 	public static <T extends Comparable<? super T>,O,R extends AsyncExpansionReceiver<T,O>> ExpansionDistributor<T,O> relay(R pReceiver, 
@@ -103,7 +103,9 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 	}
 
 	public void act() {
+
 		Collections.sort(mAllQueryExpansions, mQueryComparator);
+		System.out.println("Retrieving documents...");
 		if(mFilters==null) {
 			for(List<List<T>> query: mAllQueryExpansions) {
 				int i=0;

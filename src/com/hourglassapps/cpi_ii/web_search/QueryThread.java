@@ -27,6 +27,7 @@ import com.hourglassapps.util.Typed;
 public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<String,K>, Consumer<List<List<String>>> {
 	private final static String TAG=QueryThread.class.getName();
 	private static int NAME=0;
+	private final static List<List<String>> TERMINAL_RECORD=Collections.<List<String>>emptyList();
 	private final List<List<String>> mDisjunctions=new ArrayList<List<String>>();
 	private final Deque<List<List<String>>> mInbox=new ArrayDeque<>();
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
@@ -34,7 +35,6 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 	private final Journal<K,Typed<URL>> mJournal;
 	private Throttle mThrottle=Throttle.NULL_THROTTLE;
 	private final Deferred<Void, IOException, K> mDeferred=new DeferredObject<>();
-	private boolean mRunning=true;
 	private Closer mCloser=new Closer();
 	
 	public QueryThread(int pNumThreads, SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,Typed<URL>> pJournal) throws IOException {
@@ -88,7 +88,7 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 		try {
 			boolean skipped=false;
 			List<List<String>> booleanQuery=unshift();
-			while(runnable()) {
+			while(runnable(booleanQuery)) {
 				List<String> disjunctions=concat(booleanQuery);
 				//Log.i(TAG, "query tid: "+Thread.currentThread().getId()+" "+disjunctions.toString());
 				Query<K,URL> query=mQ.formulate(disjunctions);
@@ -113,13 +113,17 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 		}
 	}
 
-	private synchronized boolean runnable() {
-		return mRunning || mInbox.size()>0;
+	private synchronized boolean runnable(List<List<String>> pQuery) {
+		return pQuery!=TERMINAL_RECORD;
 	}
 	
-	private synchronized void quit() {
-		mRunning=false;
-		push(Collections.<List<String>>emptyList());
+	private synchronized void forceQuit() {
+		mInbox.addFirst(TERMINAL_RECORD);
+		notify();
+	}
+
+	private synchronized void quitWhenFinished() {
+		push(TERMINAL_RECORD);
 	}
 	
 	@Override
@@ -152,7 +156,7 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 	public void close() throws Exception {
 		try {
 			try {
-				quit();
+				quitWhenFinished();
 				join();
 			} finally {
 				try {
