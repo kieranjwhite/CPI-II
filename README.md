@@ -50,7 +50,15 @@ grep ../../treebank/perseus_treebank/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]'
 To list all terms and their frequencies in the collection
 =========================================================
 
-java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.MainListIndexTerms > misc/tokens/<some_filename>
+Please ensure that document collection is indexed appropriately with MainIndexCondcutus beforehand. For example you might want to specify a different type of ngram.
+
+This command lists frequencies of stemmed trigrams in indexed document collection.
+
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.MainListIndexTerms --display-freqs > misc/tokens/trigrams_stemmed_freqs.txt
+
+The following lists all ngram (in this case 3-gram) stem groups. All morphological variations in the collection for each term are listed.
+
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:libucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.MainListIndexTerms misc/stem_maps/3grams.dat
 
 -----------------------------------------------------------------
 

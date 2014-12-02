@@ -29,7 +29,6 @@ public class MainListIndexTerms {
 			}
 		}
 
-		
 		try {
 			final IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
 			if(freqs) {

@@ -46,6 +46,8 @@ public class PoemRecord implements Record<Long, String> {
 	private enum Datable { Yes, No };
 	private Datable _datable;
 	private String _no_of_stanzas;
+	private String _refrain_text_3;
+	private final static String BOUNDARY_TEXT=" 0 "; //numerals 
 	
 	@Override
 	public Long id() {
@@ -55,8 +57,18 @@ public class PoemRecord implements Record<Long, String> {
 	@Override
 	public String content() {
 		assert LANG_LATIN.equals(getLanguage());
-		if(_poem_text_3!=null) {
-			return _poem_text_3;
+		if(_poem_text_3!=null || _refrain_text_3!=null) {
+			StringBuilder text=new StringBuilder();
+			if(_poem_text_3!=null) {
+				text.append(_poem_text_3);
+			}
+			if(_poem_text_3!=null && _refrain_text_3!=null) {
+				text.append(BOUNDARY_TEXT);
+			}
+			if(_refrain_text_3!=null) {
+				text.append(_refrain_text_3);
+			}
+			return text.toString();
 		} else {
 			//assert(TEXT_INCIPIT_ONLY.equals(getNoOfStanzas()));
 			return getTitle();
@@ -70,6 +82,10 @@ public class PoemRecord implements Record<Long, String> {
 
 	public void setPoem_text_3(String pArg) {
 		_poem_text_3=pArg;
+	}
+	
+	public void setRefrain_text_3(String pArg) {
+		_refrain_text_3=pArg;
 	}
 	
 	public void setEprintid(long pArg) {

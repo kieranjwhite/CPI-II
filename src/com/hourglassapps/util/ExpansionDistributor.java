@@ -123,8 +123,10 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 				int i=0;
 				List<List<T>> unmodifiableExpansions=Collections.unmodifiableList(query);
 				assert unmodifiableExpansions.size()>0;
+				boolean routed=false;
 				for(AsyncExpansionReceiver<T,O> r: mReceivers) {
 					if(mFilters.get(i).accept(unmodifiableExpansions)) {
+						routed=true;
 						for(List<T> expansions: unmodifiableExpansions) {
 							r.onExpansion(expansions);
 						}
@@ -132,6 +134,7 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 					}
 					i++;
 				}
+				assert routed;
 			}
 		}
 		mAllQueryExpansions.clear();

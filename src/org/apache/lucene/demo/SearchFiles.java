@@ -38,7 +38,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
-import com.hourglassapps.cpi_ii.lucene.IndexingThread;
+import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
 
 /** Simple command-line based search demo. */
 public class SearchFiles {
@@ -93,7 +93,7 @@ public class SearchFiles {
     IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(index)));
     IndexSearcher searcher = new IndexSearcher(reader);
     // :Post-Release-Update-Version.LUCENE_XY:
-    Analyzer analyzer = IndexingThread.analyzer();
+    Analyzer analyzer = StandardLatinAnalyzer.searchAnalyzer();
 
     BufferedReader in = null;
     if (queries != null) {

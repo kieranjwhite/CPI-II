@@ -1,6 +1,5 @@
 package com.hourglassapps.cpi_ii.lucene;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -11,13 +10,9 @@ import java.util.Deque;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 
-import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
 import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
-import com.hourglassapps.cpi_ii.stem.StemRecorderFilter;
-import com.hourglassapps.cpi_ii.stem.StempelRecorderFilter;
 import com.hourglassapps.cpi_ii.web_search.Query;
 import com.hourglassapps.cpi_ii.web_search.QueryRecord;
 import com.hourglassapps.persist.Journal;
@@ -42,20 +37,6 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 	private final List<Ii<Boolean,String>> mCommittableKey;
 	private long mLastLogTime=0;
 	
-	public static Analyzer analyzer() throws IOException {
-		@SuppressWarnings("resource")
-		Analyzer analyser=new StandardLatinAnalyzer(LatinAnalyzer.PERSEUS_STOPWORD_FILE).
-		setStemmer(new StemRecorderFilter.Factory() {
-
-			@Override
-			public StemRecorderFilter inst(TokenStream pInput) throws IOException {
-				return new StempelRecorderFilter(pInput, false, new File("data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out"));
-			}
-
-		});
-		return analyser;
-	}
-	
 	public IndexingThread(Path pIndexDir, int pNumFeederThreads) throws Exception {
 		super("indexer");
 		
@@ -68,7 +49,7 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 		
 		mCommitDecider=new SkipTemplate<String>(pNumFeederThreads, NUM_SKIPS_BEFORE_COMMIT);
 		try {
-			Analyzer analyser=analyzer();
+			Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
 			mCloser.after(analyser);
 			final Indexer indexer=new Indexer(pIndexDir, analyser, false);
 			mCloser.after(indexer);

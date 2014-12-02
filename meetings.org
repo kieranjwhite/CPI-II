@@ -414,7 +414,7 @@
 ******* 0 blacklisted urls
 ****** pro+me+mori
 ******* 0 blacklisted urls
-**** Estimate of download size
+**** Estimate of download size (now superceded by better estimate below)
 ***** Range of 400-600MB
 ****** 400
 ******* ((608/93)*64524)/1024
@@ -445,5 +445,36 @@
 ********** http://comments.gmane.org/gmane.comp.db.cassandra.user/7693
 ****** 309MB to index 298 queries
 ******* Assuming linear growth 65GBs will be required for index
+*** In the end due to unpredictability of Bing I decided against including blacklist in queries submitted to search engine
+**** Especially in light of above examination of 16 queries of 298 where full complement of 100 results were returned
+*** Added file deduplication
+*** Re-indexed CPI collection after I realised I had originally ommitted the refrains
+**** The refrains were listed in the refrain_text_3 field and not with the main body of the text in the poem_text_3 field.
+**** Note each refrain is only listed once -- not after each stanza as might the case if displayed
+***** good -- they won't distort our n-gram frequencies used in generating boolean queries for search engine
+*** New size requirements estimate
+**** Note file deduplication has reduced estimated file size somewhat
+**** 785 queries --- 5.1GB
+**** 65418 queries--- 425GB
+**** + index
+***** 785 queries --- 1.7GB
+***** 65418 --- 142GB
+***** Assuming linear growth.
+***** I expect growth is asymptotic in reality but with a limit that is much larger than our current index size
+****** => eventual index size should be a little smaller
+**** Total size 567GB
+*** New time estimate
+**** Indexing growth rate won't be linear, rather it'll be nlogn
+**** => indexing will take somewhat longer
+**** Assuming log_2 from http://comments.gmane.org/gmane.comp.db.cassandra.user/7693
+**** For download and indexing
+**** 785 queries --- 2.2hrs
+**** 65418 queries --- 184.7hrs linear component broken down as
+***** 162.54 + 22.164 indexing
+****** accounting for log growth
+****** = 164.54 + 36.87
+**** = ~184.7 + 36.87hrs
+**** = 201.41 hrs or 8.39 days assuming other factors don't change
+***** If indexer falls behind downloader to the point where it no longer benefits from file-cache things could slow down dramatically
 
 

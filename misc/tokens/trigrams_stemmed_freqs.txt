@@ -1,9 +1,11 @@
 pater1 et filius1	5
+et in terra1	3
 novus1 rex1 novus1	3
 rex1 rex1 omnis1	3
 superus1 pater1 filius1	3
 a pater1 filius1	2
 ad gaudium1 celestique1	2
+ad honor1 et	2
 alleluia1 rex1 rex1	2
 amen1 dico2 tu1	2
 angelus1 et homo1	2
@@ -17,6 +19,7 @@ celuque1 peto1 martirother	2
 celuque1 terra1 mare1	2
 cesque1 pro nos1	2
 christus1 rex1 glorie	2
+cleruque1 cum populus2	2
 consilium1 vir1 suggeriother	2
 culpque1 do1 homo1	2
 da salus1 gaudium1	2
@@ -32,7 +35,6 @@ do1 simun1 rideo1	2
 et homo1 sum1	2
 et in mors1	2
 et in mundus2	2
-et in terra1	2
 et morior1 mors1	2
 facies1 ad facies1	2
 falsus1 divinitaus1 nullus1	2
@@ -40,6 +42,7 @@ felix1 sum1 qui	2
 filius1 dei de	2
 finis1 quis2 gaudium1	2
 fons misericordi1 tu1	2
+fons1 rigatus quis2	2
 gaudium1 dei pater1	2
 gaudium1 et in	2
 gaudium1 fulgeo1 dies1	2
@@ -99,6 +102,7 @@ per te sum1	2
 pono1 in medius1	2
 possum1 regnum1 dei	2
 post1 hoc exsilium1	2
+post1 pario2 virgo1	2
 prava1 protinus1 consilium1	2
 protinus1 consilium1 vir1	2
 pudicitia1 numquam1 violatas1	2
@@ -118,6 +122,7 @@ rex1 glorie qui	2
 rex1 novus1 lex1	2
 rex1 omnis1 qui	2
 rex1 triclinium1 ave	2
+rigatus quis2 flos	2
 sancio1 parens2 noster1	2
 sed si do1	2
 sedeo1 civitas1 qui1	2
@@ -142,6 +147,7 @@ verbum1 pater1 altus1	2
 veritaus1 solus1 sedeo1	2
 verus1 dei filius1	2
 vetus1 o pono1	2
+virga1 iesseo1 quis2	2
 virgo1 cum sit	2
 virgo1 pario2 filius1	2
 virgo1 plenus1 gratius1	2
@@ -155,6 +161,7 @@ a bonus1 vites1	1
 a brutius2 colo1	1
 a brutius2 noscitur1	1
 a bursa labituor1	1
+a carnis1 deitaus1	1
 a carnis1 numini1	1
 a caulque1 stygiother	1
 a celestque1 domus1	1
@@ -192,6 +199,7 @@ a divineus1 numen1	1
 a divinius1 nuntius1	1
 a divinum1 gratius1	1
 a eia rector1	1
+a et e	1
 a et o	1
 a facies1 contrarie1	1
 a fames1 liberao1	1
@@ -513,6 +521,7 @@ ab hostis1 versutias3	1
 ab humanus1 creatuo1	1
 ab humo cito1	1
 ab humo nomen1	1
+ab idolatris1 sum1	1
 ab ignis1 vorago1	1
 ab ignitas1 romphea	1
 ab ille1 cum	1
@@ -989,6 +998,7 @@ ad gaudium1 nos	1
 ad gaudium1 pario2	1
 ad gaudium1 perducamur1	1
 ad gaudium1 perducat1	1
+ad gaudium1 tityruibersus1	1
 ad gaudium1 verus1	1
 ad gloria1 et	1
 ad gloria1 terrenaus1	1
@@ -1007,7 +1017,6 @@ ad hoc si	1
 ad hoc siluit1	1
 ad homo1 arguments1	1
 ad homo1 sanandother	1
-ad honor1 et	1
 ad honor1 innocentum1	1
 ad honor1 pulso1	1
 ad honor1 salvatorius1	1
@@ -1085,6 +1094,7 @@ ad mensura1 qui	1
 ad miraculuus1 antique1	1
 ad monasteriunoun quasi1	1
 ad mons1 vites1	1
+ad mors1 festinamus	1
 ad mors1 intonsus1	1
 ad mos1 vivo1	1
 ad mundus1 maiestother	1
@@ -1123,10 +1133,13 @@ ad pascuus1 tityribereus1	1
 ad pater1 omnis1	1
 ad pater1 redienss1	1
 ad patrius2 christuque1	1
+ad patrius2 crux1	1
+ad patrius2 quis2	1
 ad patrius2 reverteres1	1
 ad pax1 concurrituntiruo	1
 ad penas1 improperaeo1	1
 ad pepones1 et	1
+ad petre1 latus2	1
 ad pia gaudium1	1
 ad pia supernorum2	1
 ad pium1 indultorem1	1
@@ -1162,11 +1175,13 @@ ad regnum1 sideus1	1
 ad rem conditionintisuo	1
 ad rem vehi1	1
 ad remedis1 canito1	1
+ad res illicitas2	1
 ad res sollicitus1	1
 ad sacer1 ordio1	1
 ad sacrea1 virgo1	1
 ad sacrificiother non	1
 ad salus1 cor1	1
+ad salus1 facisio1	1
 ad salus1 gaudium1	1
 ad salus1 omnis1	1
 ad salus1 semitam1	1
@@ -1282,6 +1297,7 @@ adam1 per consilium1	1
 adam1 poother vescitur1	1
 adam1 porather quidam1	1
 adam1 primus1 perdo1	1
+adam1 protoplasma1 suus1	1
 adam1 qui de	1
 adam1 qui periothra	1
 adam1 quia1 vetitum1	1
@@ -1334,6 +1350,7 @@ adesto1 naufragatis ut	1
 adfuit1 fator1 tediuu1	1
 adfuit1 humano mos1	1
 adfuit1 novus1 hodie1	1
+adhereat1 lingua1 sed	1
 adherendum1 penitus3 ut	1
 adheret1 littereucius1 propter1	1
 adhibe1 beans vites1	1
@@ -1388,6 +1405,8 @@ adiutrix1 et inpende1	1
 adiutum1 tu reddo1	1
 adiuva1 me lex1	1
 adiuva1 nos deus1	1
+adiuva1 nos hodie1	1
+adiuva1 qui gubernas	1
 adiuvante1 christus1 deo	1
 adiuvare1 si propellas1	1
 adiuvet1 in hoc	1
@@ -1439,6 +1458,7 @@ adsum1 est ego1	1
 adsum1 et quis2	1
 adsum1 et senatus1	1
 adsum1 festina monanoun	1
+adsum1 flori tendo1	1
 adsum1 nunc1 sustinenother	1
 adsum1 terminus1 quo	1
 adsum1 virginitas1 pario2	1
@@ -1615,6 +1635,7 @@ agnus1 immortalem1 sequor1	1
 agnus1 innocentie1 cum	1
 agnus1 innocentie1 resurrexit1	1
 agnus1 lotaucius1 sanguis1	1
+agnus1 morientior1 alleluia1	1
 agnus1 nascor1 natus2	1
 agnus1 occido1 vespere1	1
 agnus1 pugno1 cum	1
@@ -1717,6 +1738,7 @@ aliter1 meritmgo1 humanus1	1
 alitiulus1 et ereox1	1
 alitulus1 dulcedio1 cedique1	1
 alitusulus1 spiro1 et	1
+alius2 assumpsitulus1 homo1	1
 alius2 do1 via1	1
 alius2 et quis2	1
 alius2 exaruit1 sed	1
@@ -1732,10 +1754,13 @@ allefonsusulus1 rapio1 ad	1
 allegatisulus1 ita quod1	1
 allegoriamulus1 iste1 signaum1	1
 alleluia1 a christuque1	1
+alleluia1 alleluia1 christus1	1
 alleluia1 amen1 amen1	1
 alleluia1 beatus1 dico2	1
 alleluia1 beatus1 pontifex1	1
+alleluia1 canio1 agnus1	1
 alleluia1 chorus1 sancio1	1
+alleluia1 christus1 rex1	1
 alleluia1 devotis1 ergo1	1
 alleluia1 duc nos	1
 alleluia1 ecce1 festum	1
@@ -1753,8 +1778,10 @@ alleluia1 o virgo1	1
 alleluia1 oppresso1 populus2	1
 alleluia1 orems1 eli	1
 alleluia1 orems1 ideo1	1
+alleluia1 pangite1 alleluia1	1
 alleluia1 petrus1 vir	1
 alleluia1 post1 devictum1	1
+alleluia1 promite1 leo2	1
 alleluia1 resurgentis1 carque1	1
 alleluia1 signum1 fides1	1
 alleluia1 tuus1 placando1	1
@@ -1769,6 +1796,7 @@ allicitulus1 verbum1 dulcibus1	1
 alliciulus1 verbum1 alliciuntulus1	1
 alliciuntulus1 doloue1 capiunto1	1
 alliciuntulus1 qui non	1
+allideulus1 parvulos1 ad	1
 alliduntulus1 et te	1
 alligantesulus1 onus1 gravis1	1
 alligato1 nolo1 moveo1	1
@@ -1811,6 +1839,7 @@ almeulus1 siderum1 ab	1
 almificisulus1 uti cum	1
 almifluaulus1 regina1 glorie	1
 almisonisulus1 dies1 decoremus1	1
+almisulus1 plausibus1 eve	1
 almiulus1 celebque1 sacrarium1	1
 almiulus1 dicavito2 filia1	1
 almiulus1 paracliti1 flore	1
@@ -1917,6 +1946,7 @@ amandoulus1 amicitia1 fulgeo1	1
 amans1 cresco1 pena1	1
 amans1 teneo1 consuler1	1
 amansulus1 per amo1	1
+amansulus1 tempus1 perdo1	1
 amantemulus1 parvus1 affabilemulus1	1
 amantibs1 in singulus1	1
 amantibs1 manus1 extensis1	1
@@ -2076,6 +2106,7 @@ amor1 dulcis1 osculo2	1
 amor1 emptusx1 pretium1	1
 amor1 et amicus1	1
 amor1 et veritaus1	1
+amor1 fames1 meritmgo1	1
 amor1 fax tu	1
 amor1 fervidio1 cordis1	1
 amor1 hely et	1
@@ -2243,6 +2274,7 @@ angelus1 exaltata1 domina1	1
 angelus1 gaudium1 pasce1	1
 angelus1 gemma1 o	1
 angelus1 illustratoeo1 morunoun	1
+angelus1 in festo	1
 angelus1 in gloria1	1
 angelus1 mare1 pario2	1
 angelus1 mare1 salutatother	1
@@ -2292,6 +2324,7 @@ anguis1 qui in	1
 anguis1 vulnus1 partica1	1
 angularis1 calculuque1 ut	1
 angularis1 spes1 iustojum1	1
+anguli1 nec fauces1	1
 anguli1 tres1 est	1
 angulis1 filius1 iob	1
 angulum1 prudentia1 vigilo1	1
@@ -2317,6 +2350,7 @@ angustia1 sontther vox	1
 angustia1 triticum1 abundantia1	1
 angustias1 beatus1 qui	1
 angustias1 et memenogo1	1
+angustiat1 stimuluother avaritieulus1	1
 angustiatus1 iesus1 cruor1	1
 angustie1 et multe1	1
 angustie1 sui1 sum1	1
@@ -2566,6 +2600,7 @@ apparensulus1 in homo1	1
 apparensulus1 in judicium1	1
 apparensulus1 in justitia1	1
 appareo1 humilis1 sed	1
+apparuitulus1 apparuitulus1 quis2	1
 apparuitulus1 cui aqua1	1
 apparuitulus1 deus1 humanatuus1	1
 apparuitulus1 diu quod1	1
@@ -2573,6 +2608,9 @@ apparuitulus1 et claruique1	1
 apparuitulus1 hodie1 benignitas	1
 apparuitulus1 in israel1	1
 apparuitulus1 ingratis1 gratus1	1
+apparuitulus1 prevaluit1 quis2	1
+apparuitulus1 quis2 pia	1
+apparuitulus1 quis2 virgo1	1
 apparuitulus1 vites1 dano1	1
 appellanteulus1 sententia1 gravante	1
 appellarisulus1 nunc1 innocentius1	1
@@ -2766,6 +2804,7 @@ arensulus1 virgula1 christus1	1
 arensulus1 virgula1 iesseo1	1
 arensulus1 virgula1 mors1	1
 arensulus1 virgula1 vir1	1
+areolaulus1 letarisqueucius1 stoleola1	1
 areopagiteulus1 martyrother egregriix1	1
 arescitulus1 affectioulus1 puto1	1
 arestotilesulus1 ubi doctissimsther	1
@@ -2838,6 +2877,7 @@ armoniaulus1 festa pascalia1	1
 armus1 et fustibus	1
 aromaticaulus1 in te	1
 aromaticaulus1 tu verbi1	1
+aromaticusulus1 fructus2 desideratus1	1
 aromatisulus1 fontismas1 baptismatis	1
 aromatumulus1 virga1 fumi	1
 arreptoulus1 gladius1 scelus1	1
@@ -2885,12 +2925,14 @@ arvum1 de te	1
 arx1 caedo1 humilitaus1	1
 arx1 nos deleo1	1
 arx1 poither nuntius1	1
+arx1 supera1 per	1
 ascendamusulus1 et dicamo2	1
 ascendantulus1 ad honor1	1
 ascendatulus1 homo1 reus1	1
 ascendeno1 fulgeo1 flos	1
 ascendenteo1 in pulpitis1	1
 ascendo1 lanxucius1 noster1	1
+ascendo1 sicut1 fumi	1
 ascendo1 ut virga1	1
 ascribiturulus1 a quo	1
 ascribiturulus1 quod1 rome	1
@@ -2933,6 +2975,7 @@ asperum1 nec morior1	1
 asperum1 nemo1 vannumeral1	1
 asperum1 pondeather que	1
 asperum1 queror1 ergo1	1
+asperum1 qui verbera1	1
 asperum1 rex1 doceo1	1
 asperum1 sed vaninumeral1	1
 asperum1 sit hec	1
@@ -2979,6 +3022,7 @@ assumitulus1 offertor1 civis1	1
 assumitulus1 regiam1 sed	1
 assumpsitulus1 carneis1 filius1	1
 assumpsitulus1 habituic1 licet2	1
+assumpsitulus1 homo1 imbreeo1	1
 assumpsitulus1 singularus1 facinus1	1
 assumptaulus1 verbi1 forma1	1
 assumptioulus1 de quis2	1
@@ -3113,7 +3157,9 @@ audeo1 musa1 de	1
 audeo1 quod1 ad	1
 audeo1 sed si	1
 audere1 tu dico2	1
+audi1 audi1 audi1	1
 audi1 audi1 dulciter1	1
+audi1 audi1 nos	1
 audi1 chorus1 organicum1	1
 audi1 devium1 et	1
 audi1 dulciter1 qui	1
@@ -3125,7 +3171,9 @@ audi1 mare1 magnus1	1
 audi1 me gementem	1
 audi1 mundus2 domina1	1
 audi1 non audituo1	1
+audi1 nos clemenque1	1
 audi1 nos florum	1
+audi1 nos rex	1
 audi1 noster1 suspirium1	1
 audi1 omnis1 quod1	1
 audi1 pario2 preter1	1
@@ -3145,6 +3193,7 @@ audio1 paro2 sum	1
 audio1 sentio1 quis2	1
 audio1 sub quantus1	1
 audio1 sum1 hec	1
+audio1 tu cellulque1	1
 audio1 vastitatis1 gemitus1	1
 audio1 vox1 et	1
 auditio1 audito1 soither	1
@@ -3193,6 +3242,7 @@ aura1 rex1 potestas1	1
 aura1 te popularis1	1
 aurarium1 quis2 gazas	1
 aurelianius1 civitas1 te	1
+aureolus1 gaudeo1 leodegari2	1
 aureolus1 pange1 cum	1
 aureus1 ave nubis	1
 aureus1 exieo1 alvusulus1	1
@@ -3263,6 +3313,7 @@ aurum1 via1 facieo1	1
 ausa1 ficti fraus	1
 ausa1 nubes1 tristities1	1
 ausa1 ternere1 vita1	1
+ausibdeo1 christus1 nam	1
 auster1 nec in	1
 auster1 terra1 influente1	1
 austera1 seu asperum1	1
@@ -3323,6 +3374,7 @@ avaritia1 plantat1 et	1
 avaritia1 que sitis1	1
 avaritia1 querior1 spolium1	1
 avaritia1 regnanum1 et	1
+avaritieulus1 nec fax	1
 avaritieulus1 potsther multus1	1
 avaritieulus1 questum1 sequor1	1
 avaritieulus1 scelus1 idolatris1	1
@@ -3421,6 +3473,7 @@ ave regina1 virginum1	1
 ave remedium1 nos	1
 ave rex1 superus1	1
 ave rosa1 rubens1	1
+ave rosa1 speciosas1	1
 ave rosa1 spina1	1
 ave salus1 homo1	1
 ave salutatother mox	1
@@ -3539,6 +3592,7 @@ baculi verus1 verus1	1
 baculo converto1 in	1
 baculo cum lana1	1
 baculo disputeut incredulus1	1
+baculo exultet1 hodie1	1
 baculo nec pensanum1	1
 baculo nee giezi	1
 baculo pars1 uterque1	1
@@ -3546,6 +3600,7 @@ baculo profero1 scripturother	1
 baculo que non	1
 baculum invitaus1 ad	1
 baculum pastoris1 quod1	1
+baculum per typicutimus1	1
 baculum pie prefertur1	1
 baculum vulpenumeral1 format1	1
 baculus carnique1 pareo1	1
@@ -3562,6 +3617,7 @@ baiuli botrum in	1
 baiulo verbi1 dei	1
 baiulus communs2 vacannumeral1	1
 baiulus crucifixque1 crux1	1
+baiulus gabriel verbi1	1
 baiulus tantus1 moveo1	1
 balaam1 pes lediturucius1	1
 balam faticinuum1 ut	1
@@ -3788,7 +3844,9 @@ bethlehem qui natus2	1
 bethlehem qui regats1	1
 bethlehem quis2 gigno1	1
 bethlehem quis2 pario2	1
+bethlehem salvatous1 rex1	1
 betleem de virga1	1
+bibamus ne hamuic1	1
 bibant bibant vivanus1	1
 bibant vivanus1 vivanus1	1
 bibemus saltem1 pax1	1
@@ -3821,6 +3879,7 @@ bino sic obnoxius1	1
 bipertit moveo1 in	1
 bis bini huc	1
 bis exigaeo1 bonus1	1
+bis filius1 temperato1	1
 bissi1 retortes1 castitaque1	1
 bitumine ut in	1
 bituria caput1 aquitanieulus1	1
@@ -3853,6 +3912,7 @@ bone iesus1 noster1	1
 bone nos1 propicium1	1
 bone spes1 facieis1	1
 bone voluntao1 hinc1	1
+bone voluntao1 nos	1
 bonitatius1 carneis1 vilems1	1
 bonitatius1 da salus1	1
 bonitatius1 donum1 sue	1
@@ -4164,6 +4224,7 @@ candor1 munditius2 rosamque1	1
 candor1 munditius2 semper1	1
 candor1 nimio1 evanescantx1	1
 candor1 puellarum1 vultuis1	1
+candor1 vinco1 lilium1	1
 candore1 rosam1 maritane1	1
 candoribus1 de virgo1	1
 candoris1 liliumucius1 nos	1
@@ -4173,6 +4234,7 @@ candoris1 virtutum1 receptacilio1	1
 canduique1 rubus non	1
 canemis1 virgini1 fugato1	1
 canibuque1 sub mensa1	1
+canio1 agnus1 morientior1	1
 canio1 illumqe1 timeo1	1
 canio1 rex1 passo1	1
 canis1 imprudents1 avidus1	1
@@ -4194,6 +4256,7 @@ cano1 synagoga1 memini1	1
 cano1 titulus1 celebro1	1
 canonicque1 decani1 vos	1
 canonique1 cum solus1	1
+canoribuque1 vox1 sinceris1	1
 canorque1 iubileo1 benedicunus1	1
 canorus1 camenque1 sonorus3	1
 canorus1 iocunditas1 est	1
@@ -4236,6 +4299,7 @@ cantibuque1 qui suo	1
 canticique1 angelicius1 pastores1	1
 canticique1 et modulnoun	1
 canticique1 organicis1 ad	1
+canticum1 baculum per	1
 canticum1 et animus1	1
 canticum1 exsultano1 angelicus1	1
 canticum1 exsulto1 exultanteo1	1
@@ -4646,6 +4710,7 @@ carnis1 claudo1 est	1
 carnis1 contra1 spiritus1	1
 carnis1 deitaus1 hamuic1	1
 carnis1 deitaus1 lateo1	1
+carnis1 deitaus1 non	1
 carnis1 fragili ago1	1
 carnis1 jaceo1 debilis1	1
 carnis1 nostre1 prolis1	1
@@ -4856,6 +4921,7 @@ cauda1 messsgo1 incendunt1	1
 cauda1 verto1 dum	1
 cauda1 vulpiunumeral1 finis1	1
 cauda1 vulpiunumeral1 plus1	1
+cauda1 vulpiunumeral1 tuus1	1
 caulque1 stygiother iherusaleeo1	1
 caunuque1 me tu1	1
 causa1 compellos2 unicus1	1
@@ -4867,6 +4933,7 @@ causa1 fructus2 claudo1	1
 causa1 gallia1 que	1
 causa1 imputaeo1 occasio1	1
 causa1 intra2 lacus1	1
+causa1 languorisucius1 video1	1
 causa1 libertas1 hodie1	1
 causa1 luctus1 habeo1	1
 causa1 machiother mundane1	1
@@ -4904,6 +4971,7 @@ caveas1 in subijctous1	1
 caveas1 ut habeo1	1
 caveo1 a mens1	1
 caveo1 ne cum	1
+caveoo1 videnso1 et	1
 cavernao1 dextera1 superna2	1
 cavernao1 presulum1 proferto1	1
 cavernao1 regulis1 sed	1
@@ -4933,6 +5001,7 @@ cecitaque1 cecique1 locum1	1
 cecitaque1 decrescit1 homilia	1
 cecitaque1 erransx1 in	1
 cecitaque1 et cum	1
+cecitaque1 sic illuminate1	1
 cecitaque1 terminum1 invenio1	1
 cecitaque1 vestit1 ipse1	1
 cecitatique1 transiit1 in	1
@@ -4978,6 +5047,8 @@ cedique1 aquiloulus1 flatu	1
 cedique1 culpa1 gratie	1
 cedique1 dolor1 pristiotheu	1
 cedique1 et obedither	1
+cedique1 fletus error1	1
+cedique1 frigus1 hiemalc	1
 cedique1 gaudium1 hos	1
 cedique1 hic1 compendis2	1
 cedique1 hosties1 triumphaes1	1
@@ -5051,6 +5122,7 @@ celebrei1 victoria1 recoliturs1	1
 celebremuque1 christus1 natalitias1	1
 celebremuque1 concrepandntiouo modulinoun	1
 celebremuque1 et ipse1	1
+celebremuque1 et suo	1
 celebremuque1 igitur1 festum	1
 celebremuque1 nataliss1 solemn1	1
 celebremuque1 ut hec	1
@@ -5114,6 +5186,7 @@ celestiuque1 pono1 per	1
 celestiuque1 prestent1 solatiuus1	1
 celestiuque1 sit lausucius1	1
 celestiuque1 terrestrium1 superus1	1
+celestque1 curius2 gratulemur	1
 celestque1 domus1 quis2	1
 celestque1 eduliox1 presentia1	1
 celestque1 filie placa1	1
@@ -5225,6 +5298,7 @@ cellam1 pigmentariam1 et	1
 cellaria1 que das	1
 cellaria1 que donum1	1
 cellarium1 vinarius1 dives1	1
+cellulque1 vinarium1 per	1
 celo1 commercis2 pauperumque1	1
 celo1 et blandituus1	1
 celoque1 componis2 dominus1	1
@@ -5350,6 +5424,7 @@ celque1 recipio1 palatioum1	1
 celque1 recreo1 cum	1
 celque1 regina1 ac	1
 celque1 regina1 rosa1	1
+celque1 regina1 tuus1	1
 celque1 reserato1 et	1
 celque1 reseratur1 triumpes1	1
 celque1 rex pro	1
@@ -5359,9 +5434,11 @@ celque1 rex1 osculo2	1
 celque1 rorans pluvia1	1
 celque1 rorans pluviam1	1
 celque1 roro1 in	1
+celque1 ros tu	1
 celque1 ros1 celuque1	1
 celque1 ros1 tellus1	1
 celque1 rosa1 sino1	1
+celque1 salutaother marie1	1
 celque1 scalother via	1
 celque1 sedes1 agmen1	1
 celque1 semitas1 numquam1	1
@@ -5450,7 +5527,10 @@ cereuque1 donsther septeniui1	1
 cerimonique1 angelus1 consiliium1	1
 cernamuque1 ijdiex1 propitius1	1
 cernaque1 a laterus3	1
+cernaque1 hoc meditaor1	1
+cernaque1 meditaor1 quis2	1
 cernebaque1 aberrare1 non	1
+cernenque1 allideulus1 parvulos1	1
 cernenque1 celicuque1 ita	1
 cerneque1 igitur1 impropriueo1	1
 cernio1 cum virgo1	1
@@ -5535,6 +5615,7 @@ cessebaque1 mussitare1 temeu1	1
 cessenque1 arguments1 perfidie1	1
 cesseque1 calamitas1 hec	1
 cesseque1 caritaus1 que	1
+cesseque1 ignis1 in	1
 cesseque1 labor2 studiother	1
 cesseque1 tristitia1 floralis	1
 cesso1 ergastulix1 et	1
@@ -5603,6 +5684,7 @@ cetuque1 laus1 deo	1
 cetuque1 lugeatucius1 mars1	1
 cetuque1 noster1 letusucius1	1
 cetuque1 populoruus2 multus1	1
+cetuque1 syoother letusucius1	1
 cetuque1 unde1 miror1	1
 cetuque1 ut angelicaus1	1
 ceu sol nubes1	1
@@ -5871,6 +5953,7 @@ christus1 miles1 christus1	1
 christus1 milies1 mundus2	1
 christus1 mors1 et	1
 christus1 mors1 redditurs1	1
+christus1 nam humanitaus1	1
 christus1 nao1 de	1
 christus1 nascente conferenteo1	1
 christus1 natalitias1 ave	1
@@ -5924,6 +6007,7 @@ christus1 regnum1 pretulit1	1
 christus1 reicitis1 vos	1
 christus1 resurgere1 transeo1	1
 christus1 rex1 do1	1
+christus1 rex1 iubileo1	1
 christus1 rivo iordanis1	1
 christus1 rupta vestis1	1
 christus1 sed vivus1	1
@@ -6038,6 +6122,7 @@ circulus1 redeo1 cum	1
 circulus1 tu moveo1	1
 circulus1 vita1 do1	1
 circum1 vellus1 viret1	1
+circumcidi1 sustinuiother in	1
 circumcidi1 volvo1 cui	1
 circumciditur1 hostias1 regaliss1	1
 circumciditur1 jesus nomen1	1
@@ -6071,6 +6156,7 @@ cisterna1 veteri1 pariter1	1
 citantque1 peremptorie1 liquetucius1	1
 citarque1 propera1 de	1
 citatique1 vinctus2 nequeo1	1
+cithara1 spes1 noster1	1
 cithereque1 reddits1 inultum1	1
 cithereque1 regia1 et	1
 cito1 careanque1 et	1
@@ -6176,6 +6262,7 @@ claritas1 deo dicamo2	1
 claritas1 divineus1 iustijie1	1
 claritas1 et figura1	1
 claritas1 expers1 ut	1
+claritas1 per qui1	1
 claritas1 qua pater1	1
 claritatius1 lux1 o	1
 claritatius1 me immersueo1	1
@@ -6356,6 +6443,7 @@ clavuque1 pungens1 acumines1	1
 clavus1 fit contrario1	1
 clavus1 retunditurs1 dum	1
 clemenque1 et benignus1	1
+clemenque1 et misericors1	1
 clemenque1 et paraclite1	1
 clemenque1 puerpera1 qui1	1
 clemenque1 tuus1 ovibus1	1
@@ -6439,7 +6527,6 @@ clerque1 vivo1 ad	1
 clerque1 vox et	1
 cleruque1 annus1 duodecies1	1
 cleruque1 campus2 licentieucius1	1
-cleruque1 cum populus2	1
 cleruque1 cum prelatis1	1
 cleruque1 et militia1	1
 cleruque1 et populus1	1
@@ -6449,6 +6536,7 @@ cleruque1 mundus2 paupertatis1	1
 cleruque1 noster1 cedique1	1
 cleruque1 patrocinium1 miles1	1
 cleruque1 populus1 ubertas	1
+cletuque1 dies1 vetus1	1
 clibanque1 incendium1 fides1	1
 clibanuque1 igneuis1 ac	1
 clipeoque1 dico2 episcoposx1	1
@@ -6541,6 +6629,7 @@ colerque1 officium1 cum	1
 colerque1 tua volo1	1
 colerque1 tunc1 laboro1	1
 colimuque1 virgo1 qui1	1
+colique1 gaudium1 penset1	1
 colique1 mens1 clarus1	1
 colique1 turba1 tener1	1
 colitque1 laus1 deo	1
@@ -6709,6 +6798,7 @@ commercis2 pauperumque1 reatuss1	1
 commercis2 quis2 est	1
 commercis2 sit relativorums1	1
 commercius2 descendo1 ut	1
+commercius2 digneus1 rependiturs1	1
 commercius2 divineus1 potents1	1
 commilitas2 christuque1 sequor1	1
 comminatus2 homo1 penas1	1
@@ -6810,6 +6900,7 @@ complesss2 probato1 quando1	1
 completis2 laus1 solvamur1	1
 complets2 meto2 post1	1
 complets2 prophetia1 nascor1	1
+complets2 prophetia1 salvus1	1
 complets2 sum1 promissa1	1
 completus2 hodie1 dum	1
 compleveris2 video1 ne	1
@@ -7068,6 +7159,7 @@ confeitsor1 perditur1 claudito1	1
 confeitsor1 qui purum1	1
 confeitsor1 quis2 est	1
 conferato1 resurrexit1 hodie1	1
+conferato1 stadiuother factum1	1
 conferaturo1 nam qui	1
 conferenso1 conteratuntiruo pravitas1	1
 conferenso1 honor1 nullus1	1
@@ -7173,6 +7265,7 @@ congaudeantituo ecclesiax1 festa	1
 congaudeantituo suo reparatoris1	1
 congaudendntiouo de matother	1
 congaudenntituo glorie tantus1	1
+congaudenntituo omnis1 angelus1	1
 congaudententisuo celebremuque1 nataliss1	1
 congaudententisuo iubilemueo1 hodie1	1
 congaudentiouo quis2 interemistis1	1
@@ -7533,6 +7626,7 @@ contintiouo ergo1 fidelis1	1
 contintiouo ex amor1	1
 contintiouo festa colenque1	1
 contintiouo festa paschalia1	1
+contintiouo gaudeat hec	1
 contintiouo gaudium1 tripuditiaus1	1
 contintiouo hac die	1
 contintiouo hic dei	1
@@ -7745,6 +7839,7 @@ copiosus1 apud1 te	1
 copiosus1 gratie piscine1	1
 copiosus1 iustojum1 tutelanc1	1
 copiosus1 laudeucius1 medeago1	1
+copiosus1 tu plenitudo1	1
 copique1 aper1 leo2	1
 copique1 ditatueus1 murmur1	1
 copique1 phebus1 bacchus1	1
@@ -7754,6 +7849,7 @@ copulque1 flos1 do1	1
 copulque1 impleeo1 virtus1	1
 copulque1 que servetvius1	1
 copulque1 sed frigescente	1
+copulque1 stupeother omnis1	1
 copulque1 te concipio1	1
 coquo1 fructus2 colorari1	1
 cor amo1 circa1	1
@@ -7808,6 +7904,7 @@ cor1 fideliums1 nos1	1
 cor1 fideliums1 replevits1	1
 cor1 fove ments1	1
 cor1 gratulantium vices1	1
+cor1 iubilemueo1 et	1
 cor1 letabundoucius1 dicamo2	1
 cor1 letabundoucius1 novus1	1
 cor1 letaucius1 frons2	1
@@ -7834,6 +7931,7 @@ cor1 pio omnis1	1
 cor1 premunt1 saucius1	1
 cor1 preoccupemus1 superne2	1
 cor1 promptus2 et	1
+cor1 purifica1 fece	1
 cor1 quis2 peccao1	1
 cor1 refovets1 flos	1
 cor1 removetus1 rex1	1
@@ -7874,6 +7972,7 @@ cordibus1 iubilueo1 rex	1
 cordibus1 qui es	1
 cordibus1 ramum gementibus	1
 cordibus1 venio1 sanctother	1
+cordis1 cithara1 spes1	1
 cordis1 confeitsor1 quis2	1
 cordis1 erectionex1 pascha1	1
 cordis1 esureum1 quod1	1
@@ -7967,6 +8066,7 @@ corpus1 mater1 fudit	1
 corpus1 mens1 declinet1	1
 corpus1 meus1 corrigo1	1
 corpus1 monstro1 lividiucius1	1
+corpus1 per secului1	1
 corpus1 possimus1 unguere	1
 corpus1 presulem1 plebs1	1
 corpus1 purissimus1 salutarother	1
@@ -8112,6 +8212,7 @@ creato1 omnis1 quando1	1
 creato1 omnis1 queror1	1
 creato1 primus1 sino1	1
 creato1 quod1 in	1
+creato1 secului1 pro	1
 creato1 spiritus1 et	1
 creato1 spiritus1 inc	1
 creato1 spiritus1 spiritus1	1
@@ -8355,6 +8456,7 @@ cromaticque1 per diascismateus1	1
 cronicque1 te signaum1	1
 cronoque1 et seratus1	1
 crucianque1 singulus1 mea	1
+cruciaque1 nec mordeo1	1
 cruciatibuque1 eternum1 cruciatus1	1
 cruciatibuque1 malus1 noster1	1
 cruciatque1 pascor1 penis1	1
@@ -8476,6 +8578,7 @@ crux1 qua nos	1
 crux1 qui1 expavi1	1
 crux1 rex patibuloor1	1
 crux1 stipes1 nos	1
+crux1 supplicium1 reparandos1	1
 crux1 supplicium1 superatis1	1
 crux1 sustinenother tediuu1	1
 crux1 sustinuiother opprobrium1	1
@@ -8689,6 +8792,7 @@ cum carinius1 sed	1
 cum carque1 venditur1	1
 cum causa1 decidii1	1
 cum cecique1 restauretur1	1
+cum celestque1 curius2	1
 cum certus1 nondum1	1
 cum ceterus1 celestique1	1
 cum ceterus1 ruo	1
@@ -8777,9 +8881,13 @@ cum gaudium1 iam	1
 cum gaudium1 lectioucius1	1
 cum gaudium1 maneo1	1
 cum gaudium1 militaneus1	1
+cum gaudium1 nos	1
 cum gaudium1 pater1	1
 cum gaudium1 perducat1	1
+cum gaudium1 proferato1	1
+cum gaudium1 psallit1	1
 cum gaudium1 te	1
+cum genitrice pia	1
 cum gladius1 flagitio	1
 cum gloria1 ad	1
 cum gloria1 amen1	1
@@ -8937,12 +9045,14 @@ cum peccatum1 iubar1	1
 cum penitente1 filius1	1
 cum peperisti1 filius1	1
 cum peperisti1 non	1
+cum perenni1 gloria1	1
 cum perenni1 laurea1	1
 cum perverso1 perverteris1	1
 cum petrus1 utituor1	1
 cum phaleris1 sic	1
 cum pius1 appareasulus1	1
 cum planctibus1 hypocritis	1
+cum plausu1 mysticnoun	1
 cum plebs1 iocunda1	1
 cum pontificus1 festum	1
 cum populus2 ut	1
@@ -9098,6 +9208,7 @@ cum veniao1 contulintituo	1
 cum venio1 invenio1	1
 cum venio1 te	1
 cum ventilaverius1 triticutimus1	1
+cum venus1 ut	1
 cum verus1 sit	1
 cum verus1 sol	1
 cum victoria1 gallia1	1
@@ -9121,6 +9232,7 @@ cum volo1 vinco1	1
 cum vox clameque1	1
 cum vox1 multisonus1	1
 cumque1 non sum1	1
+cumula1 ut queo1	1
 cumulatio1 quis2 prosum1	1
 cumulatio1 quo tendo1	1
 cumulum1 propinet1 unctio	1
@@ -9163,6 +9275,7 @@ cunctius1 te reddo1	1
 cunctoque1 ad supera1	1
 cunctoque1 allicitulus1 quod1	1
 cunctoque1 perdo1 culpque1	1
+cunctoque1 perdo1 virgo1	1
 cunctoque1 sino1 veniao1	1
 cunctoruque1 cella1 fornicatrix	1
 cunctoruque1 dominus1 iesus1	1
@@ -9369,6 +9482,7 @@ curius2 felicitatx1 copia1	1
 curius2 fit ferreus1	1
 curius2 fulgeo1 dies1	1
 curius2 gallia1 cum	1
+curius2 gratulemur et	1
 curius2 homo1 relevaturs1	1
 curius2 ijbeno1 avaritia1	1
 curius2 in te	1
@@ -9481,6 +9595,7 @@ da famulis gaudium1	1
 da fides2 mysterinoun	1
 da gaudioruum1 premia1	1
 da gratus1 quo	1
+da hodie1 gaudium1	1
 da laus1 homo1	1
 da me fructus2	1
 da miser1 tutameum1	1
@@ -9489,6 +9604,7 @@ da misericordia1 tu	1
 da nos1 donmther	1
 da nos1 hodie1	1
 da nos1 proles1	1
+da nos1 ut	1
 da novus1 canticum1	1
 da pax1 permansuram1	1
 da potsther solatius1	1
@@ -9669,6 +9785,7 @@ dat gaudeo1 nec	1
 dat gratius1 dulcis1	1
 dat gratius1 soluvo1	1
 dat hoc ancipitem1	1
+dat in esmum1	1
 dat in tenebrae1	1
 dat incendium1 ergo1	1
 dat incendium1 novus1	1
@@ -9744,6 +9861,7 @@ davidicum1 decet1 patefieri1	1
 davitico1 natura1 decipit1	1
 davitico1 parien1 cedruque1	1
 de abbatis1 docesther	1
+de aureolus1 gaudeo1	1
 de baculo disputeut	1
 de basociis intersum1	1
 de beatius1 celque1	1
@@ -9777,6 +9895,7 @@ de ceterque1 natio1	1
 de ceterque1 non	1
 de christus1 patrimonium1	1
 de christus1 prediis1	1
+de christus1 victoria1	1
 de cicutque1 baculum	1
 de cisterna1 veteri1	1
 de clausurque1 det	1
@@ -9860,6 +9979,7 @@ de luctus1 duco1	1
 de lumen1 claruique1	1
 de lumen1 prodiens1	1
 de lumen1 prothem	1
+de lumen1 radiat	1
 de lumen1 redemptors1	1
 de lumen1 suo	1
 de lupoucius1 facio1	1
@@ -10083,8 +10203,10 @@ de te volo1	1
 de te volvo1	1
 de tempus1 jactura1	1
 de tenebrae1 facio1	1
+de tenebrae1 historic1	1
 de terra1 fons	1
 de terra1 promissionis1	1
+de terra1 sumeris1	1
 de terra1 sumpsit1	1
 de terre1 sedes1	1
 de thalamus1 o	1
@@ -10129,6 +10251,7 @@ de virgo1 perdito1	1
 de virgo1 procedo1	1
 de virgo1 puerpera1	1
 de virgo1 purgao1	1
+de virgo1 quod1	1
 de virgo1 releganss1	1
 de virgo1 rex	1
 de virgo1 salutatother	1
@@ -10310,6 +10433,7 @@ decora1 venio1 sino1	1
 decorabat1 dum vir	1
 decoraris1 virga1 flore	1
 decoras1 emulumx1 vites1	1
+decorat1 angelus1 contintiouo	1
 decorat1 gloria1 ut	1
 decorata1 frons1 flore	1
 decoratam1 ac orno1	1
@@ -10324,6 +10448,7 @@ decore1 vestium1 criniuque1	1
 decorem1 contra1 mos1	1
 decorem1 deitatius1 sue	1
 decorem1 servano1 et	1
+decorem1 sumpti1 baculi	1
 decoremus1 vox1 altisonus1	1
 decorum1 floribus mireus1	1
 decorum1 virgo1 post1	1
@@ -10447,6 +10572,7 @@ deficis1 qui proximus1	1
 deficiunt1 celuque1 celque1	1
 deficiunt1 tempestatiu1 articulus1	1
 defixit1 studium1 amor1	1
+deflorat1 amansulus1 tempus1	1
 deflorat1 aurum1 dum	1
 deflorata1 superus1 rex1	1
 defloruit1 fama1 prior1	1
@@ -10688,6 +10814,7 @@ deitaus1 in homo1	1
 deitaus1 in servus2	1
 deitaus1 lateo1 inclino1	1
 deitaus1 maiestatother eseum1	1
+deitaus1 non sum1	1
 deitaus1 osculatuum1 socimther	1
 deitaus1 prior1 sum1	1
 deitaus1 qui1 brevitass1	1
@@ -11177,6 +11304,7 @@ deus1 est quis2	1
 deus1 est quod1	1
 deus1 est sino1	1
 deus1 et custos1	1
+deus1 et dissipeut	1
 deus1 et homo1	1
 deus1 et impassibilieo1	1
 deus1 et nalium	1
@@ -11246,6 +11374,7 @@ deus1 nam surgo1	1
 deus1 nascor1 de	1
 deus1 nascor1 volvo1	1
 deus1 natus2 est	1
+deus1 natus2 ex	1
 deus1 ne perieo1	1
 deus1 nec ultra1	1
 deus1 non alius2	1
@@ -11460,6 +11589,7 @@ dico2 audiebam1 ad	1
 dico2 ave gratius1	1
 dico2 ave mare1	1
 dico2 ave te	1
+dico2 canticum1 baculum	1
 dico2 castruque1 nobile	1
 dico2 confessoruntimuo omnis1	1
 dico2 cor1 locassum1	1
@@ -11568,6 +11698,7 @@ die ille1 tremendtiaus1	1
 die in iubileo1	1
 die iste1 splenduit1	1
 die lucus1 capitul1	1
+die meago1 prophetie1	1
 die nocti lux1	1
 die novissiuo1 in	1
 die novus1 dano1	1
@@ -11633,6 +11764,7 @@ dies1 est dies1	1
 dies1 est inclino1	1
 dies1 est letabundaucius1	1
 dies1 est letitium1	1
+dies1 est venio1	1
 dies1 et alibi1	1
 dies1 et annus1	1
 dies1 et duco1	1
@@ -11719,6 +11851,7 @@ dies1 spacium1 sed	1
 dies1 sum1 extremus1	1
 dies1 triumphaes1 mundus2	1
 dies1 veneranda1 o	1
+dies1 vetus1 novus1	1
 diezeugmenons1 plangant1 ut	1
 differaeus1 sed fio1	1
 differaeus1 video1 ne	1
@@ -11737,6 +11870,7 @@ diffinitueus1 que numquam1	1
 diffitetueus1 et ab	1
 diffluenteeus1 prosperis1 sui	1
 diffluereus1 qui1 modicius1	1
+diffluereus1 sub venus1	1
 difflueus1 dilueus1 sauciother	1
 diffluieus1 cottidie1 qui	1
 diffluieus1 hac labeucius1	1
@@ -11760,6 +11894,7 @@ digitus1 hinc1 est	1
 digitus1 monstrarum1 cupiunque1	1
 dignarius1 parco1 nam	1
 dignarus1 per noster1	1
+dignarus1 te laudo1	1
 dignarus1 virgo1 tu1	1
 dignatius1 fecundaus1 numen1	1
 dignatius1 fit ille1	1
@@ -11785,6 +11920,7 @@ digneus1 pario2 novus1	1
 digneus1 pario2 rex1	1
 digneus1 promam1 preconia1	1
 digneus1 queo1 verbum1	1
+digneus1 rependiturs1 creato1	1
 digneus1 scelus1 da	1
 digneus1 sit cibuque1	1
 digneus1 solvo1 laudao1	1
@@ -11844,6 +11980,7 @@ dignus1 filius1 ni	1
 dignus1 fit ridiculus	1
 dignus1 iubilueo1 letantiumucius1	1
 dignus1 laudeucius1 congruntiauo	1
+dignus1 laudeucius1 gaudeo1	1
 dignus1 laus1 novus1	1
 dignus1 lausucius1 et	1
 dignus1 letum1 homo1	1
@@ -11854,9 +11991,11 @@ dignus1 memoria1 pius1	1
 dignus1 monstres1 oculus1	1
 dignus1 nam de	1
 dignus1 nestoriequs1 probis1	1
+dignus1 pensanum1 meriago1	1
 dignus1 pontificius1 divinus1	1
 dignus1 preconio1 syoother	1
 dignus1 quidem1 egregiex1	1
+dignus1 quis2 abscid1	1
 dignus1 quis2 puto1	1
 dignus1 sorether tu	1
 dignus1 sum1 per	1
@@ -12109,11 +12248,13 @@ disputeut incredulus1 fracto	1
 disputeut soluto1 pax1	1
 disquirereus plus1 abundaret1	1
 disrupeua compagins2 rotarum1	1
+dissidenteua firmus1 firmanus1	1
 dissimilias1 cura1 querior1	1
 dissimiliss1 deus1 nos1	1
 dissipaeui palmites1 tot	1
 dissipaeui sit necesse1	1
 dissipavereut prodigus1 pars1	1
+dissipeut hostis1 quis2	1
 dissoeua cogo1 consonarntieuo	1
 dissolueua glacie gelus1	1
 dissolueua rosa1 produxit1	1
@@ -12229,6 +12370,7 @@ divinitatius1 cella1 es	1
 divinitatius1 cella1 virgo1	1
 divinitatius1 sedes1 almificisulus1	1
 divinitatius1 sentio1 deus1	1
+divinitatus1 pax in	1
 divinitaus1 divinum1 humanitaus1	1
 divinitaus1 donum1 dei	1
 divinitaus1 ex contactntiuuo	1
@@ -12249,6 +12391,7 @@ divinituus1 in sigillo1	1
 divinituus1 inflectens1 humanituus1	1
 divinituus1 infuso1 ros1	1
 divinituus1 nunc1 sanctother	1
+divinituus1 pluit1 in	1
 divinituus1 pluit1 ros	1
 divinituus1 presul1 cum	1
 divinituus1 sacramenet1 spiramento1	1
@@ -12295,6 +12438,7 @@ divinum1 volvo1 clementique1	1
 divinus1 donum1 numen1	1
 divinus1 dulcis1 polleo1	1
 divinus1 flaminis humane	1
+divinus1 numini1 sit	1
 diviseus1 post1 mors1	1
 divisieus1 dum se	1
 divisieus1 mare1 notus1	1
@@ -12543,6 +12687,7 @@ doctriether gloria1 nec	1
 doctriether regulas1 quis2	1
 doctriether sanus1 error1	1
 doctriether viluits1 que	1
+doctrinaather gaude sub	1
 doctrinsther inservio1 nec	1
 doctrther abutituor1 doctriether	1
 doctrther discipulus1 servus2	1
@@ -12681,6 +12826,7 @@ domina1 ad quis2	1
 domina1 celoruque1 decus1	1
 domina1 dulcoris1 dulcis1	1
 domina1 est cum	1
+domina1 et celque1	1
 domina1 ipse1 collaudarum1	1
 domina1 propera1 nos	1
 domina1 recordares1 miserum1	1
@@ -12810,6 +12956,7 @@ dominus1 mittaeus1 de	1
 dominus1 moysnoun fiscella	1
 dominus1 multipliciteus1 iterum1	1
 dominus1 nascente finis1	1
+dominus1 nativitaus1 jus1	1
 dominus1 ne post1	1
 dominus1 nec ad	1
 dominus1 nec cogito1	1
@@ -12831,7 +12978,9 @@ dominus1 perdit1 favens	1
 dominus1 peto1 quis2	1
 dominus1 pietas1 pater1	1
 dominus1 placatur1 pax	1
+dominus1 plebs1 humanus1	1
 dominus1 pono1 debetio1	1
+dominus1 pro homo1	1
 dominus1 pro nos1	1
 dominus1 prodesse1 non	1
 dominus1 quando1 benedicaus1	1
@@ -13039,6 +13188,7 @@ dormivtther bibens in	1
 dormsther dominus1 nihil1	1
 dormtther veritaus1 solus1	1
 dos gemme comparabilis2	1
+dos irroreo1 nos	1
 dos luna1 stadiother	1
 dos tu scirpeother	1
 dotaather celituque1 deitatius1	1
@@ -13185,6 +13335,7 @@ dulcis1 divinituus1 donum1	1
 dulcis1 domiciliuus1 gloria1	1
 dulcis1 domina1 dulcoris1	1
 dulcis1 dulcissima1 o	1
+dulcis1 es et	1
 dulcis1 et decora1	1
 dulcis1 et laudabilisucius1	1
 dulcis1 euphoniax1 pange1	1
@@ -13293,6 +13444,7 @@ dum christuque1 concipituo1	1
 dum christuque1 humanatuus1	1
 dum christuque1 non	1
 dum christus1 virguncula1	1
+dum circumcidi1 sustinuiother	1
 dum clamo1 osanna2	1
 dum claudo1 aditus2	1
 dum claudo1 aliquis1	1
@@ -13321,6 +13473,8 @@ dum diffluieus1 hac	1
 dum divineus1 premia1	1
 dum domus1 viduarum1	1
 dum dormittther somnus1	1
+dum dum circumcidi1	1
+dum dum dum	1
 dum effugiso1 fecundaus1	1
 dum eva que	1
 dum exurgens1 dominus1	1
@@ -13521,6 +13675,7 @@ dum toti1 mundus2	1
 dum traducotirus1 studium1	1
 dum tu1 flexibilis	1
 dum tullenistus2 manna1	1
+dum tullenistus2 peperisti1	1
 dum tumescit1 uterus1	1
 dum unituus1 creatuo1	1
 dum vacuinumeral1 prebuit1	1
@@ -13601,6 +13756,7 @@ dure1 te iohannies1	1
 dure1 vetustatis1 nos	1
 durus1 ab ipse1	1
 durus1 et infernus1	1
+durus1 ferenus1 durus1	1
 durus1 hic1 inventum1	1
 durus1 nescio1 abfore1	1
 durus1 o lex	1
@@ -13638,6 +13794,7 @@ dyabolum1 edoceo1 et	1
 e a et	1
 e celique1 egrediturx1	1
 e celque1 descendo1	1
+e et i	1
 e patrei1 reparao1	1
 e thalamus1 propheta1	1
 e vestigio1 ille1	1
@@ -13745,6 +13902,7 @@ ecclesiax1 apostolus1 prediti1	1
 ecclesiax1 beata mater1	1
 ecclesiax1 beate katherine	1
 ecclesiax1 canteque1 alleluia1	1
+ecclesiax1 cedique1 fletus	1
 ecclesiax1 celebrato1 convivium1	1
 ecclesiax1 celque1 fungens	1
 ecclesiax1 christque1 noster1	1
@@ -13752,6 +13910,7 @@ ecclesiax1 cor1 simul1	1
 ecclesiax1 crux1 qua	1
 ecclesiax1 cum iugeo1	1
 ecclesiax1 cuuique1 sum1	1
+ecclesiax1 de christus1	1
 ecclesiax1 deprecemur1 igitur1	1
 ecclesiax1 dum pater1	1
 ecclesiax1 ecce1 festum	1
@@ -14050,9 +14209,11 @@ egregiumx1 qui pavit1	1
 egregius1 balaam1 pes	1
 egregius1 decus1 angelicuus1	1
 egregius1 domus1 in	1
+egregius1 gaudeat ecclesiax1	1
 egregius1 qui1 de	1
 egregriix1 et archimandriteulus1	1
 egressex1 de radice	1
+egressiox1 per qui1	1
 egressumx1 pandens1 miser1	1
 egrex1 tolerotirus1 unde1	1
 egrisx1 efficerisx1 oleum1	1
@@ -14113,11 +14274,15 @@ ei uterque1 fero1	1
 eia annus1 est	1
 eia annus1 novus1	1
 eia bis bini	1
+eia cum gaudium1	1
 eia dei filius1	1
 eia dei plenus1	1
+eia dico2 canticum1	1
 eia eia annus1	1
+eia eia cum	1
 eia eia eia	1
 eia eia fit	1
+eia eia voco1	1
 eia et cantao1	1
 eia et eia	1
 eia filius1 principium1	1
@@ -14151,6 +14316,7 @@ eia ut talis1	1
 eia venio1 in	1
 eia videnso1 auctor1	1
 eia virgo1 pario2	1
+eia voco1 nos	1
 eicitrs1 christus1 vinco1	1
 eicitrs1 in lignum1	1
 eicitrs1 mundus2 salvatous1	1
@@ -14175,8 +14341,10 @@ elaboretx1 ut extollat1	1
 elapsusx1 fauces1 et	1
 elargiturx1 divitiae1 cedique1	1
 elationemx1 vincats1 astra1	1
+elatiox1 nam terra1	1
 elatiox1 per qui1	1
 elatiox1 quidem1 exsilium1	1
+elatiox1 terra1 tandem1	1
 elatix1 debacantes1 altus1	1
 elecothmr dano1 intellego1	1
 elecothmr donmther perfectum1	1
@@ -14261,6 +14429,7 @@ elusitx1 cupido1 et	1
 elusitx1 et ab	1
 emanatx1 litteram1 complanas2	1
 emancipatx1 miseri1 mitieus1	1
+emanuelx1 complets2 prophetia1	1
 emanuelx1 pusiolus1 nos1	1
 emanuelx1 qui adam1	1
 emanuelx1 quod1 annuntiatum1	1
@@ -14283,6 +14452,7 @@ emeruntx1 iugulieo1 ut	1
 emicaro1 nicholai1 laus1	1
 emico1 radius elucescensx1	1
 emico1 rectaum1 parans1	1
+emicuio1 et liqueo1	1
 emicuio1 verus1 emanuelx1	1
 emineno1 periculum1 tu	1
 eminentio1 producitur1 venuste1	1
@@ -14322,7 +14492,9 @@ emulandix1 decorus1 et	1
 emulax1 rachelis populus1	1
 emulax1 virgio1 pudoris1	1
 emulisx1 dum virtuts1	1
+emulix1 cernenque1 allideulus1	1
 emulix1 iuguntueo1 populus2	1
+emulix1 quis2 sit	1
 emulix1 rei sub	1
 emulix1 replicents1 in	1
 emulix1 saginatother redimits1	1
@@ -14569,13 +14741,16 @@ ergo1 nos terrigene1	1
 ergo1 noster1 contintiouo	1
 ergo1 noster1 seculiui1	1
 ergo1 nostre1 propaginis1	1
+ergo1 novus1 laus1	1
 ergo1 nunc1 introeat1	1
 ergo1 parco1 domina1	1
 ergo1 pario2 vins1	1
 ergo1 pater1 heres	1
 ergo1 per signum1	1
 ergo1 per te	1
+ergo1 plaude1 dignus1	1
 ergo1 post1 tediuu1	1
+ergo1 premium1 quidvs2	1
 ergo1 presul1 confitenntisuo	1
 ergo1 presum1 prees1	1
 ergo1 prex1 marie1	1
@@ -14604,6 +14779,7 @@ ergo1 sepultui1 scelus1	1
 ergo1 sic sufficiaother	1
 ergo1 sicut1 carbunculuque1	1
 ergo1 sicut1 consulo1	1
+ergo1 singulus1 ius	1
 ergo1 sit gloria1	1
 ergo1 sit lausucius1	1
 ergo1 solatiuus1 absi1	1
@@ -14613,6 +14789,7 @@ ergo1 superstitio2 vacarnumeral1	1
 ergo1 syoother filie	1
 ergo1 tantus1 dolor1	1
 ergo1 tantus1 rex1	1
+ergo1 tergum1 retrodata1	1
 ergo1 torpetious1 recurrams1	1
 ergo1 totus2 cordis1	1
 ergo1 tu progredere1	1
@@ -14673,6 +14850,7 @@ error1 fac et	1
 error1 fit stultitiother	1
 error1 hic1 vie	1
 error1 ligatucius1 lingua1	1
+error1 metus1 redeo1	1
 error1 quis2 vinco1	1
 error1 reddeno1 virginibus1	1
 errore1 patrius1 dum	1
@@ -14728,11 +14906,13 @@ es deus1 ecclesiex1	1
 es deus1 in	1
 es directeus1 via	1
 es doceo1 rex1	1
+es domina1 et	1
 es eburneusx1 vision1	1
 es ego1 gratiosa	1
 es elegothsr puella1	1
 es et allium1	1
 es et filia1	1
+es et pia	1
 es et quis2	1
 es et studium1	1
 es et sum1	1
@@ -14750,6 +14930,7 @@ es in thronius1	1
 es ingenitusum1 celque1	1
 es intacta1 salus1	1
 es magnus1 homo1	1
+es mare1 virgo1	1
 es mater1 genitor1	1
 es militieus1 felix1	1
 es mons1 atque1	1
@@ -14763,6 +14944,7 @@ es quasi1 virgo1	1
 es qui mussitas1	1
 es redimeres1 quando1	1
 es regina1 benedictus1	1
+es rosa1 sino1	1
 es rubus vision1	1
 es sed formosus1	1
 es sed si	1
@@ -14793,6 +14975,7 @@ esaum1 reduciturs1 cesseque1	1
 eseum1 equalisx1 deitaus1	1
 eseum1 mortalitanoun eternitas1	1
 eseum1 trinitatitisus1 societsther	1
+esmum1 fertquo1 sordsther	1
 esmum1 regredis1 mos1	1
 esmum1 vites1 sino1	1
 eso lignum1 vetito1	1
@@ -14865,6 +15048,7 @@ est culpque1 socialsther	1
 est cum filius1	1
 est cum homo1	1
 est cum phaleris1	1
+est cum plausu1	1
 est cum pretium1	1
 est de david1	1
 est de iesseo1	1
@@ -14896,6 +15080,7 @@ est deus1 quod1	1
 est dico2 verious1	1
 est dies1 dies1	1
 est dies1 dominus1	1
+est dies1 est	1
 est dies1 et	1
 est dies1 eterne1	1
 est dies1 ille1	1
@@ -14925,6 +15110,7 @@ est effectuss2 homo1	1
 est ego1 de	1
 est ego1 visum1	1
 est egredior1 fortemqis1	1
+est egressiox1 per	1
 est egrisx1 medicina1	1
 est ei necessix1	1
 est eia annus1	1
@@ -14945,14 +15131,17 @@ est et filia1	1
 est et immortalis1	1
 est et mundiuus2	1
 est et navis1	1
+est et noster1	1
 est et novus1	1
 est et pa	1
 est et pax	1
 est et questio1	1
 est et qui	1
 est et sum1	1
+est et veritaus1	1
 est ex gratius1	1
 est ex homo1	1
+est ex virgo1	1
 est exaltatio1 mirus1	1
 est excidium1 planctum1	1
 est excludo1 omnis1	1
@@ -15055,6 +15244,7 @@ est iocundius1 quo	1
 est is1 si	1
 est iste1 glorie	1
 est iste1 prosperum1	1
+est iste1 que	1
 est iste1 rex	1
 est iudieo1 are	1
 est iustojum1 tu	1
@@ -15131,6 +15321,8 @@ est nescienequs1 fides2	1
 est non ratio1	1
 est nos1 deus1	1
 est nos1 dominus1	1
+est nos1 parvulus1	1
+est noster1 dolor1	1
 est noster1 salutariother	1
 est noster1 sit	1
 est novus1 lex	1
@@ -15152,6 +15344,7 @@ est per gratia1	1
 est per hoc	1
 est per omnis1	1
 est per quis2	1
+est per virgo1	1
 est perpes1 festivitas	1
 est perutilis1 culpa1	1
 est pia stirps1	1
@@ -15192,6 +15385,7 @@ est quod1 eos	1
 est quod1 in	1
 est quod1 nos	1
 est redemptios1 o	1
+est rediteo1 ad	1
 est refectios1 communis1	1
 est refectios1 tripletixus1	1
 est refugiums1 clericique1	1
@@ -15251,6 +15445,7 @@ est tenuis1 nemo1	1
 est terminus1 lux	1
 est terra1 non	1
 est terra1 redditas1	1
+est transeamus1 et	1
 est tu1 pena1	1
 est tu1 tam	1
 est tu1 virgo1	1
@@ -15266,6 +15461,7 @@ est utillimuor1 sancio1	1
 est vel melius1	1
 est velut1 flos	1
 est venio1 ecce1	1
+est venio1 lex	1
 est venio1 nos	1
 est verax1 quis2	1
 est verbigena1 nisi1	1
@@ -15298,6 +15494,7 @@ estaum1 diffidieus1 sperass1	1
 estaum1 in tumultus1	1
 estaum1 ire vetus1	1
 estivaium1 quod1 est	1
+estivlum1 juventus1 letaturucius1	1
 estuantiuum1 pro divorto1	1
 estuum1 silva1 decorata1	1
 esu bone iesus1	1
@@ -15349,6 +15546,7 @@ et ad me	1
 et ad noe	1
 et ad orior1	1
 et ad portuss1	1
+et ad res	1
 et ad verus1	1
 et ad vita1	1
 et ade costque1	1
@@ -15470,6 +15668,7 @@ et celestque1 nos	1
 et celoque1 aperio1	1
 et celoque1 reperivits1	1
 et celque1 perfectior1	1
+et celque1 regina1	1
 et celque1 sidus1	1
 et cessandque1 propositum1	1
 et ceterus1 fructus2	1
@@ -15589,8 +15788,10 @@ et decimatius1 est	1
 et decipit1 hinc1	1
 et decora1 pro	1
 et decora1 tuus1	1
+et decorat1 angelus1	1
 et decorem1 induit1	1
 et decorem1 servano1	1
+et decorem1 sumpti1	1
 et decrepiti1 modus1	1
 et decrepiti1 quasi1	1
 et decretum1 nuptiali	1
@@ -15634,6 +15835,7 @@ et dimicaverieus1 crucque1	1
 et dimitteus1 nos1	1
 et disciplieua de	1
 et disputeut cum	1
+et dissipeut hostis1	1
 et dissolvo1 prohibes1	1
 et ditavieus1 victor1	1
 et diu vixi1	1
@@ -15669,12 +15871,14 @@ et dupplici1 substancia1	1
 et durus1 ab	1
 et dux1 porphyrimther	1
 et e a	1
+et e et	1
 et eam purifica1	1
 et ebrius1 efficerisx1	1
 et ecce1 tempus1	1
 et edo2 superus1	1
 et ei consurgerntieuo	1
 et ei defuit1	1
+et eia eia	1
 et eia et	1
 et eia iubilandeo1	1
 et eia quia1	1
@@ -15701,6 +15905,7 @@ et etheris1 et	1
 et eum non	1
 et evado1 asperum1	1
 et evangelium1 quis2	1
+et eveho1 homo1	1
 et evitarex1 possum1	1
 et ex dano1	1
 et ex eis	1
@@ -15733,6 +15938,8 @@ et extirpet1 vinea1	1
 et extra1 dealbatio1	1
 et extremus1 captivitso1	1
 et extrinsecus1 tenax1	1
+et eya iubilandeo1	1
+et eya regia1	1
 et ezechyelx1 nec	1
 et fac celestque1	1
 et fac ego1	1
@@ -15859,6 +16066,7 @@ et golias corruit1	1
 et gratia1 agamo1	1
 et gratia1 flosculis	1
 et gratie solus1	1
+et gratius1 cum	1
 et gratius1 salus1	1
 et gratius1 salvavius1	1
 et gratus1 erigex1	1
@@ -15904,6 +16112,7 @@ et humilis1 quis2	1
 et humiliteus1 pro	1
 et hydropico semper1	1
 et hymnis contintiouo	1
+et i mirus1	1
 et iam navis1	1
 et iam rome	1
 et idcirco1 quasi1	1
@@ -16057,8 +16266,10 @@ et letareucius1 turba1	1
 et letaturucius1 dum	1
 et letaturucius1 tunc1	1
 et letaucius1 dei	1
+et letemurucius1 eya	1
 et letemurucius1 hodie1	1
 et letemurucius1 ita1	1
+et letitium1 risus	1
 et letitium1 sic	1
 et letoum1 aggrediulus1	1
 et levamenucius1 pro	1
@@ -16075,6 +16286,7 @@ et lilium1 ut	1
 et liliumucius1 convalliuntimuo	1
 et lingua1 dupplices1	1
 et linitumucius1 cecque1	1
+et liqueo1 apparuitulus1	1
 et liquore2 non	1
 et littereucius1 dominiuus1	1
 et locus1 tam	1
@@ -16110,6 +16322,7 @@ et marcescentother flosculum	1
 et mare1 non	1
 et mare1 spiritus1	1
 et mare1 tremuntitus1	1
+et marie1 virgini1	1
 et martother pater1	1
 et mater1 deitatius1	1
 et mater1 dignitas1	1
@@ -16148,6 +16361,7 @@ et miser1 in	1
 et miser1 qui	1
 et miseri1 liberavio1	1
 et misericordia1 concorntisuo	1
+et misericors1 audi1	1
 et miserum1 gratus1	1
 et mitieus1 sapituother	1
 et modus1 tam	1
@@ -16220,6 +16434,7 @@ et nos dimittimuo1	1
 et nos gaudenter	1
 et nos hoc	1
 et nos letentucius1	1
+et nos letoum1	1
 et nos luciucius1	1
 et nos omnis1	1
 et nos pontther	1
@@ -16227,8 +16442,10 @@ et nos quia1	1
 et nos semper1	1
 et nos1 apparuitulus1	1
 et nos1 conversatuntiruo	1
+et noster1 redemptios1	1
 et noster1 secului1	1
 et novus1 federis	1
+et novus1 gaudium1	1
 et novus1 gratius1	1
 et novus1 lex	1
 et novus1 novus1	1
@@ -16283,6 +16500,7 @@ et opus1 salominium1	1
 et opus1 sic	1
 et ora clemens1	1
 et ordina1 sub	1
+et ore iocundo1	1
 et ore superus1	1
 et organico1 nunc1	1
 et organis1 ad	1
@@ -16337,6 +16555,7 @@ et per portmther	1
 et per rubum	1
 et per unigenituus1	1
 et per virtus1	1
+et perduco1 hostis1	1
 et pereo1 largisqueucius1	1
 et perfidus1 gens1	1
 et peritueo1 non	1
@@ -16350,6 +16569,7 @@ et pes1 radicitus	1
 et peto1 rote	1
 et petrum1 eripio1	1
 et phylargia1 livor1	1
+et pia candor1	1
 et pietas1 benignitas	1
 et pietas1 et	1
 et pinguesciis1 exactio1	1
@@ -16419,6 +16639,9 @@ et prostrata1 ut	1
 et protheant1 se	1
 et provecti1 de	1
 et proximum1 in	1
+et prudens1 pereo1	1
+et psallamus1 ad	1
+et psallamus1 novus1	1
 et psallamus1 nunc1	1
 et psallentes1 noster1	1
 et psalterium1 premiaque1	1
@@ -16539,6 +16762,7 @@ et sanctitaus1 et	1
 et satia1 perhenni1	1
 et sauciother flagellum1	1
 et scientia1 donum1	1
+et scio1 quod1	1
 et scutum1 tributums1	1
 et se mortnoun	1
 et se signet1	1
@@ -16641,6 +16865,7 @@ et sum1 novus1	1
 et sum1 per	1
 et sum1 provideas1	1
 et sum1 si	1
+et suo cum	1
 et supera1 unirus1	1
 et superat1 sed	1
 et superbus1 cum	1
@@ -16742,6 +16967,7 @@ et vercordia1 fulgeo1	1
 et vereor1 quod1	1
 et veritateus1 tego1	1
 et veritaus1 concordo1	1
+et veritaus1 quod1	1
 et veritaus1 sed	1
 et vermis1 conscientintieuo	1
 et vermis1 sum1	1
@@ -16843,6 +17069,7 @@ eterne1 glorie ortus2	1
 eterne1 glorie qui	1
 eterne1 memorie1 resurrexit1	1
 eterne1 periothun penis1	1
+eterne1 salvus1 nos	1
 eterne1 solameus1 unicuus1	1
 eterne1 vites1 fiducia1	1
 eterne1 vites1 premium1	1
@@ -16850,6 +17077,7 @@ eterne1 vites1 statuss2	1
 eterni1 germinis in	1
 eterni1 numen1 agnus1	1
 eterni1 pater1 filius1	1
+eterni1 premium1 in	1
 eternitas1 comparo2 imieo1	1
 eternitas1 in secului1	1
 eternitas1 induit1 servitium1	1
@@ -16862,6 +17090,7 @@ eterno1 dispensatores1 gratie	1
 eterno1 priothea gaudium1	1
 eterno1 provideras1 presciveras1	1
 eterno1 servieus2 qui	1
+eternum1 fruor1 iugiteeo1	1
 eternum1 in supplicium1	1
 eternum1 perducens1 turbio2	1
 eternum1 perducunt1 dominus1	1
@@ -16900,6 +17129,7 @@ eucharistiax1 iudajsmis1 florens	1
 eucharistiex1 tui judas1	1
 eugex1 dulcis1 euphoniax1	1
 eulogiumx1 tu pro	1
+eum conferato1 stadiuother	1
 eum deprecantur1 mens1	1
 eum et expertem1	1
 eum exaltate1 super2	1
@@ -16927,6 +17157,7 @@ eva cui crediderao1	1
 eva cunctoque1 perdo1	1
 eva facinus1 audens1	1
 eva facinus1 credo1	1
+eva fugavit1 gustu	1
 eva luctus1 infero1	1
 eva mater1 omnis1	1
 eva mater1 pario2	1
@@ -16975,8 +17206,10 @@ eve nebula1 eventux1	1
 eve nomen1 tam	1
 eve per pario2	1
 eve solus1 delet1	1
+eve subvenit1 ausibdeo1	1
 eve transformata1 tu	1
 eve vhe vhe	1
+eveho1 homo1 ad	1
 evellensx1 stirpes1 spineam1	1
 eventibusx1 peccando1 succubuiother	1
 eventum1 syllogizaother veritaus1	1
@@ -17172,6 +17405,7 @@ excelsis1 canito1 gloria1	1
 excelsis1 colloco1 supra1	1
 excelsis1 deo redemptoris1	1
 excelsis1 gloria1 nam1	1
+excelsis1 gloria1 sit	1
 excelsis1 gloria1 vox	1
 excelsis1 sit gloria1	1
 excelsum1 regnanum1 solius1	1
@@ -17184,6 +17418,7 @@ exci1 potentia1 restitue1	1
 excidisti1 natus2 peperisti1	1
 excidium1 et coma1	1
 excidium1 planctum1 verto1	1
+excidium1 syoother fleo1	1
 excido1 a memoria1	1
 excido1 et caritaus1	1
 excido1 quo lapis1	1
@@ -17364,6 +17599,7 @@ exoritur1 homo1 novus1	1
 exoritur1 qui mundus1	1
 exoritur1 via vites1	1
 exorno1 fulgibus fructus2	1
+exorno1 fulgidus fructus2	1
 exosus1 ut fruamur	1
 expalleat1 que indignus1	1
 expallesco1 decolor1 et	1
@@ -17563,6 +17799,7 @@ exsulto1 sobrether christus1	1
 exsulto1 socius1 novus1	1
 exsuperat1 per te	1
 exsurgamus1 tenebrae1 tersa1	1
+exsurgat1 deus1 et	1
 exsurrgo1 et nos	1
 exta1 priothea necaque1	1
 extat1 gaudium1 dupplici1	1
@@ -17660,6 +17897,7 @@ exules1 propinant1 poculum1	1
 exules1 restauret1 patrei1	1
 exulis1 clarius1 reformanss1	1
 exultando1 et canto1	1
+exultando1 tempus1 est	1
 exultanteo1 deo laus1	1
 exultanteo1 et letantesucius1	1
 exultanteo1 hic1 sacrother	1
@@ -17674,6 +17912,7 @@ exultavio1 o natale1	1
 exultet1 celque1 curius2	1
 exultet1 contintiouo quia1	1
 exultet1 hec contintiouo	1
+exultet1 hodie1 cleruque1	1
 exultet1 plebs1 fideliums1	1
 exuo1 nam removeo1	1
 exuo1 peregrinaus1 induit1	1
@@ -17686,12 +17925,23 @@ exuunt1 nec feditatis	1
 eya amor1 proemia1	1
 eya cor1 premunt1	1
 eya da gratus1	1
+eya et eya	1
+eya eya eya	1
+eya eya plebs1	1
+eya eya transeamus1	1
 eya impetreneo1 suspirium1	1
+eya iubilandeo1 resonet1	1
 eya mater1 dominus1	1
 eya noster1 sui1	1
+eya noster1 sum1	1
+eya noster1 turmanc1	1
+eya plebs1 fidelis1	1
 eya quod1 facio1	1
 eya quod1 sequatuui1	1
+eya regia1 egregius1	1
 eya renascunturs1 omnis1	1
+eya rex nos	1
+eya transeamus1 videamo1	1
 ezechielisx1 porather tu	1
 ezechielx1 nequeque1 sum1	1
 ezechielx1 te salutanother	1
@@ -17749,6 +17999,8 @@ facies1 lex1 iam	1
 facies1 lux illuminate1	1
 facies1 nescio1 quo	1
 facies1 nunc1 gravis1	1
+facies1 o pater1	1
+facies1 plenus1 gratie	1
 facies1 rex1 rex1	1
 facies1 sed caudque1	1
 facies1 sic eum	1
@@ -17768,6 +18020,7 @@ facinus1 audens1 et	1
 facinus1 carnique1 sumpta1	1
 facinus1 credo1 et	1
 facinus1 hec est	1
+facinus1 laxatorucius1 gaudent	1
 facinus1 llluditurucius1 alapis1	1
 facinus1 mors1 amo1	1
 facinus1 quis2 pater1	1
@@ -17839,6 +18092,7 @@ facio1 me pauperem1	1
 facio1 mentior1 nescius1	1
 facio1 misticueus1 preter1	1
 facio1 munus1 largitorisucius1	1
+facio1 ne nos	1
 facio1 nec venio1	1
 facio1 nobilis1 aspectus2	1
 facio1 non debeo1	1
@@ -17886,6 +18140,7 @@ facio1 ut possum1	1
 facio1 vas egregiumx1	1
 facio1 vel qui	1
 facio1 victorem1 augeo1	1
+facio1 victoria1 ob	1
 facio1 vinets1 ergo1	1
 facio1 vins1 mea	1
 facio1 virginis1 in	1
@@ -17929,11 +18184,13 @@ factum1 discerno1 quis2	1
 factum1 est ad	1
 factum1 est divinituus1	1
 factum1 est ecclesiax1	1
+factum1 est ex	1
 factum1 est iniquus1	1
 factum1 est per	1
 factum1 est pluranotn	1
 factum1 est rex	1
 factum1 est socather	1
+factum1 est transeamus1	1
 factum1 factorum1 pro	1
 factum1 femina1 sino1	1
 factum1 grex1 membrum1	1
@@ -17950,6 +18207,7 @@ factum1 potens1 resisto1	1
 factum1 pretiosum1 mors1	1
 factum1 propter1 nos	1
 factum1 puerpera1 in	1
+factum1 qui pondertther	1
 factum1 quod1 audio1	1
 factum1 rupes1 ruptio	1
 factum1 subeas1 ne	1
@@ -18047,6 +18305,7 @@ fames1 cedique1 pestium1	1
 fames1 et sum1	1
 fames1 gravamine ac	1
 fames1 liberao1 dum	1
+fames1 meritmgo1 deflorat1	1
 fames1 palpebris1 letaturucius1	1
 fames1 pertuleris1 et	1
 fames1 siliqua1 porcoruus1	1
@@ -18055,6 +18314,7 @@ fames1 sitis1 patior1	1
 fames1 tabesco1 pascior1	1
 fami do1 fons	1
 familia1 agnus1 lotaucius1	1
+familia1 jocus1 et	1
 familiaris1 proditor1 admitto1	1
 familiaris1 unitaus1 que	1
 familiaritas1 scrutantium1 profunditas1	1
@@ -18136,6 +18396,7 @@ fatum1 crudelibuque1 exsolvit1	1
 fatum1 gemini militavieus1	1
 fatum1 luditucius1 alea1	1
 fatum1 occubuit1 ergo1	1
+fauces1 adhereat1 lingua1	1
 fauces1 colubrque1 nequissimus	1
 fauces1 et attractu1	1
 faunus careque1 pallium1	1
@@ -18173,6 +18434,7 @@ favus1 mellis1 quis2	1
 favus1 pietatis1 decus1	1
 fax incendito1 ardeo1	1
 fax tu reconciliatrixs1	1
+fax urit invidie1	1
 fax1 gallia1 premoritur1	1
 fax1 misetto1 misereor1	1
 fax1 pro ille1	1
@@ -18180,6 +18442,7 @@ fax1 vigilis1 suscitaother	1
 feaiso1 avaritieulus1 potsther	1
 feaiso1 lutumucius1 aspernatur1	1
 feaiso1 scoriother qua	1
+fece mundana1 la	1
 fece peccatoruum1 ablue1	1
 fecem fugio1 luxuries2	1
 fecem hauseranic1 ad	1
@@ -18247,6 +18510,7 @@ federa promptior1 parato2	1
 federa purgatoo1 et	1
 federa que debiles1	1
 federa servo1 gens1	1
+federa ut supera1	1
 federa vita1 tribuito1	1
 federantur superus1 ima	1
 federat novus1 do1	1
@@ -18306,6 +18570,7 @@ felix1 dies1 et	1
 felix1 es et	1
 felix1 es militieus1	1
 felix1 est conceptuntisuo	1
+felix1 est egressiox1	1
 felix1 est principium1	1
 felix1 exitueo1 tu1	1
 felix1 extat1 gaudium1	1
@@ -18337,6 +18602,7 @@ felix1 qui in	1
 felix1 qui pro	1
 felix1 qui servio1	1
 felix1 quis2 ad	1
+felix1 quis2 non	1
 felix1 regnum1 francie	1
 felix1 tam misera1	1
 felix1 ternarius1 hoc	1
@@ -18489,6 +18755,7 @@ fertilis1 celque1 fecundatuus1	1
 fertilitao1 hodie1 benignitas	1
 fertilo1 quis2 possum1	1
 fertquo1 germen gratie	1
+fertquo1 sordsther nubila1	1
 feruleo1 manus1 et	1
 ferumo1 sedeats1 scandalum1	1
 ferus1 dextera1 crucifigentique1	1
@@ -18520,6 +18787,7 @@ festa colunque1 baculi	1
 festa dies1 ago1	1
 festa dies1 dando1	1
 festa dies1 nunc1	1
+festa festorum resurrexit1	1
 festa floralia rex1	1
 festa ianjaria1 festiva	1
 festa pascalia1 celebrentuque1	1
@@ -18527,6 +18795,7 @@ festa paschalia1 converto1	1
 festa sion2 quo	1
 festa super2 omnis1	1
 festa venio1 ludo1	1
+festi cum celestque1	1
 festi gaudium1 celque1	1
 festi solvito1 gaudeo1	1
 festina iam credo1	1
@@ -18535,6 +18804,7 @@ festina monanoun ego1	1
 festina mundus2 refugiums1	1
 festina properus1 quis2	1
 festina tuus1 visiolo1	1
+festinamus peccare1 desistamus1	1
 festinat claudo1 meago1	1
 festinatio quis2 differeus1	1
 festinemus ingredi1 civitas1	1
@@ -18551,7 +18821,9 @@ festivitas hic1 celebretuque1	1
 festivitas sit omnis1	1
 festo benedicamuus1 dominus1	1
 festo christus1 decus1	1
+festo michaelieus1 qui	1
 festo pater1 et	1
+festorum resurrexit1 eya	1
 festorum verus1 figuralia	1
 festuca venenosum1 plus1	1
 festucam in allium1	1
@@ -18619,12 +18891,14 @@ fidelis1 anime1 flete	1
 fidelis1 careo1 querela1	1
 fidelis1 carmen1 maneo1	1
 fidelis1 celestibuque1 saginaother	1
+fidelis1 celque1 salutaother	1
 fidelis1 ceptrque1 regnis1	1
 fidelis1 chorus1 alleluia1	1
 fidelis1 conscientintieuo lutumucius1	1
 fidelis1 contintiouo mens1	1
 fidelis1 francie castitateque1	1
 fidelis1 gaudent filius1	1
+fidelis1 iubileeo1 gaudeat	1
 fidelis1 nisi1 sum1	1
 fidelis1 plaudat1 canticique1	1
 fidelis1 psallamus1 ovanteum1	1
@@ -18685,6 +18959,7 @@ fides1 divinum1 dogmaather	1
 fides1 do1 funeri	1
 fides1 doctorsther impudenteeo1	1
 fides1 enervatur1 eo1	1
+fides1 est et	1
 fides1 est necessarius1	1
 fides1 est non	1
 fides1 et caritaus1	1
@@ -18924,6 +19199,7 @@ filius1 ave ave	1
 filius1 ave regina1	1
 filius1 beate vivo1	1
 filius1 benedicaus1 hec	1
+filius1 bis filius1	1
 filius1 cado1 in	1
 filius1 calvarique1 a	1
 filius1 calvarique1 exsufflat1	1
@@ -18963,6 +19239,7 @@ filius1 dieectuss2 ipse1	1
 filius1 divinitaus1 hinc1	1
 filius1 do1 volo1	1
 filius1 dominus1 mittaeus1	1
+filius1 dum tullenistus2	1
 filius1 ecclesiex1 et	1
 filius1 eleothtr sino1	1
 filius1 est gentils1	1
@@ -19072,6 +19349,7 @@ filius1 principium1 cum	1
 filius1 pro salus1	1
 filius1 procedet1 suo	1
 filius1 processus1 humanus1	1
+filius1 propina1 in	1
 filius1 proprius1 donavium1	1
 filius1 prosequitur1 per	1
 filius1 psallat1 hec	1
@@ -19218,6 +19496,7 @@ fio1 turpiter1 sic	1
 fio1 voluntas1 tua	1
 firmamentuus1 sol1 luna1	1
 firmandus1 staro1 deicius1	1
+firmanus1 federa ut	1
 firmanus1 id bonus1	1
 firmanus1 mens1 natus2	1
 firmanus1 solium1 mysticnoun	1
@@ -19237,6 +19516,7 @@ firmo1 pax1 federa	1
 firmum1 fertilo1 quis2	1
 firmus et stabiliother	1
 firmus1 corona1 capituo1	1
+firmus1 firmanus1 federa	1
 firmus1 mens1 vovnumeral1	1
 firmus1 mentis1 in	1
 firmus1 nexequu1 ligatucius1	1
@@ -19280,6 +19560,7 @@ fit eleigo1 compendius2	1
 fit elinguisx1 obmutescither	1
 fit emulax1 virgio1	1
 fit et mundus2	1
+fit ex filia1	1
 fit ex lutum2	1
 fit ex sputo1	1
 fit facio1 virginis1	1
@@ -19321,6 +19602,7 @@ fit mors1 mors1	1
 fit mortalis1 eterne1	1
 fit mortalis2 ante1	1
 fit mortalis2 homo1	1
+fit mortalis2 solus1	1
 fit nascendo bos	1
 fit novus1 flore	1
 fit nox illuminae1	1
@@ -19343,6 +19625,7 @@ fit pro nos1	1
 fit propitia1 rome	1
 fit protectio1 iugeo1	1
 fit provisio1 cecque1	1
+fit puerpera1 virgo1	1
 fit puerpera1 virilis1	1
 fit purius1 nisi1	1
 fit questio1 de	1
@@ -19352,6 +19635,7 @@ fit redemptios1 misseus1	1
 fit redemptoriss1 passio1	1
 fit refectios1 credenduo1	1
 fit regnum1 viduums1	1
+fit regredior1 ad	1
 fit repente1 peregrinus1	1
 fit restauratio1 christus1	1
 fit resurrectio1 psallat1	1
@@ -19483,6 +19767,7 @@ fleo1 deothur nunc1	1
 fleo1 digneus1 scelus1	1
 fleo1 in miseria1	1
 fleo1 miser1 vites1	1
+fleo1 non cesseque1	1
 fleo1 orior1 vivendos1	1
 fleo1 possum1 nisi1	1
 fleo1 quis2 me	1
@@ -19495,6 +19780,7 @@ fletum augeo1 nudus1	1
 fletum misceo1 ut	1
 fletum pauperis1 proles1	1
 fletus ad vesperus1	1
+fletus error1 metus1	1
 fletus fluidi altus1	1
 fletus homo1 et	1
 fletus pallas1 plorat1	1
@@ -19573,6 +19859,7 @@ floret hortus incrementa1	1
 floret iesseo1 virgula1	1
 floret ut cucurbitque1	1
 floret ut rosula	1
+flori tendo1 corpus1	1
 floribus compts2 prompte1	1
 floribus mireus1 splendeo1	1
 floribus novus1 applauditeulus1	1
@@ -19620,6 +19907,7 @@ floruit ventrei1 tui	1
 florula et osculum1	1
 florum dux morunoun	1
 florum flos gratius1	1
+florum flos tu	1
 florum flos virtutum1	1
 florum juvenis1 renovanss1	1
 florum mens1 pascior1	1
@@ -19629,6 +19917,7 @@ flos ad tempus1	1
 flos amantis1 flos	1
 flos amigdalaulus1 synagogother	1
 flos arboris1 quis2	1
+flos aromaticusulus1 fructus2	1
 flos britannie de	1
 flos campque1 proferto1	1
 flos campque1 sino1	1
@@ -19652,6 +19941,7 @@ flos estaium1 novitasco1	1
 flos et fons	1
 flos et odor1	1
 flos exorno1 fulgibus	1
+flos exorno1 fulgidus	1
 flos flore fecundatuus1	1
 flos florens virginum1	1
 flos floriget candor1	1
@@ -19699,6 +19989,7 @@ flos sanctario1 et	1
 flos spirat1 odore1	1
 flos steriliother spes1	1
 flos stupoother studiother	1
+flos tu celque1	1
 flos virginum1 stirps1	1
 flos virginum1 velut1	1
 flos virgo1 deus1	1
@@ -19887,7 +20178,7 @@ fons1 in gremium1	1
 fons1 in rivulum	1
 fons1 plenitudinis1 amen1	1
 fons1 potantrther ovicule1	1
-fons1 rigatus quis2	1
+fons1 rigatus qui1	1
 fons1 rivulus cum	1
 fontalis radius iesus1	1
 fonticulus indirecte1 labituor1	1
@@ -20038,6 +20329,7 @@ fortis1 ad noster1	1
 fortis1 adversarius1 per	1
 fortis1 alligavitulus1 in	1
 fortis1 ancora1 noster1	1
+fortis1 areolaulus1 letarisqueucius1	1
 fortis1 armo1 tendo1	1
 fortis1 attollat1 debiles1	1
 fortis1 brachio te	1
@@ -20091,6 +20383,7 @@ fortune quatitui2 lux	1
 fortutudinis omnis1 sanctitudinius1	1
 forus1 nec in	1
 fove ments1 movnoun	1
+fove nos libero1	1
 fove removus1 noxia1	1
 fove sub ala	1
 fovea christuque1 hos	1
@@ -20281,6 +20574,7 @@ frigor1 et brumalis1	1
 frigor1 extinguit1 cum	1
 frigoribu1 pingens1 urbs1	1
 frigus1 et ceterus1	1
+frigus1 hiemalc redeo1	1
 frivola sudother martother	1
 frivola tue scientio1	1
 frondesco1 alathia1 cano1	1
@@ -20424,6 +20718,8 @@ fudit mater1 intacta1	1
 fudit odore1 o	1
 fueras redemptuss1 ab	1
 fueras te reseras1	1
+fuerimus nihil1 prosum1	1
+fuerimus nil prosum1	1
 fuga1 nessequo1 dupplici1	1
 fugabitur1 dies1 nigrescit1	1
 fugando1 fugiamo1 dalidao1	1
@@ -20435,6 +20731,7 @@ fugao1 surgo1 homo1	1
 fugas1 castrum1 acies1	1
 fugato1 impiueo1 eia	1
 fugato1 procul1 sordes1	1
+fugavit1 gustu malus3	1
 fugeio1 a nos1	1
 fugeraio1 ab egyptiax1	1
 fugeraio1 et porcus1	1
@@ -20524,6 +20821,7 @@ fulgida stella1 lux	1
 fulgide quod1 radiat	1
 fulgidi defixit1 studium1	1
 fulgido astt1 cum	1
+fulgidus fructus2 fecundaus1	1
 fulgor inenarrabilis1 murra1	1
 fulgor itinervomo o	1
 fulgor lumen1 nubes1	1
@@ -20542,6 +20840,7 @@ fulmine qui1 multus1	1
 fulsit clarus1 in	1
 fulsit in propatulum1	1
 fulsit in tenebrae1	1
+fulsit lectuloucius1 virgio1	1
 fulsit mundus2 lux	1
 fulsit notitia mater1	1
 fulsit unde1 quod1	1
@@ -20552,6 +20851,7 @@ fumi angelus1 domina1	1
 fumi aromaticaulus1 in	1
 fumi in altus1	1
 fumi vas ire	1
+fumi virgula1 virga1	1
 fumido video1 is1	1
 fumus1 et vapores1	1
 fumus1 hosties1 ne	1
@@ -20676,6 +20976,7 @@ gabriel hec profero1	1
 gabriel hodie1 apparuitulus1	1
 gabriel pronuntiavit1 verbum1	1
 gabriel qui1 emmanuelx1	1
+gabriel verbi1 fidelis1	1
 gabriele nuntio mare1	1
 gabrielem tam fidelems1	1
 gabrieli misseus1 celque1	1
@@ -20732,6 +21033,7 @@ gaude gloriosa morboruus1	1
 gaude incarnatus1 est	1
 gaude letaucius1 cantus1	1
 gaude mundus2 gloria1	1
+gaude novus1 nupta	1
 gaude per qui1	1
 gaude pia virgo1	1
 gaude plebs1 israel1	1
@@ -20742,6 +21044,7 @@ gaude quis2 meritum1	1
 gaude sancio1 et	1
 gaude sedes1 mannetiother	1
 gaude sion2 filia1	1
+gaude sub periteo1	1
 gaude syoother devoto1	1
 gaude syoother iubileo1	1
 gaude tu de	1
@@ -20759,6 +21062,7 @@ gaudeas militieus1 flos1	1
 gaudeas securui1 quod1	1
 gaudeat cui mors1	1
 gaudeat devotio1 fideliums1	1
+gaudeat ecclesiax1 de	1
 gaudeat ecclesiax1 fideliums1	1
 gaudeat ecclesiax1 invenio	1
 gaudeat ecclesiax1 novus1	1
@@ -20783,6 +21087,7 @@ gaudent celque1 letanturucius1	1
 gaudent filius1 marie1	1
 gaudent ille1 gratius1	1
 gaudent indulgentia1 supplicanteother	1
+gaudent mille1 mille1	1
 gaudent potentia1 honor1	1
 gaudenter psallimus1 quis2	1
 gaudeo quod1 pro	1
@@ -20790,6 +21095,7 @@ gaudeo reddituras1 depositum1	1
 gaudeo1 antiquitas1 cum	1
 gaudeo1 asinus1 et	1
 gaudeo1 celque1 curius2	1
+gaudeo1 cetuque1 syoother	1
 gaudeo1 chorus1 celestiuque1	1
 gaudeo1 cor amo1	1
 gaudeo1 corripi1 exspectano1	1
@@ -20807,6 +21113,7 @@ gaudeo1 eia venio1	1
 gaudeo1 eia videnso1	1
 gaudeo1 eia virgo1	1
 gaudeo1 et letemurucius1	1
+gaudeo1 et psallamus1	1
 gaudeo1 exaltabitur1 sicut1	1
 gaudeo1 favellus nimium1	1
 gaudeo1 filius1 procedet1	1
@@ -20826,8 +21133,11 @@ gaudeo1 in dominus1	1
 gaudeo1 in spe	1
 gaudeo1 intentdo1 nexuequs1	1
 gaudeo1 iubileo1 mens1	1
+gaudeo1 laus1 sui1	1
+gaudeo1 leodegari2 trintiaus1	1
 gaudeo1 letiquum1 vivo1	1
 gaudeo1 madother typictieus1	1
+gaudeo1 martirother virtus1	1
 gaudeo1 nec habeo1	1
 gaudeo1 noceo1 miser1	1
 gaudeo1 noster1 ecclesiax1	1
@@ -20835,6 +21145,7 @@ gaudeo1 pater1 sedulus1	1
 gaudeo1 pax justitia1	1
 gaudeo1 per te	1
 gaudeo1 pharaone1 plebs1	1
+gaudeo1 plaudit1 altissiuo1	1
 gaudeo1 privileothei simultatis1	1
 gaudeo1 puer1 herodes	1
 gaudeo1 quia1 venio1	1
@@ -20947,6 +21258,7 @@ gaudium1 levitarums1 resultet1	1
 gaudium1 maneo1 virginitas1	1
 gaudium1 mater1 ecclesiax1	1
 gaudium1 mater1 flentem	1
+gaudium1 mater1 integritas1	1
 gaudium1 medeago1 verus1	1
 gaudium1 mellifluum1 amor1	1
 gaudium1 merueo1 superna2	1
@@ -20958,6 +21270,7 @@ gaudium1 natus2 est	1
 gaudium1 nicholai1 prex1	1
 gaudium1 nimio1 resonet1	1
 gaudium1 nisi1 procul1	1
+gaudium1 nos festa	1
 gaudium1 nos in	1
 gaudium1 nos perhennia1	1
 gaudium1 nos poither	1
@@ -20975,6 +21288,7 @@ gaudium1 pario2 tam	1
 gaudium1 pasce1 cura1	1
 gaudium1 pater1 exultavio1	1
 gaudium1 patrei1 divineus1	1
+gaudium1 penset1 eterni1	1
 gaudium1 per iesums1	1
 gaudium1 perducamur1 celestique1	1
 gaudium1 perducat1 celestique1	1
@@ -20985,12 +21299,15 @@ gaudium1 pretendit1 singulus1	1
 gaudium1 privilegiothet mea	1
 gaudium1 pro bonus1	1
 gaudium1 pro qua	1
+gaudium1 proferato1 hec	1
 gaudium1 prophete1 vaticiniunumeral1	1
 gaudium1 proprius1 calore1	1
 gaudium1 psallat1 cum	1
 gaudium1 psallat1 hec	1
+gaudium1 psallit1 gaudeo1	1
 gaudium1 puerpere1 nolo1	1
 gaudium1 que paro2	1
+gaudium1 que superus1	1
 gaudium1 quis2 antiquus1	1
 gaudium1 quod1 salvatous1	1
 gaudium1 reduco1 proles1	1
@@ -21020,6 +21337,7 @@ gaudium1 syoother mens1	1
 gaudium1 te laudo1	1
 gaudium1 te liberao1	1
 gaudium1 teritur1 quatitui2	1
+gaudium1 tityruibersus1 cibaria1	1
 gaudium1 tripuditiaus1 decet1	1
 gaudium1 tu qui	1
 gaudium1 ubi pax	1
@@ -21134,7 +21452,9 @@ generaus1 sed de	1
 generaus1 veneunt1 altarie1	1
 generosa christuque1 natus2	1
 generosa generaus1 veneunt1	1
+generosa gloriosa stella1	1
 generosa serenavius1 et	1
+generosa tu mater1	1
 generosa vites1 medicina1	1
 generosam ac pre	1
 generositas extulerit1 ut	1
@@ -21164,6 +21484,7 @@ genitor1 carnis1 nostre1	1
 genitor1 ingenitusum1 nos	1
 genitor1 ipse1 roga	1
 genitor1 origo1 conditorintisuo	1
+genitor1 paradisi1 adam1	1
 genitor1 salvother lumen1	1
 genitorem1 contra1 carnique1	1
 genitorem1 factoum1 seclui1	1
@@ -21367,6 +21688,7 @@ gereno1 irritueo1 proinde1	1
 gereno1 te sic	1
 gerenteo1 vicis1 et	1
 gergesei pheresei1 capiunto1	1
+geris et in	1
 gerit christus1 tituluibermus1	1
 gerit indicium1 quis2	1
 gerit quod1 mox	1
@@ -21450,7 +21772,9 @@ gigno1 non fit	1
 gigno1 o qui1	1
 gigno1 o sanctother	1
 gigno1 prior1 generaus1	1
+gigno1 puerpera1 asperum1	1
 gigno1 purgavio1 criminque1	1
+gigno1 que nos	1
 gigno1 qui1 abiecte1	1
 gigno1 quis2 predestinavit1	1
 gigno1 regales1 regaliss1	1
@@ -21594,6 +21918,7 @@ gloria1 sexta1 passus3	1
 gloria1 si que	1
 gloria1 si sto1	1
 gloria1 sit cum	1
+gloria1 sit divinitatus1	1
 gloria1 sit solus1	1
 gloria1 sto1 in	1
 gloria1 superus1 equatx1	1
@@ -21708,6 +22033,7 @@ gloriosa dei mater1	1
 gloriosa domina1 sua	1
 gloriosa est de	1
 gloriosa fulgida stella1	1
+gloriosa lex1 lucidus1	1
 gloriosa luminer1 gens1	1
 gloriosa margaritum1 pretiosum1	1
 gloriosa mater1 salvatorius1	1
@@ -21716,6 +22042,7 @@ gloriosa nascor1 de	1
 gloriosa natus2 pario2	1
 gloriosa perpes1 factum1	1
 gloriosa prodivit1 primothel	1
+gloriosa stella1 mare1	1
 gloriosa suavius1 et	1
 gloriosa super2 omnis1	1
 gloriosa ut mors1	1
@@ -21777,6 +22104,7 @@ grate fameques1 latus3	1
 grate gratie munus1	1
 grate pater1 qui	1
 grates ago gratie	1
+grates hodie1 deus1	1
 grates referamo1 canticique1	1
 grati sub inopia1	1
 grati sum1 memoria1	1
@@ -21814,6 +22142,7 @@ gratia1 quis2 per	1
 gratia1 se neganequt1	1
 gratia1 si mereo1	1
 gratia1 soror1 martother	1
+gratia1 traditutisus1 est	1
 gratia1 ut facio1	1
 gratie ac venieo1	1
 gratie ad orior1	1
@@ -21849,6 +22178,7 @@ gratie gratulentur syoother	1
 gratie hoc in	1
 gratie in qua	1
 gratie laus1 sonatther	1
+gratie letareucius1 virgo1	1
 gratie mare1 ad	1
 gratie mare1 stella1	1
 gratie meritmgo1 lucrantesucius1	1
@@ -21908,6 +22238,7 @@ gratiosa gratia1 imploreo1	1
 gratiosa inter1 omnis1	1
 gratiosa novus1 ferenus1	1
 gratiosa redolents1 fragrantia	1
+gratiosa tu vitiss1	1
 gratiosam cunctus1 figurabant	1
 gratiosum et totus2	1
 gratius fortune gratius1	1
@@ -21929,6 +22260,7 @@ gratius1 christus1 rex1	1
 gratius1 confidententisuo in	1
 gratius1 converto1 in	1
 gratius1 criminque1 termina1	1
+gratius1 cum perenni1	1
 gratius1 dat misericordia1	1
 gratius1 de sanctother	1
 gratius1 dele1 vitium1	1
@@ -22056,6 +22388,7 @@ gratulare et letareucius1	1
 gratulati sum1 pastores1	1
 gratulatur gaudeo1 quidem1	1
 gratulemur dies1 est	1
+gratulemur et letemurucius1	1
 gratulemur in hac	1
 gratulentur filie quis2	1
 gratulentur par1 concordia1	1
@@ -22232,6 +22565,7 @@ gustans fructus2 suus1	1
 gustanti vetitum1 intacti1	1
 gustas nucleum de	1
 gustaverat sum1 quod1	1
+gustu malus3 malus1	1
 gustus sapientiother error1	1
 gustus1 straviother justus1	1
 gutta minimus1 stillanother	1
@@ -22247,6 +22581,7 @@ ha cum iudeeo1	1
 ha ha he	1
 ha he qui	1
 ha miserum1 te	1
+ha moriensor1 vita1	1
 ha quo se	1
 habeareo1 celebrei1 amen1	1
 habena1 ensis1 tollo1	1
@@ -22300,6 +22635,7 @@ habeo1 parus1 est	1
 habeo1 parvus1 majus1	1
 habeo1 plus1 est	1
 habeo1 post1 deliquia1	1
+habeo1 postquam1 prebuit1	1
 habeo1 premia1 exul1	1
 habeo1 que devoveo	1
 habeo1 qui capio1	1
@@ -22394,6 +22730,7 @@ hac usuras2 et	1
 hac vallnumeral1 lacrimarumucius1	1
 hac vallnumeral1 miseri1	1
 hac vehar1 ratis1	1
+hac verbi1 copulque1	1
 hac verius1 temperiu1	1
 hac via prex1	1
 hac virga1 pastorali1	1
@@ -22407,6 +22744,7 @@ halitus1 et flammarum1	1
 hamic1 suspendituother in	1
 hamuic1 in esaum1	1
 hamuic1 mordentenoun teneo1	1
+hamuic1 nos trahatitus1	1
 hamuic1 sub esaum1	1
 hannibal1 terror1 hostis1	1
 harmoniic1 cor tuus1	1
@@ -22472,6 +22810,7 @@ hec abiectio1 insum1	1
 hec abusio1 miles1	1
 hec actum1 sum1	1
 hec ad franciam	1
+hec adsum1 flori	1
 hec adversantia1 mors1	1
 hec affirmatioulus1 fallo1	1
 hec annuo1 et	1
@@ -22493,6 +22832,7 @@ hec contintiouo benedicaus1	1
 hec contintiouo caput1	1
 hec contintiouo cum	1
 hec contintiouo festa	1
+hec contintiouo gaudeat	1
 hec contintiouo gaudium1	1
 hec contintiouo in	1
 hec contintiouo moveanoun	1
@@ -22631,6 +22971,8 @@ hedere terebinthus1 sensus2	1
 hedis egrisx1 sanother	1
 hee laus1 ille1	1
 hee sum1 rote	1
+hei hei novus1	1
+hei novus1 gaudium1	1
 helena1 pari1 pulcherrima1	1
 helena1 pari1 pulcherrimus1	1
 heli et heli	1
@@ -22697,6 +23039,7 @@ heu mors1 iugeo1	1
 heu mox cado1	1
 heu mundus2 vita1	1
 heu navicula simonus1	1
+heu quantus1 est	1
 heu qui1 subditis1	1
 heu quis2 nos	1
 heu quo progreditur1	1
@@ -22706,6 +23049,7 @@ heu te intueor1	1
 heu veritaus1 a	1
 heu vita1 fugitivo1	1
 heu vita1 mors1	1
+hey in iste1	1
 hez hez hez	1
 hi aspere1 uberi	1
 hi consummanntituo incendium1	1
@@ -22784,6 +23128,7 @@ hic mundanus1 ne	1
 hic natura1 cum	1
 hic non est	1
 hic numerus1 est	1
+hic nuntio1 est	1
 hic oculus1 lingua1	1
 hic pansat1 in	1
 hic patronus1 gravitatiss1	1
@@ -22952,6 +23297,7 @@ hic1 vites1 stadiuother	1
 hic1 vites1 status2	1
 hictus1 sepui1 fures1	1
 hiemalc nox1 cum	1
+hiemalc redeo1 tempus1	1
 hiemalc tempus1 ver	1
 hiemalic et vernalis1	1
 hiemalic quod1 vis	1
@@ -23043,6 +23389,7 @@ his tympanistritiaus1 vielles1	1
 hispanic1 lausucius1 decus1	1
 hispanuc1 apulusulus1 et	1
 historiam1 per civitas1	1
+historic1 procedo1 sol	1
 histric1 donatuum1 premiis1	1
 histric1 et tu1	1
 histric1 virtus1 premium1	1
@@ -23105,6 +23452,7 @@ hoc fio1 ignoreo1	1
 hoc florali gaudium1	1
 hoc fons1 rivulus	1
 hoc gaudium1 nescius1	1
+hoc hoc in	1
 hoc ignis1 napeas	1
 hoc ignis1 pietatis1	1
 hoc ille1 janua1	1
@@ -23134,6 +23482,7 @@ hoc mare1 arrideulus1	1
 hoc marie1 parituro2	1
 hoc martyriother donmther	1
 hoc medicinale1 unde1	1
+hoc meditaor1 quis2	1
 hoc misticeus1 ostendito1	1
 hoc mitto1 exsilium1	1
 hoc mons1 letum1	1
@@ -23167,6 +23516,7 @@ hoc proficias1 igitur1	1
 hoc promeruit1 infelix1	1
 hoc quod1 astrus1	1
 hoc quod1 canimuque1	1
+hoc quod1 factum1	1
 hoc quod1 gravat	1
 hoc quod1 latuitucius1	1
 hoc responso1 novus1	1
@@ -23186,6 +23536,7 @@ hoc signum1 gigas	1
 hoc signum1 populus1	1
 hoc signum1 triumphes1	1
 hoc siluit1 vita1	1
+hoc solemn1 concinantituo	1
 hoc sollempnio1 leteturucius1	1
 hoc sollempnio1 o	1
 hoc solum1 gaudeo	1
@@ -23222,6 +23573,7 @@ hodie1 cessenque1 arguments1	1
 hodie1 characterque1 signo1	1
 hodie1 christuque1 a	1
 hodie1 christuque1 natus2	1
+hodie1 cleruque1 cum	1
 hodie1 craque1 fiet	1
 hodie1 cum sanctother	1
 hodie1 cur oculus1	1
@@ -23229,6 +23581,7 @@ hodie1 datoo1 letitium1	1
 hodie1 de filia1	1
 hodie1 debellavit1 tyrannus1	1
 hodie1 deus1 filius1	1
+hodie1 deus1 natus2	1
 hodie1 die descendo1	1
 hodie1 die permaneo1	1
 hodie1 die qui	1
@@ -23244,11 +23597,13 @@ hodie1 exsultanteo1 et	1
 hodie1 fero1 ad	1
 hodie1 filius1 divinitaus1	1
 hodie1 filius1 marie1	1
+hodie1 fit regredior1	1
 hodie1 flos apparuitulus1	1
 hodie1 flos campque1	1
 hodie1 flos1 terra1	1
 hodie1 fructuosas2 ad	1
 hodie1 gaudeo1 quia1	1
+hodie1 gaudium1 que	1
 hodie1 gladius1 versatilto1	1
 hodie1 glorie dies1	1
 hodie1 gratulentur filie	1
@@ -23264,6 +23619,7 @@ hodie1 iustijie1 de	1
 hodie1 lapis1 sanctuariother	1
 hodie1 letitium1 sub	1
 hodie1 lux mundus2	1
+hodie1 lux orior1	1
 hodie1 mater1 contagio1	1
 hodie1 mecum1 sum1	1
 hodie1 mirabilus1 commercis2	1
@@ -23295,6 +23651,7 @@ hodie1 quod1 fides1	1
 hodie1 quod1 homo1	1
 hodie1 radiat lux	1
 hodie1 reemo1 nos	1
+hodie1 regina1 iustijie1	1
 hodie1 res iocosa1	1
 hodie1 resurgere1 die	1
 hodie1 rex eterne1	1
@@ -23336,6 +23693,7 @@ homicidium cum luxuria1	1
 homilia prophetia1 presenti1	1
 homo1 abrahe1 et	1
 homo1 ad laus1	1
+homo1 ad patrius2	1
 homo1 arguments1 prorsus1	1
 homo1 audi1 omnis1	1
 homo1 ave mare1	1
@@ -23425,6 +23783,7 @@ homo1 fructus2 david1	1
 homo1 funiculus sed	1
 homo1 gaudeat omnis1	1
 homo1 gaudeo1 eia	1
+homo1 genito de	1
 homo1 genitricis pia	1
 homo1 gratius1 vivificus1	1
 homo1 habeo1 mortnoun	1
@@ -23629,6 +23988,7 @@ honor1 dano1 privilegotheu	1
 honor1 delectatur1 dominus1	1
 honor1 dextera1 dispenseut	1
 honor1 dispendieum cum	1
+honor1 et decorem1	1
 honor1 et gloria1	1
 honor1 et lumen1	1
 honor1 et onus1	1
@@ -23673,6 +24033,7 @@ honora1 quis2 scio1	1
 honorans1 noster1 pater1	1
 honorant1 et chaldeque1	1
 honorari1 ecce1 navis1	1
+honorat1 et decorat1	1
 honorat1 nichil1 iustjus1	1
 honore1 christus1 natalitias1	1
 hora1 cenque1 hausiic1	1
@@ -23756,6 +24117,7 @@ hostilis1 confregintituo ostium1	1
 hostilis1 munus1 dano1	1
 hostiliss1 protervia1 et	1
 hostios1 arca1 intrat2	1
+hostis1 ad miseria1	1
 hostis1 annus1 dignus1	1
 hostis1 capacitaque1 hamuic1	1
 hostis1 capio1 es	1
@@ -23805,6 +24167,7 @@ hostis1 publicous1 habeo1	1
 hostis1 qui fraus1	1
 hostis1 qui pios1	1
 hostis1 qui semper1	1
+hostis1 quis2 habeo1	1
 hostis1 relegatos1 letemurucius1	1
 hostis1 relego1 regnum1	1
 hostis1 reliquus1 habeo1	1
@@ -23889,6 +24252,7 @@ humanus1 genus1 spes1	1
 humanus1 genus1 venieo1	1
 humanus1 henrici probo1	1
 humanus1 inefficax1 et	1
+humanus1 la laudaucius1	1
 humanus1 labemucius1 crimen1	1
 humanus1 languidumucius1 a	1
 humanus1 languorisucius1 vulnus1	1
@@ -24008,6 +24372,7 @@ hypocrite qui culiceque1	1
 hypocritis si pro	1
 hysopus humilis1 per	1
 i et e	1
+i mirus1 virtus1	1
 iaceaeo1 prior1 delibera1	1
 iaceaeo1 quatuoi2 in	1
 iaceneo1 cunabulique1 lam	1
@@ -24110,6 +24475,7 @@ iam lucus1 orto1	1
 iam maturother dum	1
 iam maturother et	1
 iam me beatam	1
+iam mestitago1 plebs1	1
 iam meus1 loquelisucius1	1
 iam mitto1 est	1
 iam mors1 insultui1	1
@@ -24263,6 +24629,7 @@ ideo1 perores1 malleother	1
 idiomats1 magnalius1 dei	1
 idolatris1 noster1 scio1	1
 idolatris1 pro patrius2	1
+idolatris1 sum1 liberato1	1
 idolorus1 servituo1 templum1	1
 idolus1 non expavesco1	1
 idolus1 quod1 corruit1	1
@@ -24306,6 +24673,7 @@ iesseo1 progreditur1 novus1	1
 iesseo1 pullulat1 in	1
 iesseo1 qui1 christuque1	1
 iesseo1 quis2 floris	1
+iesseo1 quis2 pretendit1	1
 iesseo1 radix1 exeret1	1
 iesseo1 regius1 flore	1
 iesseo1 ut humanus1	1
@@ -24323,6 +24691,9 @@ iesums1 christuque1 dominus1	1
 iesums1 christuque1 marie1	1
 iesums1 das supplicium1	1
 iesums1 dux1 secqtor1	1
+iesums1 iesums1 iesums1	1
+iesums1 iesums1 marie1	1
+iesums1 marie1 filius1	1
 iesums1 tu1 mortuus1	1
 iesus1 ad pater1	1
 iesus1 admirabilis1 o	1
@@ -24399,6 +24770,7 @@ iesus1 liber4 signatuum1	1
 iesus1 lignum1 clavatuque1	1
 iesus1 magis2 monstrato1	1
 iesus1 mamother lactatusucius1	1
+iesus1 marie1 filius1	1
 iesus1 marie1 natus2	1
 iesus1 mater1 compatiens2	1
 iesus1 mirandus1 facio1	1
@@ -24573,6 +24945,7 @@ ignominieo1 laus1 nunc1	1
 ignominieo1 mater1 flentis	1
 ignoraeo1 quis2 volo1	1
 ignoraneo1 vir1 tu	1
+ignorano1 emulix1 quis2	1
 ignorano1 per crux1	1
 ignoreo1 que sit	1
 ignoro1 dives1 quis2	1
@@ -24727,6 +25100,7 @@ illecebras1 sed cecque1	1
 illecta1 diseue tandem1	1
 illesa1 manenso1 deitaus1	1
 illesa1 virginitas1 sum1	1
+illesum1 dat in	1
 illesus1 flos1 leditucius1	1
 illibate1 castitaque1 qui1	1
 illibatue1 ignis1 qui	1
@@ -24734,7 +25108,9 @@ illibitue1 amor1 revocantis1	1
 illic1 quis2 admittitur1	1
 illic2 agmen1 sum1	1
 illic2 sanctus1 disposieui	1
+illicita2 dignus1 pensanum1	1
 illicita2 me protege1	1
+illicitas2 liciterucius1 acceduntque1	1
 illicite2 miser1 immoreris1	1
 illiciti2 hauriunic1 venenum1	1
 illiciti2 sensui1 et	1
@@ -24754,6 +25130,7 @@ illuminae1 et eliminansx1	1
 illuminae1 maneo1 nos1	1
 illuminate1 cordium1 per	1
 illuminate1 cordiurn1 et	1
+illuminate1 nam lumen1	1
 illuminate1 qua pateo1	1
 illuminate1 virgo1 fecundatuus1	1
 illuminave1 cum a	1
@@ -24776,6 +25153,7 @@ illustrasteo1 seculuui1 donum1	1
 illustrateo1 es spiritus1	1
 illustratoeo1 morunoun gloria1	1
 illustratueo1 lumen1 lumen1	1
+illustravieo1 pax1 recognitas1	1
 illustravieo1 sacrother cordis1	1
 illustreeo1 decipis1 cum	1
 illustreo1 cecaque1 mens1	1
@@ -24810,6 +25188,7 @@ imago1 teneo1 hec	1
 imbecilleo1 quia1 sum1	1
 imbreeo1 ruo1 et	1
 imbreeo1 ruo1 unde1	1
+imbreeo1 spiritus1 divinituus1	1
 imbreeo1 spiritus1 paraclitus1	1
 imbribueo1 rubus non	1
 imbuieo1 ars1 quod1	1
@@ -25161,6 +25540,7 @@ in bellum1 nec	1
 in bethlehem inde1	1
 in bethlehem qui	1
 in bethlehem quis2	1
+in bethlehem salvatous1	1
 in betleem de	1
 in bonus1 ago1	1
 in bonus1 dum	1
@@ -25400,10 +25780,13 @@ in erroris1 laberintoucius1	1
 in erumpnax1 semper1	1
 in esaum1 latuitucius1	1
 in eseum1 mortalitanoun	1
+in esmum1 fertquo1	1
 in esu corticis1	1
 in eternum1 amen1	1
+in eternum1 fruor1	1
 in eternum1 perducens1	1
 in ethere1 mater1	1
+in eum conferato1	1
 in eurox1 nec	1
 in excelsis1 canito1	1
 in excelsis1 colloco1	1
@@ -25433,6 +25816,7 @@ in fames1 gravamine	1
 in famulos hinc1	1
 in favilla1 cineis1	1
 in fel verto1	1
+in festo michaelieus1	1
 in festucis qualis1	1
 in fictili dignitas1	1
 in fides1 firmius	1
@@ -25531,6 +25915,7 @@ in hac pena1	1
 in hac pre	1
 in hac unius1	1
 in hac vallnumeral1	1
+in hac verbi1	1
 in hac verius1	1
 in hac via	1
 in hac virga1	1
@@ -25560,6 +25945,7 @@ in hoc exsilio1	1
 in hoc exsilium1	1
 in hoc festo	1
 in hoc florali	1
+in hoc hoc	1
 in hoc in	1
 in hoc littera1	1
 in hoc locus1	1
@@ -25574,6 +25960,7 @@ in hoc quod1	1
 in hoc salum1	1
 in hoc secului1	1
 in hoc signum1	1
+in hoc solemn1	1
 in hoc sollempnio1	1
 in hoc solum1	1
 in hoc status2	1
@@ -25648,6 +26035,7 @@ in is1 presentia1	1
 in is1 solemn1	1
 in is1 speleas1	1
 in israel1 per	1
+in iste1 die	1
 in iste1 foraminibus	1
 in iste1 otiosum1	1
 in iubileo1 in	1
@@ -25937,6 +26325,7 @@ in presenti1 retineo1	1
 in presepe1 parien1	1
 in presepe1 ponito1	1
 in presepio1 dominus1	1
+in presepio1 quis2	1
 in presepio1 rex	1
 in presepio1 stella1	1
 in pretium1 pretium1	1
@@ -26017,6 +26406,7 @@ in quo deus1	1
 in quo dupplo1	1
 in quo malignus1	1
 in quo natura1	1
+in quo non	1
 in quo nos1	1
 in quo sanctus1	1
 in quo si	1
@@ -26240,11 +26630,14 @@ in terra1 igniculos1	1
 in terra1 nascor1	1
 in terra1 nuntiatur1	1
 in terra1 panis1	1
+in terra1 patrius2	1
 in terra1 pax	1
 in terra1 qui	1
 in terra1 redditas1	1
 in terra1 revertendis1	1
+in terra1 reverteriss1	1
 in terra1 sumo1	1
+in terra1 vox	1
 in tertio1 pernoctans1	1
 in tertius1 die	1
 in testu1 conditntiauo	1
@@ -26749,6 +27142,7 @@ inferus1 angelus1 ad	1
 inferus1 avesqie1 superius1	1
 inferus1 coheredeque1 filius1	1
 inferus1 nostre1 sum1	1
+inferus1 refrenass1 illicita2	1
 inferus1 sedes1 de	1
 inferus1 sinistre1 manuis1	1
 inferus1 sino1 spe	1
@@ -26757,6 +27151,7 @@ inferus1 trusutisus1 misera1	1
 inferus1 veneraoi1 machina1	1
 inficere1 ioseph1 venus1	1
 inficis1 cui detraho1	1
+inficis1 fellitis conditntiauo	1
 inficit1 hic reficits1	1
 inficit1 minister1 ecclesiex1	1
 inficitur1 subjectus2 macula1	1
@@ -27103,6 +27498,7 @@ integra1 puella1 que	1
 integra1 virgo1 integra1	1
 integralia1 pater1 gigno1	1
 integritas1 discordeus tempus1	1
+integritas1 post1 puerperium1	1
 integritas1 que sit	1
 integritas1 qui1 daro1	1
 integro1 deitatius1 jus1	1
@@ -27142,6 +27538,7 @@ inter1 bracchium1 tulo1	1
 inter1 ceterus1 fors1	1
 inter1 chorus1 mulier1	1
 inter1 cura1 continuantisuo	1
+inter1 dissidenteua firmus1	1
 inter1 eos dat	1
 inter1 eos multus1	1
 inter1 feminasque1 primus1	1
@@ -27398,6 +27795,7 @@ involvuntur1 fluctibus juvenis1	1
 iob allium1 qui	1
 iob concutio1 ut	1
 iob opprimit1 verus1	1
+iocetur1 almisulus1 plausibus1	1
 ioci1 thalamutisus1 gratie	1
 iocis1 dignus1 atque1	1
 iocosa1 ave lex1	1
@@ -27437,6 +27835,7 @@ iohannes1 instruens1 fero1	1
 iohannes1 planctum1 movnoun	1
 iohannes1 pre ceterus1	1
 iohannes1 superus1 lex1	1
+iohannes1 te rogo1	1
 iohannies1 aquileulus1 monnoun	1
 iohel1 et ezechyelx1	1
 ioles1 illecebra1 alcideulus1	1
@@ -27580,6 +27979,7 @@ irritueo1 que sit	1
 irritueo1 trudititus1 in	1
 irrogaeo1 et qui	1
 irroreo1 cor aridumulus1	1
+irroreo1 nos tu	1
 irruieo1 qui domus1	1
 irruitieo1 gladius1 in	1
 is abstulist1 prole1	1
@@ -27671,6 +28071,7 @@ iste1 colo1 pange1	1
 iste1 colo1 tritiaus1	1
 iste1 commixtis2 salvaus1	1
 iste1 compleveris2 video1	1
+iste1 die meago1	1
 iste1 dies1 celebrarque1	1
 iste1 dies1 est	1
 iste1 dies1 pretiosum1	1
@@ -27700,6 +28101,7 @@ iste1 parvulus1 traho1	1
 iste1 parvus1 allium1	1
 iste1 petroso1 limiteucius1	1
 iste1 prosperum1 cum	1
+iste1 que ascendo1	1
 iste1 quod1 metuo1	1
 iste1 quod1 tribuo1	1
 iste1 re is	1
@@ -27774,14 +28176,17 @@ iubilateo1 mens1 cum	1
 iubilateo1 noxe1 pulsa1	1
 iubileeo1 cor1 pio	1
 iubileeo1 cum tripuditious1	1
+iubileeo1 ecclesiax1 cedique1	1
 iubileeo1 ecclesiax1 cor1	1
 iubileeo1 ecclesiax1 quia1	1
+iubileeo1 gaudeat ecclesiax1	1
 iubileeo1 nos1 reduxerunts1	1
 iubileeo1 penarum1 laxatucius1	1
 iubileeo1 ruscinola1 pange1	1
 iubilemueo1 accurattque1 celebremuque1	1
 iubilemueo1 cordis1 vox1	1
 iubilemueo1 et cantemuque1	1
+iubilemueo1 et ore	1
 iubilemueo1 et psallamus1	1
 iubilemueo1 hec est	1
 iubilemueo1 hic est	1
@@ -27795,6 +28200,8 @@ iubileo1 israel1 et	1
 iubileo1 mellis1 emulox1	1
 iubileo1 mens1 procul1	1
 iubileo1 nicholaus1 est	1
+iubileo1 puri1 cordis1	1
+iubileo1 qui se	1
 iubileo1 qui sub	1
 iubileo1 repleo1 quis2	1
 iubileueo1 annus1 in	1
@@ -28000,11 +28407,13 @@ ius ratio1 discreteuo	1
 ius sino1 dispendeuo	1
 ius tuerenc1 in	1
 ius usurpanss2 sacerdotis1	1
+ius vir1 lex1	1
 iusjos1 quis2 tutrixnc1	1
 iusjos1 simulant1 filius1	1
 iusjue1 do1 scelus1	1
 iussejis1 nonne1 tu	1
 iussjobeo1 dictum1 sectariui1	1
+iustijie1 adiuva1 nos	1
 iustijie1 apparuitulus1 hodie1	1
 iustijie1 coccum1 bistincti1	1
 iustijie1 cor1 suus1	1
@@ -28058,6 +28467,7 @@ iuvenibueo1 compassis2 presidio1	1
 iuveo1 lapideus1 me	1
 jaceo1 et attrita1	1
 jaceo1 imperium1 hierusalem1	1
+jaceo1 in presepio1	1
 jaceo1 in sterquiliniother	1
 jaceo1 in viarum1	1
 jaceo1 infimi1 casibuque1	1
@@ -28092,6 +28502,7 @@ jesu dulcissime1 vita1	1
 jesum cum munus1	1
 jesus christuque1 dico2	1
 jesus nomen1 ponito1	1
+jocus1 et letitium1	1
 johannes amantiso1 corpus1	1
 joseph nao1 frstm1	1
 jubeo1 ab omnis1	1
@@ -28158,11 +28569,13 @@ jus1 computatuo ecce1	1
 jus1 debent1 hec	1
 jus1 decet1 hic1	1
 jus1 det pia	1
+jus1 festi cum	1
 jus1 festum colo1	1
 jus1 fiunt hec	1
 jus1 fracto natures2	1
 jus1 hic1 muto1	1
 jus1 homo1 conditintiouo	1
+jus1 leduntucius1 et	1
 jus1 miror1 est	1
 jus1 mirus1 mirus1	1
 jus1 mors1 carnis1	1
@@ -28170,6 +28583,7 @@ jus1 musica1 proportio1	1
 jus1 muto1 stupueraother	1
 jus1 natura1 tunc1	1
 jus1 nauseant1 et	1
+jus1 noster1 est	1
 jus1 numen1 ut	1
 jus1 pario2 virgo1	1
 jus1 pio cor1	1
@@ -28241,6 +28655,7 @@ juvenis1 etate1 tu1	1
 juvenis1 renovanss1 amor1	1
 juvenis1 teneo1 laus1	1
 juvenis1 transeunt1 limitesucius1	1
+juvenis1 urbanitaus1 iocetur1	1
 juventus1 alacrior1 exitium1	1
 juventus1 annuo1 nihil1	1
 juventus1 floruit liqueo1	1
@@ -28271,6 +28686,9 @@ katherine precamine1 ad	1
 katherine que scribaother	1
 koinon orgium1 ad	1
 kyrie christus1 rex1	1
+la laudaucius1 dominus1	1
+la laudaucius1 tinnuliberaus1	1
+la lavaucius1 cor1	1
 la pas liberato1	1
 la spes1 reorum1	1
 labarisucius1 in laqueous1	1
@@ -28489,6 +28907,7 @@ languentesucius1 nos prostituit1	1
 languentucius1 desideria1 tuiquus1	1
 languentucius1 officium1 si	1
 languentucius1 syoother filie	1
+langueoucius1 causa1 languorisucius1	1
 langueoucius1 iam fero1	1
 langueoucius1 seu summus1	1
 languesucius1 veloeo1 te	1
@@ -28511,6 +28930,7 @@ languoreucius1 proprio1 confusio1	1
 languoribusucius1 remedium1 venio1	1
 languorisucius1 gemitus1 sed	1
 languorisucius1 tu solaciuus1	1
+languorisucius1 video1 nec	1
 languorisucius1 vulnus1 dum	1
 languoriucius1 dedo1 in	1
 laniantucius1 dens1 et	1
@@ -28700,6 +29120,7 @@ latuitucius1 sed eclipsisx1	1
 latuitucius1 sed in	1
 latuitucius1 sol in	1
 latuitucius1 ut homo1	1
+latus2 anguli1 nec	1
 latus2 et cruor1	1
 latus2 iesus1 subjectus2	1
 latus2 pro te	1
@@ -28731,6 +29152,8 @@ laudao1 invisibilem1 pater1	1
 laudato1 deo sedulo1	1
 laudato1 obtulither que	1
 laudato1 syoother presenti1	1
+laudaucius1 dominus1 plebs1	1
+laudaucius1 tinnuliberaus1 vox1	1
 laudes1 pater1 filius1	1
 laudess1 referamo1 tu1	1
 laudetucius1 cum tripuditious1	1
@@ -28749,6 +29172,7 @@ laudeucius1 dignus1 clemenque1	1
 laudeucius1 dignus1 deus1	1
 laudeucius1 dignus1 est	1
 laudeucius1 dignus1 iubilueo1	1
+laudeucius1 gaudeo1 martirother	1
 laudeucius1 marie1 non	1
 laudeucius1 medeago1 morboruus1	1
 laudeucius1 plenus1 verus1	1
@@ -28773,6 +29197,7 @@ laudo1 omnis1 populus2	1
 laudo1 paradisus1 glorie	1
 laudo1 quod1 vinctus2	1
 laudo1 ut ad	1
+laudo1 virgo1 que	1
 laudumucius1 carmen1 reddats1	1
 laurea1 aureus1 laurea1	1
 laurea1 me iheseo1	1
@@ -28827,6 +29252,7 @@ laus1 novus1 cantibuque1	1
 laus1 novus1 refero1	1
 laus1 nunc1 est	1
 laus1 o stella1	1
+laus1 occurrat1 omnis1	1
 laus1 officium1 vigils1	1
 laus1 omnis1 solium1	1
 laus1 pater1 dico2	1
@@ -28846,6 +29272,7 @@ laus1 solvamur1 a	1
 laus1 solvamus1 donum1	1
 laus1 sonatther sobrether	1
 laus1 subtilitas1 quoniam1	1
+laus1 sui1 debieo1	1
 laus1 tui nomen1	1
 laus1 tympantious1 cum	1
 laus1 virginis1 marie1	1
@@ -28860,6 +29287,8 @@ lausucius1 decus1 et	1
 lausucius1 dei verbum1	1
 lausucius1 deo ingenitoum1	1
 lausucius1 deo pater1	1
+lausucius1 divinus1 numini1	1
+lausucius1 dominus1 pro	1
 lausucius1 et congruntiauo	1
 lausucius1 et filius1	1
 lausucius1 et gloria1	1
@@ -28887,6 +29316,7 @@ lausucius1 tuus1 actuutque1	1
 lavacroucius1 flores odor1	1
 lavasucius1 per lacrima1	1
 lavaucius1 carnique1 criminque1	1
+lavaucius1 cor1 purifica1	1
 lavesucius1 in piscina1	1
 lavimurucius1 renascimurs1 colligimuque1	1
 laviucius1 indumentum1 sanguis1	1
@@ -28907,6 +29337,7 @@ lavo1 suspendiother humanus1	1
 lavo1 vitium1 ad	1
 lavo1 vitium1 carque1	1
 laxansucius1 scelus1 lac	1
+laxatorucius1 gaudent mille1	1
 laxatucius1 debeo1 post1	1
 lazariucius1 et divitieus1	1
 lectionemucius1 arripeulus1 audientes1	1
@@ -28931,6 +29362,7 @@ lectous2 noster1 iubeo1	1
 lectous2 optume1 hoc	1
 lectous2 prophetie1 iubeo1	1
 lectous2 surgeno1 de	1
+lectuloucius1 virgio1 per	1
 lecturusucius1 de hoc	1
 lectus2 ferreo1 necnoque1	1
 lectus2 ornat1 color1	1
@@ -28951,6 +29383,7 @@ lediturucius1 prorsus1 ullus1	1
 lediturucius1 quis2 brachio	1
 lediturucius1 sol sub	1
 ledorucius1 quis2 facio1	1
+leduntucius1 et ad	1
 legaleucius1 coaptantuus1 celque1	1
 legalisucius1 leviaturs1 novelle	1
 legalisucius1 pagine1 maneo1	1
@@ -29016,6 +29449,7 @@ leo2 serpetinasvius1 furias1	1
 leo2 superbie2 resurrexit1	1
 leo2 ve qui	1
 leo2 vorago1 ergo1	1
+leodegari2 trintiaus1 fortis1	1
 leodegarium2 psallendo1 carmen2	1
 leodium2 prefulsit1 pontificius1	1
 lepidusucius1 ad filius1	1
@@ -29052,7 +29486,9 @@ letareucius1 mater1 ecclesiax1	1
 letareucius1 nam tot	1
 letareucius1 salus1 do1	1
 letareucius1 turba1 nunc1	1
+letareucius1 virgo1 pia	1
 letargumucius1 patior1 surgeno1	1
+letarisqueucius1 stoleola1 pro	1
 letariucius1 nec luctariucius1	1
 letataucius1 novus1 hymeneis1	1
 letaturucius1 amor1 latebra1	1
@@ -29073,6 +29509,7 @@ letaucius1 lux ago1	1
 letaucius1 martother virgo1	1
 letaucius1 sit cicestrique1	1
 letaucius1 vox1 lectous2	1
+letemurucius1 eya noster1	1
 letemurucius1 hodie1 hodie1	1
 letemurucius1 homo1 deo	1
 letemurucius1 igitur1 angelus1	1
@@ -29163,6 +29600,7 @@ letitium1 quod1 virginis1	1
 letitium1 rectum1 conscientia1	1
 letitium1 refulgeo1 in	1
 letitium1 resurrexit1 verus1	1
+letitium1 risus pax	1
 letitium1 rors1 misericordi1	1
 letitium1 sequestrentuui1 omnis1	1
 letitium1 sic ille1	1
@@ -29177,6 +29615,7 @@ letoruum1 et flentium	1
 letoum1 age dies1	1
 letoum1 aggrediulus1 nec	1
 letoum1 casus1 comitatus2	1
+letoum1 facio1 ne	1
 letum1 consortintiouo effundamusx1	1
 letum1 cor1 letaucius1	1
 letum1 homo1 poother	1
@@ -29187,6 +29626,7 @@ letum1 qui1 numquam1	1
 letum1 quiescamus1 cum	1
 letum1 trintious1 benedicamuus1	1
 letum1 tunc1 prostravit1	1
+letusucius1 iubileeo1 ecclesiax1	1
 letusucius1 noster1 cetuque1	1
 letusucius1 nunc1 et	1
 letusucius1 sumpsit1 premium1	1
@@ -29264,6 +29704,7 @@ lex sino1 gratius1	1
 lex stupeother ius	1
 lex te rex1	1
 lex velut1 extera1	1
+lex venio1 rex	1
 lex verbum1 carque1	1
 lex vetus1 terminatur1	1
 lex vicissitudinum1 sic	1
@@ -29290,6 +29731,7 @@ lex1 dominus1 qui1	1
 lex1 dum pro	1
 lex1 dum tullenistus2	1
 lex1 durus1 per	1
+lex1 emulix1 cernenque1	1
 lex1 et de	1
 lex1 et gratie	1
 lex1 excluduntur1 vetus1	1
@@ -29326,6 +29768,7 @@ lex1 lectous2 lectous2	1
 lex1 litterali1 spiritalis1	1
 lex1 litteram1 spiritus1	1
 lex1 lucex1 ante1	1
+lex1 lucidus1 generosa	1
 lex1 lux non	1
 lex1 malus1 lex1	1
 lex1 medullmgo1 corticis1	1
@@ -29491,6 +29934,7 @@ libero1 nos et	1
 libero1 nos exosus1	1
 libero1 pro nos1	1
 libero1 procura1 luceo1	1
+libero1 purgo1 cordis1	1
 libero1 qua mundus2	1
 libero1 que sit	1
 libero1 reicitus1 et	1
@@ -29611,6 +30055,7 @@ lilioucius1 dum virgo1	1
 lilioucius1 prudentior1 natura1	1
 lilioucius1 rugis non	1
 lilium1 candor1 munditius2	1
+lilium1 es rosa1	1
 lilium1 et rosas1	1
 lilium1 his alluditulus1	1
 lilium1 nec ardeo1	1
@@ -29684,6 +30129,7 @@ lingua1 mens1 et	1
 lingua1 pando2 vel	1
 lingua1 que loquor1	1
 lingua1 refrenanss1 tempereu1	1
+lingua1 sed quo	1
 lingua1 subijctous1 instruo1	1
 liniesucius1 intrinsecus1 archamulus1	1
 liniitucius1 duo1 naturas1	1
@@ -29698,6 +30144,7 @@ linquo1 pontificiuus1 clementique1	1
 linteoucius1 par ero	1
 lippiensucius1 lugubriceucius1 guttiens	1
 lippiremucius1 abundanter1 ni	1
+liqueo1 apparuitulus1 prevaluit1	1
 liqueo1 et libuitucius1	1
 liquerantucius1 cui subvenit1	1
 liquesco1 a sol1	1
@@ -29818,6 +30265,7 @@ locus1 obstupescither excipio1	1
 locus1 pascue1 post1	1
 locus1 presulum1 pilatanum1	1
 locus1 proprius1 civis1	1
+locus1 quo jaceo1	1
 locus1 scelus1 fides1	1
 locus1 scelus1 scelus1	1
 locus1 si queror1	1
@@ -29902,6 +30350,7 @@ lubricaucius1 que do1	1
 lubricoucius1 non modicus1	1
 lubricoucius1 spes1 pono1	1
 lubricumucius1 dano1 dubium1	1
+lubricumucius1 durus1 ferenus1	1
 luceo1 egrumx1 medicamiego1	1
 luceo1 hodierna1 luceo1	1
 luceo1 in te	1
@@ -29925,6 +30374,7 @@ lucex1 scintillo1 eligix1	1
 lucex1 stella1 spes1	1
 lucidisucius1 ministrei1 qui	1
 lucidus1 carque1 sit	1
+lucidus1 generosa gloriosa	1
 lucidus1 tu rutilans	1
 luciferaucius1 turba1 gratie	1
 luciferiucius1 nec promitti1	1
@@ -30091,6 +30541,7 @@ lumen1 prothem culpque1	1
 lumen1 qua beate	1
 lumen1 quod1 luceo1	1
 lumen1 quomodo1 luceo1	1
+lumen1 radiat de	1
 lumen1 redemptors1 et	1
 lumen1 resplenduit1 et	1
 lumen1 sensibuui1 meus1	1
@@ -30108,6 +30559,7 @@ lumen1 veritatius1 tu	1
 lumen1 verus1 de	1
 luminaei1 nox1 et	1
 luminer1 gens1 super2	1
+luminsooss1 tu stella1	1
 lumisonus1 celque1 domina1	1
 lumisonus1 et emito1	1
 lumisonus1 fonts1 pario2	1
@@ -30157,6 +30609,7 @@ lusisseucius1 pudeat1 sed	1
 lusistiucius1 temere1 ad	1
 lustransucius1 exploro1 venter1	1
 lustransucius1 nox1 caligio1	1
+lustrastiucius1 facies1 o	1
 lustraucius1 cor illustreo1	1
 lususs2 est incitatio1	1
 lususs2 revorto1 cesseque1	1
@@ -30260,8 +30713,10 @@ lux opima1 cum	1
 lux optata1 claruique1	1
 lux oriens1 nos	1
 lux orior1 dum	1
+lux orior1 est	1
 lux pater1 eximiueo1	1
 lux plenus1 lumisonus1	1
+lux prelucana1 la	1
 lux prophete1 progenies1	1
 lux refulgeo1 hodie1	1
 lux refulgeo1 homo1	1
@@ -30321,6 +30776,7 @@ luxuries2 magister1 carnique1	1
 luxus2 dissolvituo1 cum	1
 luxus2 profluit1 rex	1
 luxus2 sic sum1	1
+luxus2 sopiather nos	1
 luxus2 te atteris1	1
 luxus2 vestium1 mors1	1
 luxuss2 et rapineo1	1
@@ -30598,6 +31054,7 @@ malus3 glorificat que	1
 malus3 hic incendium1	1
 malus3 hoc scio1	1
 malus3 in die	1
+malus3 malus1 perdo1	1
 malus3 malus2 fruentibus	1
 malus3 malus2 irriteo1	1
 malus3 mens1 et	1
@@ -30839,6 +31296,7 @@ mare1 factures2 condolenntisuo	1
 mare1 fecundatuus1 spiritus1	1
 mare1 fer auxilium1	1
 mare1 filius1 dei	1
+mare1 florum flos	1
 mare1 flos sanctario1	1
 mare1 flos virginum1	1
 mare1 fulgor itinervomo	1
@@ -30895,6 +31353,7 @@ mare1 nos vivificavius1	1
 mare1 notus1 ministerae1	1
 mare1 numquam1 turbidanc1	1
 mare1 o felix1	1
+mare1 o mater1	1
 mare1 o pater1	1
 mare1 omnis1 laudeucius1	1
 mare1 orior1 monstrato1	1
@@ -30917,6 +31376,7 @@ mare1 portuss1 signum1	1
 mare1 procelle1 supra1	1
 mare1 pulchior1 qui1	1
 mare1 quando1 flos	1
+mare1 que deus1	1
 mare1 que dominus1	1
 mare1 que dum	1
 mare1 qui facio1	1
@@ -30988,6 +31448,7 @@ mare1 virginitatis1 via	1
 mare1 virgio1 flos	1
 mare1 virgo1 cum	1
 mare1 virgo1 deus1	1
+mare1 virgo1 dulcis1	1
 mare1 virgo1 mundus2	1
 mare1 virgo1 virginum1	1
 mare1 virgo1 virgo1	1
@@ -31036,6 +31497,7 @@ marie1 que nos1	1
 marie1 qui gratia1	1
 marie1 restitutos1 patrei1	1
 marie1 rex1 glorie	1
+marie1 sacrum1 loquelisucius1	1
 marie1 sit in	1
 marie1 sol1 iustijie1	1
 marie1 templum1 dedico1	1
@@ -31068,6 +31530,7 @@ martinopolother urbs1 orbis1	1
 martirother cum honor1	1
 martirother sed in	1
 martirother vernant1 primitius1	1
+martirother virtus1 ad	1
 martother contemplatuntiruo nummus1	1
 martother effectuss2 hodie1	1
 martother foris2 occupato1	1
@@ -31184,6 +31647,7 @@ mater1 gratie nostre1	1
 mater1 gratie pia	1
 mater1 gratie spes1	1
 mater1 gratie vena1	1
+mater1 gratiosa tu	1
 mater1 gremium1 sub	1
 mater1 habeo1 premia1	1
 mater1 honestatuus1 inimicus1	1
@@ -31203,6 +31667,7 @@ mater1 ineffabilis1 et	1
 mater1 inseritur1 quis2	1
 mater1 instructionis1 ave	1
 mater1 intacta1 verbum1	1
+mater1 integritas1 post1	1
 mater1 intemerata1 paradisi1	1
 mater1 jesu cum	1
 mater1 labimuor1 ad	1
@@ -31266,6 +31731,7 @@ mater1 quis2 portother	1
 mater1 quo merueo1	1
 mater1 quod1 filie	1
 mater1 rea sonatther	1
+mater1 redemptoriss1 que	1
 mater1 redivivums1 reddo1	1
 mater1 resolvis1 eulogiumx1	1
 mater1 rex1 angelus1	1
@@ -31537,6 +32003,7 @@ mea possum1 quis2	1
 mea pro te	1
 meago1 placeo1 pando2	1
 meago1 propheta1 es	1
+meago1 prophetie1 pario2	1
 meago1 sit dolor1	1
 mebonus1 ratio1 previa1	1
 mecum1 delibero1 nunc1	1
@@ -31599,6 +32066,8 @@ medigo1 oy crepanque1	1
 mediogo1 mundus2 morientior1	1
 mediogo1 non aperis1	1
 meditaego1 ut valeo1	1
+meditaor1 quis2 nos	1
+meditaor1 quis2 primus1	1
 medius1 ad utrumque1	1
 medius1 bases propheticas1	1
 medius1 cunctus1 silentium1	1
@@ -31889,6 +32358,7 @@ mens1 rapio1 ad	1
 mens1 referoo1 deliquia1	1
 mens1 rei timor1	1
 mens1 robur1 imprimereo1	1
+mens1 sanother mens1	1
 mens1 sceptruother rex1	1
 mens1 sed os1	1
 mens1 sedeats1 fastus3	1
@@ -31909,6 +32379,7 @@ mens1 tulo1 letaucius1	1
 mens1 tumorem1 humilis1	1
 mens1 una a	1
 mens1 ut plebs1	1
+mens1 ut pro	1
 mens1 ut repente1	1
 mens1 vagaus1 presagam1	1
 mens1 verus1 penitentem1	1
@@ -32032,6 +32503,7 @@ meriigo1 regno1 in	1
 meriigo1 supplicium1 quod1	1
 meriigo1 una vox1	1
 meritmgo1 decus1 et	1
+meritmgo1 deflorat1 amansulus1	1
 meritmgo1 diffinieus1 ad	1
 meritmgo1 dum pronior1	1
 meritmgo1 fac aurum1	1
@@ -32103,6 +32575,7 @@ merueo1 vita1 morior1	1
 meruerutgo1 non solus1	1
 meruiseo1 celque1 rex1	1
 meruiseo1 enim1 tu	1
+meruiseo1 pia vas	1
 meruiseo1 porto1 et	1
 meruiseo1 rex1 et	1
 meruiseo1 stella1 mare1	1
@@ -32136,6 +32609,7 @@ messysgo1 porather per	1
 mestasgo1 malito1 amen1	1
 mestissiego1 corpus1 vel	1
 mestitago1 laudetucius1 omnis1	1
+mestitago1 plebs1 mosburge1	1
 mestitego1 ave verus1	1
 metago1 sonatther hydrauleus1	1
 metero2 vitium1 dum	1
@@ -32167,6 +32641,7 @@ metus1 evaserisx1 et	1
 metus1 expietur1 anima1	1
 metus1 frangitur nec	1
 metus1 fremitus nequeque1	1
+metus1 redeo1 cletuque1	1
 metus1 vigilies1 preter1	1
 meumqus1 patrimonium1 meus1	1
 meus1 a gaudium1	1
@@ -32211,6 +32686,7 @@ micaneus1 munditius2 misceneus1	1
 micaneus1 presignavit1 hic	1
 miceus1 labituor1 ob	1
 michaeeus1 gaudium1 natus2	1
+michaelieus1 qui facio1	1
 micheus1 cerno1 medelsgo1	1
 micheus1 florula et	1
 micheus1 volo1 medeigo1	1
@@ -32282,6 +32758,7 @@ mille1 quis2 divinum1	1
 mille1 rupi vinculum1	1
 mille1 sustinuiother penas1	1
 mille1 vir1 mortibunoun	1
+minabatueus1 per filius1	1
 minatueus1 suffoceother mox	1
 mineus1 clavque1 spine1	1
 mineus1 non mulceo1	1
@@ -32427,6 +32904,7 @@ mirus1 caritaus1 et	1
 mirus1 caritaus1 mirus1	1
 mirus1 christus1 bonitaus1	1
 mirus1 christus1 pietas1	1
+mirus1 claritas1 per	1
 mirus1 clementique1 triumpes1	1
 mirus1 de sardother	1
 mirus1 dei dignatius1	1
@@ -32442,6 +32920,7 @@ mirus1 lactansucius1 is1	1
 mirus1 loquor1 cado1	1
 mirus1 materia1 pario2	1
 mirus1 mirus1 stupenother	1
+mirus1 novitas1 et	1
 mirus1 nupte novitas1	1
 mirus1 parien1 expers1	1
 mirus1 potentia1 gubernans	1
@@ -32459,6 +32938,7 @@ mirus1 sum1 dictum1	1
 mirus1 sum1 magnus1	1
 mirus1 virgo1 vir1	1
 mirus1 virtus1 osculandum1	1
+mirus1 virtus1 stephanother	1
 mirus1 φυσι κλεοσ	1
 misceeus1 pocuather primus1	1
 miscendeus1 pocuather mors1	1
@@ -32668,6 +33148,7 @@ misericordia1 te coronat1	1
 misericordia1 tu deitatus1	1
 misericordia1 tu pro	1
 misericordite1 a peccatoruum1	1
+misericors1 audi1 audi1	1
 misericors1 deus1 parco1	1
 miserrime1 quis2 dico2	1
 miserrimum1 ruit in	1
@@ -32754,6 +33235,7 @@ mitto1 a pater1	1
 mitto1 ad nos	1
 mitto1 ad solatiuus1	1
 mitto1 ave virgini1	1
+mitto1 baiulus gabriel	1
 mitto1 celituque1 plenius1	1
 mitto1 celituque1 salus1	1
 mitto1 celque1 nuntio	1
@@ -32813,6 +33295,7 @@ modulandnoun canticum1 fides1	1
 modulatunoun dum clamo1	1
 modulemunoun seduli1 vox1	1
 modulinoun letitium1 sonemsther	1
+modulnoun mens1 sanother	1
 modulnoun modulemunoun seduli1	1
 modulnoun qui post1	1
 modulnoun quis2 pro	1
@@ -32968,6 +33451,7 @@ mordanoun viperas1 agna1	1
 mordennoun magrantother mestasgo1	1
 mordenoun in me	1
 mordenoun omnis1 nullus1	1
+mordeo1 nec angustiat1	1
 mordeo1 ut viperas1	1
 morerentor2 fatui sed	1
 moreros2 da sponte1	1
@@ -32987,8 +33471,10 @@ moriensor1 nos reconcilianss1	1
 moriensor1 pro homo1	1
 moriensor1 que non	1
 moriensor1 subigo1 nos1	1
+moriensor1 vita1 luxus2	1
 moriensor1 vita1 reparavits1	1
 moriensqueor1 gigno1 quis2	1
+morientior1 alleluia1 pangite1	1
 morientior1 et gregi	1
 morientisor1 dampnatuo1 posteritais1	1
 morientisor1 mors1 vivunts1	1
@@ -33152,6 +33638,7 @@ mors1 exsilium1 gaudeo1	1
 mors1 extendo1 sua	1
 mors1 exterminio1 medeigo1	1
 mors1 extremus1 quia1	1
+mors1 festinamus peccare1	1
 mors1 festinatio quis2	1
 mors1 frangere venio1	1
 mors1 frangit ostium1	1
@@ -33349,6 +33836,7 @@ mortalis2 est ex	1
 mortalis2 homo1 manducaother	1
 mortalis2 nascor1 volvo1	1
 mortalis2 nebula1 et	1
+mortalis2 solus1 tactutisus1	1
 mortalis2 vita1 mortifernoun	1
 mortalitanoun eternitas1 una	1
 mortalitanoun ut fio1	1
@@ -33490,6 +33978,7 @@ mosaica1 vetustas1 occultaverat1	1
 mosaice1 claudo1 misterieus1	1
 mosaice1 rubus vision1	1
 mosayce1 quondam1 tego1	1
+mosburge1 doctrinaather gaude	1
 motus2 corpus1 mens1	1
 motus2 voluntao1 gloriari1	1
 moveanoun combustis2 dano1	1
@@ -33508,6 +33997,7 @@ moveo1 astrorm1 computano	1
 moveo1 cor1 virginum1	1
 moveo1 digitus1 hinc1	1
 moveo1 ego1 iurgiueo1	1
+moveo1 ergo1 singulus1	1
 moveo1 est dea	1
 moveo1 impious1 nefarius1	1
 moveo1 in contrarios1	1
@@ -33518,6 +34008,7 @@ moveo1 mens1 sceptruother	1
 moveo1 obscurarus1 sidus1	1
 moveo1 paraclitus1 angelus1	1
 moveo1 penna1 do1	1
+moveo1 pereo1 iherusaleeo1	1
 moveo1 pietatis1 nostre1	1
 moveo1 pudicitie1 eternalis1	1
 moveo1 questionem1 in	1
@@ -33660,6 +34151,7 @@ munda1 tu post1	1
 mundam1 vas infothtr	1
 mundana1 cunctus1 vanus1	1
 mundana1 fabriec1 iam	1
+mundana1 la laudaucius1	1
 mundana1 liberao1 inclinato1	1
 mundana1 quis2 te	1
 mundana1 spuma1 gracilis	1
@@ -33761,6 +34253,7 @@ mundus1 iocundetur1 nao1	1
 mundus1 irrigatueo1 paradisus1	1
 mundus1 istum1 fugio1	1
 mundus1 linqueucius1 metus1	1
+mundus1 luminsooss1 tu	1
 mundus1 maiestother dei	1
 mundus1 morior1 sepultuui1	1
 mundus1 mundari1 possum1	1
@@ -33894,6 +34387,7 @@ mundus2 mors1 sum1	1
 mundus2 mortuus1 at	1
 mundus2 moveo1 temperau1	1
 mundus2 mundet1 sanguis1	1
+mundus2 nam es	1
 mundus2 nascor1 vir	1
 mundus2 natus2 athanaeus1	1
 mundus2 natus2 est	1
@@ -33981,6 +34475,7 @@ mundus2 tollitisus1 lex1	1
 mundus2 tollo1 peccamina1	1
 mundus2 tonatitus1 fabriec1	1
 mundus2 trames1 erratx1	1
+mundus2 transeo1 per	1
 mundus2 tunc1 condoluintituo	1
 mundus2 ut mundaret1	1
 mundus2 venter1 virginalis1	1
@@ -34136,6 +34631,7 @@ mysticinoun umbraculis1 olim1	1
 mysticnoun dampno1 species1	1
 mysticnoun de virgo1	1
 mysticnoun pax1 tellus1	1
+mysticnoun plaudamus1 et	1
 mysticnoun que per	1
 mysticnoun spiramine1 non	1
 mysticnoun sub species1	1
@@ -34172,6 +34668,7 @@ nam de peccatum1	1
 nam dei filius1	1
 nam dolor1 causa1	1
 nam dulcissimus1 ex	1
+nam es domina1	1
 nam etiam1 si	1
 nam facundia1 verboruum1	1
 nam falsitaus1 pro	1
@@ -34185,6 +34682,7 @@ nam incessanter1 sacerdos1	1
 nam intacta1 permanere1	1
 nam iujte1 penitudinis1	1
 nam letalisucius1 ambitus2	1
+nam lumen1 de	1
 nam mitto1 celituque1	1
 nam mors1 exterminio1	1
 nam moysenoun obstupuendis1	1
@@ -34241,6 +34739,7 @@ nam sum1 tenebraeo1	1
 nam super2 david1	1
 nam surgo1 a	1
 nam te dispensaeue	1
+nam terra1 tandem1	1
 nam tot christus1	1
 nam ut idem1	1
 nam ut lucus1	1
@@ -34300,6 +34799,7 @@ nardus aromaticaulus1 tu	1
 nardus caritatius1 fons	1
 nardus mirreus1 trittiaus1	1
 nardus odorifera1 salus1	1
+nardus odorifera1 stillaother	1
 nares dico2 cur	1
 naris aut cesarieque1	1
 naris eminentio1 producitur1	1
@@ -34339,6 +34839,7 @@ nascor1 dignatuus1 hodie1	1
 nascor1 divinitaus1 donum1	1
 nascor1 divinum1 peritueo1	1
 nascor1 e virgo1	1
+nascor1 emanuelx1 complets2	1
 nascor1 emmanuelx1 quis2	1
 nascor1 et contaminntieuo	1
 nascor1 et in	1
@@ -34425,6 +34926,7 @@ natiquus1 filia1 virgo1	1
 nativitaus1 cum iubileo1	1
 nativitaus1 et deo	1
 nativitaus1 incarnatur1 immensitaeo1	1
+nativitaus1 jus1 noster1	1
 nativitaus1 mirandus1 o	1
 nativitaus1 mors1 rumpo1	1
 nativitaus1 munde1 vivo1	1
@@ -34593,6 +35095,7 @@ natus2 est rex	1
 natus2 est ut	1
 natus2 est verus1	1
 natus2 et a	1
+natus2 ex mare1	1
 natus2 exorior1 est	1
 natus2 filius1 est	1
 natus2 fleo1 orior1	1
@@ -34724,6 +35227,7 @@ ne formides polluo1	1
 ne fors1 preter1	1
 ne fraudets1 sexus1	1
 ne gravis1 a	1
+ne hamuic1 nos	1
 ne iaceaeo1 prior1	1
 ne ijdiex1 offendas1	1
 ne intres1 in	1
@@ -34747,6 +35251,7 @@ ne nescio1 ad	1
 ne nos credamuque1	1
 ne nos in	1
 ne nos inducas1	1
+ne nos morior1	1
 ne nos pereo1	1
 ne noster1 subeo1	1
 ne offendas1 in	1
@@ -34814,6 +35319,7 @@ nec alimentum1 queritior1	1
 nec ambitulus1 nec	1
 nec amor1 meus1	1
 nec amplectiturulus1 instinctu1	1
+nec angustiat1 stimuluother	1
 nec animadvertere1 iudeeo1	1
 nec anime1 quod1	1
 nec annate1 spectams1	1
@@ -34829,6 +35335,7 @@ nec blandituus1 sino1	1
 nec capituo1 seculariui1	1
 nec carenque1 fraudibus	1
 nec carneis1 contingo1	1
+nec caveoo1 videnso1	1
 nec cervicique1 prone1	1
 nec cogito1 de	1
 nec comburitus2 rubus	1
@@ -34864,9 +35371,11 @@ nec est locus1	1
 nec est qui	1
 nec fas sum1	1
 nec fastidiuor1 civis1	1
+nec fauces1 adhereat1	1
 nec favor1 querere1	1
 nec favore deferor1	1
 nec favore nec	1
+nec fax urit	1
 nec feditatis diluuneus1	1
 nec flore proprio1	1
 nec fraudavi temere1	1
@@ -34922,6 +35431,7 @@ nec mense1 miceus1	1
 nec metus1 frangitur	1
 nec minuieus1 quod1	1
 nec molestum1 virgini1	1
+nec mordeo1 nec	1
 nec mors1 horror1	1
 nec mortuus1 suscitatuother	1
 nec mundat1 scelus1	1
@@ -35309,6 +35819,7 @@ nicholae1 nicholae1 prebe1	1
 nicholae1 pontifex1 egregiex1	1
 nicholae1 prebe1 nos1	1
 nicholae1 presulum1 gemma1	1
+nicholae1 propera1 nos	1
 nicholai1 dulcibus1 vacemo1	1
 nicholai1 laus1 cum	1
 nicholai1 preconio1 nicholaus1	1
@@ -35369,6 +35880,7 @@ nihil1 patior1 patior1	1
 nihil1 ponio1 medius1	1
 nihil1 possum1 muneri1	1
 nihil1 proficies1 passiones1	1
+nihil1 prosum1 elatiox1	1
 nihil1 prosum1 mathesother	1
 nihil1 rubo nocuit	1
 nihil1 si quis2	1
@@ -35418,6 +35930,7 @@ nil poessther aurum1	1
 nil possum1 resisto1	1
 nil potentis1 nil	1
 nil proficit1 sic	1
+nil prosum1 elatiox1	1
 nil salutandother nocuit	1
 nil scio1 possum1	1
 nil scio1 tu1	1
@@ -35681,6 +36194,7 @@ non adsum1 caput1	1
 non agnosco1 maritale1	1
 non agnovius1 maritale1	1
 non aliter1 clerque1	1
+non alius2 assumpsitulus1	1
 non alius2 quis2	1
 non alius2 redemptuss1	1
 non alius2 venio1	1
@@ -35738,6 +36252,7 @@ non cessanque1 depellere1	1
 non cessarenque1 scribo1	1
 non cessebaque1 mussitare1	1
 non cesseque1 caritaus1	1
+non cesseque1 ignis1	1
 non cesso1 ops1	1
 non clamabque1 nequeque1	1
 non claudio1 ostium1	1
@@ -35770,6 +36285,7 @@ non corruptius1 precesx1	1
 non credo1 cum	1
 non creo1 nascor1	1
 non crispatque1 frons	1
+non cruciaque1 nec	1
 non cubaque1 ianuieo1	1
 non curans1 licitaucius1	1
 non curant1 de	1
@@ -36028,6 +36544,7 @@ non permittito1 qui	1
 non permitto1 in	1
 non perpenditis1 quod1	1
 non perterret1 mineus1	1
+non plorat1 sed	1
 non pono1 os	1
 non portato1 heu	1
 non possideo1 in	1
@@ -36127,7 +36644,9 @@ non sum1 assuetumulus1	1
 non sum1 benevolus1	1
 non sum1 carnique1	1
 non sum1 conscius1	1
+non sum1 corruptus1	1
 non sum1 dedo1	1
+non sum1 dignus1	1
 non sum1 dolus1	1
 non sum1 facio1	1
 non sum1 filius1	1
@@ -36224,6 +36743,7 @@ nos a necque1	1
 nos a ve	1
 nos a zabulo	1
 nos ab hac	1
+nos ab idolatris1	1
 nos ab iste1	1
 nos abrogaverat1 adsum1	1
 nos ad celoque1	1
@@ -36239,6 +36759,7 @@ nos ad varius1	1
 nos ad vites1	1
 nos adhibe1 beans	1
 nos adhuc1 arguatulus1	1
+nos adiuva1 qui	1
 nos agnus1 immortalem1	1
 nos almus1 devius1	1
 nos amao1 digneus1	1
@@ -36259,6 +36780,7 @@ nos christque1 per	1
 nos christuque1 fecundarus1	1
 nos christuque1 reformavits1	1
 nos circumdet1 virtus1	1
+nos clemenque1 et	1
 nos clementique1 mors1	1
 nos collegiis1 tua	1
 nos commends2 filius1	1
@@ -36294,6 +36816,7 @@ nos desertum1 nos	1
 nos designo1 mortuus1	1
 nos deus1 salutariother	1
 nos deus1 sit	1
+nos dignarus1 te	1
 nos dimittimuo1 debitoribus1	1
 nos direxieus1 die	1
 nos divinitatius1 sedes1	1
@@ -36332,8 +36855,10 @@ nos expurgat1 hodie1	1
 nos exuis1 induisque1	1
 nos falli patior1	1
 nos fecundus1 fons1	1
+nos festa celebremuque1	1
 nos festina mundus2	1
 nos florum flos	1
+nos fove nos	1
 nos fove removus1	1
 nos gaudenter psallimus1	1
 nos gratius1 emancipatx1	1
@@ -36349,6 +36874,7 @@ nos igitur1 regnantum1	1
 nos ijdiex1 agarulus1	1
 nos illumie1 nosque1	1
 nos illuminave1 cum	1
+nos illustravieo1 pax1	1
 nos imbuieo1 novus1	1
 nos in asperis1	1
 nos in christus1	1
@@ -36359,8 +36885,10 @@ nos in vorago1	1
 nos incutit1 ut	1
 nos inducas1 in	1
 nos induti1 labeucius1	1
+nos inficis1 fellitis	1
 nos iniunxit1 inter1	1
 nos instruis1 quis2	1
+nos intueamur1 te	1
 nos irradieo1 sis	1
 nos juvo1 ut	1
 nos largitorucius1 glorie	1
@@ -36368,14 +36896,17 @@ nos leseratucius1 vites1	1
 nos letentucius1 puer1	1
 nos letitium1 laus1	1
 nos letitium1 planctum1	1
+nos letoum1 facio1	1
 nos liberao1 a	1
 nos liberasto1 cum	1
+nos libero1 purgo1	1
 nos ligo1 amor1	1
 nos locetucius1 in	1
 nos luciucius1 redimurs1	1
 nos magistrat2 altiorulus1	1
 nos medius1 licet2	1
 nos ministae1 malus1	1
+nos morior1 desinas1	1
 nos morior1 volvo1	1
 nos mors1 a	1
 nos mors1 voragnumeral1	1
@@ -36405,6 +36936,7 @@ nos poither finis1	1
 nos pontther in	1
 nos post1 mundus2	1
 nos poto1 ara	1
+nos primus1 fuerimus	1
 nos pro vites1	1
 nos propitius1 parco1	1
 nos propter1 baculum	1
@@ -36442,6 +36974,7 @@ nos repleo1 gaudium1	1
 nos respectu1 gratie	1
 nos restituit1 ereptosx1	1
 nos revisits1 per	1
+nos rex eterne1	1
 nos salveother gratius1	1
 nos salveother per	1
 nos salvous1 a	1
@@ -36472,9 +37005,11 @@ nos teneo1 satan1	1
 nos terrigene1 letemurucius1	1
 nos timeo1 sum1	1
 nos traditutirus1 conspuituntiruo	1
+nos trahatitus1 in	1
 nos traho1 ab	1
 nos transfer1 o	1
 nos transvexit1 die	1
+nos tu imbreo1	1
 nos tueturnc1 ab	1
 nos uberrima mors1	1
 nos ubi gaudeo1	1
@@ -36518,6 +37053,7 @@ nos1 credo1 persolvamus1	1
 nos1 criminuque1 procul1	1
 nos1 crucifigo1 sum1	1
 nos1 cruque1 tutameum1	1
+nos1 da hodie1	1
 nos1 dat in	1
 nos1 debeo1 noster1	1
 nos1 dei munus1	1
@@ -36552,6 +37088,7 @@ nos1 evangelium1 eia	1
 nos1 exora1 filius1	1
 nos1 factum1 est	1
 nos1 festivitas sit	1
+nos1 filius1 propina1	1
 nos1 filius1 secundus1	1
 nos1 filius1 supernum2	1
 nos1 fit mortalis2	1
@@ -36612,6 +37149,7 @@ nos1 paraclitus1 in	1
 nos1 pario2 homo1	1
 nos1 parvuli1 procurat1	1
 nos1 parvulo1 per	1
+nos1 parvulus1 iesus1	1
 nos1 parvulus1 vaginumeral1	1
 nos1 passio1 sanctus1	1
 nos1 pateo1 per	1
@@ -36639,6 +37177,7 @@ nos1 puer1 munus1	1
 nos1 quod1 pandi1	1
 nos1 rapio1 sol1	1
 nos1 ratum qui1	1
+nos1 reddats1 grates	1
 nos1 redditurs1 cesseque1	1
 nos1 redditurs1 patrius2	1
 nos1 redemptios1 eia	1
@@ -36676,6 +37215,7 @@ nos1 tribues1 post1	1
 nos1 tu autem1	1
 nos1 unda1 cruque1	1
 nos1 ut acephalitque1	1
+nos1 ut bibamus	1
 nos1 ut merueo1	1
 nos1 venialeo1 fio1	1
 nos1 versatto1 in	1
@@ -36737,6 +37277,7 @@ noster1 dominus1 beata	1
 noster1 dominus1 cum	1
 noster1 ecclesiax1 dum	1
 noster1 electothmr tu	1
+noster1 est iocunditas1	1
 noster1 est redemptios1	1
 noster1 est refugiums1	1
 noster1 est steriliother	1
@@ -36754,6 +37295,7 @@ noster1 floreat c	1
 noster1 flos consonantituo	1
 noster1 forma1 genus1	1
 noster1 fulgeo1 contintiouo	1
+noster1 fulsit lectuloucius1	1
 noster1 gaudium1 ut	1
 noster1 genus1 fletus	1
 noster1 genus1 mors1	1
@@ -36860,6 +37402,7 @@ noster1 spes1 in	1
 noster1 subeo1 ruina1	1
 noster1 sui1 conscius1	1
 noster1 sum1 animus1	1
+noster1 sum1 familia1	1
 noster1 sum1 gaudium1	1
 noster1 sum1 sanitaus1	1
 noster1 suscipother ut	1
@@ -36874,6 +37417,7 @@ noster1 tollito1 de	1
 noster1 totiens1 divinum1	1
 noster1 triumphaes1 pax	1
 noster1 trutinatitus1 penam1	1
+noster1 turmanc1 cum	1
 noster1 tympanistritiaus1 in	1
 noster1 ut cordibus1	1
 noster1 ve sino1	1
@@ -37003,6 +37547,7 @@ novisui1 vita1 in	1
 novitas1 appetitumulus1 baculi	1
 novitas1 circuique1 solitaus1	1
 novitas1 condiuntuntiruo osculo2	1
+novitas1 et novus1	1
 novitas1 mandao1 dat	1
 novitas1 mater1 puerperio1	1
 novitas1 novus1 lex1	1
@@ -37078,6 +37623,7 @@ novus1 fermentio1 panis1	1
 novus1 festum colque1	1
 novus1 festum novus1	1
 novus1 fit constructintiouo	1
+novus1 fit ex	1
 novus1 fit insitio1	1
 novus1 fit solemnit1	1
 novus1 fit translatio1	1
@@ -37087,6 +37633,7 @@ novus1 flos gaudium1	1
 novus1 gaudeo1 vetus1	1
 novus1 gaudium1 ago1	1
 novus1 gaudium1 et	1
+novus1 gaudium1 mater1	1
 novus1 gaudium1 o	1
 novus1 gereno1 artifex1	1
 novus1 gigas gemine	1
@@ -37100,10 +37647,12 @@ novus1 iam novus1	1
 novus1 incarnatio1 innovans1	1
 novus1 indutus1 vestis1	1
 novus1 instrumentum1 venio1	1
+novus1 iubileo1 puri1	1
 novus1 jus1 christus1	1
 novus1 jus1 mirus1	1
 novus1 laus1 dico2	1
 novus1 laus1 novus1	1
+novus1 laus1 occurrat1	1
 novus1 lex est	1
 novus1 lex intro2	1
 novus1 lex novella	1
@@ -37142,6 +37691,7 @@ novus1 novasui1 tequu1	1
 novus1 novus1 characterque1	1
 novus1 novus1 sideris1	1
 novus1 nunc1 intonent1	1
+novus1 nupta fides1	1
 novus1 nutrio1 venus1	1
 novus1 opus1 novus1	1
 novus1 orior1 letemurucius1	1
@@ -37157,6 +37707,7 @@ novus1 plaude1 sonsther	1
 novus1 pollutmther scelus1	1
 novus1 pontificeus1 commendans2	1
 novus1 populus2 novus1	1
+novus1 presuli1 ad	1
 novus1 primus1 die	1
 novus1 princothep gaude	1
 novus1 productio1 evellensx1	1
@@ -37226,6 +37777,7 @@ nox obscurus1 brevis1	1
 nox primus1 crimen1	1
 nox vetus1 cedo1	1
 nox1 caligio1 sol	1
+nox1 cecitaque1 sic	1
 nox1 celeber1 iubilemueo1	1
 nox1 claudito1 vites1	1
 nox1 cum flavescat	1
@@ -37249,6 +37801,7 @@ nox1 sol exterminat1	1
 nox1 sub obscurus1	1
 nox1 tenebrae1 illumine1	1
 nox1 volannumeral1 non	1
+noxa1 servulivius1 penis1	1
 noxe1 cedeo1 piaus1	1
 noxe1 contagio1 militaneus1	1
 noxe1 pulsa1 cecitatque1	1
@@ -37475,6 +38028,7 @@ numini1 fugio1 pars1	1
 numini1 jungo1 in	1
 numini1 quod1 est	1
 numini1 sed homo1	1
+numini1 sit et	1
 numinum1 vir1 nescius1	1
 nummi1 privilegotheu vix	1
 nummi1 vel ad	1
@@ -37667,6 +38221,7 @@ nuper1 decorabat1 dum	1
 nupserat vultus1 simplicitus1	1
 nupsit limoucius1 spiritus1	1
 nupta deus1 gaudeo1	1
+nupta fides1 est	1
 nupta verbum1 dei	1
 nupte novitas1 mater1	1
 nupte simul1 cum	1
@@ -37792,6 +38347,7 @@ o felix1 humilitaus1	1
 o felix1 mortalis1	1
 o felix1 nuptie	1
 o felix1 puerpera1	1
+o felix1 quis2	1
 o ferus1 dextera1	1
 o ferus1 pestis1	1
 o filia1 eve	1
@@ -37823,6 +38379,7 @@ o iudeeo1 perfidus1	1
 o jesu dulcissime1	1
 o labilior1 o	1
 o labilior1 sors1	1
+o langueoucius1 causa1	1
 o laudandaucius1 virginitas1	1
 o laudeucius1 plus1	1
 o lectous2 incipe1	1
@@ -37846,6 +38403,7 @@ o mare1 de	1
 o mare1 ego1	1
 o mare1 exaudi1	1
 o mare1 fer	1
+o mare1 florum	1
 o mare1 flos	1
 o mare1 fulgor	1
 o mare1 homo1	1
@@ -37865,6 +38423,7 @@ o mater1 benignus1	1
 o mater1 dei	1
 o mater1 eli	1
 o mater1 inclita1	1
+o mater1 redemptoriss1	1
 o mens1 cogito1	1
 o ments1 perfidaus1	1
 o metropolitaigo1 abbates1	1
@@ -37877,6 +38436,7 @@ o mirus1 caritaus1	1
 o mirus1 christus1	1
 o mirus1 clementique1	1
 o mirus1 materia1	1
+o mirus1 novitas1	1
 o mirus1 res	1
 o miserantis1 opus1	1
 o monialinoun contintiouo	1
@@ -37935,6 +38495,7 @@ o pia o	1
 o pia rogita	1
 o pia traho1	1
 o pincerna1 venieo1	1
+o pium1 est	1
 o plebs1 inclita1	1
 o pono1 pono1	1
 o pono1 vetus1	1
@@ -38033,6 +38594,7 @@ o superus1 pietas1	1
 o superus1 potentia1	1
 o superus1 rex1	1
 o totus1 asieulus1	1
+o trintiaus1 de	1
 o ut fiant	1
 o ut nascaris	1
 o vallinumeral1 humilis1	1
@@ -38073,6 +38635,7 @@ ob hoc ira	1
 ob hoc pridem1	1
 ob hoc rite1	1
 ob inopis clamor1	1
+ob laus1 salvatorius1	1
 ob nimiam1 mollitieo1	1
 ob parens2 fastigior1	1
 ob peccatum1 perpetratum1	1
@@ -38264,6 +38827,7 @@ occultes1 vitium1 suavis1	1
 occupao1 o cur	1
 occupato1 querens1 lucriucius1	1
 occurrat1 morbius1 quis2	1
+occurrat1 omnis1 populus1	1
 occurrens1 veritaus1 misericordi1	1
 occurreris1 cum possum1	1
 occurristi1 seviui1 latronibus2	1
@@ -38347,6 +38911,7 @@ odor1 ut vasculum1	1
 odora1 rheam flora	1
 odore1 o verius1	1
 odorifera1 salus1 refectios1	1
+odorifera1 stillaother arx1	1
 odoriferum1 botrus pro	1
 odoris1 et gratie	1
 odoris1 flos estaium1	1
@@ -38492,6 +39057,7 @@ omnis1 adsit1 contintiouo	1
 omnis1 allium1 orior1	1
 omnis1 amantis1 traho1	1
 omnis1 ambitio1 radix1	1
+omnis1 angelus1 in	1
 omnis1 angustia1 nicholae1	1
 omnis1 audio1 cleruque1	1
 omnis1 ave mare1	1
@@ -38621,6 +39187,7 @@ omnis1 insignitus1 clementique1	1
 omnis1 inundans1 mater1	1
 omnis1 invitantuus1 oculus1	1
 omnis1 istum1 chorus1	1
+omnis1 jus1 leduntucius1	1
 omnis1 juvo1 seculuui1	1
 omnis1 labeucius1 carenque1	1
 omnis1 labeucius1 verbum1	1
@@ -38692,6 +39259,7 @@ omnis1 pestis1 sevioui1	1
 omnis1 peto1 tribues1	1
 omnis1 plenus1 gaudium1	1
 omnis1 poither per	1
+omnis1 populus1 cum	1
 omnis1 populus2 deus1	1
 omnis1 populus2 prorsus1	1
 omnis1 porather non	1
@@ -39128,6 +39696,7 @@ orior1 dies1 celebrei1	1
 orior1 discordium1 preliorum1	1
 orior1 dum morior1	1
 orior1 eruatx1 a	1
+orior1 est et	1
 orior1 et culpque1	1
 orior1 et fraus	1
 orior1 ex mare1	1
@@ -39514,6 +40083,7 @@ pangentes1 alleluia1 ille1	1
 pangentes1 alleluia1 is1	1
 pangentes1 alleluia1 oppresso1	1
 pangentes1 alleluia1 orems1	1
+pangite1 alleluia1 promite1	1
 panis1 abscondito1 dulcis1	1
 panis1 afferturo1 gratie	1
 panis1 angelus1 salvus1	1
@@ -39592,6 +40162,7 @@ paraclitus1 in fides1	1
 paraclitus1 pluit1 in	1
 paraclitus1 sanctus1 spiritus1	1
 paraclitus1 tu1 habito1	1
+paradisi1 adam1 protoplasma1	1
 paradisi1 cronicque1 te	1
 paradisi1 depello1 foris1	1
 paradisi1 janua1 pandito2	1
@@ -39728,6 +40299,7 @@ pareo1 oculus1 rectus1	1
 parero1 ut nec	1
 paretuo1 a superi1	1
 pari1 ab immundisqueo1	1
+pari1 ave plenus1	1
 pari1 ave quia1	1
 pari1 et non	1
 pari1 et panis1	1
@@ -39784,6 +40356,7 @@ pario2 dominus1 is1	1
 pario2 egrediturx1 spiritalis1	1
 pario2 emarcescitx1 castitatique1	1
 pario2 enim1 contagiuntimuo	1
+pario2 est marie1	1
 pario2 et complectitus2	1
 pario2 et pario2	1
 pario2 filia1 ave	1
@@ -39872,6 +40445,7 @@ pario2 virginitas1 eia	1
 pario2 virginum1 et	1
 pario2 virgio1 sibiul1	1
 pario2 virgo1 integra1	1
+pario2 virgo1 mare1	1
 pario2 virgo1 permaneo1	1
 pario2 virgo1 prodit1	1
 pario2 virgo1 purus1	1
@@ -39987,6 +40561,7 @@ parvulo1 ovis1 et	1
 parvulo1 pax1 princiothei	1
 parvulo1 per virgo1	1
 parvulo1 quis2 os1	1
+parvulos1 ad petre1	1
 parvulos1 negligunequt1 qui	1
 parvulum1 cesque1 gaudeo1	1
 parvulum1 hodie1 filius1	1
@@ -39996,6 +40571,7 @@ parvulum1 ut a	1
 parvulum1 vates1 eliseus1	1
 parvulus1 femineum expleo1	1
 parvulus1 iesus1 infans1	1
+parvulus1 iesus1 marie1	1
 parvulus1 in amplexuss2	1
 parvulus1 iuvenculeo1 habiliic1	1
 parvulus1 quod1 temnao1	1
@@ -40221,6 +40797,7 @@ pater1 dico2 video1	1
 pater1 dionysieus1 eructax1	1
 pater1 dispensateuo o	1
 pater1 do1 filius1	1
+pater1 dos irroreo1	1
 pater1 egrediturx1 verbum1	1
 pater1 es ingenitusum1	1
 pater1 est deus1	1
@@ -40482,8 +41059,10 @@ patrimonium1 vita1 carnique1	1
 patrius1 descendo1 solius1	1
 patrius1 dum via1	1
 patrius1 est sum1	1
+patrius2 bone voluntao1	1
 patrius2 christuque1 pesti1	1
 patrius2 contendito1 in	1
+patrius2 crux1 supplicium1	1
 patrius2 culpque1 liber4	1
 patrius2 doleo1 iesus1	1
 patrius2 dum excido1	1
@@ -40505,6 +41084,7 @@ patrius2 preelecti1 sed	1
 patrius2 prescitos1 ad	1
 patrius2 pulcher1 liquitucius1	1
 patrius2 que vocetx1	1
+patrius2 quis2 seduco1	1
 patrius2 reddeno1 proprius1	1
 patrius2 regnemuss1 cum	1
 patrius2 reverteres1 cum	1
@@ -40620,6 +41200,7 @@ pax est in	1
 pax est terra1	1
 pax et concordia1	1
 pax et gloria1	1
+pax et gratius1	1
 pax et misericordia1	1
 pax et veritaus1	1
 pax gallius2 resurrexit1	1
@@ -40676,6 +41257,7 @@ pax1 osculo2 ratio1	1
 pax1 permansuram1 et	1
 pax1 perturbat1 spiritus1	1
 pax1 princiothei proclamat1	1
+pax1 recognitas1 qui1	1
 pax1 regia1 gaudeo1	1
 pax1 reportanss1 homo1	1
 pax1 requies1 sic	1
@@ -40969,10 +41551,12 @@ penitus3 veritateus1 prophetie1	1
 penna1 do1 sum1	1
 pensantquum1 laneucius1 pretium1	1
 pensanum1 in subditis1	1
+pensanum1 meriago1 retributiones1	1
 pensanum1 nec respiciunt1	1
 pensarum1 vos debetio1	1
 pensaum1 in homo1	1
 pensent1 quod1 subditur1	1
+penset1 eterni1 premium1	1
 penset1 sedulus1 precidatur1	1
 peothim factum1 promissio1	1
 pependit1 et pro	1
@@ -40987,6 +41571,7 @@ peperisti1 gaude et	1
 peperisti1 laudeucius1 plenus1	1
 peperisti1 non tullenistus2	1
 peperisti1 qui gubernat	1
+peperisti1 salus1 omnis1	1
 peperisti1 vites1 via	1
 pepigit1 contra1 ritums1	1
 pepones1 et alliaulus1	1
@@ -41057,6 +41642,7 @@ per eventum1 syllogizaother	1
 per exsilia1 mundus2	1
 per facies1 figuravit	1
 per filius1 ave	1
+per filius1 bis	1
 per filius1 pater1	1
 per filius1 venio1	1
 per flagitium1 abutuntur1	1
@@ -41070,6 +41656,7 @@ per genus1 masculus1	1
 per gladious1 rachel	1
 per gratia1 angelus1	1
 per gratia1 justus1	1
+per gratia1 traditutisus1	1
 per gratie miraculuus1	1
 per gravis1 ab	1
 per gustus1 straviother	1
@@ -41120,6 +41707,7 @@ per licentia1 qui1	1
 per lignum1 triumphes1	1
 per locum1 dano1	1
 per locus1 a	1
+per lubricumucius1 durus1	1
 per mammoother questum1	1
 per mare1 stella1	1
 per marie1 virgo1	1
@@ -41139,6 +41727,7 @@ per misteriueus1 fit	1
 per misteriueus1 verboruum1	1
 per mors1 examen1	1
 per mors1 liberatuo1	1
+per moveo1 ergo1	1
 per moysenoun famulum	1
 per natura1 homo1	1
 per naufragium salvus1	1
@@ -41190,6 +41779,7 @@ per que virtus1	1
 per qui1 carnique1	1
 per qui1 cum	1
 per qui1 deus1	1
+per qui1 est	1
 per qui1 fit	1
 per qui1 graditur	1
 per qui1 liber4	1
@@ -41199,6 +41789,7 @@ per qui1 mater1	1
 per qui1 misertus1	1
 per qui1 mundus1	1
 per qui1 nos1	1
+per qui1 nox1	1
 per qui1 pateo1	1
 per qui1 regnum1	1
 per qui1 rei	1
@@ -41312,10 +41903,12 @@ per tres1 soleo1	1
 per tuus1 clementiaque1	1
 per tuus1 judicium1	1
 per tuus1 virgo1	1
+per typicutimus1 mundus2	1
 per unigenituus1 deceptorem1	1
 per unus1 dies1	1
 per usura1 meto2	1
 per uxor1 retineo1	1
+per varius1 preconia1	1
 per vectores1 quando1	1
 per venter1 confunduntuntiruo	1
 per verbum1 participium1	1
@@ -41405,6 +41998,7 @@ perdo1 invenituo1 et	1
 perdo1 luciferaucius1 turba1	1
 perdo1 mundus2 destinao1	1
 perdo1 non fit	1
+perdo1 non plorat1	1
 perdo1 noster1 salus1	1
 perdo1 orior1 prole1	1
 perdo1 palatium1 nos	1
@@ -41420,6 +42014,7 @@ perdo1 restituit1 gratius1	1
 perdo1 sed conversuntimuo	1
 perdo1 sed secundus1	1
 perdo1 sive1 dragma1	1
+perdo1 virgo1 vita1	1
 perdo1 volvo1 ut	1
 perduc1 ad celestique1	1
 perduc1 miteus1 benedictus1	1
@@ -41434,6 +42029,7 @@ perducat1 gratius1 superne2	1
 perducat1 intercessio1 nicholai1	1
 perducat1 nos largitorucius1	1
 perducens1 turbio2 in	1
+perduco1 hostis1 ad	1
 perducunt1 dominus1 celque1	1
 perdulci1 facies1 dolus1	1
 peream1 nam plus1	1
@@ -41459,6 +42055,7 @@ pereo1 exemplum1 malus1	1
 pereo1 fides1 turpiter1	1
 pereo1 fulmine qui	1
 pereo1 hedera sananother	1
+pereo1 iherusaleeo1 memini1	1
 pereo1 in astuta1	1
 pereo1 in tempus1	1
 pereo1 ingens1 vacannumeral1	1
@@ -41621,6 +42218,7 @@ perpetui1 amor1 vinculos1	1
 perpetui1 fac ut	1
 perpetuus1 fulgeo1 dies1	1
 perpetuus1 nos christque1	1
+perpetuus1 salus1 nostre1	1
 perpetuus1 totus2 desiderabilis1	1
 perplexus1 iter1 nec	1
 perscrutator1 inclitus1 es	1
@@ -41746,6 +42344,7 @@ petra1 fonts1 propinavit1	1
 petra1 profluit1 medulago1	1
 petra1 vescimur1 olive1	1
 petram1 revolverunts1 quomodo1	1
+petre1 latus2 anguli1	1
 petre1 qui eam	1
 petre1 rectus1 eo	1
 petri1 fluctuat quia1	1
@@ -41790,6 +42389,7 @@ phorcidibus1 luscusucius1 roma1	1
 phos1 phenicis1 est	1
 phylargia1 livor1 et	1
 physica1 fallo1 dialecticeus1	1
+pia candor1 vinco1	1
 pia clementique1 consolarintisuo	1
 pia cura1 flos1	1
 pia cyprique1 agone1	1
@@ -41802,8 +42402,11 @@ pia felix1 creatuo1	1
 pia gaudium1 regnis1	1
 pia gaudium1 syoother	1
 pia genitrix mare1	1
+pia gigno1 mare1	1
+pia gigno1 que	1
 pia gratius1 sic	1
 pia letareucius1 mater1	1
+pia lustrastiucius1 facies1	1
 pia mare1 lapsisucius1	1
 pia mater1 et	1
 pia mater1 gratie	1
@@ -41838,11 +42441,14 @@ pia stella1 mare1	1
 pia stirps1 iesseo1	1
 pia superne2 mater1	1
 pia supernorum2 civis1	1
+pia theotocotisus1 mare1	1
 pia traho1 nos	1
 pia ut nos	1
+pia vas sum1	1
 pia vena1 venieo1	1
 pia venieo1 via	1
 pia virgo1 dulcis1	1
+pia virgo1 gigno1	1
 pia virgo1 mare1	1
 pia virgo1 mater1	1
 pia virgo1 medeego1	1
@@ -41957,6 +42563,7 @@ piscina1 que permansisti1	1
 piscine1 carnique1 maculoother	1
 piscis1 natant1 equoribuus1	1
 pium1 ecce1 pie	1
+pium1 est cum	1
 pium1 gratius1 quo	1
 pium1 indultorem1 cur	1
 pium1 ne propositum1	1
@@ -42101,14 +42708,17 @@ plateas1 deiciunus1 et	1
 plato1 et sino1	1
 plato1 tullius1 totus2	1
 plato1 ubi pompeysther	1
+plaudamus1 et psallamus1	1
 plaudamus1 plausibus1 nam	1
 plaudant1 omnis1 ave	1
 plaudat1 canticique1 organicis1	1
 plaudat1 mater1 ecclesiax1	1
+plaudat1 novus1 iubileo1	1
 plaudat1 omnis1 lyricusucius1	1
 plaudat1 perdo1 et	1
 plaudat1 tripuditious1 homo1	1
 plaude1 cantuarias1 laudansucius1	1
+plaude1 dignus1 laudeucius1	1
 plaude1 pro victoria1	1
 plaude1 sonsther expende1	1
 plaudit1 carenque1 cura1	1
@@ -42123,9 +42733,11 @@ plaudite1 rex1 passo1	1
 plaudite1 spiritus1 immundeo1	1
 plaudunt1 vaninumeral1 pontifex1	1
 plausibus1 cordis1 oriss1	1
+plausibus1 eve subvenit1	1
 plausibus1 nam salus1	1
 plausu1 letabundoucius1 liberavio1	1
 plausu1 letum1 trintious1	1
+plausu1 mysticnoun plaudamus1	1
 plausu1 renovaris1 novus1	1
 plebani1 mercenarigo1 predones1	1
 plebanis1 copulatuque1 in	1
@@ -42152,12 +42764,15 @@ plebs1 devoveo sathanae1	1
 plebs1 donum1 gratie	1
 plebs1 festiva tu1	1
 plebs1 fidelis1 careo1	1
+plebs1 fidelis1 iubileeo1	1
 plebs1 fidelis1 plaudat1	1
 plebs1 fideliums1 audiato1	1
 plebs1 fideliums1 planctum1	1
+plebs1 humanus1 la	1
 plebs1 in hospitium1	1
 plebs1 iocunda1 propheta1	1
 plebs1 israel1 infans1	1
+plebs1 mosburge1 doctrinaather	1
 plebs1 omnis1 eia	1
 plebs1 pauperculum1 gedeon	1
 plebs1 pro christus1	1
@@ -42178,6 +42793,7 @@ plene1 non obnoxiuther	1
 plene1 tot penis1	1
 pleneque1 fruens deus1	1
 plenitudo1 condescendeno1 adsum1	1
+plenitudo1 tempus1 tu	1
 plenitus1 spe sincerus1	1
 plenius1 forme munuscula1	1
 plenius1 inspiret1 enormes1	1
@@ -42206,6 +42822,7 @@ plenus1 gaudium1 benedicaus1	1
 plenus1 gaudium1 eia	1
 plenus1 gaudium1 psallat1	1
 plenus1 gens1 solus1	1
+plenus1 gratie letareucius1	1
 plenus1 gratie porather	1
 plenus1 gratius1 capio1	1
 plenus1 gratius1 caput1	1
@@ -42257,6 +42874,7 @@ plorat1 filius1 nullus1	1
 plorat1 gero1 a	1
 plorat1 moysenoun fatisceum1	1
 plorat1 nestoreequm1 vatenumeral1	1
+plorat1 sed temere1	1
 plorat1 tego1 per	1
 ploratu1 plangunt1 anxio1	1
 ploratur1 letitum1 a	1
@@ -42515,6 +43133,7 @@ populus1 bellus1 sitis1	1
 populus1 bini1 exprimunt1	1
 populus1 cecuque1 et	1
 populus1 congaudentituo ecclesiax1	1
+populus1 cum genitrice	1
 populus1 est nescienequs1	1
 populus1 gens1 sedeo1	1
 populus1 gentilis1 adoret1	1
@@ -42834,7 +43453,6 @@ post1 pario2 emarcescitx1	1
 post1 pario2 flore	1
 post1 pario2 mater1	1
 post1 pario2 persevero1	1
-post1 pario2 virgo1	1
 post1 pario2 vocao1	1
 post1 parus1 obtentther	1
 post1 patrum1 oraculum1	1
@@ -42876,6 +43494,7 @@ postliminio1 credenduo1 est	1
 postliminio1 secundus1 quis2	1
 postposuit1 et peritueo1	1
 postquam1 ego1 credito1	1
+postquam1 prebuit1 saraceniother	1
 postquam1 rex accumbo1	1
 postquam1 sedeo1 iam	1
 postquem1 descendo1 ad	1
@@ -42924,6 +43543,7 @@ potentia1 honor1 sino1	1
 potentia1 in hoc	1
 potentia1 in numen1	1
 potentia1 in vestitu1	1
+potentia1 inter1 dissidenteua	1
 potentia1 maiestastother misericordia1	1
 potentia1 maneo1 per	1
 potentia1 mitieus1 misericordia1	1
@@ -43043,6 +43663,7 @@ pravus1 consilium1 sed	1
 pravus1 deformant1 opus1	1
 pravus1 depravas1 opus1	1
 pravus1 depravat1 socisther	1
+pravus1 moveo1 pereo1	1
 pre ceterus1 admiranda1	1
 pre ceterus1 ave	1
 pre ceterus1 ditareus1	1
@@ -43097,6 +43718,7 @@ prebuit1 que latuitucius1	1
 prebuit1 quia1 malus3	1
 prebuit1 quis2 cum	1
 prebuit1 quod1 debeo1	1
+prebuit1 saraceniother locus1	1
 precamine1 ad poither	1
 precamine1 rumpo1 fulminaei1	1
 precamur1 eli quis2	1
@@ -43353,6 +43975,7 @@ prelio1 troja1 tunc1	1
 prelio1 vultus1 gereno1	1
 preliorum1 francia turbo2	1
 prelium1 dat hoc	1
+prelucana1 la lavaucius1	1
 preludia1 que video1	1
 prelum1 babylonis1 intra2	1
 prem1 er uis	1
@@ -43406,11 +44029,13 @@ premium1 do1 omnis1	1
 premium1 dum palpat1	1
 premium1 et gaudium1	1
 premium1 hiems1 tediuu1	1
+premium1 in eum	1
 premium1 iustojum1 sublevator1	1
 premium1 ne receptos1	1
 premium1 nego1 dei	1
 premium1 non molestat1	1
 premium1 noster1 caritaus1	1
+premium1 quidvs2 commercius2	1
 premium1 quis2 colerque1	1
 premium1 sit tu1	1
 premium1 tu gaudioruum1	1
@@ -43470,6 +44095,7 @@ presens1 fruar is1	1
 presens1 hec familia1	1
 presens1 homo1 ijdiex1	1
 presens1 orbis1 consolatontiruo	1
+presens1 qui colique1	1
 presens1 vita1 labituor1	1
 presensit1 logicaucius1 proposuit1	1
 presentat1 anglia1 guilermum	1
@@ -43502,6 +44128,7 @@ presepe1 replevistis1 mundus2	1
 presepi1 reclinaturs1 hic1	1
 presepia1 dum pater1	1
 presepio1 dominus1 dominus1	1
+presepio1 quis2 honorat1	1
 presepio1 rex omnis1	1
 presepio1 stella1 scintillat1	1
 presepium1 prave1 spoliatuum1	1
@@ -43603,6 +44230,7 @@ presules1 adoro1 vitulus1	1
 presules1 et consul1	1
 presules1 mollis1 blanditiius1	1
 presules1 nec tot	1
+presuli1 ad honor1	1
 presuli1 novus1 deno1	1
 presuli1 qui secului1	1
 presulis1 claruique1 miraculius1	1
@@ -43633,6 +44261,7 @@ presunt1 in ecclesiax1	1
 pretendas1 mos1 non	1
 pretendis1 forme flosculum	1
 pretendis1 non possideo1	1
+pretendit1 hec adsum1	1
 pretendit1 inimicus1 mortaleis1	1
 pretendit1 pallium1 veritatius1	1
 pretendit1 singulus1 osculum2	1
@@ -43719,6 +44348,7 @@ prevalere1 ei qui	1
 prevales1 an carmen1	1
 prevaluit1 convaluintituo injurius1	1
 prevaluit1 obtinuither nos	1
+prevaluit1 quis2 gigno1	1
 prevaricatio1 virtus1 subtrahitur1	1
 prevenerat1 sed osculum2	1
 prevenerunt1 quomodo1 iudeeo1	1
@@ -43750,6 +44380,7 @@ prex1 ad pretium1	1
 prex1 adesto1 naufragatis	1
 prex1 audi1 pia	1
 prex1 commendans2 ut	1
+prex1 cumula1 ut	1
 prex1 egregiox1 palatioum1	1
 prex1 exaudivit1 submersum1	1
 prex1 filius1 acceptotque1	1
@@ -43819,6 +44450,8 @@ primus1 et novus1	1
 primus1 et secundus1	1
 primus1 foris1 socratsther	1
 primus1 forma1 exuo1	1
+primus1 fuerimus nihil1	1
+primus1 fuerimus nil	1
 primus1 genus1 humanus1	1
 primus1 hic rependits1	1
 primus1 hoc considerntiauo	1
@@ -43992,6 +44625,7 @@ privo1 degens1 vita1	1
 privo1 filius1 qui	1
 privo1 fit emulax1	1
 privo1 tediu1 et	1
+pro baculo exultet1	1
 pro baculo pars1	1
 pro bonus1 muto1	1
 pro bravio dum	1
@@ -44028,6 +44662,7 @@ pro gravitas1 criminuque1	1
 pro his quis2	1
 pro homo1 culpam1	1
 pro homo1 cum	1
+pro homo1 genito	1
 pro homo1 humanarus1	1
 pro homo1 modus1	1
 pro homo1 prodiit1	1
@@ -44100,12 +44735,14 @@ pro nos1 passabitior1	1
 pro nos1 passibilis1	1
 pro nos1 patior1	1
 pro nos1 possum1	1
+pro nos1 reddats1	1
 pro nos1 se	1
 pro nos1 sit	1
 pro noster1 modulnoun	1
 pro noster1 scelus1	1
 pro noster1 vita1	1
 pro noster1 vulnerunumeral1	1
+pro noxa1 servulivius1	1
 pro ops1 nec	1
 pro pater1 inopia1	1
 pro patrius2 contendito1	1
@@ -44180,6 +44817,7 @@ pro tribunal1 heu	1
 pro tu1 dolother	1
 pro tua vita1	1
 pro tuus1 pater1	1
+pro tuus1 prex1	1
 pro veloeo1 compellers2	1
 pro ventrei1 crapulque1	1
 pro verus1 subrogatur1	1
@@ -44247,6 +44885,7 @@ procedo1 lux in	1
 procedo1 que egyptix1	1
 procedo1 ratio1 frustratur1	1
 procedo1 sol de	1
+procedo1 sol iustijie1	1
 procedo1 solus1 radius	1
 proceleuma1 nautis fit	1
 procella1 mare1 hic1	1
@@ -44365,6 +45004,7 @@ profectui1 studeo1 vices1	1
 profectum1 coluique1 cum	1
 profectum1 fides1 spes1	1
 proferaso1 qui scripturaother	1
+proferato1 hec contintiouo	1
 proferenso1 inferto1 ille1	1
 proferenso1 ut eliudx1	1
 profereto1 flos1 flos	1
@@ -44518,6 +45158,7 @@ promissus1 pater1 iesus1	1
 promissus1 per propheta1	1
 promit1 canticum1 exsultano1	1
 promit1 flos1 sed	1
+promite1 leo2 vinco1	1
 promittebatur1 lex1 titulus1	1
 promitti1 cinis1 se	1
 promitti1 premia1 spe	1
@@ -44563,6 +45204,7 @@ propensius1 me parciuo1	1
 propera1 credo1 vel	1
 propera1 de virgo1	1
 propera1 mundus2 vita1	1
+propera1 nos fove	1
 propera1 nos refederas1	1
 propera1 nos sanother	1
 propera1 que sum	1
@@ -44610,6 +45252,7 @@ prophetia1 nascitor1 ex	1
 prophetia1 nascor1 emmanuelx1	1
 prophetia1 pre cunctius1	1
 prophetia1 presenti1 patescit1	1
+prophetia1 salvus1 post1	1
 prophetiam1 claque1 vox1	1
 prophetiam1 ut gigas	1
 prophetica1 ezechielisx1 porather	1
@@ -44619,8 +45262,10 @@ propheticas1 sub evangeliox1	1
 prophetie1 finis1 adimplete1	1
 prophetie1 iubeo1 benedicerus1	1
 prophetie1 o qui1	1
+prophetie1 pario2 est	1
 propicio1 iam iam	1
 propicium1 iudeeo1 clementissimque1	1
+propina1 in eternum1	1
 propina1 noster1 mens1	1
 propina1 patens1 omnis1	1
 propina1 totus2 speciosas1	1
@@ -44806,6 +45451,8 @@ prosum1 aurum1 congerientisuo	1
 prosum1 cum adicituro1	1
 prosum1 delectatio1 aut	1
 prosum1 delectatio1 quis2	1
+prosum1 elatiox1 nam	1
+prosum1 elatiox1 terra1	1
 prosum1 fari nolo1	1
 prosum1 geryon hesperius	1
 prosum1 in auxilium1	1
@@ -44847,6 +45494,7 @@ prothev foris2 honestus	1
 prothoplaustum1 perdo1 orior1	1
 protinus1 resurrexit1 dominus1	1
 protinus1 ut dominus1	1
+protoplasma1 suus1 vexit1	1
 protoplasti1 culpam1 vetus1	1
 protulisti1 cum peperisti1	1
 protulisti1 deus1 iungeneo1	1
@@ -44914,8 +45562,10 @@ prudentie1 bissi1 retortes1	1
 prudentie1 fides1 vox	1
 prudentior1 natura1 ut	1
 prudentium1 consilium1 te	1
+psallamus1 ad laus1	1
 psallamus1 et salvamuus1	1
 psallamus1 mens1 superus1	1
+psallamus1 novus1 presuli1	1
 psallamus1 nunc1 cunctipotentus1	1
 psallamus1 ovanteum1 benedicaus1	1
 psallamus1 ovanteum1 dum	1
@@ -44944,6 +45594,7 @@ psallentes1 noster1 ments1	1
 psallentie1 munus1 festi	1
 psallimus1 letantesucius1 ad	1
 psallimus1 quis2 christuque1	1
+psallit1 gaudeo1 plaudit1	1
 psallite1 atque1 congaudetntieuo	1
 psallite1 hymnum deo	1
 psallite1 libertas1 perdite1	1
@@ -45111,6 +45762,7 @@ pueriti1 quartus1 sextaque1	1
 pueroru1 acies1 iocis1	1
 pueroru1 preconiis1 glorificetur	1
 pueroru1 spiritali1 gaudium1	1
+puerpera1 asperum1 qui	1
 puerpera1 christuque1 natus2	1
 puerpera1 clausique1 intra2	1
 puerpera1 dat regenx1	1
@@ -45139,6 +45791,7 @@ puerpera1 singularius1 honor1	1
 puerpera1 stella1 iacoeo1	1
 puerpera1 tua lex	1
 puerpera1 virgo1 lumen1	1
+puerpera1 virgo1 mare1	1
 puerpera1 virilis1 expers1	1
 puerpere1 cur non	1
 puerpere1 die tertius1	1
@@ -45172,6 +45825,7 @@ pugno1 ad te	1
 pugno1 cum draco1	1
 pugno1 efficitx1 uti	1
 pulcher1 facies1 celque1	1
+pulcher1 facies1 plenus1	1
 pulcher1 flos1 floris	1
 pulcher1 liquitucius1 atrium1	1
 pulcher1 nimis1 et	1
@@ -45270,11 +45924,14 @@ purgemus1 ergo1 vitium1	1
 purget1 vitium1 locupletemucius1	1
 purgetur1 feaiso1 scoriother	1
 purgetur1 per contrarium1	1
+purgo1 cordis1 scelus1	1
 purgo1 nos cruque1	1
 purgo1 sordsther cordium1	1
 purgo1 virtus1 radio	1
 purgo1 vitium1 tuus1	1
+puri1 cordis1 cithara1	1
 puri1 cordis1 sacrificiuother	1
+purifica1 fece mundana1	1
 purificat1 muneus1 et	1
 purificavit1 et a	1
 puriorem1 tres1 centupliciteque1	1
@@ -45302,6 +45959,7 @@ purpurat1 color1 autumpnais1	1
 purpurato1 flore pratum1	1
 purpure1 descendo1 cum	1
 purpurea1 homo1 massa2	1
+purpurea1 turtureanc1 in	1
 purpureus1 et vernalem1	1
 purum1 abluit1 petrum1	1
 purum1 pario2 pure1	1
@@ -45500,6 +46158,7 @@ quantus1 decet1 honor1	1
 quantus1 dei potentia1	1
 quantus1 deo displiceeut	1
 quantus1 dispendeuo de	1
+quantus1 est noster1	1
 quantus1 est rex	1
 quantus1 fames1 pertuleris1	1
 quantus1 federe regnets1	1
@@ -45580,8 +46239,10 @@ quatitui2 lux subito1	1
 quatitui2 solium1 perdit1	1
 quatuoi2 atque1 quintus1	1
 quatuoi2 in angulis1	1
+quavii2 iam mestitago1	1
 que ad lubricaucius1	1
 que apertus1 licet2	1
+que ascendo1 sicut1	1
 que carus1 vinco1	1
 que castitatique1 semitas1	1
 que castque1 pario2	1
@@ -45622,6 +46283,7 @@ que de jus1	1
 que de requies1	1
 que debiles1 ditaneus1	1
 que deceperat1 capio1	1
+que deus1 pari1	1
 que devoveo sum	1
 que dico2 facio1	1
 que dico2 propheta1	1
@@ -45646,6 +46308,7 @@ que dum video1	1
 que duo contrarius1	1
 que egyptix1 tempnenu1	1
 que est in	1
+que est iste1	1
 que est superus1	1
 que expectabatur1 et	1
 que facies1 frons	1
@@ -45654,6 +46317,7 @@ que facisio1 fac	1
 que factum1 sum1	1
 que femina1 tam	1
 que ferso1 ad	1
+que filius1 dum	1
 que filius1 pater1	1
 que fio1 irreptieo1	1
 que fit mater1	1
@@ -45704,6 +46368,7 @@ que mater1 sum1	1
 que mea micheus1	1
 que merueo1 de	1
 que merueo1 gratia1	1
+que meruiseo1 pia	1
 que misericordi1 nullus1	1
 que mollis1 sum1	1
 que mordenoun omnis1	1
@@ -45732,6 +46397,7 @@ que non violariss1	1
 que nos amplexaturulus1	1
 que nos comitetus2	1
 que nos et	1
+que nos illustravieo1	1
 que nos1 hac	1
 que novisui1 vita1	1
 que numquam1 finitur	1
@@ -45820,6 +46486,7 @@ que sum1 in	1
 que sum1 rachela	1
 que sum1 vinculum1	1
 que super2 celque1	1
+que superus1 candor1	1
 que surgo1 de	1
 que susceiito1 et	1
 que tam dolenather	1
@@ -45977,6 +46644,7 @@ qui cito1 preteris1	1
 qui clarueraque1 ipse1	1
 qui claudo1 omnis1	1
 qui clavis1 geritis	1
+qui colique1 gaudium1	1
 qui colorat1 gaudium1	1
 qui complanans2 asperum1	1
 qui conclusuntisuo salomonium1	1
@@ -46086,6 +46754,7 @@ qui facio1 omnis1	1
 qui facio1 secului1	1
 qui facio1 sum1	1
 qui facio1 tu1	1
+qui facio1 victoria1	1
 qui fastus2 rumperis	1
 qui faventes magnatibuus1	1
 qui favilla1 diceriso2	1
@@ -46114,6 +46783,7 @@ qui gloriamin1 in	1
 qui gratia1 et	1
 qui gregi deficiunt1	1
 qui grex1 custodio1	1
+qui gubernas omnis1	1
 qui gubernas res	1
 qui gubernat machinam1	1
 qui gubernat omnis1	1
@@ -46291,6 +46961,7 @@ qui plangit1 nec	1
 qui plantas1 inserit1	1
 qui plus1 habeo1	1
 qui pneumate1 seculuui1	1
+qui pondertther omnis1	1
 qui porrigium1 cur	1
 qui portavtther angelus1	1
 qui possum1 comparo1	1
@@ -46368,6 +47039,7 @@ qui sauciuother respicio1	1
 qui scio1 quod1	1
 qui scripturaother reseras1	1
 qui se credo1	1
+qui se illesum1	1
 qui se ipse1	1
 qui se nimis1	1
 qui se noverit	1
@@ -46468,6 +47140,7 @@ qui vellus1 vellitis1	1
 qui vendit1 vel	1
 qui venio1 captivantso1	1
 qui venio1 est	1
+qui verbera1 minabatueus1	1
 qui vernali1 facio1	1
 qui verus1 contero1	1
 qui vestivit1 aridamulus1	1
@@ -46567,8 +47240,10 @@ qui1 effectus2 quis2	1
 qui1 egenus1 quidquas2	1
 qui1 emmanuelx1 benedixius1	1
 qui1 est meus1	1
+qui1 est salvatius1	1
 qui1 et dierums1	1
 qui1 et dux1	1
+qui1 eva fugavit1	1
 qui1 expavi1 indumentum1	1
 qui1 exuito1 quadranti2	1
 qui1 facies1 nunc1	1
@@ -46591,8 +47266,10 @@ qui1 fero1 beneficium1	1
 qui1 ferreo1 amurcamulus1	1
 qui1 feteo raptum	1
 qui1 filie sanitaus1	1
+qui1 fit puerpera1	1
 qui1 fit redemptios1	1
 qui1 fleo1 deothur	1
+qui1 flos exorno1	1
 qui1 formosus1 qui1	1
 qui1 fortis1 procul1	1
 qui1 fortuna1 destruit1	1
@@ -46649,6 +47326,7 @@ qui1 mirabilius1 iste1	1
 qui1 mirandus1 qui1	1
 qui1 mirandus1 sacerdotum1	1
 qui1 mirificeus1 pario2	1
+qui1 mirus1 claritas1	1
 qui1 mirus1 potentia1	1
 qui1 mirus1 qui1	1
 qui1 misera1 mors1	1
@@ -46669,6 +47347,7 @@ qui1 non corruptius1	1
 qui1 non opus1	1
 qui1 nos1 congruntiauo	1
 qui1 novus1 et	1
+qui1 nox1 cecitaque1	1
 qui1 nullus1 cupiditas1	1
 qui1 numquam1 deserui1	1
 qui1 offendis1 ergo1	1
@@ -46815,6 +47494,7 @@ quia1 salus1 est	1
 quia1 scortother subditum1	1
 quia1 sensus2 obmutescither	1
 quia1 si dispenseus	1
+quia1 sic genitor1	1
 quia1 sic volvo1	1
 quia1 solus1 potens1	1
 quia1 sui memorum1	1
@@ -46862,6 +47542,7 @@ quidem1 sacramentum1 mundus2	1
 quidem1 simoniacus1 unus1	1
 quidem1 sum1 rei	1
 quidem1 vis odoris1	1
+quidvs2 commercius2 digneus1	1
 quidvs2 renuass1 inter1	1
 quies1 do1 david1	1
 quies1 do1 miser1	1
@@ -47048,6 +47729,7 @@ quis2 ego creaveraque1	1
 quis2 enim1 gloriosa	1
 quis2 equatx1 pravitas1	1
 quis2 ergo1 miserrime1	1
+quis2 ergo1 premium1	1
 quis2 ergo1 torpetious1	1
 quis2 ergo1 tu1	1
 quis2 erigo1 turrisnc1	1
@@ -47106,6 +47788,7 @@ quis2 filius1 reemo1	1
 quis2 finis1 interituss2	1
 quis2 fit privilegotheu	1
 quis2 floris mater1	1
+quis2 flos aromaticusulus1	1
 quis2 flos exorno1	1
 quis2 frauds1 facio1	1
 quis2 fructus2 noster1	1
@@ -47119,6 +47802,7 @@ quis2 gazas hostis1	1
 quis2 generositas extulerit1	1
 quis2 genuisti1 ut	1
 quis2 gigno1 mare1	1
+quis2 gigno1 puerpera1	1
 quis2 gigno1 rigor	1
 quis2 gloria1 freanio1	1
 quis2 gloria1 mundana1	1
@@ -47127,6 +47811,7 @@ quis2 gratie reparaturs1	1
 quis2 gratius1 fit	1
 quis2 habeo1 in	1
 quis2 habeo1 nimie1	1
+quis2 habeo1 postquam1	1
 quis2 hec habeo1	1
 quis2 hec magnalius1	1
 quis2 hec prosum1	1
@@ -47134,6 +47819,7 @@ quis2 hic causque1	1
 quis2 hoc mirabiliuus1	1
 quis2 homo1 redimiturs1	1
 quis2 homo1 vaninumeral1	1
+quis2 honorat1 et	1
 quis2 hostis1 seduxerat1	1
 quis2 humane rationis1	1
 quis2 humus1 gigno1	1
@@ -47256,6 +47942,7 @@ quis2 nolo1 iterum1	1
 quis2 nomen1 fit	1
 quis2 nomen1 greci	1
 quis2 non claudo1	1
+quis2 non cruciaque1	1
 quis2 non deseris1	1
 quis2 non difficilis1	1
 quis2 non est	1
@@ -47269,6 +47956,7 @@ quis2 nos collegiis1	1
 quis2 nos cum	1
 quis2 nos gratius1	1
 quis2 nos peccatoreum1	1
+quis2 nos primus1	1
 quis2 nos salveother	1
 quis2 nosco1 factum1	1
 quis2 nostre1 propaginis1	1
@@ -47326,6 +48014,7 @@ quis2 per ipse1	1
 quis2 per navigium	1
 quis2 perdo1 querens1	1
 quis2 pervertis1 nec	1
+quis2 pia virgo1	1
 quis2 plasmaverat1 doleo1	1
 quis2 polsther et	1
 quis2 poother terra1	1
@@ -47351,8 +48040,10 @@ quis2 preornatum1 mos1	1
 quis2 presidet1 semper1	1
 quis2 prestant1 presidium1	1
 quis2 presul1 titulus1	1
+quis2 pretendit1 hec	1
 quis2 pretium1 humanus1	1
 quis2 prex1 moysnoun	1
+quis2 primus1 fuerimus	1
 quis2 primus1 viperas1	1
 quis2 princeps1 babilonis	1
 quis2 prior1 coluique1	1
@@ -47421,6 +48112,7 @@ quis2 scio1 proderit1	1
 quis2 scio1 propitius1	1
 quis2 scio1 si	1
 quis2 sed non	1
+quis2 seduco1 et	1
 quis2 semper1 declinavi1	1
 quis2 senserui1 precipuos1	1
 quis2 sententia1 est	1
@@ -47437,6 +48129,7 @@ quis2 sit illicitum2	1
 quis2 sit modus1	1
 quis2 sit mundus1	1
 quis2 sit privilegotheu	1
+quis2 sit virtus1	1
 quis2 solidatuus1 parie1	1
 quis2 sollempnio1 celque1	1
 quis2 solo1 improbitaus1	1
@@ -47539,6 +48232,7 @@ quis2 viperas1 letiferum1	1
 quis2 virga1 sum1	1
 quis2 virgo1 geneus1	1
 quis2 virgo1 peperi1	1
+quis2 virgo1 pia	1
 quis2 virtus1 preditus1	1
 quis2 virtus1 sarcinother	1
 quis2 virtus1 simul1	1
@@ -47613,6 +48307,7 @@ quo christque1 procul1	1
 quo complents2 ius	1
 quo condituntiruo naturiss2	1
 quo crucioque1 ad	1
+quo cum venus1	1
 quo defuncto1 si	1
 quo dei fuscat	1
 quo deletur1 peccatum1	1
@@ -47645,6 +48340,7 @@ quo nihil1 est	1
 quo nil emungiturx1	1
 quo nil melius1	1
 quo niteris1 qua	1
+quo non sum1	1
 quo nos instruis1	1
 quo nos suo	1
 quo nos1 deus1	1
@@ -47709,6 +48405,7 @@ quo vites1 balsamum	1
 quo vivendis1 regulas1	1
 quocumque1 graditur agnus1	1
 quod1 a bursa	1
+quod1 a carnis1	1
 quod1 a roma1	1
 quod1 a superus1	1
 quod1 abel1 jus1	1
@@ -47832,6 +48529,7 @@ quod1 expedit1 quod1	1
 quod1 expirant1 defectibus1	1
 quod1 explicit1 explicat1	1
 quod1 facitio1 cur	1
+quod1 factum1 est	1
 quod1 factum1 subeas1	1
 quod1 fenum carnique1	1
 quod1 fides1 doctorsther	1
@@ -47852,6 +48550,7 @@ quod1 habeo1 dabo1	1
 quod1 habeo1 iste1	1
 quod1 habeo1 propinatur1	1
 quod1 heri1 sum1	1
+quod1 hic nuntio1	1
 quod1 hic puer1	1
 quod1 hic seminaveei1	1
 quod1 hinc1 transeo1	1
@@ -47924,6 +48623,7 @@ quod1 non est	1
 quod1 non exeas1	1
 quod1 non habeo1	1
 quod1 non inflectitur1	1
+quod1 non obscurato1	1
 quod1 non patior1	1
 quod1 non seminaveei1	1
 quod1 non statim1	1
@@ -48195,6 +48895,7 @@ radians pre ceterus1	1
 radians super2 astrum1	1
 radiat absqu1 calore1	1
 radiat complets2 prophetia1	1
+radiat de virgo1	1
 radiat deitaus1 vestita1	1
 radiat hoc mare1	1
 radiat lux celebrei1	1
@@ -48226,6 +48927,7 @@ radio tribus1 donsther	1
 radio verbum1 nascor1	1
 radios gratie adest1	1
 radiosa cellulque1 divinitatius1	1
+radiosa pia lustrastiucius1	1
 radiosa stella1 matutinus1	1
 radium a quo	1
 radium celestque1 stillicidiuother	1
@@ -48426,6 +49128,7 @@ recluserunts1 quomodo1 iudeeo1	1
 reclusos1 carcer1 in	1
 reclusos1 styxquother stupenother	1
 recogitas1 de tempus1	1
+recognitas1 qui1 eva	1
 recolenss1 oraculs1 nam	1
 recolentess1 gaudeo1 hodie1	1
 recolimuss1 et cor1	1
@@ -48513,6 +49216,7 @@ reddants1 lilium1 et	1
 reddants1 solicituus1 ut	1
 reddats1 disparus1 que	1
 reddats1 ei gratia1	1
+reddats1 grates hodie1	1
 reddats1 vites1 premia1	1
 reddaturs1 per acums1	1
 reddemuo1 calix1 quis2	1
@@ -48618,6 +49322,7 @@ redemptoris1 laus1 cunctus1	1
 redemptoris1 meo galileo	1
 redemptoriss1 mater1 que	1
 redemptoriss1 noster1 gubernatoris1	1
+redemptoriss1 que meruiseo1	1
 redemptors1 cernito1 ad	1
 redemptors1 et fideliums1	1
 redemptors1 et non	1
@@ -48639,6 +49344,7 @@ redeo1 ad seculariui1	1
 redeo1 ad vomitunumeral1	1
 redeo1 bos ad	1
 redeo1 captivitso1 ad	1
+redeo1 cletuque1 dies1	1
 redeo1 cum letitium1	1
 redeo1 cum potentia1	1
 redeo1 etas1 aureus1	1
@@ -48649,6 +49355,7 @@ redeo1 mundus2 partus2	1
 redeo1 pro peccatum1	1
 redeo1 risus aperituo1	1
 redeo1 solemn1 quis2	1
+redeo1 tempus1 estivlum1	1
 redeundis1 omnis1 spiritus1	1
 redeuno1 cursus1 renovares1	1
 redeuo1 non concedo1	1
@@ -48687,6 +49394,7 @@ redintegraturs1 metus1 desiderium1	1
 redires1 cogituo1 quisquis1	1
 redires1 si debero1	1
 redis1 christus1 fili	1
+rediteo1 ad patrius2	1
 rediteo1 homo1 plaudat1	1
 rediteo1 mercaoi1 et	1
 rediteo1 mundus2 celebrabilque1	1
@@ -48733,6 +49441,7 @@ reemo1 passio1 letificaum1	1
 reemo1 per filius1	1
 reemo1 qui vix	1
 reemo1 sanguis1 inimicus1	1
+ref tui statuss2	1
 refectionems1 tabultieus1 lex1	1
 refectios1 communis1 est	1
 refectios1 credenduo1 est	1
@@ -48807,6 +49516,7 @@ refovets1 flos amantis1	1
 refovets1 titillatiiberous1 nos	1
 refrenanss1 tempereu1 fulgeo1	1
 refrenants1 moveo1 renums1	1
+refrenass1 illicita2 dignus1	1
 refrenats1 reproboss1 turbo2	1
 refrigeriums1 mundus2 lumen1	1
 refrigescets1 caritaus1 multus1	1
@@ -48877,6 +49587,7 @@ regia1 da verus1	1
 regia1 david1 rex1	1
 regia1 dei plenus1	1
 regia1 dum pater1	1
+regia1 egregius1 gaudeat	1
 regia1 et invitaus1	1
 regia1 gaudeo1 pax	1
 regia1 hec latento1	1
@@ -48921,6 +49632,7 @@ regina1 gens1 salvother	1
 regina1 glorie duco1	1
 regina1 gloriosa natus2	1
 regina1 gloriosa suavius1	1
+regina1 iustijie1 adiuva1	1
 regina1 morunoun dux	1
 regina1 nos de	1
 regina1 nos1 hodie1	1
@@ -48931,6 +49643,7 @@ regina1 regnanum1 rex1	1
 regina1 rosa1 sino1	1
 regina1 salomoneum1 audiens1	1
 regina1 tu laqueiucius1	1
+regina1 tuus1 nos1	1
 regina1 virginum1 celque1	1
 regina1 virginum1 et	1
 regina1 virginum1 super2	1
@@ -49050,6 +49763,7 @@ rego1 exsilium1 rors1	1
 rego1 in morunoun	1
 regrederiss1 mundus2 flos	1
 regredior1 ad celestique1	1
+regredior1 ad patrius2	1
 regredior1 ad principium1	1
 regredis1 mos1 canus1	1
 regredis1 sed his	1
@@ -49298,6 +50012,7 @@ rependiss1 crux1 debeo1	1
 rependiss1 gemitus1 non	1
 rependiss1 quare1 non	1
 rependits1 johannes amantiso1	1
+rependiturs1 creato1 secului1	1
 repente1 charismatque1 spiritus1	1
 repente1 dono1 ego1	1
 repente1 funebris1 criminque1	1
@@ -49417,6 +50132,7 @@ res est tenuis1	1
 res est transitoreo1	1
 res fides1 nunc1	1
 res fragilis1 vas	1
+res illicitas2 liciterucius1	1
 res immundeo1 solus1	1
 res in virgo1	1
 res inepta1 solus1	1
@@ -49656,6 +50372,8 @@ resurrexit1 dominus1 dolor1	1
 resurrexit1 dominus1 pietas1	1
 resurrexit1 dominus1 qui	1
 resurrexit1 dominus1 salus1	1
+resurrexit1 et eveho1	1
+resurrexit1 eya eya	1
 resurrexit1 hodie1 debellavit1	1
 resurrexit1 hodie1 hebreorum	1
 resurrexit1 hodie1 hec	1
@@ -49694,6 +50412,7 @@ retribuiss1 pro tot	1
 retribuiturs1 pro do1	1
 retro1 respicimus1 quod1	1
 retro1 satana1 tuus1	1
+retrodata1 quavii2 iam	1
 retrorsum1 nullus1 vestigium1	1
 retrospiciens1 et post1	1
 retulits1 ad aream1	1
@@ -49744,8 +50463,11 @@ reverteres1 crux1 ad	1
 reverteres1 cum penitente1	1
 reverteres1 dum poto1	1
 reverteres1 dupplex1 dampnuo1	1
+reverteres1 reverteres1 ut	1
+reverteres1 ut nos	1
 reverteres1 via trittiaus1	1
 reverteres1 vita1 voragio1	1
+reverteriss1 qui de	1
 revexits1 ovem1 perdio1	1
 revirescits1 et florescit	1
 revirescits1 virgula1 sua	1
@@ -49797,9 +50519,11 @@ rex et sacerdos1	1
 rex et sol	1
 rex et sponsus1	1
 rex eterne1 glorie	1
+rex eterne1 salvus1	1
 rex etheris1 iam	1
 rex ex vitiss1	1
 rex excedit1 qui1	1
+rex facinus1 laxatorucius1	1
 rex francorum mir	1
 rex fremuit et	1
 rex fugato1 impiueo1	1
@@ -49845,6 +50569,7 @@ rex militieus1 nuntius1	1
 rex monilibunoun ornavit1	1
 rex nabuchodonosor furno1	1
 rex natures2 suo	1
+rex nos adiuva1	1
 rex nos1 agnituus1	1
 rex nove ludovicus1	1
 rex novus1 et	1
@@ -49892,6 +50617,7 @@ rex triumpho1 etheris1	1
 rex tu digitueus1	1
 rex ubi magnus1	1
 rex unicuus1 pacificus1	1
+rex venio1 fons	1
 rex virtutum1 descendo1	1
 rex virtutum1 quis2	1
 rex virtutum1 tergeo1	1
@@ -49989,6 +50715,7 @@ rex1 instauratur1 hodie1	1
 rex1 intacte1 profudit1	1
 rex1 intrat2 nuptias	1
 rex1 involutum1 restitutum1	1
+rex1 iubileo1 qui	1
 rex1 iustijie1 mireus1	1
 rex1 lex et	1
 rex1 magnificus1 quis2	1
@@ -50046,6 +50773,7 @@ rex1 regiam1 quis2	1
 rex1 regnatuo1 thusqutieus1	1
 rex1 respiciunt1 in	1
 rex1 rex altus1	1
+rex1 rex facinus1	1
 rex1 rex glorie	1
 rex1 rex in	1
 rex1 rex monilibunoun	1
@@ -50116,7 +50844,7 @@ rigas mens1 sitieno1	1
 rigat hostis1 firmus1	1
 rigatus iesus1 mater1	1
 rigatus iesus1 rex	1
-rigatus quis2 flos	1
+rigatus qui1 flos	1
 rigavit dogmaether corusco1	1
 rigavit item1 thronutisus1	1
 rigavit qui noster1	1
@@ -50140,6 +50868,7 @@ risus et opprobrium1	1
 risus fideliums1 in	1
 risus habeo1 et	1
 risus lascivia1 arcus1	1
+risus pax et	1
 risus que labellulaucius1	1
 risus1 dulceis1 populus2	1
 risus1 in meroreus1	1
@@ -50198,6 +50927,7 @@ rogent ut vivo1	1
 rogita o mater1	1
 rogita ut adiuvet1	1
 rogitemus dominus1 ne	1
+rogo1 da nos1	1
 rogo1 licitumucius1 illicitum2	1
 rogo1 pio ut	1
 rogo1 qui tendo1	1
@@ -50249,6 +50979,7 @@ ros in gramine	1
 ros in virgo1	1
 ros mundus2 nosco1	1
 ros natus2 est	1
+ros tu pater1	1
 ros1 celque1 compluents2	1
 ros1 celque1 distillaneue	1
 ros1 celuque1 claudio1	1
@@ -50300,6 +51031,7 @@ rosa1 rubicunda dulci1	1
 rosa1 sino1 culpque1	1
 rosa1 sino1 spina1	1
 rosa1 solus1 christus1	1
+rosa1 speciosas1 gloriosa	1
 rosa1 spina1 carenque1	1
 rosa1 super2 omnis1	1
 rosa1 tu liliumucius1	1
@@ -50326,6 +51058,7 @@ rostris carpunque1 et	1
 rosula aqueulus1 puteus1	1
 rosula fragrat ut	1
 rosula protecta1 propina1	1
+rosula purpurea1 turtureanc1	1
 rosus a perfidis1	1
 rota1 iam plus1	1
 rota1 in rotam1	1
@@ -50468,6 +51201,7 @@ rutilans semper1 clarus1	1
 rutilans tu gemma1	1
 rutilante cynthiuque1 emundatx1	1
 rutilat hodie1 dies1	1
+rutilat terra1 terra1	1
 rutus fonts1 qui	1
 s ic terror1	1
 sabaotother clementique1 pange1	1
@@ -50669,6 +51403,7 @@ salus1 ex gratius1	1
 salus1 ex iudeieo1	1
 salus1 exitueo1 venio1	1
 salus1 exoritur1 via	1
+salus1 facisio1 populus2	1
 salus1 fideliums1 salvother	1
 salus1 finis1 nescius1	1
 salus1 gaudium1 ave	1
@@ -50708,6 +51443,7 @@ salus1 nos1 plus1	1
 salus1 noster1 et	1
 salus1 noster1 perficitur1	1
 salus1 noster1 spes1	1
+salus1 nostre1 janua1	1
 salus1 nunc1 lex1	1
 salus1 o qui1	1
 salus1 omnis1 det	1
@@ -50749,6 +51485,7 @@ salus1 virtus1 et	1
 salus1 zelo nequiteo1	1
 salutandother nocuit dico2	1
 salutanother gabriel beata	1
+salutaother marie1 sacrum1	1
 salutaribuother quis2 agenduo1	1
 salutariother b porro1	1
 salutariother calix1 et	1
@@ -50834,6 +51571,7 @@ salvatous1 morior1 dum	1
 salvatous1 morior1 et	1
 salvatous1 morior1 ut	1
 salvatous1 omnis1 natus2	1
+salvatous1 rex1 rex	1
 salvatuus1 nec mortuus1	1
 salvatuus1 vir hebreus	1
 salvaus1 archaulus1 iusjos1	1
@@ -50886,6 +51624,7 @@ salvother virginum1 salvother	1
 salvother virgo1 dominus1	1
 salvother virgo1 gratiosa	1
 salvother virgo1 margaretother	1
+salvother virgo1 perpetuus1	1
 salvother virgo1 regia1	1
 salvother virgo1 rubens1	1
 salvother virgo1 serenavius1	1
@@ -50903,6 +51642,7 @@ salvus1 me fac	1
 salvus1 nos amen1	1
 salvus1 nos candenque1	1
 salvus1 nos stella1	1
+salvus1 post1 pario2	1
 salvus1 pudicitie1 signaculum1	1
 salvus1 pudor1 o	1
 salvus1 sedans1 tediuu1	1
@@ -50955,6 +51695,7 @@ sancio1 destrui1 par1	1
 sancio1 dignus1 decore1	1
 sancio1 et immaculateo1	1
 sancio1 et sollempnio1	1
+sancio1 festa festorum	1
 sancio1 filius1 alliduntulus1	1
 sancio1 fortitudo1 lausucius1	1
 sancio1 gratius1 alleluia1	1
@@ -51101,6 +51842,7 @@ sanctus1 petrus1 obviaus1	1
 sanctus1 predicantibus1 diffunditueus1	1
 sanctus1 presulis1 claruique1	1
 sanctus1 sabaotother hosanic1	1
+sanctus1 sancio1 festa	1
 sanctus1 sancio1 qui	1
 sanctus1 sanctoother perficit1	1
 sanctus1 sanctus1 cantuss1	1
@@ -51170,6 +51912,7 @@ sanitaus1 quis2 fait	1
 sanitaus1 reddaturs1 per	1
 sanius1 medelmgo1 conferato1	1
 sanother languidaus1 donum1	1
+sanother mens1 sanother	1
 sanother munda1 fedis	1
 sanother ne noster1	1
 sanother saucius1 ut	1
@@ -51227,6 +51970,7 @@ saporeother tuus1 non	1
 saporeother unda1 fluo1	1
 saporiother nectareque1 tu	1
 sapuother sicut1 fatui	1
+saraceniother locus1 quo	1
 saracenuother sepulchruui1 polluio1	1
 sarcinaother vetus1 existenteo1	1
 sarcinother legalisucius1 leviaturs1	1
@@ -51435,6 +52179,7 @@ scio1 quis2 possum1	1
 scio1 quis2 sit	1
 scio1 quod1 christus1	1
 scio1 quod1 heri1	1
+scio1 quod1 hic	1
 scio1 quod1 possum1	1
 scio1 quod1 veritaus1	1
 scio1 si do1	1
@@ -51556,6 +52301,7 @@ se felix1 intelligens1	1
 se fulgento1 claritatus1	1
 se gentis1 copulareque1	1
 se hinc1 exsortem1	1
+se illesum1 dat	1
 se inclinans1 ad	1
 se induit1 et	1
 se ipse1 exinanieneo1	1
@@ -51700,6 +52446,7 @@ secului1 pax gallius2	1
 secului1 pax1 insigne1	1
 secului1 per terminos1	1
 secului1 pro malus1	1
+secului1 pro noxa1	1
 secului1 qui sui1	1
 secului1 qui1 lux	1
 secului1 quis2 virtus1	1
@@ -51979,6 +52726,7 @@ sed qui mos1	1
 sed qui possum1	1
 sed qui sic	1
 sed quis2 iudeeo1	1
+sed quo cum	1
 sed quo plus1	1
 sed quod1 ago1	1
 sed quod1 edendo2	1
@@ -52035,6 +52783,7 @@ sed tamquam1 caput1	1
 sed tandem1 defloruit1	1
 sed tantus1 severitas1	1
 sed te claudio1	1
+sed temere1 diffluereus1	1
 sed temere1 mors1	1
 sed terrenus1 sapiunother	1
 sed tituloruus1 cumulus1	1
@@ -52134,6 +52883,7 @@ sedo1 possum1 nec	1
 seducens1 homo1 hic1	1
 seducis1 mens1 meus1	1
 seduco1 ambitus2 sed	1
+seduco1 et perduco1	1
 seducte1 sum1 in	1
 seductio1 iustijie1 sub	1
 seductor1 invidus1 quis2	1
@@ -52284,6 +53034,7 @@ semper1 rutilans semper1	1
 semper1 sino1 cum	1
 semper1 sino1 tediu1	1
 semper1 sum1 copiosus1	1
+semper1 sum1 paro2	1
 semper1 teneo1 medius1	1
 semper1 tu1 sum1	1
 semper1 uti soleo1	1
@@ -52613,6 +53364,7 @@ servo1 semitas1 largitatisucius1	1
 servo1 servus2 a	1
 servo1 vivendos1 stoice1	1
 servulavius1 sum humilis1	1
+servulivius1 penis1 affligiturulus1	1
 servulovius1 ipse1 solveno1	1
 servumvius1 libero1 servus2	1
 servumvius1 mitto1 eliseus1	1
@@ -52946,6 +53698,7 @@ sic floruit nec	1
 sic flos ille1	1
 sic formator1 homo1	1
 sic fulgeas ut	1
+sic genitor1 paradisi1	1
 sic germinat virga1	1
 sic granum a	1
 sic gratie meritmgo1	1
@@ -52955,6 +53708,7 @@ sic iacheeo1 transfodit1	1
 sic ijbeno1 puer1	1
 sic ijdiex1 ut	1
 sic ille1 dei	1
+sic illuminate1 nam	1
 sic imbuieo1 ars1	1
 sic immutaeo1 status2	1
 sic imo subtilius1	1
@@ -52964,6 +53718,7 @@ sic in verbum1	1
 sic in vester1	1
 sic in vindictam1	1
 sic induit1 orbis1	1
+sic inferus1 refrenass1	1
 sic ingeris1 in	1
 sic innotuit1 saracenuother	1
 sic intacta1 virgo1	1
@@ -53108,6 +53863,7 @@ sicut1 et membrsgo1	1
 sicut1 et nos	1
 sicut1 fatui nam	1
 sicut1 flos in	1
+sicut1 fumi virgula1	1
 sicut1 iacoeo1 certamen1	1
 sicut1 ille1 benedixius1	1
 sicut1 in arbor1	1
@@ -53388,6 +54144,7 @@ sincere1 verus1 penitere1	1
 sinceris1 et decentibs1	1
 sinceris1 mens1 concineo1	1
 sinceris1 mens1 gaudeo1	1
+sinceris1 mens1 ut	1
 sinceritas1 spes1 magnaminitus1	1
 sincero1 nos condeceo1	1
 sincerum1 bibito1 quis2	1
@@ -53416,6 +54173,7 @@ singularus1 proprieque1 proprius1	1
 singularus1 refugiums1 ave	1
 singularus1 tuus1 salutarother	1
 singule1 do1 fimbrias	1
+singulorum1 singulus1 ignorano1	1
 singulosque1 gravitass1 artus2	1
 singultuosiss1 vox1 verbum1	1
 singulus1 de ventrei1	1
@@ -53425,6 +54183,8 @@ singulus1 emitto1 oleum1	1
 singulus1 et sum1	1
 singulus1 genus1 tolletisus1	1
 singulus1 hic1 sedulus1	1
+singulus1 ignorano1 emulix1	1
+singulus1 ius vir1	1
 singulus1 mea messis1	1
 singulus1 naturas1 deus1	1
 singulus1 osculum2 amor1	1
@@ -53432,6 +54192,7 @@ singulus1 prestat1 condimentuntimuo	1
 singulus1 quod1 mens1	1
 singulus1 restituet1 si	1
 singulus1 sic ergo1	1
+singulus1 singulorum1 singulus1	1
 singulus1 solo1 partiri1	1
 singulus1 virtus1 opus1	1
 sinibus1 scieno1 procedat1	1
@@ -53515,6 +54276,7 @@ sino1 spe venieo1	1
 sino1 spina1 fons	1
 sino1 spina1 liliumucius1	1
 sino1 spina1 nos1	1
+sino1 spina1 sancio1	1
 sino1 spina1 urna1	1
 sino1 sponso1 denudasti1	1
 sino1 stentorother sed	1
@@ -53653,12 +54415,14 @@ sit deus1 atque1	1
 sit devotio1 ut	1
 sit dignus1 baculo	1
 sit dignus1 donsther	1
+sit divinitatus1 pax	1
 sit dolor1 par	1
 sit dolor1 post1	1
 sit dominus1 impletoeo1	1
 sit duo sum1	1
 sit equus1 inequaliter1	1
 sit error1 hic1	1
+sit et marie1	1
 sit et organa1	1
 sit et terminus1	1
 sit excelsus1 altous1	1
@@ -53705,6 +54469,8 @@ sit labilor1 ne	1
 sit lausucius1 decus1	1
 sit lausucius1 dei	1
 sit lausucius1 deo	1
+sit lausucius1 divinus1	1
+sit lausucius1 dominus1	1
 sit lausucius1 et	1
 sit lausucius1 in	1
 sit lausucius1 pater1	1
@@ -53792,6 +54558,7 @@ sit venditus1 egipauo1	1
 sit via nam	1
 sit via trittiaus1	1
 sit vicinus1 virtutum1	1
+sit virtus1 emulax1	1
 sit vita1 cogito1	1
 sit vita1 vacuus1	1
 sitiants1 ut labor2	1
@@ -54020,6 +54787,7 @@ solaus1 concupio1 rex1	1
 solaus1 effundo1 rupes1	1
 solem1 do1 hic1	1
 solemn1 christque1 facio1	1
+solemn1 concinantituo hec	1
 solemn1 iam de	1
 solemn1 novus1 rex1	1
 solemn1 quis2 dei	1
@@ -54231,6 +54999,7 @@ solus1 succubuiother uva1	1
 solus1 sufficerother et	1
 solus1 sufficiother si	1
 solus1 tabernaculum1 quod1	1
+solus1 tactutisus1 gratius1	1
 solus1 tu1 gloria1	1
 solus1 umbraculum1 da	1
 solus1 vaco1 ops1	1
@@ -54364,6 +55133,7 @@ sophistiather nec vos	1
 sophistiither frauds1 cohibuique1	1
 sophonisther zacharias ionas1	1
 sopiather jaceo1 et	1
+sopiather nos inficis1	1
 sopitsther culpque1 rituss1	1
 sorbutther dens1 stupescuno1	1
 sorbutther finees lanceam1	1
@@ -54514,6 +55284,7 @@ species1 venio1 gigas	1
 species1 video1 ut	1
 species1 vulpis1 latuitucius1	1
 speciosas1 audi1 audi1	1
+speciosas1 gloriosa lex1	1
 speciosas1 in columbque1	1
 speciosas1 nos commends2	1
 speciosas1 rex1 rex1	1
@@ -54659,6 +55430,7 @@ spes1 miser1 thesaurutisus1	1
 spes1 misereor1 mei	1
 spes1 mitto1 lex1	1
 spes1 multus1 fructus2	1
+spes1 noster1 fulsit	1
 spes1 nostre1 termino1	1
 spes1 omnis1 fideliums1	1
 spes1 ponito1 in	1
@@ -54703,6 +55475,7 @@ spina1 orior1 cum	1
 spina1 procreatur1 et	1
 spina1 ros1 celque1	1
 spina1 rosa1 pulcher1	1
+spina1 sancio1 melodia1	1
 spina1 sputo1 felle	1
 spina1 urna1 divinum1	1
 spinas1 caput1 dum	1
@@ -54755,6 +55528,7 @@ spiritus1 consiliium1 modus1	1
 spiritus1 da pressis1	1
 spiritus1 david1 precinuit1	1
 spiritus1 descendet1 in	1
+spiritus1 divinituus1 pluit1	1
 spiritus1 ducerx1 ad	1
 spiritus1 dum in	1
 spiritus1 emanatx1 litteram1	1
@@ -54997,6 +55771,7 @@ stadiother lux1 plenus1	1
 stadiother mors1 sequor1	1
 stadiother nullus1 prevenitur1	1
 stadiother sed non	1
+stadiuother factum1 qui	1
 stadiuother sed nec	1
 stadiuother ut sit	1
 stadiuother vites1 labor2	1
@@ -55038,6 +55813,7 @@ status2 thesaurizatisus1 dolor1	1
 statuss2 amantis1 votum1	1
 statuss2 egrediturx1 ut	1
 statuss2 et christuque1	1
+statuss2 excidium1 syoother	1
 statuss2 iam repertos1	1
 statuss2 immutatueo1 gregis	1
 statuss2 perenni1 reformatuss1	1
@@ -55064,6 +55840,7 @@ stella1 mare1 decus1	1
 stella1 mare1 dignitas1	1
 stella1 mare1 et	1
 stella1 mare1 eximieo1	1
+stella1 mare1 fulgida	1
 stella1 mare1 inclita1	1
 stella1 mare1 lucidus1	1
 stella1 mare1 lux	1
@@ -55107,12 +55884,14 @@ stella1 producit1 radium	1
 stella1 quis2 radius	1
 stella1 radians super2	1
 stella1 radio noster1	1
+stella1 radiosa pia	1
 stella1 radium celestque1	1
 stella1 radium pariend1	1
 stella1 ranscendens sidus1	1
 stella1 revelaturs1 que	1
 stella1 rex de	1
 stella1 rosa1 primothel	1
+stella1 rutilat terra1	1
 stella1 scintillat1 radio	1
 stella1 semper1 rutilans	1
 stella1 serenavius1 lumen1	1
@@ -55125,6 +55904,7 @@ stella1 sol1 profero1	1
 stella1 sol1 proferso1	1
 stella1 spes1 lapsorumucius1	1
 stella1 stella1 numquam1	1
+stella1 stella1 rutilat	1
 stella1 stella1 stella1	1
 stella1 tu optima1	1
 stella1 vernans1 ubertate	1
@@ -55183,6 +55963,7 @@ stillanother mella1 iesseo1	1
 stillanother mons1 collis1	1
 stillanother nutu dei	1
 stillanother quo nil	1
+stillaother arx1 supera1	1
 stillaother in stella1	1
 stillaother odoriferum1 botrus	1
 stillicidiother stillanother nutu	1
@@ -55197,6 +55978,7 @@ stimulanother pullulant1 iniurie1	1
 stimuliother iaculieo1 confodiunntituo	1
 stimulother moveo1 pietatis1	1
 stimulother que culpque1	1
+stimuluother avaritieulus1 nec	1
 stimuluother salomonium1 exitus2	1
 stimuluother te mors1	1
 stipendiiother cor contrahunt1	1
@@ -55274,6 +56056,7 @@ stolam1 suus1 pro	1
 stolao1 zacharie conferso1	1
 stole1 cum gloria1	1
 stole1 gemine purpuram1	1
+stoleola1 pro tuus1	1
 stolida1 veritaus1 est	1
 straminother totus2 fluet	1
 stratiother misera1 phos1	1
@@ -55363,6 +56146,7 @@ stupeother ius miratuus1	1
 stupeother littera1 deus1	1
 stupeother natura1 novus1	1
 stupeother natures2 ratio1	1
+stupeother omnis1 regulas1	1
 stupeother physica1 fallo1	1
 stupeother quis2 suppleother	1
 stupeother sui fracto	1
@@ -55548,6 +56332,7 @@ sub utroque1 sol1	1
 sub velaminum1 carnique1	1
 sub velaminum1 nostre1	1
 sub venus1 imperium1	1
+sub venus1 laboro1	1
 sub venus1 tuo	1
 sub vernaculo1 est	1
 sub vestimentum1 ovis1	1
@@ -55717,6 +56502,7 @@ subveniat1 quod1 peto1	1
 subvenientis1 ope caritatius1	1
 subvenies1 divinituus1 nunc1	1
 subvenirent1 miser1 in	1
+subvenit1 ausibdeo1 christus1	1
 subvenit1 ecce1 salvus1	1
 subvenit1 gratius1 ille1	1
 subvenit1 in naufragio	1
@@ -55854,6 +56640,7 @@ sui1 credo1 pastoris1	1
 sui1 credo1 potestseum1	1
 sui1 credo1 sed	1
 sui1 daro1 volo1	1
+sui1 debieo1 referamo1	1
 sui1 deo prex1	1
 sui1 dextera1 lex1	1
 sui1 dico2 querunt1	1
@@ -55993,6 +56780,7 @@ sum1 dico2 non	1
 sum1 dictum1 superus1	1
 sum1 dies1 salus1	1
 sum1 difficilieus1 salomonum1	1
+sum1 dignus1 quis2	1
 sum1 disciplieue fel	1
 sum1 dispono1 epi	1
 sum1 dispositeum marie1	1
@@ -56029,6 +56817,7 @@ sum1 exitueo1 imprimeo1	1
 sum1 extremus1 et	1
 sum1 facio1 est	1
 sum1 facio1 quando1	1
+sum1 familia1 jocus1	1
 sum1 favilla1 cineis1	1
 sum1 festorum verus1	1
 sum1 fideliums1 teneano1	1
@@ -56363,6 +57152,7 @@ sumpto1 regimix1 homo1	1
 sumpto1 virtus1 glano	1
 sunamitiother clamo1 pro	1
 sunamitiother filius1 nos	1
+suo cum parvulo1	1
 suo dampnavio1 sanguis1	1
 suo dat noster1	1
 suo durus1 tot	1
@@ -56426,8 +57216,10 @@ supera1 babylonis1 filia1	1
 supera1 bellus1 retundits1	1
 supera1 celuque1 numerus1	1
 supera1 christque1 dei	1
+supera1 per qui1	1
 supera1 propulsatum1 domus1	1
 supera1 qui presens1	1
+supera1 sic inferus1	1
 supera1 unirus1 possum1	1
 supera1 voco1 gratus1	1
 superabundat1 palea1 qua	1
@@ -56531,6 +57323,7 @@ superstitio2 sed monachunoun	1
 superstitio2 vacarnumeral1 a	1
 superus1 bonitaus1 o	1
 superus1 bonus1 letitium1	1
+superus1 candor1 liliumucius1	1
 superus1 cardineque1 sed	1
 superus1 cenobique1 ubi	1
 superus1 christus1 victoria1	1
@@ -56577,6 +57370,7 @@ superus1 peracto1 gaudium1	1
 superus1 peteno1 deus1	1
 superus1 pietas1 o	1
 superus1 pontificus1 vocao1	1
+superus1 potentia1 inter1	1
 superus1 potentia1 o	1
 superus1 preconis1 gloria1	1
 superus1 prelatis1 orior1	1
@@ -56640,6 +57434,7 @@ supplicium1 ob peccatum1	1
 supplicium1 ordinavit1 justitia1	1
 supplicium1 pie toleratitus1	1
 supplicium1 quod1 potentum1	1
+supplicium1 reparandos1 via1	1
 supplicium1 superatis1 facio1	1
 supplicium1 syoother presenti1	1
 supplicium1 totus2 deficio1	1
@@ -56711,10 +57506,12 @@ surgo1 pugna1 tutenc1	1
 surgo1 qui curo1	1
 surgo1 qui nos1	1
 surgo1 sublimibus1 qui	1
+surgo1 surgo1 vigilas1	1
 surgo1 tertius1 et	1
 surgo1 tolltieus1 grabatum	1
 surgo1 video1 gens1	1
 surgo1 video1 ne	1
+surgo1 vigilas1 semper1	1
 surgo1 vulnus1 unde1	1
 surgunother ad honor1	1
 surgunother spine1 tribulis1	1
@@ -56795,6 +57592,7 @@ sustineo1 pressuram1 o	1
 sustineother a curius2	1
 sustineother dulceis1 fructus2	1
 sustinuiother casus1 sophistiither	1
+sustinuiother in quo	1
 sustinuiother ne penas1	1
 sustinuiother opprobrium1 resurgentis1	1
 sustinuiother penas1 martyrother	1
@@ -56872,6 +57670,7 @@ suus1 tamen1 non	1
 suus1 telum1 pater1	1
 suus1 ut post1	1
 suus1 vatibunumeral1 credo1	1
+suus1 vexit1 ad	1
 suus1 vivo1 paco1	1
 suus1 vulnus1 o	1
 suxiother ubera qui	1
@@ -56919,12 +57718,14 @@ syoother filie stola1	1
 syoother filie tempus1	1
 syoother filie transeo1	1
 syoother filius1 velut1	1
+syoother fleo1 non	1
 syoother immolatur1 ananias1	1
 syoother in pulvis1	1
 syoother in sanguinibuother	1
 syoother in sinus1	1
 syoother iubileo1 israel1	1
 syoother iudeeo1 gloria1	1
+syoother letusucius1 iubileeo1	1
 syoother mens1 purus1	1
 syoother orior1 gaude	1
 syoother plangere1 reprimes1	1
@@ -57143,6 +57944,7 @@ tangito1 quasi1 de	1
 tango1 hinc1 ab	1
 tango1 ore flexo	1
 tangtieus1 purus1 te	1
+tantalizanus1 singulus1 singulorum1	1
 tantaus1 penas1 tempus1	1
 tantillus1 facio1 tantus1	1
 tantoquus1 presule1 felix1	1
@@ -57347,6 +58149,7 @@ te laudo1 hec	1
 te laudo1 iugiteeo1	1
 te laudo1 omnis1	1
 te laudo1 paradisus1	1
+te laudo1 virgo1	1
 te ledereucius1 possum1	1
 te leditucius1 dum	1
 te lex divinum1	1
@@ -57467,6 +58270,7 @@ te resurrexit1 humeris	1
 te reums1 eiects1	1
 te rex in	1
 te rex1 rex	1
+te rogo1 da	1
 te rogo1 supplicium1	1
 te saleother ad	1
 te salomonium1 sophather	1
@@ -57625,6 +58429,7 @@ temere1 amo1 vel	1
 temere1 conjunx1 amplexuss2	1
 temere1 de ceterque1	1
 temere1 deincepsde1 intendam1	1
+temere1 diffluereus1 sub	1
 temere1 et me	1
 temere1 gens1 hec	1
 temere1 in siccus1	1
@@ -57705,9 +58510,11 @@ tempus1 brevis1 et	1
 tempus1 de virgo1	1
 tempus1 dispoeue noster1	1
 tempus1 durus1 nescio1	1
+tempus1 est dies1	1
 tempus1 est gratie	1
 tempus1 est lamecelnt1	1
 tempus1 est vernale1	1
+tempus1 estivlum1 juventus1	1
 tempus1 et corpus1	1
 tempus1 et tempus1	1
 tempus1 fluentum1 que	1
@@ -57729,6 +58536,7 @@ tempus1 ortus2 sui	1
 tempus1 otii1 superus1	1
 tempus1 patrei1 presidium1	1
 tempus1 pellit1 tediuu1	1
+tempus1 perdo1 non	1
 tempus1 prebet1 gratie	1
 tempus1 primitius1 verus1	1
 tempus1 regno1 superus1	1
@@ -57736,6 +58544,7 @@ tempus1 spe metuques1	1
 tempus1 stultuother dum	1
 tempus1 sum1 immarcescibileeo1	1
 tempus1 sum1 nullus1	1
+tempus1 tu mundus1	1
 tempus1 venio1 planctuosum1	1
 tempus1 venio1 quo	1
 tempus1 venio1 venieo1	1
@@ -57750,6 +58559,7 @@ tendiu1 finis1 pondeather	1
 tendiu1 laberisucius1 dum	1
 tendiu1 peritus1 palpans1	1
 tendo1 congregatintiouo aut	1
+tendo1 corpus1 per	1
 tendo1 in exsilium1	1
 tendo1 munus1 prex1	1
 tendunu1 omnis1 vie	1
@@ -57764,6 +58574,7 @@ tenebrae1 dat lumen1	1
 tenebrae1 dum sedeo1	1
 tenebrae1 exterminat1 clarque1	1
 tenebrae1 facio1 lux1	1
+tenebrae1 historic1 procedo1	1
 tenebrae1 ibi fletus	1
 tenebrae1 illumine1 hic1	1
 tenebrae1 illumine1 nostre1	1
@@ -57887,6 +58698,8 @@ terere1 sed crux1	1
 tergatum1 scio1 quod1	1
 terge1 sordsther mentis1	1
 tergeo1 noster1 sanieus1	1
+tergum1 retrodata1 quavii2	1
+teris1 terra1 geris	1
 terit1 bernardus terrea1	1
 terit1 morts1 ferio1	1
 terit1 quod1 nunc1	1
@@ -57971,6 +58784,7 @@ terra1 finis1 sanctus1	1
 terra1 fons exoritur1	1
 terra1 fructus2 geneus1	1
 terra1 gens1 panis1	1
+terra1 geris et	1
 terra1 igniculos1 universus1	1
 terra1 influente1 hec	1
 terra1 influente1 surgeno1	1
@@ -57986,6 +58800,7 @@ terra1 nuntiatur1 in	1
 terra1 oculus1 fit	1
 terra1 operuis1 dum	1
 terra1 panis1 noster1	1
+terra1 patrius2 bone	1
 terra1 pax et	1
 terra1 pax homo1	1
 terra1 pax indicitur1	1
@@ -58002,6 +58817,7 @@ terra1 redditas1 david1	1
 terra1 redditas1 per	1
 terra1 replenss1 lumen1	1
 terra1 revertendis1 per	1
+terra1 reverteriss1 qui	1
 terra1 rivulos acquarutque1	1
 terra1 sancio1 consignatuntiruo	1
 terra1 se moveo1	1
@@ -58011,11 +58827,15 @@ terra1 splendor1 orior1	1
 terra1 splenduit1 et	1
 terra1 sumo1 o	1
 terra1 sumpsit1 forma1	1
+terra1 tandem1 sum1	1
+terra1 teris1 terra1	1
+terra1 terra1 iubilaeo1	1
 terra1 timor1 tremore1	1
 terra1 tremititus1 et	1
 terra1 umbra1 limitatucius1	1
 terra1 unius1 celicque1	1
 terra1 vetus1 novus1	1
+terra1 vox audio1	1
 terramqu1 regx1 in	1
 terre1 celuque1 terret1	1
 terre1 corpusculum1 vermisque1	1
@@ -58267,6 +59087,7 @@ tineiberaus1 beatus1 qui	1
 tineiberaus1 et spiritus1	1
 tineiberaus1 leseucius1 mens1	1
 tineiberaus1 regales1 vestimentum1	1
+tinnuliberaus1 vox1 modulnoun	1
 tinnulibereus1 oculus1 caligaque1	1
 tipiberous1 predixere1 veterum1	1
 tirannoruibermus1 agmen1 perturbant1	1
@@ -58520,12 +59341,14 @@ traditutirus1 conspuituntiruo contundituntiruo	1
 traditutirus1 lex in	1
 traditutirus1 per osculum1	1
 traditutirus1 trahito1 morior1	1
+traditutisus1 est rediteo1	1
 traditutisus1 iesus1 mors1	1
 traditutisus1 iesus1 mundus2	1
 trado1 pax est	1
 trado1 transeo1 hebreus	1
 trador1 martyrother consilium1	1
 traducotirus1 studium1 o	1
+trahatitus1 in supplicium1	1
 trahatitus1 lachesisucius1 clotque1	1
 trahatitus1 superius1 assumptosulus1	1
 traheritisus1 et luxibus1	1
@@ -58574,6 +59397,8 @@ transacto1 secului1 sit	1
 transamma1 ectollamx1 venenum1	1
 transcendens1 omnis1 ordo1	1
 transcendit1 lilium1 candor1	1
+transeamus1 et scio1	1
+transeamus1 videamo1 verbum1	1
 transeo1 ad gloria1	1
 transeo1 de clausurque1	1
 transeo1 enim1 res1	1
@@ -58588,6 +59413,7 @@ transeo1 noster1 redemptios1	1
 transeo1 omnis1 res1	1
 transeo1 originis1 b	1
 transeo1 parus1 tamen1	1
+transeo1 per lubricumucius1	1
 transeo1 quasi1 ventus1	1
 transeo1 sumpta1 pecunia1	1
 transeunt1 cresco1 fames1	1
@@ -58770,7 +59596,9 @@ trinitattiius1 gloria1 planctum1	1
 trinoqutieus1 nomen1 sit	1
 trintiaus1 confeitsor1 qui	1
 trintiaus1 dato1 exultet1	1
+trintiaus1 de aureolus1	1
 trintiaus1 est gratius1	1
+trintiaus1 fortis1 areolaulus1	1
 trintiaus1 hinc1 est	1
 trintiaus1 lux divinum1	1
 trintiaus1 polluio1 pr	1
@@ -58933,6 +59761,8 @@ tu benedictus1 et	1
 tu camera1 tu	1
 tu castitatique1 speculums1	1
 tu celituque1 dignarus1	1
+tu cellulque1 vinarium1	1
+tu celque1 ros	1
 tu celuque1 circulus1	1
 tu civitas1 iustijie1	1
 tu claritatius1 stella1	1
@@ -59019,6 +59849,7 @@ tu gratius1 pro	1
 tu gratus1 do1	1
 tu hortus castitatique1	1
 tu iherusaleeo1 quia1	1
+tu imbreo1 bonitatius1	1
 tu in mulier1	1
 tu inexperta1 mare1	1
 tu iubilueo1 mentalsgo1	1
@@ -59046,6 +59877,7 @@ tu mamilother stillanother	1
 tu margaritum1 insignita1	1
 tu mater1 es	1
 tu mater1 expers1	1
+tu mater1 gratiosa	1
 tu mater1 mare1	1
 tu me conturbo1	1
 tu me destitutum1	1
@@ -59064,6 +59896,7 @@ tu mortnoun mors1	1
 tu mosaice1 rubus	1
 tu movebanoun me	1
 tu moveo1 reguliss1	1
+tu mundus1 luminsooss1	1
 tu mutao1 aurum1	1
 tu myrrhenoun tu	1
 tu nardus aromaticaulus1	1
@@ -59077,6 +59910,7 @@ tu nos considerntiauo	1
 tu nos in	1
 tu nos reconcilias1	1
 tu nos semper1	1
+tu nos1 da	1
 tu noster1 ita	1
 tu nox1 lux	1
 tu olea1 cypressuque1	1
@@ -59085,6 +59919,7 @@ tu palma1 tu	1
 tu palmes1 honestatius1	1
 tu pando2 dignarus1	1
 tu pater1 ac	1
+tu pater1 dos	1
 tu pater1 tu	1
 tu patule1 largitatisucius1	1
 tu pauperis1 umbraculum1	1
@@ -59096,6 +59931,7 @@ tu per angelus1	1
 tu per quinque1	1
 tu perlustrasti1 seculuui1	1
 tu placa1 nos1	1
+tu plenitudo1 tempus1	1
 tu poother et	1
 tu porather celque1	1
 tu porather seratus1	1
@@ -59133,6 +59969,7 @@ tu rex tu	1
 tu rivulus frutex	1
 tu rosa1 parens2	1
 tu rosea tu	1
+tu rosula purpurea1	1
 tu rubus ignis1	1
 tu rubus vision1	1
 tu rutilans aurorum1	1
@@ -59179,6 +60016,7 @@ tu spiritus1 ut	1
 tu sponsa1 dotaather	1
 tu stella1 mare1	1
 tu stella1 non	1
+tu stella1 radiosa	1
 tu stella1 voco1	1
 tu susannaother liberasto1	1
 tu te decipis1	1
@@ -59228,6 +60066,7 @@ tu vitale1 premium1	1
 tu vites1 lignum1	1
 tu vites1 pax	1
 tu vites1 vita1	1
+tu vitiss1 copiosus1	1
 tu vitiss1 uva	1
 tu vulnerinumeral1 medelmgo1	1
 tu1 auditoribuo1 benevolisquus1	1
@@ -59430,6 +60269,7 @@ tui respice1 sceptrother	1
 tui rex1 unctio	1
 tui sanguis1 sumptique1	1
 tui sceptruother imperium1	1
+tui statuss2 excidium1	1
 tui statuss2 tue	1
 tui visolo1 in	1
 tuiquus1 sino1 socius1	1
@@ -59437,6 +60277,7 @@ tuleritnc1 non habueriic1	1
 tullenistus2 gravis1 virtus1	1
 tullenistus2 homousion1 pater1	1
 tullenistus2 manna1 sub	1
+tullenistus2 peperisti1 salus1	1
 tullenistus2 spolium1 dic	1
 tulliumus1 zenonis prudentiam1	1
 tullius1 facundiusio1 perorat1	1
@@ -59574,6 +60415,7 @@ turbo2 sollicitat1 me	1
 turgentesnc1 et inflo1	1
 turgetnc1 castrimargique1 inquinat1	1
 turgetnc1 me portantmther	1
+turmanc1 cum gaudium1	1
 turmasnc1 armentulus1 christicolaus1	1
 turmasnc1 traho1 poeta1	1
 turmisnc1 celesteque1 palatiumum1	1
@@ -59603,6 +60445,7 @@ turrisnc1 fortitudo1 primus1	1
 turrisnc1 nebulosequa1 sion2	1
 turrisnc1 nostre1 spes1	1
 turrisnc1 qui1 vallavinumeral1	1
+turtureanc1 in terra1	1
 turturisnc1 et castitaque1	1
 turturnc1 subarrhata1 tu	1
 turturumquenc1 eguitx1 obsequium1	1
@@ -59640,6 +60483,7 @@ tuus1 auxilium1 propina1	1
 tuus1 benedius1 virgo1	1
 tuus1 cano1 titulus1	1
 tuus1 clementiaque1 ut	1
+tuus1 combussis2 messsgo1	1
 tuus1 considerntiauo pater1	1
 tuus1 continuuntimuo ad	1
 tuus1 coram1 ara1	1
@@ -59684,6 +60528,7 @@ tuus1 non amo	1
 tuus1 non debeo1	1
 tuus1 non exigitueo1	1
 tuus1 non genui1	1
+tuus1 nos1 filius1	1
 tuus1 nuptias vocato1	1
 tuus1 obumbrabither totus2	1
 tuus1 orna1 mos1	1
@@ -59695,6 +60540,7 @@ tuus1 placabilis1 eia	1
 tuus1 placando1 filius1	1
 tuus1 populus2 ad	1
 tuus1 possum1 parie1	1
+tuus1 prex1 cumula1	1
 tuus1 qui portavtther	1
 tuus1 quis2 sitiunts1	1
 tuus1 refugiums1 fac	1
@@ -59731,6 +60577,7 @@ tympanutimus1 et chorus1	1
 tympanutimus1 manus1 portavtther	1
 typictiius1 tu victimas1	1
 typicutimus1 moysenoun et	1
+typicutimus1 mundus2 transeo1	1
 typicutisus1 triumphaes1 hodie1	1
 typitisus1 obumbratuther verbi1	1
 typtious1 mysterinoun sub	1
@@ -60070,6 +60917,7 @@ uranice concinebanntituo celestque1	1
 uranice concinuintituo celestique1	1
 urant quatuoi2 atque1	1
 urat qui reperits1	1
+urbanitaus1 iocetur1 almisulus1	1
 urbibus1 et sedes1	1
 urbibus1 fit pressura1	1
 urbs1 alexandrinaulus1 tantus1	1
@@ -60152,6 +61000,7 @@ ut azimusulus1 fides1	1
 ut balam faticinuum1	1
 ut benediceretuus1 qui	1
 ut benedictuus1 tui	1
+ut bibamus ne	1
 ut bonus1 sit	1
 ut bos ductuso1	1
 ut canamuque1 et	1
@@ -60347,6 +61196,7 @@ ut non relinquats1	1
 ut non ultra1	1
 ut nos defendat1	1
 ut nos dei	1
+ut nos intueamur1	1
 ut nos mundet1	1
 ut nos oraculs1	1
 ut nos vivo1	1
@@ -60394,12 +61244,14 @@ ut possum1 vocx1	1
 ut post1 exsilium1	1
 ut post1 hoc	1
 ut post1 vivaus1	1
+ut pravus1 moveo1	1
 ut pre sidus1	1
 ut predictum1 sum1	1
 ut predixit1 gedeon	1
 ut primitius1 christuque1	1
 ut primus1 scelus1	1
 ut primus1 suscitetuother	1
+ut pro nos1	1
 ut prodeat1 et	1
 ut promiserat1 et	1
 ut propheta1 doceo1	1
@@ -60411,6 +61263,7 @@ ut pupillam1 oculus1	1
 ut purgetur1 feaiso1	1
 ut purus1 sum1	1
 ut que causa1	1
+ut queo1 beari	1
 ut qui contra1	1
 ut qui plantas1	1
 ut qui quod1	1
@@ -60485,6 +61338,7 @@ ut subversa1 iaceaeo1	1
 ut sum1 multipliceus1	1
 ut sum1 verbi1	1
 ut suo parcant1	1
+ut supera1 sic	1
 ut superbus1 inimicus1	1
 ut superem2 hic1	1
 ut superus1 cum	1
@@ -60785,6 +61639,7 @@ varius1 monstrum1 video1	1
 varius1 nos1 in	1
 varius1 nunc1 inebriant1	1
 varius1 plus1 iste1	1
+varius1 preconia1 poliather	1
 varius1 pro veloeo1	1
 varius1 purus1 colique1	1
 varius1 que dat	1
@@ -60821,6 +61676,7 @@ vas sincerum1 inter1	1
 vas sino1 liquor2	1
 vas sordidmther ut	1
 vas sorditmther carnique1	1
+vas sum1 salvatorius1	1
 vas totus1 miseri1	1
 vasco1 scotuother britones	1
 vasculo1 franget ergo1	1
@@ -61168,6 +62024,7 @@ venio1 est iudieo1	1
 venio1 et concinenntituo	1
 venio1 et cum	1
 venio1 et liberatio1	1
+venio1 et nos	1
 venio1 et prelatum1	1
 venio1 eucharistiax1 cum	1
 venio1 expresse1 judex1	1
@@ -61175,6 +62032,7 @@ venio1 exsulto1 regnantum1	1
 venio1 festina properus1	1
 venio1 fidelis1 sino1	1
 venio1 finis1 sino1	1
+venio1 fons gratie	1
 venio1 gergesei pheresei1	1
 venio1 gigas gemine	1
 venio1 gratus1 tollo1	1
@@ -61198,6 +62056,7 @@ venio1 invenio1 super2	1
 venio1 invenio1 victorem1	1
 venio1 iudeeo1 gens1	1
 venio1 leteucius1 salus1	1
+venio1 lex venio1	1
 venio1 ludo1 me	1
 venio1 lumen1 gens1	1
 venio1 lumen1 lumisonus1	1
@@ -61225,6 +62084,7 @@ venio1 proles1 ade	1
 venio1 que venio1	1
 venio1 quis2 facio1	1
 venio1 quo virgo1	1
+venio1 rex venio1	1
 venio1 sanctother spiritus1	1
 venio1 scelerius1 nisi1	1
 venio1 seditio1 fames1	1
@@ -61245,6 +62105,8 @@ venio1 velociter1 et	1
 venio1 velociter1 que	1
 venio1 venditur1 votum1	1
 venio1 venieo1 psallat1	1
+venio1 venio1 et	1
+venio1 venio1 venio1	1
 venio1 vita1 viveno1	1
 venituo1 et ad	1
 venter1 baiulans fudisti	1
@@ -61314,6 +62176,7 @@ venus1 sponso1 lampcelad1	1
 venus1 sum1 dioneus1	1
 venus1 suspirium1 ungent	1
 venus1 tuo discusseus	1
+venus1 ut pravus1	1
 venus1 vinco1 dum	1
 venus1 vir qui	1
 venustata1 contendo1 lilioucius1	1
@@ -61337,6 +62200,7 @@ veraquus1 salvatius1 quis2	1
 verax1 quis2 est	1
 verax1 vir1 nescius1	1
 verber1 redditurs1 presul1	1
+verbera1 minabatueus1 per	1
 verbera1 que mors1	1
 verbera1 trucitiaus1 sum1	1
 verberat1 tonsuratutisus1 ille1	1
@@ -61346,9 +62210,11 @@ verbere1 cratque1 fune	1
 verbi1 carnique1 cella1	1
 verbi1 conceitoo1 sino1	1
 verbi1 consumptintiouo carnique1	1
+verbi1 copulque1 stupeother	1
 verbi1 dei cella1	1
 verbi1 dei nostre1	1
 verbi1 divinitaus1 fit	1
+verbi1 fidelis1 celque1	1
 verbi1 forma1 deitateus1	1
 verbi1 fusa pluvia1	1
 verbi1 glossa seviui1	1
@@ -61412,6 +62278,7 @@ verbum1 genito de	1
 verbum1 gravidas1 pario2	1
 verbum1 gravidas1 semper1	1
 verbum1 hoc pre	1
+verbum1 hoc quod1	1
 verbum1 hos exasperes1	1
 verbum1 in uterus1	1
 verbum1 incarnari1 volo1	1
@@ -61540,6 +62407,7 @@ veritaus1 oleum1 testimoniu1	1
 veritaus1 per veritatius1	1
 veritaus1 prefixit1 ecce1	1
 veritaus1 probo1 meritoruum1	1
+veritaus1 quod1 a	1
 veritaus1 refrigescets1 caritaus1	1
 veritaus1 sed preminet1	1
 veritaus1 sepui1 pario2	1
@@ -61941,6 +62809,7 @@ vetus1 littera1 iam	1
 vetus1 littera1 presignarat1	1
 vetus1 meroreus1 pellite1	1
 vetus1 nec mundat1	1
+vetus1 novus1 fit	1
 vetus1 novus1 mos1	1
 vetus1 nummus1 dat	1
 vetus1 numquam1 exuunt1	1
@@ -61981,6 +62850,7 @@ vexatio1 nituntur1 patrocinium1	1
 vexilla1 christus1 deserunt1	1
 vexillo1 caritaus1 et	1
 vexillum1 erigex1 et	1
+vexit1 ad patrius2	1
 vexit1 die christuque1	1
 vhe quia1 tollitisus1	1
 vhe venio1 ab	1
@@ -62145,6 +63015,7 @@ victoria1 gallia1 cum	1
 victoria1 in crucque1	1
 victoria1 macother virtus1	1
 victoria1 nos duc	1
+victoria1 ob laus1	1
 victoria1 per te	1
 victoria1 pneumati1 sum1	1
 victoria1 protectorum1 virginum1	1
@@ -62172,11 +63043,13 @@ victrixques1 pharaonis1 et	1
 victrixs1 et athleta1	1
 victuruss2 in sudor1	1
 victus2 carentibuque1 reddo1	1
+videamo1 verbum1 hoc	1
 videbariso1 primitus1 quis2	1
 videbato1 istum1 mare1	1
 videbio1 beatus1 qui	1
 videnso1 auctor1 terminum1	1
 videnso1 deus1 quod1	1
+videnso1 et prudens1	1
 videnso1 fallito1 dum	1
 videnso1 infernuso1 tremuititus1	1
 videnso1 interitus2 condoluintituo	1
@@ -62234,6 +63107,7 @@ video1 ne dormisther	1
 video1 ne mergarsgo1	1
 video1 ne mora1	1
 video1 ne vaco1	1
+video1 nec caveoo1	1
 video1 nec invidia1	1
 video1 non elisum1	1
 video1 non patior1	1
@@ -62312,6 +63186,7 @@ vigil1 ut fertileo1	1
 vigilantems1 cum venio1	1
 vigilantems1 et tu	1
 vigilantias1 laudetucius1 omnis1	1
+vigilas1 semper1 sum1	1
 vigilems1 et stabileother	1
 vigilems1 pastorem1 sue	1
 vigilemuss1 et cum	1
@@ -62380,6 +63255,7 @@ vim patior1 nec	1
 vim sanctus1 spiritus1	1
 vim subicio1 quis2	1
 vimiee1 et sub	1
+vinarium1 per varius1	1
 vinarius1 dives1 in	1
 vincats1 astra1 humilitaus1	1
 vincats1 ut usus2	1
@@ -62420,6 +63296,7 @@ vinco1 freanio1 ac	1
 vinco1 in arbor1	1
 vinco1 in patientia1	1
 vinco1 leo leo2	1
+vinco1 lilium1 es	1
 vinco1 mella1 virgo1	1
 vinco1 miseri1 deus1	1
 vinco1 miserum1 statim1	1
@@ -62592,6 +63469,7 @@ vir1 galilei dominus1	1
 vir1 gremium1 propicio1	1
 vir1 illustreeo1 decipis1	1
 vir1 invius1 thortiius1	1
+vir1 lex1 emulix1	1
 vir1 longus1 desideria1	1
 vir1 mare1 celoruque1	1
 vir1 mortibunoun in	1
@@ -62677,7 +63555,6 @@ virga1 iesseo1 floruit	1
 virga1 iesseo1 is1	1
 virga1 iesseo1 luctus1	1
 virga1 iesseo1 mysticnoun	1
-virga1 iesseo1 quis2	1
 virga1 iesseo1 regius1	1
 virga1 introduxit1 quondam1	1
 virga1 moysnoun me	1
@@ -62886,6 +63763,7 @@ virgio1 chorque1 sum1	1
 virgio1 flos honor1	1
 virgio1 ihesueo1 reperiams1	1
 virgio1 novus1 do1	1
+virgio1 per sidus1	1
 virgio1 profunde1 vulnero1	1
 virgio1 pudoris1 constantiontiruo	1
 virgio1 pudoris1 in	1
@@ -62933,6 +63811,7 @@ virgo1 deus1 pario2	1
 virgo1 deus1 stella1	1
 virgo1 diceriso2 et	1
 virgo1 dominus1 tui	1
+virgo1 dulcis1 es	1
 virgo1 dulcis1 o	1
 virgo1 dulcis1 teneo1	1
 virgo1 eclypsisx1 stella1	1
@@ -62972,6 +63851,7 @@ virgo1 gemina virginum1	1
 virgo1 gemma1 grecie	1
 virgo1 gemma1 mulier1	1
 virgo1 generosa serenavius1	1
+virgo1 generosa tu	1
 virgo1 geneus1 qui	1
 virgo1 gigno1 sicut1	1
 virgo1 gloria1 laus1	1
@@ -63007,7 +63887,9 @@ virgo1 mare1 dei	1
 virgo1 mare1 et	1
 virgo1 mare1 genitrix	1
 virgo1 mare1 marie1	1
+virgo1 mare1 o	1
 virgo1 mare1 pax1	1
+virgo1 mare1 stella1	1
 virgo1 margaretother niger1	1
 virgo1 mater1 christus1	1
 virgo1 mater1 ecclesiex1	1
@@ -63077,13 +63959,16 @@ virgo1 perdito1 pro	1
 virgo1 permaneo1 sic	1
 virgo1 permansisti1 gaude	1
 virgo1 permansit1 post1	1
+virgo1 perpetuus1 salus1	1
 virgo1 pertulisti1 tu	1
 virgo1 philistinarum1 favus1	1
 virgo1 pia factum1	1
+virgo1 pia gigno1	1
 virgo1 pia letareucius1	1
 virgo1 pia medeago1	1
 virgo1 pia per	1
 virgo1 pia quod1	1
+virgo1 pia theotocotisus1	1
 virgo1 pia virgo1	1
 virgo1 pie qui	1
 virgo1 piissimma1 o	1
@@ -63134,6 +64019,7 @@ virgo1 quis2 facies1	1
 virgo1 quis2 laus1	1
 virgo1 quis2 species1	1
 virgo1 quis2 ubera	1
+virgo1 quod1 non	1
 virgo1 regia1 dei	1
 virgo1 regia1 dum	1
 virgo1 regia1 militaneus1	1
@@ -63252,6 +64138,7 @@ virgula1 tu virgo1	1
 virgula1 verius1 rosula	1
 virgula1 victoris1 noster1	1
 virgula1 vir1 ferculao1	1
+virgula1 virga1 iesseo1	1
 virgula1 vites1 gereno1	1
 virgulam1 secretui1 baiulam	1
 virguncula1 magnus1 multus1	1
@@ -63563,6 +64450,7 @@ vita1 jugum1 teneo1	1
 vita1 labituor1 et	1
 vita1 lectioucius1 nos1	1
 vita1 liberalitas1 nec	1
+vita1 luxus2 sopiather	1
 vita1 mendxgo1 et	1
 vita1 mora3 non	1
 vita1 morior1 adam1	1
@@ -63848,6 +64736,7 @@ vitios1 vigeo1 in	1
 vitiosums1 fer solameus1	1
 vitis1 deperit1 quod1	1
 vitiss1 abundao1 tu	1
+vitiss1 copiosus1 tu	1
 vitiss1 engadina1 botrum	1
 vitiss1 generosa vites1	1
 vitiss1 germine plantatoris1	1
@@ -64084,6 +64973,7 @@ voco1 filia1 factum1	1
 voco1 gratia1 se	1
 voco1 in ius	1
 voco1 nec creao1	1
+voco1 nos ad	1
 voco1 obiendther non	1
 voco1 tu sol	1
 vocumqunumeral1 concordia1 sustinenother	1
@@ -64176,6 +65066,7 @@ voluminnumeral1 claudo1 latuitucius1	1
 volumunumeral1 sed non	1
 voluntao1 gloriari1 de	1
 voluntao1 hinc1 amor1	1
+voluntao1 nos ab	1
 voluntao1 sidus1 navigans	1
 voluntas1 arguitulus1 ex	1
 voluntas1 curro1 peragere1	1
@@ -64308,6 +65199,7 @@ vovnumeral1 spiritus1 sanctus1	1
 vox a cor1	1
 vox ad placeo1	1
 vox amena1 corpusque1	1
+vox audio1 tu	1
 vox audituo1 adv	1
 vox clamano1 in	1
 vox clamano1 locus1	1
@@ -64368,6 +65260,7 @@ vox1 iocunda1 non	1
 vox1 lectous2 iam	1
 vox1 manus1 cordis1	1
 vox1 mediaus1 transvolando1	1
+vox1 modulnoun mens1	1
 vox1 multisonus1 unisonius1	1
 vox1 nummi1 vel	1
 vox1 pater1 est	1
@@ -64450,6 +65343,7 @@ vulpis1 samsoniother ganniunt	1
 vulpis1 sum1 inter1	1
 vulpiunumeral1 finis1 hic1	1
 vulpiunumeral1 plus1 qui1	1
+vulpiunumeral1 tuus1 combussis2	1
 vultuis1 presentetur1 in	1
 vultuques1 simplicus1 hic1	1
 vultus1 aspectus2 quare1	1
