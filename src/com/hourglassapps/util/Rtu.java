@@ -277,10 +277,12 @@ public class Rtu {
     }
 
 	public static String convertStreamToString(java.io.InputStream is) {
-	    java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-	    return s.hasNext() ? s.next() : "";
+		try(java.util.Scanner scan=new java.util.Scanner(is)) {
+			java.util.Scanner s = scan.useDelimiter("\\A");
+			return s.hasNext() ? s.next() : "";
+		}
 	}
-	
+
 	public static Integer[] box(int[] array) {
 		Integer[] result = new Integer[array.length];
 		for (int i = 0; i < array.length; i++)

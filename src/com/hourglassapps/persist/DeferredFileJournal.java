@@ -86,7 +86,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 			}
 
 			Ii<String,String> srcDst=new Ii<>(pLink.get().toString(), dest.toString());
-			if(mDone.addExisting(srcDst)) {
+			if(mDone.addedAlready(srcDst)) {
 				//If we return without adding to mPromised, commit() might not commit the transaction properly
 				mTypesWriter.println(destKey+Character.toString(TYPE_COLUMN_DELIMITER)+TYPE_SYMLINK);
 				

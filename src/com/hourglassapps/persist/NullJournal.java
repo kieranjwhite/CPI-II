@@ -7,7 +7,7 @@ import com.hourglassapps.util.Typed;
 public class NullJournal<K,C> implements Journal<K,C> {
 
 	@Override
-	public boolean addExisting(K pKey) {
+	public boolean addedAlready(K pKey) {
 		return false;
 	}
 

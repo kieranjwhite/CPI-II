@@ -323,10 +323,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 
 	private void downloadAndIndex(String stemPath, int numThreads) throws Exception {
-		try(
-				final IndexingThread indexer=new IndexingThread(Paths.get(MainIndexDownloaded.INDEX_PATH), numThreads); 
-				Closer c=new Closer();
-				) {
+		try(final IndexingThread indexer=new IndexingThread(Paths.get(MainIndexDownloaded.INDEX_PATH), numThreads)) {
 			
 			indexer.start();
 			QueryThread<String> receiver=null;
@@ -335,16 +332,12 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 			List<Filter<List<List<String>>>> filters=
 					new JobDelegator<List<List<String>>>(numThreads, new HashTemplate<List<List<String>>>()).filters();
 			for(int t=0; t<numThreads; t++) {
-				try {
-					DeferredFileJournal<String,URL,ContentTypeSourceable> journal=
-							new DeferredFileJournal<String,URL,ContentTypeSourceable>(
-									Paths.get(Integer.toString(t)+THREAD_JOURNAL_NAME), KEY_CONVERTER, this);
-					receiver=setupQuery(numThreads, journal);
-					journals.add(journal);
-					receivers.add(receiver);
-				} finally {
-					c.after(receiver);
-				}
+				DeferredFileJournal<String,URL,ContentTypeSourceable> journal=
+						new DeferredFileJournal<String,URL,ContentTypeSourceable>(
+								Paths.get(Integer.toString(t)+THREAD_JOURNAL_NAME), KEY_CONVERTER, this);
+				receiver=setupQuery(numThreads, journal);
+				journals.add(journal);
+				receivers.add(receiver);
 			}
 			
 			try(IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);

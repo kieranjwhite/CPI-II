@@ -118,7 +118,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>>
 	}
 	
 	@Override
-	public boolean addExisting(K pKey) {
+	public boolean addedAlready(K pKey) {
 		return Files.exists(destDir(pKey));
 	}
 

@@ -31,7 +31,7 @@ import com.hourglassapps.util.Log;
 
 public class IndexingThread extends Thread implements Consumer<QueryRecord<String>>, AutoCloseable {
 	private final static String TAG=IndexingThread.class.getName();
-	private final static int NUM_SKIPS_BEFORE_COMMIT=200; //a commit is slow so we don't do it for each query
+	private final static int NUM_SKIPS_BEFORE_COMMIT=20; //a commit is slow so we don't do it for each query
 	private final Deque<QueryRecord<String>> mInbox=new ArrayDeque<>();
 	private final Closer mCloser=new Closer();
 	private final List<Journal<String,Path>> mJournals=new ArrayList<>();
@@ -47,7 +47,7 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 		mCommittableKey=new ArrayList<>(pNumFeederThreads);
 		Ii<Boolean,String> committableKeyInit=new Ii<>(Boolean.FALSE, null);
 		for(int t=0; t<pNumFeederThreads; t++) {
-			mCommittableKey.set(t, committableKeyInit);
+			mCommittableKey.add(committableKeyInit);
 		}
 		
 		mCommitDecider=new SkipTemplate<String>(pNumFeederThreads, NUM_SKIPS_BEFORE_COMMIT);
@@ -94,8 +94,8 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 	@Override
 	public void run() {
 		try {
+			QueryRecord<String> record=unshift();			
 			while(runnable()) {
-				QueryRecord<String> record=unshift();
 				int tid=record.tid();
 				String key=record.key();
 				Path dir=record.dir();
@@ -107,16 +107,17 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 						//previous transaction is committed at the start of a new transaction
 						journal.commit(lastCommittableKey.snd());
 					}
-					mCommittableKey.set(tid, new Ii<Boolean,String>(journal.addExisting(key), key));
+					mCommittableKey.set(tid, new Ii<Boolean,String>(!journal.addedAlready(key), key));
 				}
 				if(mCommittableKey.get(tid).fst()) {
 					journal.addNew(dir);
 				}
+				record=unshift();
 			}
 		} catch(Throwable e) {
 			Log.e(TAG, e);
 		} finally {
-			Log.i(TAG, "Quitting query thread: "+Thread.currentThread().getId());
+			Log.i(TAG, "Quitting indexing thread: "+Thread.currentThread().getId());
 		}
 
 	}
@@ -144,6 +145,7 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 	
 	private synchronized void quit() {
 		mRunning=false;
+		push(new QueryRecord<String>(0,null,null));
 	}
 	
 	@Override

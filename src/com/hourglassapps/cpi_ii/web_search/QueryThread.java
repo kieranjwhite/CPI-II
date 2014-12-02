@@ -24,7 +24,7 @@ import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.Typed;
 
-public class QueryThread<K> extends Thread implements AutoCloseable, AsyncExpansionReceiver<String,K>, Consumer<List<List<String>>> {
+public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<String,K>, Consumer<List<List<String>>> {
 	private final static String TAG=QueryThread.class.getName();
 	private static int NAME=0;
 	private final List<List<String>> mDisjunctions=new ArrayList<List<String>>();
@@ -88,12 +88,12 @@ public class QueryThread<K> extends Thread implements AutoCloseable, AsyncExpans
 		try {
 			boolean skipped=false;
 			List<List<String>> booleanQuery=unshift();
-			List<String> disjunctions=concat(booleanQuery);
 			while(runnable()) {
+				List<String> disjunctions=concat(booleanQuery);
 				//Log.i(TAG, "query tid: "+Thread.currentThread().getId()+" "+disjunctions.toString());
 				Query<K,URL> query=mQ.formulate(disjunctions);
 				K name=query.uniqueName();
-				if(!mJournal.addExisting(name)) {
+				if(!mJournal.addedAlready(name)) {
 					skipped=false;
 					search(query);
 				} else {
@@ -119,6 +119,7 @@ public class QueryThread<K> extends Thread implements AutoCloseable, AsyncExpans
 	
 	private synchronized void quit() {
 		mRunning=false;
+		push(Collections.<List<String>>emptyList());
 	}
 	
 	@Override

@@ -20,6 +20,7 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 	private List<List<List<T>>> mAllQueryExpansions=new ArrayList<>();
 	private Deferred<Void,IOException,Ii<Integer,O>> mDeferred=new DeferredObject<>();
 	private final Comparator<List<T>> mComparator;
+	private final Closer mCloser=new Closer();
 	
 	private final Comparator<List<List<T>>> mQueryComparator=new Comparator<List<List<T>>>() {
 
@@ -35,11 +36,10 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 		@Override
 		public int compare(List<T> arg0, List<T> arg1) {
 			assert(arg0.size()==arg1.size());
-			for(T zeroth: arg0) {
-				for(T first: arg1) {
-					if(!Rtu.safeEq(zeroth,first)) {
-						return zeroth.compareTo(first);
-					}
+			for(int i=0; i<arg0.size(); i++) {
+				T zeroth=arg0.get(i), first=arg1.get(i);
+				if(!Rtu.safeEq(zeroth,first)) {
+					return zeroth.compareTo(first);
 				}
 			}
 			return 0;
@@ -56,14 +56,29 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 		mFilters=receiversFilters.snd();
 		mComparator=pComparator;
 		
-		int tid=0;
 		for(AsyncExpansionReceiver<T,O> rec: mReceivers) {
-			Promise<Void,IOException,O> def=rec.promise();
-			def.progress(progress(tid));
-			tid++;
+			mCloser.after(rec);
 		}
+		try {
+			int tid=0;
+			for(AsyncExpansionReceiver<T,O> rec: mReceivers) {
+
+				mCloser.after(rec);
+				Promise<Void,IOException,O> def=rec.promise();
+				def.progress(progress(tid));
+				tid++;
+			} 
+		} catch(RuntimeException e) {
+			try {
+				mCloser.close();
+			} catch(Exception e1) {
+				e.addSuppressed(e1);
+			}
+			throw e;
+		}
+
 	}
-	
+
 	public static <T extends Comparable<? super T>,O,R extends AsyncExpansionReceiver<T,O>> ExpansionDistributor<T,O> relay(R pReceiver, 
 			Filter<List<List<T>>> pFilter, Comparator<List<T>> pComparator) {
 		return new ExpansionDistributor<T,O>(
@@ -133,8 +148,9 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 	
 	@Override
 	public void close() throws Exception {
+		act();
 		try {
-			act();
+			mCloser.close();
 			mDeferred.resolve(null);
 		} catch(Exception e) {
 			mDeferred.reject(null);

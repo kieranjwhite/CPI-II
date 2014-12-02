@@ -42,8 +42,8 @@ public abstract class AbstractLuceneJournal<C> implements Journal<String, C> {
 	}
 
 	public AbstractLuceneJournal(Indexer pIndexer) throws IOException {
-		if(pIndexer.writer().getConfig().getOpenMode()!=OpenMode.CREATE) {
-			throw new IllegalArgumentException("Index should be opened in create mode");
+		if(pIndexer.writer().getConfig().getOpenMode()==OpenMode.CREATE) {
+			throw new IllegalArgumentException("Index should not be opened in create mode");
 		}
 		mIndexer=pIndexer;
 		mWriter=mIndexer.writer();
@@ -61,7 +61,7 @@ public abstract class AbstractLuceneJournal<C> implements Journal<String, C> {
 	}
 	
 	@Override
-	public boolean addExisting(final String pKey) throws IOException {
+	public boolean addedAlready(final String pKey) throws IOException {
 		ResultGenerator<String> resGen=new ResultGenerator<String>() {
 			private String mFound=null;
 
