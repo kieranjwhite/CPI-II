@@ -114,7 +114,7 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 	}
 
 	private synchronized boolean runnable(List<List<String>> pQuery) {
-		return pQuery!=TERMINAL_RECORD;
+		return pQuery.size()>0;
 	}
 	
 	private synchronized void forceQuit() {

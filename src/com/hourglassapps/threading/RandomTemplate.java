@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.hourglassapps.util.Filter;
-
 public class RandomTemplate<I> implements FilterTemplate<I> {
 	private final List<Random> mRngs=new ArrayList<Random>();
 	private final double mP;
@@ -30,12 +28,11 @@ public class RandomTemplate<I> implements FilterTemplate<I> {
 					throw new IllegalArgumentException("out of range tid: "+pTid+" max: "+mRngs.size());
 				}
 				Random rng=mRngs.get(pTid);
-				rng.setSeed(hash+mBaseSeed);
+				rng.setSeed(hash+mBaseSeed+(pTid<<8));
 				boolean res=rng.nextDouble()<mP;
 				return res;
 			}
 			
 		};
 	}
-
 }

@@ -60,7 +60,8 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 				public void run() {
 					try {
 						forceQuit();
-						close();
+						IndexingThread.this.join();
+						mCloser.close();
 					} catch (Exception e) {
 						Log.e(TAG,e);
 					}
@@ -142,17 +143,25 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 		notify();
 	}
 	
-	private synchronized void quitWhenFinished() {
+	private void quitWhenFinished() throws InterruptedException, IOException {
 		push(TERMINAL_RECORD);
+		join();
+		commitLast();
+	}
+
+	private void commitLast() throws IOException {
+		for(int tid=0; tid<mNumFeederThreads; tid++) {
+			Journal<String,Path> journal=mJournals.get(tid);
+			Ii<Boolean,String> lastCommittableKey=mCommittableKey.get(tid);
+			if(lastCommittableKey.snd()!=null) {
+				journal.commit(lastCommittableKey.snd());
+			}
+		}		
 	}
 	
 	@Override
 	public void close() throws Exception {
-		try {
-			quitWhenFinished();
-			join();
-		} finally {
-			mCloser.close();
-		}
+		quitWhenFinished();
+		mCloser.close();
 	}
 }

@@ -37,6 +37,7 @@ import com.hourglassapps.cpi_ii.web_search.bing.BingSearchEngine;
 import com.hourglassapps.persist.DeferredFileJournal;
 import com.hourglassapps.persist.Journal;
 import com.hourglassapps.persist.NullJournal;
+import com.hourglassapps.threading.FilterTemplate;
 import com.hourglassapps.threading.JobDelegator;
 import com.hourglassapps.threading.HashTemplate;
 import com.hourglassapps.threading.RandomTemplate;
@@ -265,7 +266,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					stemPath=pArgs[lastIdx++];
 					int numThreads=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println(numThreads+" thread download beginning...");
-					downloader.downloadAndIndex(stemPath, numThreads);
+					//downloader.downloadAndIndex(stemPath, numThreads, new HashTemplate<List<List<String>>>());
+					downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.0015286));
 					break;
 				case PARTITION:
 					if(pArgs.length!=4) {
@@ -324,7 +326,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		}
 	}
 
-	private void downloadAndIndex(String stemPath, int numThreads) throws Exception {
+	private void downloadAndIndex(String stemPath, int numThreads, FilterTemplate<List<List<String>>> pFilter) throws Exception {
 		if(!Files.exists(DOCUMENT_DIR)) {
 			Files.createDirectories(DOCUMENT_DIR);
 		} else {
@@ -339,7 +341,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 			final List<AsyncExpansionReceiver<String, String>> receivers=new ArrayList<>();
 			final List<DeferredFileJournal<String,URL,ContentTypeSourceable>> journals=new ArrayList<>();
 			List<Filter<List<List<String>>>> filters=
-					new JobDelegator<List<List<String>>>(numThreads, new HashTemplate<List<List<String>>>()).filters();
+					new JobDelegator<List<List<String>>>(numThreads, pFilter).filters();
 			for(int t=0; t<numThreads; t++) {
 				DeferredFileJournal<String,URL,ContentTypeSourceable> journal=
 						new DeferredFileJournal<String,URL,ContentTypeSourceable>(

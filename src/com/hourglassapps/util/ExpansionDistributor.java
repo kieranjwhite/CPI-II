@@ -63,7 +63,6 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 			int tid=0;
 			for(AsyncExpansionReceiver<T,O> rec: mReceivers) {
 
-				mCloser.after(rec);
 				Promise<Void,IOException,O> def=rec.promise();
 				def.progress(progress(tid));
 				tid++;
@@ -134,7 +133,7 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 					}
 					i++;
 				}
-				assert routed;
+				//assert routed;
 			}
 		}
 		mAllQueryExpansions.clear();
