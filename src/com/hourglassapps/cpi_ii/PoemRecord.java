@@ -47,7 +47,7 @@ public class PoemRecord implements Record<Long, String> {
 	private Datable _datable;
 	private String _no_of_stanzas;
 	private String _refrain_text_3;
-	private final static String BOUNDARY_TEXT=" 0 "; //numerals 
+	private final static String BOUNDARY_TEXT="\n0. \n"; //numerals 
 	
 	@Override
 	public Long id() {
@@ -57,22 +57,33 @@ public class PoemRecord implements Record<Long, String> {
 	@Override
 	public String content() {
 		assert LANG_LATIN.equals(getLanguage());
-		if(_poem_text_3!=null || _refrain_text_3!=null) {
+		//if(_poem_text_3!=null || _refrain_text_3!=null) {
 			StringBuilder text=new StringBuilder();
-			if(_poem_text_3!=null) {
-				text.append(_poem_text_3);
+			boolean added=false;
+			if(_title!=null && _title.length()>0) {
+				text.append(_title);
+				added=true;
 			}
-			if(_poem_text_3!=null && _refrain_text_3!=null) {
+			if(added) {
 				text.append(BOUNDARY_TEXT);
+				added=false;
 			}
-			if(_refrain_text_3!=null) {
+			if(_poem_text_3!=null && _poem_text_3.length()>0) {
+				text.append(_poem_text_3);
+				added=true;
+			}
+			if(added) {
+				text.append(BOUNDARY_TEXT);
+				added=false;
+			}
+			if(_refrain_text_3!=null && _refrain_text_3.length()>0) {
 				text.append(_refrain_text_3);
 			}
-			return text.toString();
-		} else {
-			//assert(TEXT_INCIPIT_ONLY.equals(getNoOfStanzas()));
-			return getTitle();
-		}
+			return text.toString().trim();
+		//} else {
+		//	//assert(TEXT_INCIPIT_ONLY.equals(getNoOfStanzas()));
+		//	return getTitle();
+		//}
 	}
 	
 	@Override

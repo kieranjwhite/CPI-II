@@ -1,5 +1,16 @@
 * General
 ** Libraries
+*** Apache Xalan
+**** TODO These are no longer used. Remove from this file
+**** See LICENSE.txt in the binary download at
+***** http://www.whoishostingthis.com/mirrors/apache/xalan/xalan-j/binaries/xalan-j_2_7_2-bin.zip
+**** Apache 2
+***** xalan.jar
+***** xercesImpl.jar
+***** xml-apis.jar
+**** Public domain
+***** xml-apis.jar
+****** yes this jar is part public domain and part Apache 2.
 *** Apache Tika
 **** Extracts text from files with different mime types
 **** Apache 2
