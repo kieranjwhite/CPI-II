@@ -86,6 +86,10 @@ public class PoemRecord implements Record<Long, String> {
 		//}
 	}
 	
+	public String[] lines() {
+		return content().split("\n");
+	}
+	
 	@Override
 	public boolean ignore() {
 		return !LANG_LATIN.equals(getLanguage());

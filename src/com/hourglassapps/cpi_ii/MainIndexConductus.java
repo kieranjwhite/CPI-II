@@ -20,7 +20,9 @@ import com.hourglassapps.cpi_ii.lucene.TermHandler;
 import com.hourglassapps.serialise.JSONParser;
 import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.RemoveUnescapesReader;
+import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.Log;
+import com.hourglassapps.util.ThrowableIterator;
 
 public class MainIndexConductus {
 	private final static String TAG=MainIndexConductus.class.getName();
@@ -81,10 +83,10 @@ public class MainIndexConductus {
 	
 	private void indexById(Indexer pIndexer) throws IOException, ParseException {
 		try(
-				JSONParser<Long, String, PoemRecord> parser=new JSONParser<>(
+				IOIterator<PoemRecord> parser=new JSONParser<>(
 						new RemoveUnescapesReader(
 								new BufferedReader(
-										new FileReader(mInput))), PoemRecord.class);
+										new FileReader(mInput))), PoemRecord.class).throwableIterator();
 				) {
 			while(parser.hasNext()) {
 				PoemRecord record=parser.next();
