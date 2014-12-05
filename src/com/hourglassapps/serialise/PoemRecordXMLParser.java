@@ -35,11 +35,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hourglassapps.cpi_ii.PoemRecord;
 import com.hourglassapps.cpi_ii.Record;
 import com.hourglassapps.util.ConcreteThrower;
+import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.ThrowableIterator;
 import com.hourglassapps.util.ThrowingIterable;
 
-public class PoemRecordXMLParser<I,C> implements ThrowingIterable<PoemRecord> {
+public class PoemRecordXMLParser implements ThrowingIterable<PoemRecord>, AutoCloseable {
 	private final static String TAG=PoemRecordXMLParser.class.getName();
 	private final Reader mPreprocessor;
 	
@@ -102,10 +103,10 @@ public class PoemRecordXMLParser<I,C> implements ThrowingIterable<PoemRecord> {
 	}
 	
 	@Override
-	public ThrowableIterator<PoemRecord> throwableIterator() {
+	public IOIterator<PoemRecord> throwableIterator() {
 		final ConcreteThrower<IOException> thrower=new ConcreteThrower<IOException>();
 		final Iterator<PoemRecord> it=mRecords.iterator();
-		return new ThrowableIterator<PoemRecord>() {
+		return new IOIterator<PoemRecord>() {
 
 			@Override
 			public boolean hasNext() {
@@ -132,8 +133,8 @@ public class PoemRecordXMLParser<I,C> implements ThrowingIterable<PoemRecord> {
 			}
 
 			@Override
-			public void close() throws Exception {
-				thrower.throwCaught(null);
+			public void close() throws IOException {
+				thrower.close();
 			}
 			
 		};
@@ -142,6 +143,11 @@ public class PoemRecordXMLParser<I,C> implements ThrowingIterable<PoemRecord> {
 	@Override
 	public Iterator<PoemRecord> iterator() {
 		return throwableIterator();
+	}
+
+	@Override
+	public void close() throws IOException {
+		mPreprocessor.close();
 	}
 
 }

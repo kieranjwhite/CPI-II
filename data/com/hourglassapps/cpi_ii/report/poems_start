@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html style="background-color: #f0f0f0">
+  <head>
+    <title>Conductus Links</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  </head>
+  <body>
+    <div data-role="page" id="all" data-theme="a">
+
+      <div data-role="panel" id="titles" data-display="overlay">
+	<!-- panel content goes here -->
+	<form>
+	  <input id="titles-filterable" data-type="search">
+	</form>
+	<div
+	   class="ui-controlgroup ui-controlgroup-vertical ui-corner-all"
+	   data-role="controlgroup"
+	   data-filter="true"
+	   data-input="#titles-filterable"
+	   data-enhanced="true"
+	   >
+	  <div class="ui-controlgroup-controls" >

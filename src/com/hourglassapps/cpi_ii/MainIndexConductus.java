@@ -83,13 +83,14 @@ public class MainIndexConductus {
 	
 	private void indexById(Indexer pIndexer) throws IOException, ParseException {
 		try(
-				IOIterator<PoemRecord> parser=new JSONParser<>(
+				JSONParser<Long,String,PoemRecord> parser=new JSONParser<>(
 						new RemoveUnescapesReader(
 								new BufferedReader(
-										new FileReader(mInput))), PoemRecord.class).throwableIterator();
+										new FileReader(mInput))), PoemRecord.class);
+				IOIterator<PoemRecord> text=parser.throwableIterator();
 				) {
-			while(parser.hasNext()) {
-				PoemRecord record=parser.next();
+			while(text.hasNext()) {
+				PoemRecord record=text.next();
 				if(record==null) {
 					//an exception will cause this -- it'll be thrown when parser is closed
 					break;

@@ -15,7 +15,7 @@ import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.ThrowingIterable;
 
-public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<R> {
+public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<R>, AutoCloseable {
 	private JsonParser mParser;
 	private JsonToken mNextToken;
 	private ObjectMapper mMapper=new ObjectMapper();
@@ -77,7 +77,6 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<
 			@Override
 			public void close() throws IOException {
 				throwCaught(null);
-				mPreprocessor.close();
 			}
 
 			@Override
@@ -86,6 +85,11 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<
 			}
 
 		};
+	}
+
+	@Override
+	public void close() throws IOException {
+		mPreprocessor.close();
 	}
 
 }
