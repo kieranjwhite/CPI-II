@@ -1,8 +1,13 @@
 package com.hourglassapps.cpi_ii;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.hourglassapps.util.Ii;
 
 /**
  * The fields in this class are populated by the Jackson JSON parser.
@@ -58,7 +63,9 @@ public class PoemRecord implements Record<Long, String> {
 	
 	@Override
 	public String content() {
-		assert LANG_LATIN.equals(getLanguage());
+		if(!LANG_LATIN.equals(getLanguage())) {
+			throw new IllegalStateException("wrong language");
+		}
 		//if(_poem_text_3!=null || _refrain_text_3!=null) {
 			StringBuilder text=new StringBuilder();
 			boolean added=false;
@@ -88,31 +95,74 @@ public class PoemRecord implements Record<Long, String> {
 		//}
 	}
 
-	/*
 	public static class StanzaText {
+		private final String mName;
+		private final List<String> mLines;
+		public StanzaText(String pName, List<String> pStanzaLines) {
+			mName=pName;
+			mLines=new ArrayList<>(pStanzaLines);
+		}
+		
 		public String name() {
-			
+			return mName;
 		}
-		
+
 		public List<String> lines() {
-			
-		}
-		
-		public boolean isRefrain() {
-			
+			return mLines;
 		}
 	}
-	
-	public List<Stanza> stanzas() {
-		
+
+	public List<StanzaText> stanzas() {
+		if(!LANG_LATIN.equals(getLanguage())) {
+			throw new IllegalStateException("wrong language");
+		}
+		if(_poem_text_3!=null) {
+			List<StanzaText> stanzas=new ArrayList<>();
+			String[] lines=_poem_text_3.split("\r\n");
+			List<String> stanzaLines=new ArrayList<>();
+
+			for(int l=0; l<lines.length; l++) {
+				String line=lines[l];
+				if("".equals(line)) {
+					if(stanzaLines.size()>0) {
+						String name=stanzaLines.get(0);
+						StanzaText stanza=new StanzaText(name, stanzaLines.subList(1, stanzaLines.size()));
+						stanzas.add(stanza);
+						stanzaLines.clear();
+					}
+				} else {
+					stanzaLines.add(lines[l]);
+				}
+			}
+			if(stanzaLines.size()>0) {
+				String name=stanzaLines.get(0);
+				StanzaText stanza=new StanzaText(name, stanzaLines.subList(1, stanzaLines.size()));
+				stanzas.add(stanza);
+				stanzaLines.clear();
+			}
+
+			return stanzas;
+		}
+		return Collections.emptyList();
 	}
-	
-	public Refrain refrain() {
-		
+
+	public List<String> refrain() {
+		if(!LANG_LATIN.equals(getLanguage())) {
+			throw new IllegalStateException("wrong language");
+		}
+		if(_refrain_text_3!=null) {
+			String[] refrain=_refrain_text_3.split("\r\n");
+			List<String> refrainL=new ArrayList<>();
+			for(int l=0; l<refrain.length; l++) {
+				refrainL.add(refrain[l]);
+			}
+			return refrainL;
+		}
+		return Collections.emptyList();
 	}
-	*/
+
 	public String[] lines() {
-		return content().split("\n");
+		return content().split("\r\n");
 	}
 	
 	@Override
