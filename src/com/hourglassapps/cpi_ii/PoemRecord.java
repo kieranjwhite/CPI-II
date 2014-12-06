@@ -1,5 +1,7 @@
 package com.hourglassapps.cpi_ii;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -11,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PoemRecord implements Record<Long, String> {
 	private static final String TEXT_INCIPIT_ONLY = "Text incipit only";
-	private static final String LANG_LATIN="Latin";
+	public static final String LANG_LATIN="Latin";
 	private String _poem_text_3;
 	private long _eprintid;
 	private String _date;
@@ -85,7 +87,30 @@ public class PoemRecord implements Record<Long, String> {
 		//	return getTitle();
 		//}
 	}
+
+	/*
+	public static class StanzaText {
+		public String name() {
+			
+		}
+		
+		public List<String> lines() {
+			
+		}
+		
+		public boolean isRefrain() {
+			
+		}
+	}
 	
+	public List<Stanza> stanzas() {
+		
+	}
+	
+	public Refrain refrain() {
+		
+	}
+	*/
 	public String[] lines() {
 		return content().split("\n");
 	}

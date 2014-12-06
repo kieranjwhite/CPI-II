@@ -1,0 +1,5 @@
+.poem {
+    -webkit-columns: 14em; /* Chrome, Safari, Opera */
+    -moz-columns: 14em; /* Firefox */
+    columns: 14em;
+} 

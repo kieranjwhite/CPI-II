@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Path;
 import java.util.List;
 
 public class Rtu {
@@ -191,18 +192,16 @@ public class Rtu {
 				in.close();
 			}
 		}
-		/*
-		FileChannel inChannel = new FileInputStream(src).getChannel();
-		FileChannel outChannel = dst.getChannel();
-		try {
-			inChannel.transferTo(0, inChannel.size(), outChannel);
-		} finally {
-			if (inChannel != null)
-				inChannel.close();
-			if (outChannel != null)
-				outChannel.close();
+	}
+	
+	public static void copyFile(InputStream src, File dst) throws IOException {
+		try(OutputStream out=new BufferedOutputStream(new FileOutputStream(dst))) {
+			copyFile(src, out);
 		}
-		*/
+	}
+	
+	public static void copyFile(InputStream src, Path dst) throws IOException {
+		copyFile(src, dst.toFile());
 	}
 	
 	public static void copyFile(File src, File dst) throws IOException {
@@ -215,6 +214,10 @@ public class Rtu {
 				out.close();
 			}
 		}
+	}
+	
+	public static void copyFile(Path src, Path dst) throws IOException {
+		copyFile(src.toFile(), dst.toFile());
 	}
 	
     public static boolean isSymlink(File file) throws IOException {
