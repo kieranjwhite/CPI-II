@@ -22,8 +22,8 @@ import java.util.Set;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Typed;
 
-public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>> {
-	private final static String TAG=AbstractFileJournal.class.getName();
+public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>> {
+	private final static String TAG=AbstractFilesJournal.class.getName();
 	private final static String PARTIAL_DIR_NAME="partial";
 	private final static String COMPLETED_DIR_NAME="completed";
 	protected final static int FIRST_FILENAME=1;
@@ -44,11 +44,11 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>>
 		public void run() throws IOException;
 	}
 	
-	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, S pContentGenerator) throws IOException {
+	public AbstractFilesJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, S pContentGenerator) throws IOException {
 		this(pDirectory, pFilenameGenerator, pContentGenerator, FIRST_FILENAME);
 	}
 
-	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
+	public AbstractFilesJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
 			S pContentGenerator, int pFirstFilename) throws IOException {
 		this(pDirectory, pFilenameGenerator, pContentGenerator, pFirstFilename, new PreDeleteAction(
 				){
@@ -57,7 +57,7 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>>
 					}});
 	}
 	
-	public AbstractFileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
+	public AbstractFilesJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
 			S pContentGenerator, int pFirstFilename, PreDeleteAction pPreDelete) throws IOException {
 		mFirstFilename=pFirstFilename;
 		mDirectory=pDirectory;
@@ -94,13 +94,13 @@ public abstract class AbstractFileJournal<K,C,S> implements Journal<K, Typed<C>>
 		mkdir(pPartialDir);
 	}
 	
-	private static void mkdir(Path pDir) throws IOException {
+	public static void mkdir(Path pDir) throws IOException {
 		if(!Files.exists(pDir)) {
 			Files.createDirectory(pDir);
 		}
 	}
 	
-	protected static void deleteFlatDir(Path pDir) throws IOException {
+	public static void deleteFlatDir(Path pDir) throws IOException {
 	    File[] files = pDir.toFile().listFiles();
 	    if(files!=null) {
 	        for(File f: files) {

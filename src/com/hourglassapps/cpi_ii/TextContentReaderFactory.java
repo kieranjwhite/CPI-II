@@ -21,14 +21,14 @@ import org.xml.sax.SAXException;
 import com.hourglassapps.cpi_ii.lucene.FileReaderFactory;
 import com.hourglassapps.cpi_ii.lucene.TikaReader;
 import com.hourglassapps.cpi_ii.web_search.TypedLink;
-import com.hourglassapps.persist.AbstractFileJournal;
-import com.hourglassapps.persist.DeferredFileJournal;
+import com.hourglassapps.persist.AbstractFilesJournal;
+import com.hourglassapps.persist.DeferredFilesJournal;
 import com.hourglassapps.util.Log;
 
 public class TextContentReaderFactory implements FileReaderFactory {
 	private final static String TAG=TextContentReaderFactory.class.getName();
 
-	private final static String TYPE_DELIMITER=Character.toString(DeferredFileJournal.TYPE_COLUMN_DELIMITER);
+	private final static String TYPE_DELIMITER=Character.toString(DeferredFilesJournal.TYPE_COLUMN_DELIMITER);
 	private final static TypeFileFinder TYPE_FINDER=new TypeFileFinder();
 	private Path mLastTypesParent=null;
 	private final Map<Integer,String> mFileNumToType=new HashMap<>();
@@ -56,8 +56,8 @@ public class TextContentReaderFactory implements FileReaderFactory {
 				assert parts.length==2;
 				int fileNum=Integer.parseInt(parts[0]);
 				String mimeType=parts[1];
-				if(DeferredFileJournal.TYPE_UNKNOWN.equals(mimeType) ||
-						DeferredFileJournal.TYPE_SYMLINK.equals(mimeType)) {
+				if(DeferredFilesJournal.TYPE_UNKNOWN.equals(mimeType) ||
+						DeferredFilesJournal.TYPE_SYMLINK.equals(mimeType)) {
 					mimeType=null;
 				}
 				mFileNumToType.put(fileNum, mimeType);
@@ -82,7 +82,7 @@ public class TextContentReaderFactory implements FileReaderFactory {
 	public static String leaf(Path pFile) {
 		String leaf=pFile.getFileName().toString();
 		if(leaf.length()==0 ||
-				leaf.charAt(0)==AbstractFileJournal.META_PREFIX) {
+				leaf.charAt(0)==AbstractFilesJournal.META_PREFIX) {
 			return null;
 		}
 		return leaf;
@@ -114,7 +114,7 @@ public class TextContentReaderFactory implements FileReaderFactory {
 			throw new IllegalArgumentException(pFile+" has no parent");
 		}
 		if(Files.isSymbolicLink(pFile) ||
-				DeferredFileJournal.DONE_INDEX.equals(parent.getFileName().toString())) {
+				DeferredFilesJournal.DONE_INDEX.equals(parent.getFileName().toString())) {
 			return false;
 		}
 		return leaf(pFile)!=null;

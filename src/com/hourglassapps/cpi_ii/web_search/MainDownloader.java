@@ -34,7 +34,7 @@ import com.hourglassapps.cpi_ii.MainIndexDownloaded;
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.lucene.IndexingThread;
 import com.hourglassapps.cpi_ii.web_search.bing.BingSearchEngine;
-import com.hourglassapps.persist.DeferredFileJournal;
+import com.hourglassapps.persist.DeferredFilesJournal;
 import com.hourglassapps.persist.Journal;
 import com.hourglassapps.persist.NullJournal;
 import com.hourglassapps.threading.FilterTemplate;
@@ -74,6 +74,10 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	private final RequestConfig mRequestConfig;
 
 	private CloseableHttpAsyncClient mClient;
+	
+	public static Path downloadIndex() {
+		return DOCUMENT_DIR.resolve(MainIndexDownloaded.INDEX_PATH);
+	}
 	
 	public MainDownloader() {
 		 mRequestConfig= RequestConfig.custom()
@@ -148,7 +152,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		System.out.println("About to download results for all queries.");
 		Rtu.continuePrompt();
 		try {
-			Journal<String,Typed<URL>> journal=pDummyRun?NULL_JOURNAL:new DeferredFileJournal<String,URL,ContentTypeSourceable>(JOURNAL,
+			Journal<String,Typed<URL>> journal=pDummyRun?NULL_JOURNAL:new DeferredFilesJournal<String,URL,ContentTypeSourceable>(JOURNAL,
 					JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(1,setupBlacklist(
@@ -176,7 +180,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 
 	public void downloadFiltered(String pStemPath, Filter<List<List<String>>> pFilter) throws Exception {
-		Journal<String,Typed<URL>> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(
+		Journal<String,Typed<URL>> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
 				JOURNAL, KEY_CONVERTER, this);
 
 		try(QueryThread<String> receiver=setupQuery(1,journal);
@@ -189,7 +193,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	
 	public void downloadOne(String pQueryName, URL pURL) {
 		try {
-			Journal<String,Typed<URL>> journal=new DeferredFileJournal<String,URL,ContentTypeSourceable>(TEST_JOURNAL, 
+			Journal<String,Typed<URL>> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(TEST_JOURNAL, 
 					JournalKeyConverter.SINGLETON, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(1,
@@ -334,17 +338,17 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 				throw new IOException(DOCUMENT_DIR.toString()+" must be a readable/writeable directory");
 			}
 		}
-		try(final IndexingThread indexer=new IndexingThread(DOCUMENT_DIR.resolve(MainIndexDownloaded.INDEX_PATH), numThreads)) {
+		try(final IndexingThread indexer=new IndexingThread(downloadIndex(), numThreads)) {
 			
 			indexer.start();
 			QueryThread<String> receiver=null;
 			final List<AsyncExpansionReceiver<String, String>> receivers=new ArrayList<>();
-			final List<DeferredFileJournal<String,URL,ContentTypeSourceable>> journals=new ArrayList<>();
+			final List<DeferredFilesJournal<String,URL,ContentTypeSourceable>> journals=new ArrayList<>();
 			List<Filter<List<List<String>>>> filters=
 					new JobDelegator<List<List<String>>>(numThreads, pFilter).filters();
 			for(int t=0; t<numThreads; t++) {
-				DeferredFileJournal<String,URL,ContentTypeSourceable> journal=
-						new DeferredFileJournal<String,URL,ContentTypeSourceable>(
+				DeferredFilesJournal<String,URL,ContentTypeSourceable> journal=
+						new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
 								DOCUMENT_DIR.resolve(Integer.toString(t)+THREAD_JOURNAL_NAME), KEY_CONVERTER, this);
 				receiver=setupQuery(numThreads, journal);
 				journals.add(journal);

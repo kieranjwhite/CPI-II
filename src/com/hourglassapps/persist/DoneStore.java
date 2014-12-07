@@ -23,6 +23,12 @@ import com.hourglassapps.cpi_ii.lucene.Indexer;
 import com.hourglassapps.cpi_ii.lucene.ResultGenerator;
 import com.hourglassapps.util.Ii;
 
+/**
+ * Class to detect and symlink to any URL that has previously been downloaded when presented
+ * with a download link.
+ * @author kieran
+ *
+ */
 public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path> {
 	private final static String TAG=DoneStore.class.getName();
 	private final Path mDir;
@@ -43,6 +49,11 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 		}
 	}
 	
+	/**
+	 * 
+	 * @param pDir Directory where a record of which URLs have been downloaded is saved
+	 * @throws IOException
+	 */
 	public DoneStore(Path pDir) throws IOException {
 		mDir=pDir;
 		index(mDir).close();
@@ -80,6 +91,9 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 		return resGen.result();
 	}
 	
+	/**
+	 * Checks whether a link has already been downloaded and if so creates a symbolic link to the 
+	 */
 	@Override
 	public boolean addedAlready(Ii<String,String> pSrcDst) throws IOException {
 		if(mPending.containsKey(pSrcDst.fst())) {

@@ -12,7 +12,7 @@ import org.jdeferred.ProgressCallback;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
-public class ExpansionDistributor<T extends Comparable<? super T>,O> implements ExpansionReceiver<T>, AutoCloseable {
+public class ExpansionDistributor<T extends Comparable<? super T>,O> implements ExpansionReceiver<T>, AutoCloseable, Promiser<Void,IOException,Ii<Integer,O>> {
 	private final static String TAG=ExpansionReceiver.class.getName();
 	private final List<AsyncExpansionReceiver<T,O>> mReceivers;
 	private final List<Filter<List<List<T>>>> mFilters;
@@ -85,6 +85,7 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 				pComparator);
 	}
 	
+	@Override
 	public Promise<Void,IOException,Ii<Integer,O>> promise() {
 		return mDeferred;
 	}

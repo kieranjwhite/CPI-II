@@ -7,10 +7,22 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.jdeferred.DoneFilter;
+import org.jdeferred.DonePipe;
+import org.jdeferred.ProgressCallback;
+import org.jdeferred.Promise;
 
 import com.hourglassapps.cpi_ii.PoemRecord;
+import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
+import com.hourglassapps.cpi_ii.lucene.IndexViewer;
+import com.hourglassapps.cpi_ii.web_search.MainDownloader;
+import com.hourglassapps.persist.FileJournal;
 import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.PoemRecordXMLParser;
+import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.Ii;
@@ -20,10 +32,30 @@ import com.hourglassapps.util.Rtu;
 public class MainReporter {
 	private final static String TAG=MainReporter.class.getName();
 	public final Path DOWNLOAD_PATH=Paths.get("downloaded_index");
+	private final static String RESULTS="results";
 	private final static String POEM_PANE_NAME="poems.html";
 	private final static String POEM_DIR_NAME="poems";
 	private final static Path DOCUMENT_DIR=Paths.get("documents");
 	private final static String CSS="poem.css";
+	
+	private final static class PathConverter implements Converter<Path,String> {
+		private final ConcreteThrower<Exception> mThrower;
+		
+		public PathConverter(ConcreteThrower<Exception> pThrower) {
+			mThrower=pThrower;
+		}
+		
+		@Override
+		public String convert(Path pIn) {
+			try {
+				return pIn.toRealPath().toString();
+			} catch(IOException e) {
+				mThrower.ctch(e);
+			}
+			return null;
+		}
+		
+	};
 	
 	private final Path mXML;
 	private final Path mDocuments;
@@ -56,14 +88,37 @@ public class MainReporter {
 		}
 	}
 	
-	public void create() throws IOException, ParseException {
+	public void create() throws Exception {
 		copy();
+		Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
 		try(
-				PoemsPanel poems=new PoemsPanel(mDest.resolve(POEM_PANE_NAME));
+				ConcreteThrower<Exception> thrower=new ConcreteThrower<>();
+				IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
+				FileJournal<Path> journal=new FileJournal<>(Paths.get(RESULTS), new PathConverter(thrower));
+				Queryer searcher=new Queryer(journal, index, analyser);
+				PoemsReport poems=new PoemsReport(mDest.resolve(POEM_PANE_NAME), analyser);
 				PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));
 				IOIterator<PoemRecord> it=parser.throwableIterator();
 				) {
+			Promise<Void,Void,Ii<String,String>> prom=poems.promise();
+			prom.progress(new ProgressCallback<Ii<String,String>>(){
+
+				@Override
+				public void onProgress(Ii<String, String> progress) {
+					try {
+						searcher.search(progress);
+					} catch(IOException | org.apache.lucene.queryparser.classic.ParseException e) {
+						thrower.ctch(e);
+					}
+				}
+				
+			});
+			//prom.then(doneCallback, failCallback, progressCallback);
+			
 			while(it.hasNext()) {
+				if(thrower.fallThrough()) {
+					break;
+				}
 				PoemRecord rec=it.next();
 				if(!PoemRecord.LANG_LATIN.equals(rec.getLanguage())) {
 					continue;

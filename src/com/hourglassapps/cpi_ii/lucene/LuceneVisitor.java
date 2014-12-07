@@ -34,23 +34,14 @@ import com.hourglassapps.util.Log;
 public class LuceneVisitor implements FileVisitor<Path> {
 	private final static String TAG=LuceneVisitor.class.getName();
 	
-	//progress is saved every 300 queries approximately
-	private final static int PROGRESS_INTERVAL=300;
-	private final Indexer mIndexer;
 	private final IndexWriter mWriter;
 	private final FileReaderFactory mPath2Reader;
-	private String mLastParent=null;
-	private final IndexReader mReader;
-	private boolean mLastFound=false;
 	
-	private final static FieldVal PATH=DownloadedFields.PATH.fieldVal(); 
-	private final static FieldVal POSITION=DownloadedFields.POSITION.fieldVal(); 
-	private final static FieldVal CONTENT=DownloadedFields.CONTENT.fieldVal(); 
+	public final static FieldVal PATH=DownloadedFields.PATH.fieldVal(); 
+	public final static FieldVal CONTENT=DownloadedFields.CONTENT.fieldVal(); 
 	
 	public LuceneVisitor(Indexer pIndex, FileReaderFactory pPath2Reader) throws IOException {
-		mIndexer=pIndex;
-		mReader=DirectoryReader.open(mIndexer.dir());
-		mWriter=mIndexer.writer();
+		mWriter=pIndex.writer();
 		mPath2Reader=pPath2Reader;
 	}
 
@@ -65,71 +56,7 @@ public class LuceneVisitor implements FileVisitor<Path> {
 			BasicFileAttributes arg1) throws IOException {
 		return FileVisitResult.CONTINUE;
 	}
-	/*
-	private boolean indexed(Path pPath) throws IOException {
-		String parent=pPath.getParent().getFileName().toString();
-		if(mLastParent==null || !parent.equals(mLastParent)) {
-			if(mLastParent==null) {
-				mLastParent=parent;
-			}
-			mLastFound=indexedFullCheck(pPath);
-		}
-		return mLastFound;
-		
-	}
 
-	private boolean indexedFullCheck(Path pPath) throws IOException {
-		String parent=pPath.getParent().getFileName().toString();
-		ResultGenerator<Boolean> resGen=new ResultGenerator<Boolean>() {
-			private Boolean mFound=Boolean.FALSE;
-
-			@Override
-			public void run(IndexReader pReader, TopDocs pResults)
-					throws IOException {
-				if(pReader.numDocs()>0) {
-					mFound=Boolean.TRUE;
-				}
-			}
-
-			@Override
-			public Boolean result() {
-				return mFound;
-			}
-
-		};
-		mIndexer.interrogate(mReader, POSITION, parent, 1, resGen);
-		boolean present=resGen.result();
-		try {
-			if(present) {
-				Log.i(TAG, "found: "+parent);
-				return true;
-			}
-
-			//mLastParent is done
-			Document complete=new Document();
-			Field query=POSITION.field(mLastParent);
-			complete.add(query);
-			
-			// Note (kw) We always call mWriter.addDocument / mWriter.updateDocument
-			// on the first new query found, even though that actually marks the previous
-			// query as being complete -- something we had previously done and didn't need
-			// to repeat. That's okay though.  
-			 
-			if (mWriter.getConfig().getOpenMode() == OpenMode.CREATE) {
-				// New index, so we just add the document (no old document can be there):
-				mWriter.addDocument(complete);
-			} else {
-				// Existing index (an old copy of this document may have been indexed) so 
-				// we use updateDocument instead to replace the old one matching the exact 
-				// path, if present:
-				mWriter.updateDocument(POSITION.term(mLastParent), complete);
-			}
-			return false;
-		} finally {
-			mLastParent=parent;
-		}
-	}
-	*/
 	/**
 	 * kw 25/11/2014: copied from org.apache.lucene.demo.IndexFiles
 	 * 

@@ -1,46 +1,80 @@
 package com.hourglassapps.persist;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.SelectableChannel;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
 import com.hourglassapps.util.Converter;
-import com.hourglassapps.util.Typed;
+import com.hourglassapps.util.Promiser;
 
-public class FileJournal<K,C,S extends ReadableByteChannel> extends AbstractFileJournal<K,C,Converter<C,S>> {
-	private final static String TAG=FileJournal.class.getName();
-	public FileJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, Converter<C,S> pContentGenerator) 
-			throws IOException {
-		super(pDirectory, pFilenameGenerator, pContentGenerator);
-	}
-
-	private S source(Typed<C> pContent) {
-		C source=pContent.get();
-		trailAdd(source);
-		return mContentGenerator.convert(source);
-	}
+public class FileJournal<A> implements Journal<String, A>, Promiser<Void,Void,Path> {
+	private final static String COMPLETED="completed";
+	private final static String PARTIAL="partial";
+	private final Path mCompleted;
+	private final Path mPartialFile;
+	private final Path mDir;
+	private final List<A> mPartial=new ArrayList<>();
+	private final Converter<A,String> mAddedToString;
+	private final Deferred<Void,Void,Path> mDeferred=new DeferredObject<>();
 	
+	public FileJournal(Path pDir, Converter<A,String> pAddedToString) throws IOException {
+		mDir=pDir;
+		AbstractFilesJournal.mkdir(pDir);
+		mCompleted=mDir.resolve(COMPLETED);
+		AbstractFilesJournal.mkdir(mCompleted);
+		mPartialFile=mDir.resolve(PARTIAL);
+		mAddedToString=pAddedToString;
+	}
+
 	@Override
-	public void addNew(Typed<C> pContent) throws IOException {
-		S channel=source(pContent);
-		if(channel instanceof SelectableChannel && ((SelectableChannel)channel).isBlocking()) {
-			throw new IOException("channel must be blocking");
-		}
-		if(channel==null) {
-			incFilename();
-			return;
-		}
-		Path dest=dest(pContent);
-		incFilename();
-		try(FileChannel out=FileChannel.open(dest, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW)) {
-			out.transferFrom(channel, 0, Long.MAX_VALUE);
-		}
+	public boolean addedAlready(String pKey) throws IOException {
+		return Files.exists(mDir.resolve(pKey));
+	}
+
+	@Override
+	public void addNew(A pContent) throws IOException {
+		mPartial.add(pContent);
+	}
+
+	@Override
+	public void reset() throws IOException {
+		AbstractFilesJournal.deleteFlatDir(mCompleted);
+		mPartial.clear();
 	}
 
 	@Override
 	public void close() {
+		mDeferred.resolve(null);
 	}
+
+	@Override
+	public void commit(String pKey) throws IOException {
+		Path dest=mCompleted.resolve(pKey);
+		try(PrintWriter writer=new PrintWriter(new BufferedWriter(new FileWriter(mPartialFile.toFile())))) {
+			for(A p: mPartial) {
+				String path=mAddedToString.convert(p);
+				writer.println(path);
+			}
+		}
+		Files.move(mPartialFile, dest, StandardCopyOption.ATOMIC_MOVE);
+		mPartial.clear();
+		mDeferred.notify(dest);
+	}
+
+	@Override
+	public Promise<Void, Void, Path> promise() {
+		return mDeferred;
+	}
+
 }

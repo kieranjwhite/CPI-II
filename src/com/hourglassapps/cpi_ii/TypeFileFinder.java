@@ -6,8 +6,8 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import com.hourglassapps.persist.AbstractFileJournal;
-import com.hourglassapps.persist.DeferredFileJournal;
+import com.hourglassapps.persist.AbstractFilesJournal;
+import com.hourglassapps.persist.DeferredFilesJournal;
 
 public class TypeFileFinder implements FileVisitor<Path> {
 	private Path mTypesFile=null;
@@ -27,7 +27,7 @@ public class TypeFileFinder implements FileVisitor<Path> {
 	@Override
 	public FileVisitResult visitFile(Path pFile, BasicFileAttributes arg1)
 			throws IOException {
-		if(pFile!=null && pFile.getFileName().toString().startsWith(DeferredFileJournal.TYPES_FILENAME)) {
+		if(pFile!=null && pFile.getFileName().toString().startsWith(DeferredFilesJournal.TYPES_FILENAME)) {
 			mTypesFile=pFile;
 			return FileVisitResult.TERMINATE;
 		}

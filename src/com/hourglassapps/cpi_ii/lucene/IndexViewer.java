@@ -1,12 +1,8 @@
 package com.hourglassapps.cpi_ii.lucene;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.Set;
 
 import org.apache.lucene.index.AtomicReader;
 import org.apache.lucene.index.DirectoryReader;
@@ -15,6 +11,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -81,7 +78,11 @@ public class IndexViewer implements AutoCloseable {
 	}
 
 	public static void interrogate(IndexReader pReader, IndexSearcher pSearcher, FieldVal pSearchField, String pSought, int pNumResults, ResultRelayer pRelayer) throws IOException {
-		TopDocs results = pSearcher.search(pSearchField.query(pSought), Math.max(pNumResults,1));
+		interrogate(pReader, pSearcher, pSearchField.query(pSought), pNumResults, pRelayer);
+	}
+
+	public static void interrogate(IndexReader pReader, IndexSearcher pSearcher, Query pQuery, int pNumResults, ResultRelayer pRelayer) throws IOException {
+		TopDocs results = pSearcher.search(pQuery, Math.max(pNumResults,1));
 		if(results.totalHits<1) {
 			//Log.i(TAG, "unrecognised key "+pSought);
 			return;
@@ -91,7 +92,7 @@ public class IndexViewer implements AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() throws IOException {
 		mDir.close();
 	}
 

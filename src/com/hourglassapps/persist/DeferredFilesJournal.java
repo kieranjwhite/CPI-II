@@ -31,8 +31,8 @@ import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Typed;
 
-public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJournal<K,C,Downloader<C,R>> {
-	private final static String TAG=DeferredFileJournal.class.getName();
+public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFilesJournal<K,C,Downloader<C,R>> {
+	private final static String TAG=DeferredFilesJournal.class.getName();
 	public final static String DONE_INDEX="done_index";
 	public final static char TYPE_COLUMN_DELIMITER=' ';
 	public final static String TYPE_UNKNOWN="UNKNOWN";
@@ -50,7 +50,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 	private final Path mBetweenDoneDir;
 	private final DoneStore mDone;
 	
-	public DeferredFileJournal(final Path pDirectory,
+	public DeferredFilesJournal(final Path pDirectory,
 			Converter<K, String> pFilenameGenerator,
 			Downloader<C,R> pDownloader)
 			throws IOException {
@@ -60,7 +60,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 			public void run() throws IOException {
 				Path partialDoneDir=partialDir(pDirectory).resolve(DONE_INDEX);
 				if(Files.exists(partialDoneDir)) {
-					AbstractFileJournal.deleteFlatDir(partialDoneDir);
+					AbstractFilesJournal.deleteFlatDir(partialDoneDir);
 				}
 			}
 			
@@ -119,7 +119,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 						if(src==null) {
 							src=TYPE_UNKNOWN;
 						}
-						synchronized(DeferredFileJournal.this) {
+						synchronized(DeferredFilesJournal.this) {
 							mTypesWriter.println(pTypeInfo.dstKey()+Character.toString(TYPE_COLUMN_DELIMITER)+src);
 							mDone.addNew(new Ii<>(source.toString(), dest.toString()));
 						}
@@ -176,7 +176,7 @@ public class DeferredFileJournal<K,C,R extends Sourceable> extends AbstractFileJ
 							 * is skipped but the rest of the transaction and subsequent downloads should
 							 * otherwise proceed as normal.
 							 */
-							synchronized(DeferredFileJournal.this) {
+							synchronized(DeferredFilesJournal.this) {
 								mThrower.ctch(e);
 							}
 						}});	
