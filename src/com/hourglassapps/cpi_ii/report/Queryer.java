@@ -1,8 +1,11 @@
 package com.hourglassapps.cpi_ii.report;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -29,8 +32,12 @@ import com.hourglassapps.cpi_ii.lucene.LuceneVisitor;
 import com.hourglassapps.cpi_ii.lucene.ResultRelayer;
 import com.hourglassapps.persist.Journal;
 import com.hourglassapps.util.Ii;
+import com.hourglassapps.util.Log;
+import com.hourglassapps.util.Rtu;
+import com.hourglassapps.util.URLUtils;
 
 public class Queryer implements AutoCloseable {
+	private final static String TAG=Queryer.class.getName();
 	private final static int MAX_RESULTS=1024;
 	private final Journal<String,Path> mJournal;
 	private final Analyzer mAnalyser;
@@ -38,7 +45,7 @@ public class Queryer implements AutoCloseable {
     private final QueryParser mParser;
     private final IndexReader mReader;
 	private final IndexSearcher mSearcher;
-    
+	
 	public Queryer(Journal<String,Path> pJournal, IndexViewer pIndex, Analyzer pAnalyser) throws IOException {
 		mJournal=pJournal;
 		mAnalyser=pAnalyser;
@@ -53,6 +60,7 @@ public class Queryer implements AutoCloseable {
 	
 	public void search(Ii<String,String> pQueryDst) throws ParseException, IOException {
 		if(mJournal.addedAlready(pQueryDst.snd())) {
+			Log.i(TAG, "found: "+pQueryDst);
 			return;
 		}
 		Query q=mParser.parse(pQueryDst.fst());
@@ -75,6 +83,7 @@ public class Queryer implements AutoCloseable {
 			}
 
 		});
+		Log.i(TAG, "committing: "+pQueryDst);
 		mJournal.commit(pQueryDst.snd());
 		mDeferred.notify(pQueryDst);
 	}

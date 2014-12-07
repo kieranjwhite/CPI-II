@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -22,10 +23,12 @@ import org.jdeferred.impl.DeferredObject;
 
 import com.hourglassapps.cpi_ii.PoemRecord;
 import com.hourglassapps.cpi_ii.PoemRecord.StanzaText;
+import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.FileWrapper;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Rtu;
+import com.hourglassapps.util.URLUtils;
 
 public class PoemsReport implements AutoCloseable {
 	private final static String START="poems_start";
@@ -37,24 +40,12 @@ public class PoemsReport implements AutoCloseable {
 	private final FileWrapper mWrapper;
 	private final List<PoemRecord> mPoems=new ArrayList<>();
 	private final Analyzer mAnalyzer;
-	private final Deferred<Void,Void,Ii<String,String>> mDeferred=new DeferredObject();
-	private final static Converter<List<String>,String> TOKENS_TO_REF=new Converter<List<String>,String>(){
-		private final List<String> mOutToks=new ArrayList<>();
-		private final Pattern mNonLetters=Pattern.compile("[^a-z]");
-		private final static String JOINT="_";
-		
-		@Override
-		public String convert(List<String> pIn) {
-			mOutToks.clear();
-			for(String token: pIn) {
-				Matcher m=mNonLetters.matcher(token);
-				mOutToks.add(m.replaceAll(JOINT));
-			}
-			return Rtu.join(mOutToks, JOINT)+".html";
-		}
-		
-	};
-	public PoemsReport(Path pDest, Analyzer pAnalyser) throws IOException {
+	private final Deferred<Void,Void,Ii<String,String>> mDeferred=new DeferredObject<>();
+	private final static Cleaner CLEANER=new Cleaner();
+	private final Converter<String,String> mQueryToFilename;
+
+	public PoemsReport(Path pDest, Analyzer pAnalyser, Converter<String,String> pQueryToFilename) throws IOException {
+		mQueryToFilename=pQueryToFilename;
 		mWrapper=new FileWrapper(PoemsReport.class, START, END, pDest);
 		mOut=mWrapper.writer();
 		mAnalyzer=pAnalyser;
@@ -66,25 +57,16 @@ public class PoemsReport implements AutoCloseable {
 				idTitle.snd()+"</div></a>\n");
 		mPoems.add(pRec);
 	}
-
-	private List<String> tokenise(String pLine, List<String> pOut) throws IOException {
-		pOut.clear();
-		try(Reader reader=new StringReader(pLine.trim());
-			TokenStream tokens=mAnalyzer.tokenStream(null, reader);) {
-			CharTermAttribute termAtt=tokens.addAttribute(CharTermAttribute.class);
-			tokens.reset();
-			while(tokens.incrementToken()) {
-				pOut.add(termAtt.toString());
-			}
-		}
-		return pOut;
-	}
 	
-	private String linkAndNotify(String pLine, List<String> pTokens) throws IOException {
-		tokenise(pLine, pTokens);
-		String link=TOKENS_TO_REF.convert(pTokens);
-		mDeferred.notify(new Ii<String,String>(pLine,link));
-		return href(pLine,link);
+	private String linkAndNotify(String pLine) throws IOException {
+		//tokenise(pLine, pTokens);
+		String cleaned=CLEANER.convert(pLine);
+		String link=mQueryToFilename.convert(cleaned);
+		if(link!=null) {
+			mDeferred.notify(new Ii<String,String>(cleaned,link));
+			return href(pLine,link);
+		}
+		return pLine;
 
 	}
 	
@@ -92,21 +74,19 @@ public class PoemsReport implements AutoCloseable {
 		return "<a href=\""+pLink+"\">"+pLine+"</a>";
 	}
 	
-	private void addContent(PrintWriter pOut, PoemRecord pPoemRecord, List<String> pTokens) throws IOException {
+	private void addContent(PrintWriter pOut, PoemRecord pPoemRecord) throws IOException {
 		pOut.println("<div data-role=\"page\" id=\"e"+pPoemRecord.id()+"\" data-theme=\"a\">");
 		pOut.println("<div class=\"poem\">");
 		if(pPoemRecord.getTitle()!=null) {
 			String title=pPoemRecord.getTitle();
-			pOut.println(TITLE_TAGS.fst()+linkAndNotify(pPoemRecord.getTitle(), pTokens)+TITLE_TAGS.snd());
-			pTokens.clear();
+			pOut.println(TITLE_TAGS.fst()+linkAndNotify(pPoemRecord.getTitle())+TITLE_TAGS.snd());
 		}
 		List<String> ref=pPoemRecord.refrain();
 		if(ref.size()>0) {
 			pOut.println(STANZA_TAGS.fst()+"Ref."+STANZA_TAGS.snd());
 			pOut.println("<p>");
 			for(String l: ref) {
-				pOut.println("<br>"+linkAndNotify(l, pTokens)+"</br>");
-				pTokens.clear();
+				pOut.println("<br>"+linkAndNotify(l)+"</br>");
 			}
 			pOut.println("</p>");
 		}
@@ -119,8 +99,7 @@ public class PoemsReport implements AutoCloseable {
 				if(stanza.size()>0) {
 					pOut.println("<p>");
 					for(String l: stanza) {
-						pOut.println("<br>"+linkAndNotify(l, pTokens)+"</br>");
-						pTokens.clear();
+						pOut.println("<br>"+linkAndNotify(l)+"</br>");
 					}
 					pOut.println("</p>");
 				}
@@ -138,10 +117,9 @@ public class PoemsReport implements AutoCloseable {
 	public void close() throws IOException {
 		try{
 			PrintWriter out=mWrapper.insert(MID);
-			List<String> lines=new ArrayList<>();
 			List<String> tokens=new ArrayList<>();
 			for(PoemRecord rec: mPoems) {
-				addContent(out, rec, lines);
+				addContent(out, rec);
 			}
 		} finally {
 			mWrapper.close();

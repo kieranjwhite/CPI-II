@@ -39,7 +39,7 @@ public class FileJournal<A> implements Journal<String, A>, Promiser<Void,Void,Pa
 
 	@Override
 	public boolean addedAlready(String pKey) throws IOException {
-		return Files.exists(mDir.resolve(pKey));
+		return Files.exists(mCompleted.resolve(pKey));
 	}
 
 	@Override

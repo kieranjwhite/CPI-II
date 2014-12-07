@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +29,7 @@ import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
+import com.hourglassapps.util.URLUtils;
 
 public class MainReporter {
 	private final static String TAG=MainReporter.class.getName();
@@ -91,43 +93,57 @@ public class MainReporter {
 	public void create() throws Exception {
 		copy();
 		Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
-		try(
-				ConcreteThrower<Exception> thrower=new ConcreteThrower<>();
-				IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
-				FileJournal<Path> journal=new FileJournal<>(Paths.get(RESULTS), new PathConverter(thrower));
-				Queryer searcher=new Queryer(journal, index, analyser);
-				PoemsReport poems=new PoemsReport(mDest.resolve(POEM_PANE_NAME), analyser);
-				PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));
-				IOIterator<PoemRecord> it=parser.throwableIterator();
-				) {
-			Promise<Void,Void,Ii<String,String>> prom=poems.promise();
-			prom.progress(new ProgressCallback<Ii<String,String>>(){
 
+		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
+			Converter<String,String> queryToFilename=new Converter<String,String>() {
 				@Override
-				public void onProgress(Ii<String, String> progress) {
+				public String convert(String pIn) {
 					try {
-						searcher.search(progress);
-					} catch(IOException | org.apache.lucene.queryparser.classic.ParseException e) {
+						return URLUtils.encode(pIn)+".html";
+					} catch (UnsupportedEncodingException e) {
 						thrower.ctch(e);
 					}
+					return null;
 				}
-				
-			});
-			//prom.then(doneCallback, failCallback, progressCallback);
-			
-			while(it.hasNext()) {
-				if(thrower.fallThrough()) {
-					break;
-				}
-				PoemRecord rec=it.next();
-				if(!PoemRecord.LANG_LATIN.equals(rec.getLanguage())) {
-					continue;
-				}
+			};
 
-				poems.addTitle(rec);
-			}
-		}		
-		
+
+			try(
+					IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
+					FileJournal<Path> journal=new FileJournal<>(Paths.get(RESULTS), new PathConverter(thrower));
+					Queryer searcher=new Queryer(journal, index, analyser);
+					PoemsReport poems=new PoemsReport(mDest.resolve(POEM_PANE_NAME), analyser, queryToFilename);
+					PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));
+					IOIterator<PoemRecord> it=parser.throwableIterator();
+					) {
+				Promise<Void,Void,Ii<String,String>> prom=poems.promise();
+				prom.progress(new ProgressCallback<Ii<String,String>>(){
+
+					@Override
+					public void onProgress(Ii<String, String> progress) {
+						try {
+							searcher.search(progress);
+						} catch(IOException | org.apache.lucene.queryparser.classic.ParseException e) {
+							thrower.ctch(e);
+						}
+					}
+
+				});
+				//prom.then(doneCallback, failCallback, progressCallback);
+
+				while(it.hasNext()) {
+					if(thrower.fallThrough()) {
+						break;
+					}
+					PoemRecord rec=it.next();
+					if(!PoemRecord.LANG_LATIN.equals(rec.getLanguage())) {
+						continue;
+					}
+
+					poems.addTitle(rec);
+				}
+			}		
+		}
 	}
 	
 	private static void usage() {
