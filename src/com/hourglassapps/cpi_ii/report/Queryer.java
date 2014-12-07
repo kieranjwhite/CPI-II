@@ -59,33 +59,37 @@ public class Queryer implements AutoCloseable {
 	}
 	
 	public void search(Ii<String,String> pQueryDst) throws ParseException, IOException {
-		if(mJournal.addedAlready(pQueryDst.snd())) {
+		if(mJournal.addedAlready(pQueryDst.snd()) || "".equals(pQueryDst.fst())) {
 			Log.i(TAG, "found: "+pQueryDst);
 			return;
 		}
-		Query q=mParser.parse(pQueryDst.fst());
-		IndexViewer.interrogate(mReader, mSearcher, q, MAX_RESULTS, new ResultRelayer() {
+		try {
+			Query q=mParser.parse(pQueryDst.fst());
+			IndexViewer.interrogate(mReader, mSearcher, q, MAX_RESULTS, new ResultRelayer() {
 
-			@Override
-			public void run(IndexReader pReader, TopDocs pResults)
-					throws IOException {
+				@Override
+				public void run(IndexReader pReader, TopDocs pResults)
+						throws IOException {
 
-				ScoreDoc[] results=pResults.scoreDocs;
-				for(int i=0; i<results.length; i++) {
-					Document doc = mSearcher.doc(results[i].doc);
-					Path path = Paths.get(doc.get(LuceneVisitor.PATH.s()));
-					if (path != null) {
-						mJournal.addNew(path);
-					} else {
-						assert(false);
+					ScoreDoc[] results=pResults.scoreDocs;
+					for(int i=0; i<results.length; i++) {
+						Document doc = mSearcher.doc(results[i].doc);
+						Path path = Paths.get(doc.get(LuceneVisitor.PATH.s()));
+						if (path != null) {
+							mJournal.addNew(path);
+						} else {
+							assert(false);
+						}
 					}
 				}
-			}
 
-		});
-		Log.i(TAG, "committing: "+pQueryDst);
-		mJournal.commit(pQueryDst.snd());
-		mDeferred.notify(pQueryDst);
+			});
+			Log.i(TAG, "committing: "+pQueryDst);
+			mJournal.commit(pQueryDst.snd());
+			mDeferred.notify(pQueryDst);
+		} catch(RuntimeException|IOException|ParseException e) {
+			throw e;
+		}
 	}
 
 	@Override

@@ -2,21 +2,12 @@ package com.hourglassapps.cpi_ii.report;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.util.Version;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
@@ -61,9 +52,10 @@ public class PoemsReport implements AutoCloseable {
 	private String linkAndNotify(String pLine) throws IOException {
 		//tokenise(pLine, pTokens);
 		String cleaned=CLEANER.convert(pLine);
-		String link=mQueryToFilename.convert(cleaned);
-		if(link!=null) {
-			mDeferred.notify(new Ii<String,String>(cleaned,link));
+		String key=mQueryToFilename.convert(cleaned);
+		if(key!=null) {
+			String link=key+".html";
+			mDeferred.notify(new Ii<String,String>(cleaned,key));
 			return href(pLine,link);
 		}
 		return pLine;

@@ -6,9 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.jdeferred.DoneFilter;
@@ -96,10 +99,35 @@ public class MainReporter {
 
 		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
 			Converter<String,String> queryToFilename=new Converter<String,String>() {
+				private final static int MAX_LEN=196;
+				private Map<String,String> mLongNameToShorter=new HashMap<>();
+				private int mCurSuffix=0;
+				
 				@Override
 				public String convert(String pIn) {
 					try {
-						return URLUtils.encode(pIn)+".html";
+						String encoded=URLUtils.encode(pIn);
+						assert encoded.indexOf('_')==-1;
+						if(encoded.length()>MAX_LEN) {
+							/*
+							 * Assumes convert is invoked in a fixed order. If that order changes
+							 * (eg if the the conductus xml export is modified) a new report will 
+							 * have to generated from scratch.
+							 */
+							if(mLongNameToShorter.containsKey(pIn)) {
+								encoded=mLongNameToShorter.get(pIn);
+							} else {
+								encoded=(encoded.substring(0,MAX_LEN)+'_')+(mCurSuffix++);
+								mLongNameToShorter.put(pIn, encoded);
+							}
+						}
+						try {
+							Path path=Paths.get(encoded);
+							return encoded;
+						} catch(InvalidPathException e) {
+							//Exception is thrown by Paths.get if filename is too long
+							assert false;
+						}
 					} catch (UnsupportedEncodingException e) {
 						thrower.ctch(e);
 					}

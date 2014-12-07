@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import com.hourglassapps.util.Converter;
 
 final class Cleaner implements Converter<String,String> {
-	private final Pattern mNonLetters=Pattern.compile("[^a-z]+");
+	private final Pattern mNonLetters=Pattern.compile("[^a-zA-Z'-]+");
 	private final static String JOINT=" ";
 	
 	@Override
