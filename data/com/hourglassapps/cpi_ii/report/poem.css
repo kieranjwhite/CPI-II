@@ -39,3 +39,11 @@ p {
     margin-top: 0.4em;
     margin-bottom: 0.0em;
 }
+
+a {
+    text-decoration: none;
+}
+
+.ui-controlgroup-controls {
+    overflow:auto;
+}

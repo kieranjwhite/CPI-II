@@ -8,12 +8,39 @@
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="rtu_domless.js"></script>
+    <script src="rtu.js"></script>
     <script id="panel-init">
       $(function() {
       $( "body>[data-role='panel']" ).panel().enhanceWithin();
+      $( "[data-role='header'], [data-role='footer']" ).toolbar();
+
+      glb().ui_management={
+      panel_open: false,
+
+      resize:function() {
+      var title_list=$("#title_list");
+      var top=title_list.offset().top;
+      var bottom=$(window).height();
+      var new_height=(bottom-top)-10;
+      if(new_height>=0) {
+      title_list.height(new_height);
+      }
+      }
+      }
+      
+      $(document).bind("panelopen", function(e,data) {
+      glb().ui_management.resize();
+      glb().ui_management.panel_open=true;
       });
-      $(function(){
-	$( "[data-role='header'], [data-role='footer']" ).toolbar();
+
+      $(document).bind("panelclose", function(e,data) {
+      glb().ui_management.panel_open=false;
+      });
+
+      $(window).resize(function() {
+      glb().ui_management.resize();      
+      });
       });
     </script>
   </head>
@@ -29,5 +56,6 @@
 	 data-filter="true"
 	 data-input="#titles-filterable"
 	 data-enhanced="true"
+	 style="overflow:auto"
 	 >
-	<div class="ui-controlgroup-controls" >
+	<div id="title_list" class="ui-controlgroup-controls">

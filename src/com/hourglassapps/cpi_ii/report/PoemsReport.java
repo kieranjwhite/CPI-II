@@ -83,7 +83,7 @@ public class PoemsReport implements AutoCloseable {
 	}
 	
 	private String href(String pLine, String pLink) {
-		return "<a href=\"result_list.html#"+pLink+"\">"+pLine+"</a>";
+		return "<a href=\"result_list.html#"+pLink+"\" target=\"results\">"+pLine+"</a>";
 	}
 	
 	private void addContent(PrintWriter pOut, PoemRecord pPoemRecord) throws IOException {
@@ -120,7 +120,10 @@ public class PoemsReport implements AutoCloseable {
 		}
 
 		pOut.println("</div>");
-		//pOut.println("<iframe id=\"links\" name=\"links_frame\" frameboder=\"0\" src=\"\" width=\"100%\"></iframe>");
+		
+		//pOut.println("<div id=\"wrapper\" width=\"100%\" height=\"100%\"><iframe src=\"\" name=\"results\" frameborder=\"0\" seamless width=\"100%\" height=\"100%\"/></div>");
+		//pOut.println("<iframe src=\"\" name=\"results\" frameborder=\"0\" seamless width=\"100%\"/>");
+		//pOut.println("<iframe id=\"links\" name=\"links_frame\" frameborder=\"0\" src=\"\" width=\"100%\"></iframe>");
 		pOut.println("</div>");
 		
 	}
