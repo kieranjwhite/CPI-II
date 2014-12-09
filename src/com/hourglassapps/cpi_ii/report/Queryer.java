@@ -38,7 +38,7 @@ import com.hourglassapps.util.URLUtils;
 
 public class Queryer implements AutoCloseable {
 	private final static String TAG=Queryer.class.getName();
-	private final static int MAX_RESULTS=1024;
+	private final static int MAX_RESULTS=100;
 	private final Journal<String,Path> mJournal;
 	private final Analyzer mAnalyser;
 	private final Deferred<Void,Exception,Ii<String,String>> mDeferred=new DeferredObject<>();
@@ -58,9 +58,13 @@ public class Queryer implements AutoCloseable {
 		return mDeferred;
 	}
 	
+	private String key(String pDst) {
+		return pDst+".js";
+	}
+	
 	public void search(Ii<String,String> pQueryDst) throws ParseException, IOException {
-		if(mJournal.addedAlready(pQueryDst.snd()) || "".equals(pQueryDst.fst())) {
-			Log.i(TAG, "found: "+pQueryDst);
+		if(mJournal.addedAlready(key(pQueryDst.snd())) || "".equals(pQueryDst.fst())) {
+			Log.i(TAG, "found: "+Log.esc(pQueryDst));
 			return;
 		}
 		try {
@@ -84,8 +88,8 @@ public class Queryer implements AutoCloseable {
 				}
 
 			});
-			Log.i(TAG, "committing: "+pQueryDst);
-			mJournal.commit(pQueryDst.snd());
+			Log.i(TAG, "committing: "+Log.esc(pQueryDst));
+			mJournal.commit(key(pQueryDst.snd()));
 			mDeferred.notify(pQueryDst);
 		} catch(RuntimeException|IOException|ParseException e) {
 			throw e;

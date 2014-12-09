@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -58,18 +59,34 @@ public class FileJournal<A> implements Journal<String, A>, Promiser<Void,Void,Pa
 		mDeferred.resolve(null);
 	}
 
-	@Override
-	public void commit(String pKey) throws IOException {
-		Path dest=mCompleted.resolve(pKey);
-		try(PrintWriter writer=new PrintWriter(new BufferedWriter(new FileWriter(mPartialFile.toFile())))) {
+	protected Path partial() {
+		return mPartialFile;
+	}
+	
+	protected PrintWriter writer() throws IOException {
+		return new PrintWriter(new BufferedWriter(new FileWriter(mPartialFile.toFile())));
+	}
+	
+	protected void write() throws IOException {
+		try(PrintWriter writer=writer()) {
 			for(A p: mPartial) {
 				String path=mAddedToString.convert(p);
 				writer.println(path);
 			}
 		}
+	}
+	
+	protected void tidyUp(String pKey) throws IOException {
+		Path dest=mCompleted.resolve(pKey);
 		Files.move(mPartialFile, dest, StandardCopyOption.ATOMIC_MOVE);
 		mPartial.clear();
-		mDeferred.notify(dest);
+		mDeferred.notify(dest);		
+	}
+	
+	@Override
+	public void commit(String pKey) throws IOException {
+		write();
+		tidyUp(pKey);
 	}
 
 	@Override

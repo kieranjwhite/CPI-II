@@ -1,0 +1,5 @@
+(function() {
+    glb().refreshList([
+	null
+    ]);
+}());

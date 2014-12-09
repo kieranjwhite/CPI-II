@@ -24,6 +24,7 @@ import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.web_search.MainDownloader;
 import com.hourglassapps.persist.FileJournal;
+import com.hourglassapps.persist.WrappedJournal;
 import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.PoemRecordXMLParser;
 import com.hourglassapps.util.ConcreteThrower;
@@ -37,23 +38,34 @@ import com.hourglassapps.util.URLUtils;
 public class MainReporter {
 	private final static String TAG=MainReporter.class.getName();
 	public final Path DOWNLOAD_PATH=Paths.get("downloaded_index");
-	private final static String RESULTS="results";
-	private final static String POEM_PANE_NAME="poems.html";
 	private final static String POEM_DIR_NAME="poems";
-	private final static Path DOCUMENT_DIR=Paths.get("documents");
-	private final static String CSS="poem.css";
+	private final static Path DOCUMENT_DIR=Paths.get("./documents");
+	private final static String RESULT_START="results_start";
+	private final static String RESULT_END="results_end";
+	private final Path mXML;
+	private final Path mDest;
 	
 	private final static class PathConverter implements Converter<Path,String> {
+		private final Path mParent;
 		private final ConcreteThrower<Exception> mThrower;
 		
-		public PathConverter(ConcreteThrower<Exception> pThrower) {
+		public PathConverter(ConcreteThrower<Exception> pThrower) throws IOException {
 			mThrower=pThrower;
+			Path parent=DOCUMENT_DIR.getParent();
+			if(parent==null) {
+				parent=Paths.get(".");
+			}
+			mParent=parent.toRealPath();
+		}
+
+		private Path relativize(Path pIn) {
+			return mParent.relativize(pIn);
 		}
 		
 		@Override
 		public String convert(Path pIn) {
 			try {
-				return pIn.toRealPath().toString();
+				return '"'+relativize(pIn.toRealPath()).toString()+"\",";
 			} catch(IOException e) {
 				mThrower.ctch(e);
 			}
@@ -61,10 +73,6 @@ public class MainReporter {
 		}
 		
 	};
-	
-	private final Path mXML;
-	private final Path mDocuments;
-	private final Path mDest;
 	
 	private final static Converter<String,String> LINE_TO_REL_URL=
 			new Converter<String,String>() {
@@ -83,18 +91,10 @@ public class MainReporter {
 		}
 		
 		mXML=pXml;
-		mDocuments=pDocuments;
 		mDest=pDest;
 	}
 	
-	private void copy() throws IOException {
-		try(InputStream in=MainReporter.class.getResourceAsStream(CSS)) {
-			Rtu.copyFile(in, mDest.resolve(CSS));
-		}
-	}
-	
 	public void create() throws Exception {
-		copy();
 		Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
 
 		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
@@ -112,7 +112,7 @@ public class MainReporter {
 							/*
 							 * Assumes convert is invoked in a fixed order. If that order changes
 							 * (eg if the the conductus xml export is modified) a new report will 
-							 * have to generated from scratch.
+							 * have to be generated from scratch.
 							 */
 							if(mLongNameToShorter.containsKey(pIn)) {
 								encoded=mLongNameToShorter.get(pIn);
@@ -121,13 +121,8 @@ public class MainReporter {
 								mLongNameToShorter.put(pIn, encoded);
 							}
 						}
-						try {
-							Path path=Paths.get(encoded);
-							return encoded;
-						} catch(InvalidPathException e) {
-							//Exception is thrown by Paths.get if filename is too long
-							assert false;
-						}
+						Paths.get(encoded); //This is intended to trigger an InvalidPathException if encoded is still too long
+						return encoded;
 					} catch (UnsupportedEncodingException e) {
 						thrower.ctch(e);
 					}
@@ -138,9 +133,10 @@ public class MainReporter {
 
 			try(
 					IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
-					FileJournal<Path> journal=new FileJournal<>(Paths.get(RESULTS), new PathConverter(thrower));
+					PoemsReport poems=new PoemsReport(mDest, queryToFilename);
+					WrappedJournal journal=new WrappedJournal(poems.resultsDir(), new PathConverter(thrower), 
+							MainReporter.class, RESULT_START, RESULT_END);
 					Queryer searcher=new Queryer(journal, index, analyser);
-					PoemsReport poems=new PoemsReport(mDest.resolve(POEM_PANE_NAME), analyser, queryToFilename);
 					PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));
 					IOIterator<PoemRecord> it=parser.throwableIterator();
 					) {
@@ -157,7 +153,6 @@ public class MainReporter {
 					}
 
 				});
-				//prom.then(doneCallback, failCallback, progressCallback);
 
 				while(it.hasNext()) {
 					if(thrower.fallThrough()) {
@@ -170,6 +165,7 @@ public class MainReporter {
 
 					poems.addTitle(rec);
 				}
+				poems.genContent();
 			}		
 		}
 	}
