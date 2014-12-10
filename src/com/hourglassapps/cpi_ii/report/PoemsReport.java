@@ -115,7 +115,7 @@ public class PoemsReport implements AutoCloseable {
 				if(stanza.size()>0) {
 					pOut.println("<p>");
 					for(String l: stanza) {
-						pOut.println("<br>"+linkAndNotify(id, l)+"</br>");
+						pOut.println(linkAndNotify(id, l)+"<br>");
 					}
 					pOut.println("</p>");
 				}
