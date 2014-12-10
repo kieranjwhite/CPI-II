@@ -8,6 +8,10 @@
     width: 50em;
 }
 
+iframe {
+    margin-top: 1.3em;
+}
+
 .heading {
     text-indent: 1em;
 }

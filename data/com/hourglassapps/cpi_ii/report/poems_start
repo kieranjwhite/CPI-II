@@ -34,11 +34,21 @@
       });
 
       $( ":mobile-pagecontainer" ).on( "pagecontainershow", function( event, ui ) {
+      var iframe=$(ui.toPage).children("iframe");
+      if(iframe.length==0) {
+      //add iframe
+      var if_str="<iframe src=\"\" name=\"results_"+ui.toPage.get(0).id.substring(1)+"\" frameborder=\"0\" seamless width=\"100%\"></iframe>";
+      ui.toPage.append(if_str);
+      }
       glb().ui_management.iframe=$(ui.toPage).children("iframe");
       glb().rtu.resizeEl(glb().ui_management.iframe);
       });
 
-      glb().ui_management.iframe=$("iframe");
+      var page=$("div[data-role='page']").first();
+      var if_str="<iframe src=\"\" name=\"results_"+page.get(0).id.substring(1)+"\" frameborder=\"0\" seamless width=\"100%\"></iframe>";
+      page.append(if_str);
+
+      glb().ui_management.iframe=$(page).children("iframe");
       glb().rtu.resizeEl(glb().ui_management.iframe);
 
       });

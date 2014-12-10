@@ -126,7 +126,7 @@ public class PoemsReport implements AutoCloseable {
 		pOut.println("</div>");
 		
 		//pOut.println("<div id=\"wrapper\" width=\"100%\" height=\"100%\"><iframe src=\"\" name=\"results\" frameborder=\"0\" seamless width=\"100%\" height=\"100%\"/></div>");
-		pOut.println("<iframe src=\"\" name=\"results_"+pPoemRecord.id()+"\" frameborder=\"0\" seamless width=\"100%\"></iframe>");
+		//pOut.println("<iframe src=\"\" name=\"results_"+pPoemRecord.id()+"\" frameborder=\"0\" seamless width=\"100%\"></iframe>");
 		//pOut.println("<iframe id=\"links\" name=\"links_frame\" frameborder=\"0\" src=\"\" width=\"100%\"></iframe>");
 		pOut.println("</div>");
 		
