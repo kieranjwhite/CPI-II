@@ -112,7 +112,7 @@ public class MainReporter {
 							/*
 							 * Assumes convert is invoked in a fixed order. If that order changes
 							 * (eg if the the conductus xml export is modified) a new report will 
-							 * have to be generated from scratch.
+							 * have to be generated from scratch (ie by deleting the directory poems/results).
 							 */
 							if(mLongNameToShorter.containsKey(pIn)) {
 								encoded=mLongNameToShorter.get(pIn);
@@ -121,7 +121,7 @@ public class MainReporter {
 								mLongNameToShorter.put(pIn, encoded);
 							}
 						}
-						Paths.get(encoded); //This is intended to trigger an InvalidPathException if encoded is still too long
+						Paths.get(encoded); //This will trigger an InvalidPathException if encoded is still too long -- if that happens reduce MAX_LEN
 						return encoded;
 					} catch (UnsupportedEncodingException e) {
 						thrower.ctch(e);

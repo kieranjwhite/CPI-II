@@ -11,7 +11,7 @@ import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Rtu;
 
 /***
- * Intended for the purpose of partitioning work between multiple threads a <code>ConverterReceiver<I></code> instance
+ * Intended for the purpose of partitioning work between multiple threads. A <code>ConverterReceiver<I></code> instance
  * can generate a number of <code>Filter<I></code> instances based on a template. Each filter determines whether
  * its respective thread should accept a particular job.  
  * @author kieran

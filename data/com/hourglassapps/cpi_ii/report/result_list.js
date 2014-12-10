@@ -27,7 +27,7 @@
 		break;
 	    }
 	    var link=g.results.document_root+results[i];
-	    list+="<li><a href=\""+link+"\" rel=\"external\">"+link+"<li>";
+	    list+="<li><a href=\""+link+"\" rel=\"external\">"+link+"</a><li>";
 	}
 	list+="</ul>\n";
 	var page=$('#'+glb().results.page);
