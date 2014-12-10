@@ -108,6 +108,16 @@ var hourglassapps_rtu=function() {
 	fileref.setAttribute("src", filename);
 	document.getElementsByTagName("head")[0].appendChild(fileref);
     };
+
+    r.resize=function(ref) {
+        var title_list=$(ref);
+	var top=title_list.offset().top;
+	var bottom=$(window).height();
+	var new_height=(bottom-top)-10;
+	if(new_height>=0) {
+	    title_list.height(new_height);
+	}
+    };
     
     return glb;
 };

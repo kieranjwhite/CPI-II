@@ -16,21 +16,11 @@
       $( "[data-role='header'], [data-role='footer']" ).toolbar();
 
       glb().ui_management={
-      panel_open: false,
-
-      resize:function() {
-      var title_list=$("#title_list");
-      var top=title_list.offset().top;
-      var bottom=$(window).height();
-      var new_height=(bottom-top)-10;
-      if(new_height>=0) {
-      title_list.height(new_height);
-      }
-      }
-      }
+      panel_open: false
+      };
       
       $(document).bind("panelopen", function(e,data) {
-      glb().ui_management.resize();
+      glb().rtu.resize("#title_list");
       glb().ui_management.panel_open=true;
       });
 
@@ -39,7 +29,7 @@
       });
 
       $(window).resize(function() {
-      glb().ui_management.resize();      
+      glb().rtu.resize("#title_list");      
       });
       });
     </script>

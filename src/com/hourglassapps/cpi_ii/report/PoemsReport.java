@@ -69,36 +69,36 @@ public class PoemsReport implements AutoCloseable {
 		mPoems.add(pRec);
 	}
 	
-	private String linkAndNotify(String pLine) throws IOException {
+	private String linkAndNotify(long pId, String pLine) throws IOException {
 		//tokenise(pLine, pTokens);
 		String cleaned=CLEANER.convert(pLine);
 		String key=mQueryToFilename.convert(cleaned);
 		if(key!=null) {
 			String link=key+".js";
 			mDeferred.notify(new Ii<String,String>(cleaned,key));
-			return href(pLine,link);
+			return href(pId, pLine,link);
 		}
 		return pLine;
 
 	}
 	
-	private String href(String pLine, String pLink) {
-		return "<a href=\"result_list.html#"+pLink+"\" target=\"results\">"+pLine+"</a>";
+	private String href(long pId, String pLine, String pLink) {
+		return "<a href=\"result_list.html#"+pLink+"\" target=\"results_"+pId+"\">"+pLine+"</a>";
 	}
 	
 	private void addContent(PrintWriter pOut, PoemRecord pPoemRecord) throws IOException {
 		pOut.println("<div data-role=\"page\" id=\"e"+pPoemRecord.id()+"\" data-theme=\"a\">");
 		pOut.println("<div class=\"poem\">");
+		long id=pPoemRecord.id();
 		if(pPoemRecord.getTitle()!=null) {
-			String title=pPoemRecord.getTitle();
-			pOut.println(TITLE_TAGS.fst()+linkAndNotify(pPoemRecord.getTitle())+TITLE_TAGS.snd());
+			pOut.println(TITLE_TAGS.fst()+linkAndNotify(id, pPoemRecord.getTitle())+TITLE_TAGS.snd());
 		}
 		List<String> ref=pPoemRecord.refrain();
 		if(ref.size()>0) {
 			pOut.println(STANZA_TAGS.fst()+"Ref."+STANZA_TAGS.snd());
 			pOut.println("<p>");
 			for(String l: ref) {
-				pOut.println("<br>"+linkAndNotify(l)+"</br>");
+				pOut.println("<br>"+linkAndNotify(id, l)+"</br>");
 			}
 			pOut.println("</p>");
 		}
@@ -111,7 +111,7 @@ public class PoemsReport implements AutoCloseable {
 				if(stanza.size()>0) {
 					pOut.println("<p>");
 					for(String l: stanza) {
-						pOut.println("<br>"+linkAndNotify(l)+"</br>");
+						pOut.println("<br>"+linkAndNotify(id, l)+"</br>");
 					}
 					pOut.println("</p>");
 				}
@@ -122,7 +122,7 @@ public class PoemsReport implements AutoCloseable {
 		pOut.println("</div>");
 		
 		//pOut.println("<div id=\"wrapper\" width=\"100%\" height=\"100%\"><iframe src=\"\" name=\"results\" frameborder=\"0\" seamless width=\"100%\" height=\"100%\"/></div>");
-		//pOut.println("<iframe src=\"\" name=\"results\" frameborder=\"0\" seamless width=\"100%\"/>");
+		pOut.println("<iframe src=\"\" name=\"results_"+pPoemRecord.id()+"\" frameborder=\"0\" seamless width=\"100%\"/>");
 		//pOut.println("<iframe id=\"links\" name=\"links_frame\" frameborder=\"0\" src=\"\" width=\"100%\"></iframe>");
 		pOut.println("</div>");
 		
