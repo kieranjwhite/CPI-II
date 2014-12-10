@@ -19,6 +19,7 @@
       $(document).bind("panelopen", function(e,data) {
       glb().rtu.resize("#title_list");
       glb().ui_management.panel_open=true;
+      $("#titles-filterable").get(0).focus();
       });
 
       $(document).bind("panelclose", function(e,data) {

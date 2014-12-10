@@ -102,7 +102,7 @@ public class PoemsReport implements AutoCloseable {
 			pOut.println(STANZA_TAGS.fst()+"Ref."+STANZA_TAGS.snd());
 			pOut.println("<p>");
 			for(String l: ref) {
-				pOut.println("<br>"+linkAndNotify(id, l)+"</br>");
+				pOut.println(linkAndNotify(id, l)+"<br>");
 			}
 			pOut.println("</p>");
 		}
