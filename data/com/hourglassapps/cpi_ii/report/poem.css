@@ -1,11 +1,11 @@
 .poem {
-    -webkit-columns: 14em; /* Chrome, Safari, Opera */
-    -moz-columns: 14em; /* Firefox */
-    columns: 14em;
+    -webkit-columns: 12em; /* Chrome, Safari, Opera */
+    -moz-columns: 12em; /* Firefox */
+    columns: 12em;
     margin-top: 1em;
     margin-left: auto;
     margin-right: auto;
-    width: 50em;
+    width: 53em;
 }
 
 iframe {
