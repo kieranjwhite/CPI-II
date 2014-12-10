@@ -7,18 +7,15 @@
     <link rel="stylesheet" href="poem.css" />
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script src="rtu_domless.js"></script>
     <script src="rtu.js"></script>
+    <script src="poems.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script id="panel-init">
       $(function() {
       $( "body>[data-role='panel']" ).panel().enhanceWithin();
       $( "[data-role='header'], [data-role='footer']" ).toolbar();
 
-      glb().ui_management={
-      panel_open: false
-      };
-      
       $(document).bind("panelopen", function(e,data) {
       glb().rtu.resize("#title_list");
       glb().ui_management.panel_open=true;
@@ -29,8 +26,21 @@
       });
 
       $(window).resize(function() {
-      glb().rtu.resize("#title_list");      
+      glb().rtu.resize("#title_list");
+      var iframe=glb().ui_management.iframe;
+      if(iframe!==null) {
+      glb().rtu.resizeEl(iframe);
+      }
       });
+
+      $( ":mobile-pagecontainer" ).on( "pagecontainershow", function( event, ui ) {
+      glb().ui_management.iframe=$(ui.toPage).children("iframe");
+      glb().rtu.resizeEl(glb().ui_management.iframe);
+      });
+
+      glb().ui_management.iframe=$("iframe");
+      glb().rtu.resizeEl(glb().ui_management.iframe);
+
       });
     </script>
   </head>

@@ -110,12 +110,15 @@ var hourglassapps_rtu=function() {
     };
 
     r.resize=function(ref) {
-        var title_list=$(ref);
-	var top=title_list.offset().top;
+        r.resizeEl($(ref));
+    };
+
+    r.resizeEl=function(el) {
+	var top=el.offset().top;
 	var bottom=$(window).height();
-	var new_height=(bottom-top)-10;
+	var new_height=(bottom-top);
 	if(new_height>=0) {
-	    title_list.height(new_height);
+	    el.height(new_height);
 	}
     };
     

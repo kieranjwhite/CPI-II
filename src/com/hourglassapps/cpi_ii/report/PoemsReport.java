@@ -26,6 +26,7 @@ public class PoemsReport implements AutoCloseable {
 	private final static String CSS="poem.css";
 	private final static String FORWARD_HTML="fwd.html";
 	private final static String RESULTS_HTML="result_list.html";
+	private final static String POEMS_JS="poems.js";
 	private final static String RESULTS_JS="result_list.js";
 	private final static String RTU_JS="rtu.js";
 	private final static String RTU_DOMLESS_JS="rtu_domless.js";
@@ -46,6 +47,7 @@ public class PoemsReport implements AutoCloseable {
 	
 	public PoemsReport(Path pDest, Converter<String,String> pQueryToFilename) throws IOException {
 		copy(CSS, pDest);
+		copy(POEMS_JS, pDest);
 		copy(FORWARD_HTML, pDest);
 		copy(RESULTS_HTML, pDest);
 		copy(RESULTS_JS, pDest);
@@ -124,7 +126,7 @@ public class PoemsReport implements AutoCloseable {
 		pOut.println("</div>");
 		
 		//pOut.println("<div id=\"wrapper\" width=\"100%\" height=\"100%\"><iframe src=\"\" name=\"results\" frameborder=\"0\" seamless width=\"100%\" height=\"100%\"/></div>");
-		pOut.println("<iframe src=\"\" name=\"results_"+pPoemRecord.id()+"\" frameborder=\"0\" seamless width=\"100%\"/>");
+		pOut.println("<iframe src=\"\" name=\"results_"+pPoemRecord.id()+"\" frameborder=\"0\" seamless width=\"100%\"></iframe>");
 		//pOut.println("<iframe id=\"links\" name=\"links_frame\" frameborder=\"0\" src=\"\" width=\"100%\"></iframe>");
 		pOut.println("</div>");
 		
