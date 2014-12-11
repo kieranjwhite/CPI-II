@@ -14,13 +14,15 @@
     <!--script src="result_list.js"></script-->
     <script>
       $(function() {
-      glb().setPage("results");
+      var g=glb();
+      g.setPage("results");
+      $("div[data-role='page']").first().attr("id",g.page());
       glb().rtu.loadJSFile(glb().results.root+window.location.hash.substring(1));
       });
     </script>
   </head>
   <body>
-    <div data-role="page" id="results" data-theme="a">
+    <div data-role="page" data-theme="a">
     </div><!-- /page -->
     
   </body>
