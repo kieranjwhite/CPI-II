@@ -13,7 +13,7 @@
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script id="panel-init">
       $(function() {
-      $( "body>[data-role='panel']" ).panel().enhanceWithin();
+      $( "body>[data-role='panel']").panel().enhanceWithin();
       $( "[data-role='header'], [data-role='footer']" ).toolbar();
 
       $(document).bind("panelopen", function(e,data) {

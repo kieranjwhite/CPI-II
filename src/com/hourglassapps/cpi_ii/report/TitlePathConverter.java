@@ -1,5 +1,6 @@
 package com.hourglassapps.cpi_ii.report;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.nio.file.Path;
@@ -34,6 +35,13 @@ public final class TitlePathConverter implements Converter<Ii<String,Path>,Strin
 		return mParent.relativize(pIn);
 	}
 	
+	private String toRelURL(Path pPath) {
+		String s=pPath.toString();
+		return s.replaceAll(File.separator, "/"); /* Since this is a relative path, we have control over all its constituent chars 
+												   * so we know there are no other troublesome chars to worry about.
+												   */
+	}
+	
 	@Override
 	public String convert(Ii<String,Path> pTitlePath) {
 		String title=pTitlePath.fst();
@@ -47,7 +55,7 @@ public final class TitlePathConverter implements Converter<Ii<String,Path>,Strin
 		}
 		try {
 			return "{t:\""+jsonified+"\","
-					+ "p:\""+relativize(pTitlePath.snd().toRealPath()).toString()+"\"},";
+					+ "p:\""+toRelURL(relativize(pTitlePath.snd().toRealPath()))+"\"},";
 		} catch(IOException e) {
 			mThrower.ctch(e);
 		}

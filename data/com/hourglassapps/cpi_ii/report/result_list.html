@@ -15,14 +15,22 @@
     <script>
       $(function() {
       var g=glb();
-      g.setPage("results");
-      $("div[data-role='page']").first().attr("id",g.page());
-      glb().rtu.loadJSFile(glb().results.root+window.location.hash.substring(1));
+      var query=window.location.hash.substring(1);
+      g.results.setQuery(query);
+      g.results.setPage("results");
+      $("div[data-role='page']").first().attr("id",g.results.page);
+      glb().rtu.loadJSFile(glb().results.root+query);
       });
     </script>
   </head>
   <body>
     <div data-role="page" data-theme="a">
+      <div data-role="header" data-theme="b" class="ui-bar">
+	<h3>Blank</h3>
+      </div>
+      <h3></h3>
+      <iframe id="sources" src="" name="sources" class="file"></iframe>
+      <ul id="list" data-role="listview"></ul>
     </div><!-- /page -->
     
   </body>

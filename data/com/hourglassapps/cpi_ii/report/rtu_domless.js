@@ -169,7 +169,19 @@ function() {
     };
 
     r.basename=function(i) {
-	return i.split(/([^\/]+)$/)[1];
+	var names=i.match(/^(.*\/)?([^\/]+).?$/);
+	if(names!==null) {
+	    return names[2];
+	}
+	return "/";
+    };
+
+    r.dirname=function(i) {
+	var names=i.match(/^(?:(.*)\/)?[^\/]+.?$/);
+	if(names!==null) {
+	    return names[1];
+	}
+	return ".";
     };
 
     return glb;

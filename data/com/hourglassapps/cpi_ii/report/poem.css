@@ -51,3 +51,7 @@ a {
 .ui-controlgroup-controls {
     overflow:auto;
 }
+
+iframe.file {
+    display: none;
+}

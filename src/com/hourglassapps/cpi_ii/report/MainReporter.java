@@ -45,14 +45,6 @@ public class MainReporter {
 	private final Path mXML;
 	private final Path mDest;
 	
-	private final static Converter<String,String> LINE_TO_REL_URL=
-			new Converter<String,String>() {
-		@Override
-		public String convert(String pIn) {
-			return null;
-		}
-	};
-
 	public MainReporter(Path pXml, Path pDocuments, Path pDest) throws IOException {
 		if(!Files.exists(pDest)) {
 			Files.createDirectory(pDest);
