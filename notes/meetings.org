@@ -487,5 +487,18 @@
 **** = ~184.7 + 36.87hrs
 **** = 201.41 hrs or 8.39 days assuming other factors don't change
 ***** If indexer falls behind downloader to the point where it no longer benefits from file-cache things could slow down dramatically
-
+*** TODO Possible issue with repeated URLs in report
+**** For each downloading thread we can has a duplicate of any given URL downloaded by one of the other threads
+***** ie DoneStore doesn't work across QueryThreads
+**** When there's a crash DoneStore gets wiped
+***** therefore doubling the possible duplicates over those incurred as a result of multiple QueryThreads (above)
+**** These duplicates can be problem
+***** We limited the number of results to any query to 100 in order to limit the size of the report on disk
+****** While duplicates aren't listed for the user in the report they do take up slots out of that 100 results
+****** If a given URL is returned in response to a query
+******* All (if any) of its duplicates will be returned in sequence as well
+**** Possible solution
+***** At report generation time increase number of results returnable
+****** but only save a URL if its document has a different title or size to the previous document
+****** and only save up to 100 for each query
 

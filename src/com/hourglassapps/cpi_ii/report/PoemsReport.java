@@ -78,9 +78,8 @@ public class PoemsReport implements AutoCloseable {
 		String cleaned=CLEANER.convert(pLine);
 		String key=mQueryToFilename.convert(cleaned);
 		if(key!=null) {
-			String link=key+".js";
 			mDeferred.notify(new Ii<String,String>(cleaned,key));
-			return href(pId, pLine,link);
+			return href(pId, pLine,key);
 		}
 		return pLine;
 
