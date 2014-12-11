@@ -14,7 +14,7 @@
 
 	setQuery:function(query) {
 	    g.results.query=query;
-	    $("div[data-role='header']>h3").html(query);
+	    $("div[data-role='header']>h1").html(query);
 	}
 
     };
