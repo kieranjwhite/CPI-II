@@ -39,14 +39,14 @@ import com.hourglassapps.util.URLUtils;
 public class Queryer implements AutoCloseable {
 	private final static String TAG=Queryer.class.getName();
 	private final static int MAX_RESULTS=100;
-	private final Journal<String,Path> mJournal;
+	private final Journal<String,Ii<String,Path>> mJournal;
 	private final Analyzer mAnalyser;
 	private final Deferred<Void,Exception,Ii<String,String>> mDeferred=new DeferredObject<>();
     private final QueryParser mParser;
     private final IndexReader mReader;
 	private final IndexSearcher mSearcher;
 	
-	public Queryer(Journal<String,Path> pJournal, IndexViewer pIndex, Analyzer pAnalyser) throws IOException {
+	public Queryer(Journal<String,Ii<String,Path>> pJournal, IndexViewer pIndex, Analyzer pAnalyser) throws IOException {
 		mJournal=pJournal;
 		mAnalyser=pAnalyser;
 		mParser=new QueryParser(Version.LUCENE_4_10_0, LuceneVisitor.CONTENT.s(), pAnalyser);
@@ -78,9 +78,13 @@ public class Queryer implements AutoCloseable {
 					ScoreDoc[] results=pResults.scoreDocs;
 					for(int i=0; i<results.length; i++) {
 						Document doc = mSearcher.doc(results[i].doc);
-						Path path = Paths.get(doc.get(LuceneVisitor.PATH.s()));
+						Path path=Paths.get(doc.get(LuceneVisitor.PATH.s()));
+						String title=doc.get(LuceneVisitor.TITLE.s());
 						if (path != null) {
-							mJournal.addNew(path);
+							if(title==null) {
+								title="";
+							}
+							mJournal.addNew(new Ii<String,Path>(title,path));
 						} else {
 							assert(false);
 						}

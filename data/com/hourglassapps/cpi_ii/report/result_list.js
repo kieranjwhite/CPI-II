@@ -26,8 +26,12 @@
 	    if(results[i]===null) {
 		break;
 	    }
-	    var link=g.results.document_root+results[i];
-	    list+="<li><a href=\""+link+"\" rel=\"external\">"+link+"</a><li>";
+	    var data=g.results.document_root+results[i];
+	    if(data.t==="") {
+		list+="<li><a href=\""+data.p+"\" rel=\"external\">"+data.p+"</a></li>";
+	    } else {
+		list+="<li><a href=\""+data.p+"\" rel=\"external\">"+data.t+"</a></li>";
+	    }
 	}
 	list+="</ul>\n";
 	var page=$('#'+glb().results.page);

@@ -29,18 +29,20 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 
+import com.hourglassapps.cpi_ii.stem.snowball.lucene.MetaRead;
 import com.hourglassapps.util.Log;
 
 public class LuceneVisitor implements FileVisitor<Path> {
 	private final static String TAG=LuceneVisitor.class.getName();
 	
 	private final IndexWriter mWriter;
-	private final FileReaderFactory mPath2Reader;
+	private final MetaReadFactory mPath2Reader;
 	
 	public final static FieldVal PATH=DownloadedFields.PATH.fieldVal(); 
 	public final static FieldVal CONTENT=DownloadedFields.CONTENT.fieldVal(); 
+	public final static FieldVal TITLE=DownloadedFields.TITLE.fieldVal(); 
 	
-	public LuceneVisitor(Indexer pIndex, FileReaderFactory pPath2Reader) throws IOException {
+	public LuceneVisitor(Indexer pIndex, MetaReadFactory pPath2Reader) throws IOException {
 		mWriter=pIndex.writer();
 		mPath2Reader=pPath2Reader;
 	}
@@ -80,9 +82,9 @@ public class LuceneVisitor implements FileVisitor<Path> {
 		try {
 			//if(mPath2Reader.indexable(pPath) && !indexed(pPath)) {
 			if(mPath2Reader.indexable(pPath)) {
-				Reader inner=mPath2Reader.reader(pPath);
+				MetaRead inner=mPath2Reader.metaRead(pPath);
 				assert inner!=null;
-				try(Reader reader=new BufferedReader(inner)) {
+				try(Reader reader=new BufferedReader(inner.reader())) {
 
 					// make a new, empty document
 					Document doc = new Document();
@@ -100,6 +102,11 @@ public class LuceneVisitor implements FileVisitor<Path> {
 					// Note that FileReader expects the file to be in UTF-8 encoding.
 					// If that's not the case searching for special characters will fail.
 					doc.add(CONTENT.field(reader));
+					
+					String title=inner.title();
+					if(title!=null) {
+						doc.add(TITLE.field(title));
+					}
 
 					System.out.println("updating " + pathStr);
 					mWriter.updateDocument(PATH.term(pathStr), doc);

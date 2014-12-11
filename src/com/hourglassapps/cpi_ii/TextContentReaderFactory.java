@@ -18,14 +18,15 @@ import java.util.Map;
 import org.apache.tika.exception.TikaException;
 import org.xml.sax.SAXException;
 
-import com.hourglassapps.cpi_ii.lucene.FileReaderFactory;
+import com.hourglassapps.cpi_ii.lucene.MetaReadFactory;
 import com.hourglassapps.cpi_ii.lucene.TikaReader;
+import com.hourglassapps.cpi_ii.stem.snowball.lucene.MetaRead;
 import com.hourglassapps.cpi_ii.web_search.TypedLink;
 import com.hourglassapps.persist.AbstractFilesJournal;
 import com.hourglassapps.persist.DeferredFilesJournal;
 import com.hourglassapps.util.Log;
 
-public class TextContentReaderFactory implements FileReaderFactory {
+public class TextContentReaderFactory implements MetaReadFactory {
 	private final static String TAG=TextContentReaderFactory.class.getName();
 
 	private final static String TYPE_DELIMITER=Character.toString(DeferredFilesJournal.TYPE_COLUMN_DELIMITER);
@@ -120,7 +121,7 @@ public class TextContentReaderFactory implements FileReaderFactory {
 		return leaf(pFile)!=null;
 	}
 	
-	protected Reader readerAlways(Path pFile) throws IOException {
+	protected MetaRead readerAlways(Path pFile) throws IOException {
 		try(InputStream in=new FileInputStream(pFile.toFile())) {
 			if(mSpecifyTypes) {
 				return new TikaReader(in, type(pFile));
@@ -133,7 +134,7 @@ public class TextContentReaderFactory implements FileReaderFactory {
 	}
 	
 	@Override
-	public Reader reader(Path pFile) throws IOException {
+	public MetaRead metaRead(Path pFile) throws IOException {
 		if(!indexable(pFile)) {
 			return null;
 		}

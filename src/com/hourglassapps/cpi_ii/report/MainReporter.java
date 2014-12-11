@@ -39,40 +39,11 @@ public class MainReporter {
 	private final static String TAG=MainReporter.class.getName();
 	public final Path DOWNLOAD_PATH=Paths.get("downloaded_index");
 	private final static String POEM_DIR_NAME="poems";
-	private final static Path DOCUMENT_DIR=Paths.get("./documents");
+	final static Path DOCUMENT_DIR=Paths.get("./documents");
 	private final static String RESULT_START="results_start";
 	private final static String RESULT_END="results_end";
 	private final Path mXML;
 	private final Path mDest;
-	
-	private final static class PathConverter implements Converter<Path,String> {
-		private final Path mParent;
-		private final ConcreteThrower<Exception> mThrower;
-		
-		public PathConverter(ConcreteThrower<Exception> pThrower) throws IOException {
-			mThrower=pThrower;
-			Path parent=DOCUMENT_DIR.getParent();
-			if(parent==null) {
-				parent=Paths.get(".");
-			}
-			mParent=parent.toRealPath();
-		}
-
-		private Path relativize(Path pIn) {
-			return mParent.relativize(pIn);
-		}
-		
-		@Override
-		public String convert(Path pIn) {
-			try {
-				return '"'+relativize(pIn.toRealPath()).toString()+"\",";
-			} catch(IOException e) {
-				mThrower.ctch(e);
-			}
-			return null;
-		}
-		
-	};
 	
 	private final static Converter<String,String> LINE_TO_REL_URL=
 			new Converter<String,String>() {
@@ -134,7 +105,7 @@ public class MainReporter {
 			try(
 					IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
 					PoemsReport poems=new PoemsReport(mDest, queryToFilename);
-					WrappedJournal journal=new WrappedJournal(poems.resultsDir(), new PathConverter(thrower), 
+					WrappedJournal<Ii<String,Path>> journal=new WrappedJournal<>(poems.resultsDir(), new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
 					Queryer searcher=new Queryer(journal, index, analyser);
 					PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));

@@ -7,14 +7,14 @@ import java.nio.file.Path;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.FileWrapper;
 
-public class WrappedJournal extends FileJournal<Path> {
+public class WrappedJournal<A> extends FileJournal<A> {
 	private final Class<?> mTemplateClass;
 	private final String mStart;
 	private final String mEnd;
 	
 	private FileWrapper mWrapper;
 	
-	public WrappedJournal(Path pDir, final Converter<Path, String> pAddedToString, 
+	public WrappedJournal(Path pDir, final Converter<A, String> pAddedToString, 
 			Class<?> pTemplateClass, String pStart, String pEnd)
 			throws IOException {
 		super(pDir, pAddedToString);
