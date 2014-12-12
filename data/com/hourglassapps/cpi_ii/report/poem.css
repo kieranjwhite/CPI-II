@@ -55,3 +55,7 @@ a {
 iframe.file {
     display: none;
 }
+
+.ui-btn {
+    padding: 0.35em 0.5em;
+}
