@@ -505,3 +505,7 @@
 **** documents/1_journal/completed/amplexus+dalidam+persequere/13 and
 **** documents/1_journal/completed/isaias+canit+synagoga/26
 **** two almost identical files (different only in modification date) have a completely different file ranked between them
+*** TODO Cross-origin restrictions in browsers
+**** This relates to deployment when opening report in browser from locally stored files (ie no web server)
+***** In chrome launch with --allow-file-access-from-files switch
+***** In firefox go to about:config -> security.fileuri.strict_origin_policy and set to false

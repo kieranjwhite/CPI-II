@@ -6,7 +6,13 @@
     var query=null;
     var blacklist=[];
     var num_blacklisted=0;
-	
+
+    /*
+    $("#sources").load(function() {
+	g.rtu.log($("#sources").html());
+    });
+     */
+
     g.results={
 	page:null,
 	root:"results/completed/",
@@ -86,8 +92,12 @@
 	    return promise.then(function() {
 		var source=src(i,results[i].p);
 		var deferred=$.Deferred();
-		$("#sources").load(source.file, function() {
-		    var original_url=$(this).html().split('\n')[source.line-1];
+		$("#sources").load(document_root+source.file, function() {
+		    var sources=$("#sources").text();
+		    if(sources==="") {
+			g.rtu.report("Unable to load original source URLs. Your browser may be imposing cross-domain restrictions on iframe loading. Not all results will be listed");
+		    }
+		    var original_url=sources.split('\n')[source.line-1];
 		    if(urlToIdx.hasOwnProperty(original_url)) {
 			if(source.i<urlToIdx[original_url]) {
 			    urlToIdx[original_url]=source.i;
