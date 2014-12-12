@@ -2,23 +2,39 @@
 */
 (function() {
     var g=glb();
+    var document_root="../";
+    var query=null;
+    var blacklist=[];
+    var num_blacklisted=0;
+	
     g.results={
-	root:"results/completed/",
-	document_root:"",
 	page:null,
-	query:null,
+	root:"results/completed/",
 	
 	setPage:function(pageName) {
 	    g.results.page=pageName;
 	},
 
-	setQuery:function(query) {
-	    g.results.query=query;
+	setQuery:function(pQuery) {
+	    query=pQuery;
 	    $("div[data-role='header']>h1").html(query);
-	}
+	},
 
+	setBlacklist:function(pBlacklist) {
+	    blacklist=pBlacklist;
+	    num_blacklisted=blacklist.length;
+	}
     };
 
+    var blacklisted=function(url) {
+	for(var i=0; i<num_blacklisted; i++) {
+	    if(blacklist[i].test(url)) {
+		return true;
+	    }
+	}
+	return false;
+    };
+    
     var src=function(result_idx,path) {
 	var source={
 	    i:result_idx,
@@ -48,9 +64,9 @@
 	}
 	
 	if(data.t==="") {
-	    return "<li "+style+"><a class=\"ui-btn ui-btn-icon-right ui-icon-carat-r\" href=\""+g.results.document_root+data.p+"\" rel=\"external\">"+data.p+"</a></li>\n";
+	    return "<li "+style+"><a class=\"ui-btn ui-btn-icon-right ui-icon-carat-r\" href=\""+document_root+data.p+"\" rel=\"external\">"+data.p+"</a></li>\n";
 	} else {
-	    return "<li "+style+"><a class=\"ui-btn ui-btn-icon-right ui-icon-carat-r\" href=\""+g.results.document_root+data.p+"\" rel=\"external\">"+data.t+"</a></li>\n";
+	    return "<li "+style+"><a class=\"ui-btn ui-btn-icon-right ui-icon-carat-r\" href=\""+document_root+data.p+"\" rel=\"external\">"+data.t+"</a></li>\n";
 	}
     };
 
@@ -76,6 +92,8 @@
 			if(source.i<urlToIdx[original_url]) {
 			    urlToIdx[original_url]=source.i;
 			}
+		    } else if(blacklisted(original_url)) {
+			urlToIdx[original_url]=-1;
 		    } else {
 			urlToIdx[original_url]=source.i;
 		    }
@@ -84,7 +102,7 @@
 		    if(source.i===todo) {
 			var any_visible=false;
 			while(idxToPendingURL.hasOwnProperty(todo)) {
-			    var visible=urlToIdx[idxToPendingURL[todo]]===todo;
+			    var visible=(urlToIdx[idxToPendingURL[todo]]===todo);
 			    any_visible=any_visible || visible;
 			    changes+=listItem(results[todo], !visible);
 			    delete(idxToPendingURL[todo]);

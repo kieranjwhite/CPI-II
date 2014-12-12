@@ -11,10 +11,12 @@
     <script src="rtu_domless.js"></script>
     <script src="rtu.js"></script>
     <script src="result_list.js"></script>
+    <script src="blacklist.js"></script>
     <!--script src="result_list.js"></script-->
     <script>
       $(function() {
       var g=glb();
+      
       var query=window.location.hash.substring(1);
       g.results.setQuery(query);
       g.results.setPage("results");

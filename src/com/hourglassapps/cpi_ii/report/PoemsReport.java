@@ -26,6 +26,7 @@ public class PoemsReport implements AutoCloseable {
 	private final static String CSS="poem.css";
 	private final static String FORWARD_HTML="fwd.html";
 	private final static String RESULTS_HTML="result_list.html";
+	private final static String BLACKLIST_JS="blacklist.js";
 	private final static String POEMS_JS="poems.js";
 	private final static String RESULTS_JS="result_list.js";
 	private final static String RTU_JS="rtu.js";
@@ -51,6 +52,7 @@ public class PoemsReport implements AutoCloseable {
 		copy(FORWARD_HTML, pDest);
 		copy(RESULTS_HTML, pDest);
 		copy(RESULTS_JS, pDest);
+		copy(BLACKLIST_JS, pDest);
 		copy(RTU_JS, pDest);
 		copy(RTU_DOMLESS_JS, pDest);
 		

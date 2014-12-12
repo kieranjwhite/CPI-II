@@ -501,4 +501,7 @@
 ***** At report generation time increase number of results returnable
 ****** but only save a URL if its document has a different title or size to the previous document
 ****** and only save up to 100 for each query
-
+*** TODO Figure out why in poems/results/completed/Advenis.js 
+**** documents/1_journal/completed/amplexus+dalidam+persequere/13 and
+**** documents/1_journal/completed/isaias+canit+synagoga/26
+**** two almost identical files (different only in modification date) have a completely different file ranked between them
