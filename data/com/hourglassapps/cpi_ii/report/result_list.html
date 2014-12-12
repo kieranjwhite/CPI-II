@@ -4,10 +4,12 @@
     <title>Results</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" href="poem.css" />
+    <link rel="stylesheet" href="poem.css">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="when.js"></script>
+    <script src="jx_V3.01.A.js"></script>
     <script src="rtu_domless.js"></script>
     <script src="rtu.js"></script>
     <script src="result_list.js"></script>
@@ -25,12 +27,13 @@
     </script>
   </head>
   <body>
-    <div data-role="page" data-theme="a">
+    <div data-role="page" data-theme="a" id="pageone">
       <div data-role="header" data-theme="b">
-	<h1>Blank</h1>
+	<h2>Blank</h2>
       </div>
-      <iframe id="sources" src="" name="sources" class="file"></iframe>
-      <ul id="list" data-role="listview"></ul>
+
+      <ul id="list" data-role="listview" data-split-icon="arrow-d" data-split-theme="d" data-inset="true">
+      </ul>
     </div><!-- /page -->
     
   </body>

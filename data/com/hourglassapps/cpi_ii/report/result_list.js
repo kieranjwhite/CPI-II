@@ -1,4 +1,4 @@
-/*global $,glb
+/*global $,glb,jx
 */
 (function() {
     var g=glb();
@@ -6,12 +6,6 @@
     var query=null;
     var blacklist=[];
     var num_blacklisted=0;
-
-    /*
-    $("#sources").load(function() {
-	g.rtu.log($("#sources").html());
-    });
-     */
 
     g.results={
 	page:null,
@@ -23,7 +17,7 @@
 
 	setQuery:function(pQuery) {
 	    query=pQuery;
-	    $("div[data-role='header']>h1").html(query);
+	    $("div[data-role='header']>h2").html(query);
 	},
 
 	setBlacklist:function(pBlacklist) {
@@ -61,19 +55,31 @@
 	return source;
     };
     
-    var listItem=function(data,hidden) {
+    var listItem=function(data, original_url, hidden) {
 	var style;
 	if(hidden) {
 	    style="style=\"display:none;\"";
 	} else {
 	    style="";
 	}
-	
+	var title;
 	if(data.t==="") {
-	    return "<li "+style+"><a class=\"ui-btn ui-btn-icon-right ui-icon-carat-r\" href=\""+document_root+data.p+"\" rel=\"external\">"+data.p+"</a></li>\n";
+	    title=data.p;
 	} else {
-	    return "<li "+style+"><a class=\"ui-btn ui-btn-icon-right ui-icon-carat-r\" href=\""+document_root+data.p+"\" rel=\"external\">"+data.t+"</a></li>\n";
+	    title=data.t;
 	}
+	/*
+	return "<li "+style+">"+
+	    "<div data-role=\"controlgroup\" data-type=\"horizontal\" data-mini=\"true\" style>"+
+	    "<a class=\"ui-btn ui-btn-icon-right ui-icon-action\" data-role=\"button\" href=\""+original_url+"\" rel=\"external\">"+title+"</a>"+
+	    "<a class=\"ui-btn ui-btn-icon-right ui-icon-arrow-d\" data-role=\"button\" href=\""+document_root+data.p+"\" rel=\"external\">Local copy</a>"+
+	    "</div>"+
+	    "</li>\n";
+	 */
+	return "<li "+style+">"+
+	    "<a href=\""+original_url+"\" data-rel=\"external\" target=\"_blank\"><h3>"+g.rtu.escapeHtml(title)+"</h3><p>"+g.rtu.escapeHtml(original_url)+"</p></a>"+
+	    "<a href=\""+document_root+data.p+"\" data-rel=\"external\" target=\"_blank\">Local copy</a>"+
+	    "</li>\n";
     };
 
     g.list=function(results) {
@@ -92,8 +98,10 @@
 	    return promise.then(function() {
 		var source=src(i,results[i].p);
 		var deferred=$.Deferred();
-		$("#sources").load(document_root+source.file, function() {
-		    var sources=$("#sources").text();
+		//$("#sources").load(document_root+source.file, function() {
+		jx.load(document_root+source.file, 'text/plain') .then(function(response) {
+		    //var sources=$("#sources").text();
+		    var sources=response.result;
 		    if(sources==="") {
 			g.rtu.report("Unable to load original source URLs. Your browser may be imposing cross-domain restrictions on iframe loading. Not all results will be listed");
 		    }
@@ -114,7 +122,7 @@
 			while(idxToPendingURL.hasOwnProperty(todo)) {
 			    var visible=(urlToIdx[idxToPendingURL[todo]]===todo);
 			    any_visible=any_visible || visible;
-			    changes+=listItem(results[todo], !visible);
+			    changes+=listItem(results[todo], original_url, !visible);
 			    delete(idxToPendingURL[todo]);
 			    todo++;
 			}
@@ -123,10 +131,12 @@
 			list.append(changes);
 		    }
 		    if(any_visible) {
-			list.trigger("create");
+			list.listview("refresh");
 		    }
 		    deferred.resolve();
-		});
+		}), function(pErr) {
+		    g.rtu.report("Failed to load source: "+pErr.msg+" ("+pErr.status+")");
+		};
 		return deferred.promise();
 	    });
 	};

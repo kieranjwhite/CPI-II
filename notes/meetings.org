@@ -1,16 +1,11 @@
 * General
 ** Libraries
-*** Apache Xalan
-**** TODO These are no longer used. Remove from this file
-**** See LICENSE.txt in the binary download at
-***** http://www.whoishostingthis.com/mirrors/apache/xalan/xalan-j/binaries/xalan-j_2_7_2-bin.zip
-**** Apache 2
-***** xalan.jar
-***** xercesImpl.jar
-***** xml-apis.jar
-**** Public domain
-***** xml-apis.jar
-****** yes this jar is part public domain and part Apache 2.
+*** moustache
+**** To escape html strings in javascript
+**** https://github.com/janl/mustache.js/blob/master/mustache.js
+***** entityMap and escapeHtml definitions were copied to rtu_domless.js
+**** https://github.com/janl/mustache.js/blob/master/LICENSE
+***** MIT
 *** Apache Tika
 **** Extracts text from files with different mime types
 **** Apache 2
