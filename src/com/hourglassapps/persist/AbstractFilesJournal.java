@@ -1,12 +1,10 @@
 package com.hourglassapps.persist;
 
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SelectableChannel;
@@ -14,9 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import com.hourglassapps.util.Converter;
@@ -34,11 +31,11 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 	private final Path mCompletedDir;
 	private final Converter<K,String> mFilenameGenerator;
 	private final int mFirstFilename;
-	private final List<C> mTrail;
 	private int mFilename;
 	private final PreDeleteAction mPreDelete;
 	protected final Path mPartialDir;
 	protected final S mContentGenerator;	
+	protected final Trail<C> mTrail;
 	
 	protected interface PreDeleteAction {
 		public void run() throws IOException;
@@ -67,7 +64,7 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 		mkdir(mCompletedDir);
 		mFilenameGenerator=pFilenameGenerator;
 		mContentGenerator=pContentGenerator;
-		mTrail=new ArrayList<C>();
+		mTrail=new Trail<C>(mPartialDir);
 		mPreDelete=pPreDelete;
 		mPreDelete.run();
 		setupPartial(mPartialDir);
@@ -82,11 +79,7 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 	protected static Path partialDir(Path pParent) {
 		return pParent.resolve(PARTIAL_DIR_NAME);
 	}
-	
-	protected void trailAdd(C pSource) {
-		mTrail.add(pSource);
-	}
-	
+		
 	private static void setupPartial(Path pPartialDir) throws IOException {
 		if(Files.exists(pPartialDir)) {
 			deleteFlatDir(pPartialDir);
@@ -118,7 +111,7 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 	}
 	
 	@Override
-	public boolean addedAlready(K pKey) {
+	public boolean addedAlready(K pKey) throws IOException {
 		return Files.exists(destDir(pKey));
 	}
 
@@ -137,16 +130,6 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 	@Override
 	public abstract void addNew(Typed<C> pContent) throws IOException;
 
-	protected void saveTrail(Path pDest) throws IOException {
-		try(PrintWriter out=
-				new PrintWriter(new BufferedWriter(
-						new FileWriter(mPartialDir.resolve(META_PREFIX+pDest.getFileName().toString()).toString())))) {
-			for(C source: mTrail) {
-				out.println(source);
-			}
-		}
-	}
-
 	protected void tryTidy(Path pDest) throws IOException {
 		if(Files.exists(mPartialDir)) {
 			/*
@@ -159,7 +142,7 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 	}
 	
 	protected void tidyUp(Path pDest) throws IOException {
-		saveTrail(pDest);
+		mTrail.save(pDest);
 		assert !Files.exists(pDest);
 		Files.move(mPartialDir, pDest, StandardCopyOption.ATOMIC_MOVE);
 	}

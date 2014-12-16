@@ -1,6 +1,7 @@
 package com.hourglassapps.persist;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,9 +9,13 @@ import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexCommit;
+import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
@@ -32,10 +37,14 @@ import com.hourglassapps.util.Ii;
 public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path> {
 	private final static String TAG=DoneStore.class.getName();
 	private final Path mDir;
+	
 	private Indexer mIndex=null;
+	
+	//Maps the URL of a document to its path in partial dir
 	private Map<String,String> mPending=new HashMap<>(); 
 	
 	private enum DoneFields {
+		//SRC is the URL of a document, DST is the path of the document in final directory (ie not the journal's partial directory)
 		SRC(new FieldVal("src", false)), DST(new FieldVal("dst", false));
 		
 		private final FieldVal mField;
@@ -57,6 +66,7 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 	public DoneStore(Path pDir) throws IOException {
 		mDir=pDir;
 		index(mDir).close();
+		mIndex=index(mDir);
 	}
 
 	private static Indexer index(Path pDir) throws IOException {
@@ -74,7 +84,8 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 			public void run(IndexReader pReader, TopDocs pResults)
 					throws IOException {
 				if(pReader.numDocs()>0) {
-					String original=pReader.document(pResults.scoreDocs[0].doc, Collections.singleton(DoneFields.DST.fieldVal().s())).get(DoneFields.DST.fieldVal().s());
+					String original=pReader.document(pResults.scoreDocs[0].doc, 
+							Collections.singleton(DoneFields.DST.fieldVal().s())).get(DoneFields.DST.fieldVal().s());
 					link(Paths.get(pKey.snd()), Paths.get(original));
 					mFound=Boolean.TRUE;
 				}
@@ -86,13 +97,23 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 			}
 
 		};
-		mIndex.interrogate(DoneFields.SRC.fieldVal(), pKey.fst(), 1, resGen);
+		try {
+			List<IndexCommit> commits=DirectoryReader.listCommits(mIndex.writer().getDirectory());
+			assert(commits.size()==1);
+			try(IndexReader reader=DirectoryReader.open(commits.get(0))) {
+				mIndex.interrogate(reader, DoneFields.SRC.fieldVal(), pKey.fst(), 1, resGen);
+			}
+		} catch(IndexNotFoundException e) {
+			//no commits yet
+			return false;
+		}
 		
 		return resGen.result();
 	}
 	
 	/**
-	 * Checks whether a link has already been downloaded and if so creates a symbolic link to the 
+	 * Checks whether a link has already been downloaded and if so creates a symbolic link to the original.
+	 * This method must be idempotent if a DoneStore is to be used in conjunction with a DeferredFilesJournal. 
 	 */
 	@Override
 	public boolean addedAlready(Ii<String,String> pSrcDst) throws IOException {
@@ -104,9 +125,16 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 	}
 
 	private void link(Path pLink, Path pOrig) throws IOException {
-		Files.createSymbolicLink(pLink, pLink.relativize(pOrig));
+		try {
+			Files.createSymbolicLink(pLink, pLink.relativize(pOrig));
+		} catch(FileAlreadyExistsException e) {
+			//necessary to catch this since this function needs to be idempotent
+		}
 	}
 
+	/**
+	 * Idempotent method
+	 */
 	@Override
 	public void addNew(Ii<String,String> pSrcDst) {
 		if(pSrcDst==null) {
@@ -116,9 +144,7 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 	}
 
 	private void newTrans() throws IOException {
-		assert(mIndex!=null);
-		mIndex.close();
-		mIndex=null;
+		mIndex.writer().commit();
 		mPending.clear();		
 	}
 	
@@ -127,9 +153,7 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 		if(mPending.size()==0) {
 			return;
 		}
-		if(mIndex==null) {
-			mIndex=index(mDir);
-		}
+
 		for(String src: mPending.keySet()) {
 			Path dst=pDestDir.resolve(Paths.get(mPending.get(src)).getFileName());
 			mIndex.add(DoneFields.SRC.fieldVal().field(src), DoneFields.DST.fieldVal().field(dst.toString()));
@@ -139,14 +163,13 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 
 	@Override
 	public void reset() throws IOException {
-		if(mIndex==null) {
-			mIndex=index(mDir);
-		}
 		mIndex.wipe();
 		newTrans();
 	}
 
 	@Override
-	public void close() {
+	public void close() throws IOException {
+		mIndex.writer().rollback();
+		mIndex.close();
 	}
 }

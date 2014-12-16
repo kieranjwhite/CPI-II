@@ -72,7 +72,7 @@ public class IndexViewer implements AutoCloseable {
 		}
 	}
 
-	void interrogate(IndexReader pReader, FieldVal pSearchField, String pSought, int pNumResults, ResultRelayer pRelayer) throws IOException {
+	public void interrogate(IndexReader pReader, FieldVal pSearchField, String pSought, int pNumResults, ResultRelayer pRelayer) throws IOException {
 		IndexSearcher searcher = new IndexSearcher(pReader);
 		interrogate(pReader, searcher, pSearchField, pSought, pNumResults, pRelayer);
 	}

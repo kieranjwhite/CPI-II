@@ -4,11 +4,13 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.jdeferred.Deferred;
@@ -26,6 +28,7 @@ import com.hourglassapps.persist.DoneStore;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Downloader;
+import com.hourglassapps.util.IdentityConverter;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
@@ -44,11 +47,13 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	private final DeferredManager mDeferredMgr=new DefaultDeferredManager();
 	@SuppressWarnings("rawtypes")
 	private final Promise[] mPendingArr=new Promise[]{};
-
+	private boolean mFirstCommit=false;
 	private PrintWriter mTypesWriter=null;
-	private final Path mPartialDoneDir;
-	private final Path mBetweenDoneDir;
+	//private final Path mPartialDoneDir;
+	//private final Path mBetweenDoneDir;
+	private final Path mDoneDir;
 	private final DoneStore mDone;
+	private K mLastAdded=null;
 	
 	public DeferredFilesJournal(final Path pDirectory,
 			Converter<K, String> pFilenameGenerator,
@@ -65,22 +70,70 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 			}
 			
 		});
-		mPartialDoneDir=mPartialDir.resolve(DONE_INDEX);
-		mBetweenDoneDir=pDirectory.resolve(DONE_INDEX);
-		mDone=new DoneStore(mPartialDoneDir);
+		mDoneDir=pDirectory.resolve(DONE_INDEX);
+		mDone=new DoneStore(mDoneDir);
 		mPromised=new ArrayList<>();
 	}
 
 	@Override
+	public boolean addedAlready(K pKey) throws IOException {
+		boolean added=super.addedAlready(pKey);
+		if(added) {
+			mFirstCommit=true;
+		} else {
+			tryCommitLastDone(mLastAdded);			
+		}
+		mLastAdded=pKey;
+		return added;
+	}
+
+	private synchronized void commitLastDone(K pLastAdded) throws IOException {
+		/* This method must be idempotent as a crash in the wrong place could result in it being 
+		 * invoked more than once for the same pLastAdded.
+		 */
+		Path dest=destDir(pLastAdded);
+		mDone.commit(dest);
+	}
+	
+	private List<Ii<String,Path>> checkWhatsDone(K pKey) throws IOException {
+		Path dir=destDir(pKey);
+		IndexedVisitor visitor=new IndexedVisitor();
+		Files.walkFileTree(dir, EnumSet.noneOf(FileVisitOption.class), 1, visitor);
+		Trail<String> trail=new Trail<>(dir.resolve(AbstractFilesJournal.META_PREFIX+dir.getFileName().toString()), new IdentityConverter<String>());
+		List<Ii<String,Path>> srcDsts=new ArrayList<>();
+		for(Path p: visitor.dsts()) {
+			srcDsts.add(new Ii<String,Path>(trail.url(p), p));
+		}
+		return srcDsts;
+	}
+	
+	private synchronized void tryCommitLastDone(K pLastAdded) throws IOException {
+		if(mFirstCommit) {
+			assert mLastAdded!=null;
+			//assert mDone.mPending.size()==0 
+			List<Ii<String,Path>> srcDsts=checkWhatsDone(mLastAdded);
+			for(Ii<String,Path> srcDst: srcDsts) {
+				Ii<String,String> srcDstStr=new Ii<>(srcDst.fst(), srcDst.snd().toString());
+				mDone.addNew(srcDstStr);
+			}
+			
+			mFirstCommit=false;
+		}
+		if(mLastAdded!=null) {
+			commitLastDone(mLastAdded);
+		}
+
+	}
+	
+	@Override
 	public void addNew(final Typed<C> pLink) throws IOException {
 		incFilename();
 		final C source=pLink.get();
-		trailAdd(source);
+		mTrail.add(source);
 		int destKey=filename();
 
 		final Path dest=dest(pLink);
 		synchronized(this) {
-			assert(Files.exists(mPartialDoneDir));
 			if(mTypesWriter==null) {
 				mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(TYPES_FILENAME).toString())));
 			}
@@ -133,15 +186,11 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	}
 
 	@Override
-	protected synchronized void tryTidy(Path pDest) throws IOException {
-		super.tryTidy(pDest);
-	}
-
-	@Override
 	public void commit(final K pKey) throws IOException {
 		if(mQueryTid==-1) {
 			mQueryTid=Thread.currentThread().getId();
 		}
+		
 		if(mPromised.size()>0) {
 			Promise<Void, IOException, Void> commitment;
 			commitment=mDeferredMgr.when(mPromised.toArray(mPendingArr)).then(
@@ -226,13 +275,12 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 			mTypesWriter=null;
 		} //else we're committing a transaction with no downloads, so don't worry about it
 
-		assert(mPartialDoneDir.toFile().exists());
-		mDone.commit(pDest);
+		//mDone.commit(pDest);
+		//TODO a crash here would lead to incorrect mDone with some invalid paths
 		super.tidyUp(pDest);
+		//TODO a crash here would lead to loss of all paths
+		
 		Path src=pDest.resolve(DONE_INDEX);
-		Log.v(TAG, "move to parent src ("+Thread.currentThread().getId()+"): "+Log.esc(src)+" dst: "+Log.esc(mBetweenDoneDir));
-		Files.move(src, mBetweenDoneDir, StandardCopyOption.ATOMIC_MOVE);
-		Log.v(TAG, "move to parent done");
 	}
 
 	@Override
@@ -241,9 +289,6 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 		mPromised.clear();
 		super.startEntry();
 		assert(Thread.currentThread().getId()==mQueryTid);
-		Log.v(TAG, "move to partial src ("+Thread.currentThread().getId()+"): "+Log.esc(mBetweenDoneDir)+" dst: "+Log.esc(mPartialDoneDir));
-		Files.move(mBetweenDoneDir, mPartialDoneDir, StandardCopyOption.ATOMIC_MOVE);
-		Log.v(TAG, "move to partial done");
 	}
 	
 	@Override

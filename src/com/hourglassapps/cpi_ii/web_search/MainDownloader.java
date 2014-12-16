@@ -70,7 +70,6 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	private final static int CONNECT_TIMEOUT=10*1000;
 	private final static int SOCKET_TIMEOUT=10*1000;
 	private final static int COMPLETION_TIMEOUT=180*1000;
-	
 	private final RequestConfig mRequestConfig;
 
 	private CloseableHttpAsyncClient mClient;
@@ -271,7 +270,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					int numThreads=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println(numThreads+" thread download beginning...");
 					//downloader.downloadAndIndex(stemPath, numThreads, new HashTemplate<List<List<String>>>());
-					downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.0015286));
+					downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.0008));
 					break;
 				case PARTITION:
 					if(pArgs.length!=4) {
