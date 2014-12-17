@@ -1,9 +1,16 @@
 * General
 ** Libraries
-*** jx
+*** jx library
+**** http://www.openjs.com/scripts/jx/
+**** BSD license (http://www.openjs.com/license.php)
+**** Small javascript ajax lib
 *** when.js
+**** Javascript promises -- this is a dependency of my version of the jx lib above
+***** It's a dependency of js, instead of my using jQuery promises, because I needed jx to work in a javascript worker and therefore couldn't assume the existence of the DOM
+**** https://github.com/cujojs/when
+**** MIT license https://github.com/cujojs/when/blob/master/LICENSE.txt
 *** moustache
-**** To escape html strings in javascript
+**** A few lines to escape html strings in javascript
 **** https://github.com/janl/mustache.js/blob/master/mustache.js
 ***** entityMap and escapeHtml definitions were copied to rtu_domless.js
 **** https://github.com/janl/mustache.js/blob/master/LICENSE
@@ -32,6 +39,7 @@
 ***** lucene-facet-4.10.1.jar
 ***** lucene-queries-4.10.1.jar
 ***** lucene-queryparser-4.10.1.jar
+***** lucene-analyzers-stempel-4.10.1.jar
 *** Jackson
 **** Download links
 ***** http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.4.2/jackson-core-2.4.2.jar
@@ -48,11 +56,13 @@
 **** BSD licence
 ***** http://snowball.tartarus.org/license.php
 *** Schinke
+**** Don't actually use this, but we still distribute it with the rest of the source/binary
 **** http://snowball.tartarus.org/otherapps/schinke/intro.html
 **** Schinke R, Greengrass M, Robertson AM and Willett P (1996) A stemming algorithm for Latin text databases. Journal of Documentation, 52: 172-187.
 **** We distribute Snowball-compiled version
 **** Licence unspecified
 *** jdeferred
+**** Promises implemented in Java
 **** https://github.com/jdeferred/jdeferred
 **** Apache 2
 *** AsyncHttpClient

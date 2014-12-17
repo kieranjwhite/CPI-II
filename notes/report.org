@@ -1,0 +1,38 @@
+* Tools
+** See libraries in meetings.org
+*** Mention we didn't use schinke stemmer
+** Perseus treebank
+*** TODO URL?
+* Methods
+** Train Stempel stemmer on the perseus treeback data.
+** Generate trigrams from CPI export
+*** no stoplist was used when generating trigrams.
+** Query Bing
+*** Series of Boolean queries, one for each distinct stemmed trigram in the conductus.
+*** Each query contained one quoted trigram and as many morphological variants (as determined by stem groups generated from Latin conductus poems and titles) of the terms within those trigrams as would fit in a valid Bing query.
+* Materials
+* Issues / Problems
+** When parsing the CPI export initially I forgot about the Refrains as I wasn't aware the field exists since they're only present in some poems
+** Bing's inconsistency
+*** Blacklisted sites
+** CPI export
+*** Daniel's XML export is the one you should use since, unlike the JSON export it retrains new line character information for poems
+**** I used the JSON export for everything bar report generation as I only discovered this to be an issue this in the day.
+***** new line character information is only required for report generation (so poems can be displayed sensibly).
+** Deployment
+*** Time to index
+*** Storage requirement
+*** Time to generate report
+*** Running from server or locally
+**** The issue with both of these is that I have downloaded many documents automatically without being able to vet them to check for malicious content
+***** When running locally you need to disable same origin restrictions 
+***** If hosted on a server would the server admin want to take responsibility for this content? (rhetorical -- I expect the answer to be no)
+**** Maybe some sort of (signed?) disclaimer would fix this
+* What Alan wants
+** to identify 
+*** general issues
+*** lessons
+*** points of contact
+** they should address at the meeting in Jan and subsequently
+*** in order to maximise benefits of different strands of the transforming musicology project to each other
+** What can people at Goldsmiths and QMUL (the technical people strand) do to benefit our project.

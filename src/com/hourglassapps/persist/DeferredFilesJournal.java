@@ -275,12 +275,7 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 			mTypesWriter=null;
 		} //else we're committing a transaction with no downloads, so don't worry about it
 
-		//mDone.commit(pDest);
-		//TODO a crash here would lead to incorrect mDone with some invalid paths
 		super.tidyUp(pDest);
-		//TODO a crash here would lead to loss of all paths
-		
-		Path src=pDest.resolve(DONE_INDEX);
 	}
 
 	@Override
