@@ -66,8 +66,8 @@ public class MainReporter {
 		Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
 
 		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
-			final Converter<String,String> shortener=new PathShortener(thrower);
-			Converter<Line,String> queryToFilename=new Converter<Line,String>() {
+			final Converter<String,String> shortener=new HashTagShortener(thrower);
+			Converter<Line,String> queryToHashTag=new Converter<Line,String>() {
 				private final static String TITLE_PREFIX="eprintid_";
 				private final static String SINGLE_TAG="_single_";
 				
@@ -78,14 +78,26 @@ public class MainReporter {
 
 				@Override
 				public String convert(Line pIn) {
+					/*
+					 * HashTags have a particular format.
+					 * 
+					 * If they contain a '_' character they are singled out for special treatment in result_list.js when displaying results 
+					 * header and the word between the first two spaces (or '+' signs as they'll be url encoded) is displayed as a label.
+					 * Then a colon is inserted followed by the remaining string. Any text preceding the first plus is not included in the
+					 * header.
+					 * 
+					 * If there is no '_' then the entire string returned by this function is displayed in the header.
+					 * 
+					 */
 					String cleaned=pIn.cleaned();
+					assert cleaned.indexOf('_')==-1;
 					assert !cleaned.matches("[0-9]");
 					if(pIn.type()==LineType.TITLE) {
-						return TITLE_PREFIX+Long.toString(pIn.eprintId());
+						return shortener.convert(TITLE_PREFIX+Long.toString(pIn.eprintId())+" Entire "+cleaned);
 					} else {
 						if(ONE_WORD_LINE_SPOTTER.accept(pIn)) {
 							//we can use numbers to ensure there's no filename collision between this line and a normal multi-word line
-							return TITLE_PREFIX+Long.toString(pIn.eprintId())+SINGLE_TAG+(mOneWordCnt++);
+							return shortener.convert(TITLE_PREFIX+Long.toString(pIn.eprintId())+SINGLE_TAG+(mOneWordCnt++)+" Adjacent "+cleaned);
 						} else {
 							return shortener.convert(cleaned);
 						}
@@ -95,7 +107,7 @@ public class MainReporter {
 
 			try(
 					IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
-					PoemsReport poems=new PoemsReport(mDest, queryToFilename, thrower);
+					PoemsReport poems=new PoemsReport(mDest, queryToHashTag, thrower);
 					WrappedJournal<Ii<String,Path>> journal=new WrappedJournal<>(poems.resultsDir(), new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
 					Queryer searcher=new Queryer(journal, index, analyser, QUERY_GENERATOR);

@@ -17,7 +17,17 @@
 
 	setQuery:function(pQuery) {
 	    query=pQuery;
-	    $("div[data-role='header']>h2").html(query);
+
+	    var title;
+	    var lastUnderscorePos=pQuery.lastIndexOf('_');
+	    if(lastUnderscorePos>-1) {
+		var firstPlusPos=pQuery.indexOf('+'); //word after first space is a label
+		var secondPlusPos=pQuery.substring(firstPlusPos+1).indexOf('+')+firstPlusPos+1;
+		title=pQuery.substring(firstPlusPos+1, secondPlusPos)+": "+pQuery.substring(secondPlusPos+1);
+	    } else {
+		title=query;
+	    }
+	    $("div[data-role='header']>h2").html(title);
 	},
 
 	setBlacklist:function(pBlacklist) {

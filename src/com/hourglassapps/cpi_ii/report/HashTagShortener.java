@@ -9,13 +9,13 @@ import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.URLUtils;
 
-public class PathShortener implements Converter<String,String> {
+public class HashTagShortener implements Converter<String,String> {
 	private final static int MAX_LEN=196;
 	private Map<String,String> mLongNameToShorter=new HashMap<>();
 	private int mCurSuffix=0;
 	private final ConcreteThrower<? super UnsupportedEncodingException> mThrower;
 	
-	public PathShortener(ConcreteThrower<? super UnsupportedEncodingException> pThrower) {
+	public HashTagShortener(ConcreteThrower<? super UnsupportedEncodingException> pThrower) {
 		mThrower=pThrower;
 	}
 	
@@ -23,7 +23,6 @@ public class PathShortener implements Converter<String,String> {
 	public String convert(String cleaned) {
 		try {
 			String encoded=URLUtils.encode(cleaned);
-			assert encoded.indexOf('_')==-1;
 			if(encoded.length()>MAX_LEN) {
 				/*
 				 * Assumes convert is invoked in a fixed order. If that order changes

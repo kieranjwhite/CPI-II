@@ -51,11 +51,11 @@ public class PoemsReport implements AutoCloseable {
 	private final List<PoemRecord> mPoems=new ArrayList<>();
 	private final Deferred<Void,Void,Ii<Line,String>> mDeferred=new DeferredObject<>();
 	private final static Cleaner CLEANER=new Cleaner();
-	private final Converter<Line,String> mQueryToFilename;
+	private final Converter<Line,String> mQueryToHashTag;
 	private final Path mResultsDir;
 	private final Thrower mThrower;
 	
-	public PoemsReport(Path pDest, Converter<Line,String> pQueryToFilename, Thrower pThrower) throws IOException {
+	public PoemsReport(Path pDest, Converter<Line,String> pQueryToHashTag, Thrower pThrower) throws IOException {
 		mThrower=pThrower;
 		
 		copy(CSS, pDest);
@@ -70,7 +70,7 @@ public class PoemsReport implements AutoCloseable {
 		copy(RTU_DOMLESS_JS, pDest);
 		
 		mResultsDir=pDest.resolve(RESULTS_DIR);
-		mQueryToFilename=pQueryToFilename;
+		mQueryToHashTag=pQueryToHashTag;
 		mWrapper=new FileWrapper(PoemsReport.class, START, END, pDest.resolve(POEM_PANE_NAME));
 		mOut=mWrapper.writer();
 	}
@@ -89,8 +89,8 @@ public class PoemsReport implements AutoCloseable {
 	}
 	
 	private String linkAndNotify(long pId, Line pLine) throws IOException {
-		String key=mQueryToFilename.convert(pLine);
-		Log.i(TAG, "file: "+key);
+		String key=mQueryToHashTag.convert(pLine);
+		Log.i(TAG, "file: "+Log.esc(key));
 		if(key!=null) {
 			mDeferred.notify(new Ii<Line,String>(pLine,key));
 			return href(pId, pLine.text() ,key);
