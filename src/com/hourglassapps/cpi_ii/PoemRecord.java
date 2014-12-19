@@ -66,33 +66,28 @@ public class PoemRecord implements Record<Long, String> {
 		if(!LANG_LATIN.equals(getLanguage())) {
 			throw new IllegalStateException("wrong language");
 		}
-		//if(_poem_text_3!=null || _refrain_text_3!=null) {
-			StringBuilder text=new StringBuilder();
-			boolean added=false;
-			if(_title!=null && _title.length()>0) {
-				text.append(_title);
-				added=true;
-			}
-			if(added) {
-				text.append(BOUNDARY_TEXT);
-				added=false;
-			}
-			if(_poem_text_3!=null && _poem_text_3.length()>0) {
-				text.append(_poem_text_3);
-				added=true;
-			}
-			if(added) {
-				text.append(BOUNDARY_TEXT);
-				added=false;
-			}
-			if(_refrain_text_3!=null && _refrain_text_3.length()>0) {
-				text.append(_refrain_text_3);
-			}
-			return text.toString().trim();
-		//} else {
-		//	//assert(TEXT_INCIPIT_ONLY.equals(getNoOfStanzas()));
-		//	return getTitle();
-		//}
+		StringBuilder text=new StringBuilder();
+		boolean added=false;
+		if(_title!=null && _title.length()>0) {
+			text.append(_title);
+			added=true;
+		}
+		if(added) {
+			text.append(BOUNDARY_TEXT);
+			added=false;
+		}
+		if(_poem_text_3!=null && _poem_text_3.length()>0) {
+			text.append(_poem_text_3);
+			added=true;
+		}
+		if(added) {
+			text.append(BOUNDARY_TEXT);
+			added=false;
+		}
+		if(_refrain_text_3!=null && _refrain_text_3.length()>0) {
+			text.append(_refrain_text_3);
+		}
+		return text.toString().trim();
 	}
 
 	public static class StanzaText {

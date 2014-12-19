@@ -15,11 +15,14 @@ import org.jdeferred.impl.DeferredObject;
 
 import com.hourglassapps.cpi_ii.PoemRecord;
 import com.hourglassapps.cpi_ii.PoemRecord.StanzaText;
+import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
+import com.hourglassapps.cpi_ii.report.LineGenerator.LineType;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.FileWrapper;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Rtu;
+import com.hourglassapps.util.Thrower;
 import com.hourglassapps.util.URLUtils;
 
 public class PoemsReport implements AutoCloseable {
@@ -43,12 +46,12 @@ public class PoemsReport implements AutoCloseable {
 	private final Writer mOut;
 	private final FileWrapper mWrapper;
 	private final List<PoemRecord> mPoems=new ArrayList<>();
-	private final Deferred<Void,Void,Ii<String,String>> mDeferred=new DeferredObject<>();
+	private final Deferred<Void,Void,Ii<Line,String>> mDeferred=new DeferredObject<>();
 	private final static Cleaner CLEANER=new Cleaner();
-	private final Converter<String,String> mQueryToFilename;
+	private final Converter<Line,String> mQueryToFilename;
 	private final Path mResultsDir;
 	
-	public PoemsReport(Path pDest, Converter<String,String> pQueryToFilename) throws IOException {
+	public PoemsReport(Path pDest, Converter<Line,String> pQueryToFilename) throws IOException {
 		copy(CSS, pDest);
 		copy(POEMS_JS, pDest);
 		copy(FORWARD_HTML, pDest);
@@ -79,15 +82,13 @@ public class PoemsReport implements AutoCloseable {
 		mPoems.add(pRec);
 	}
 	
-	private String linkAndNotify(long pId, String pLine) throws IOException {
-		//tokenise(pLine, pTokens);
-		String cleaned=CLEANER.convert(pLine);
-		String key=mQueryToFilename.convert(cleaned);
+	private String linkAndNotify(long pId, Line pLine) throws IOException {
+		String key=mQueryToFilename.convert(pLine);
 		if(key!=null) {
-			mDeferred.notify(new Ii<String,String>(cleaned,key));
-			return href(pId, pLine,key);
+			mDeferred.notify(new Ii<Line,String>(pLine,key));
+			return href(pId, pLine.text() ,key);
 		}
-		return pLine;
+		return pLine.text();
 
 	}
 	
@@ -96,23 +97,50 @@ public class PoemsReport implements AutoCloseable {
 	}
 	
 	private void addContent(PrintWriter pOut, PoemRecord pPoemRecord) throws IOException {
-		pOut.println("<div data-role=\"page\" id=\"e"+pPoemRecord.id()+"\" data-theme=\"a\">");
-		pOut.println("<div class=\"poem\">");
 		long id=pPoemRecord.id();
+		LineGenerator builder=new LineGenerator(id, CLEANER);
 		if(pPoemRecord.getTitle()!=null) {
-			pOut.println(TITLE_TAGS.fst()+linkAndNotify(id, pPoemRecord.getTitle())+TITLE_TAGS.snd());
+			builder.addLine(pPoemRecord.getTitle(), LineType.TITLE);
 		}
 		List<String> ref=pPoemRecord.refrain();
+		if(ref.size()>0) {
+			for(String l: ref) {
+				builder.addLine(l, LineType.BODY);
+			}
+		}
+		
+		List<StanzaText> stanzas=pPoemRecord.stanzas();
+		if(stanzas.size()>0) {
+			for(StanzaText s: stanzas) {
+				List<String> stanza=s.lines();
+				if(stanza.size()>0) {
+					for(String l: stanza) {
+						builder.addLine(l, LineType.BODY);
+					}
+				}
+				
+			}
+		}
+
+		
+		
+		int lineNum=0;
+		pOut.println("<div data-role=\"page\" id=\"e"+pPoemRecord.id()+"\" data-theme=\"a\">");
+		pOut.println("<div class=\"poem\">");
+		if(pPoemRecord.getTitle()!=null) {
+			Line title=builder.line(lineNum++);
+			pOut.println(TITLE_TAGS.fst()+linkAndNotify(id, title)+TITLE_TAGS.snd());
+		}
 		if(ref.size()>0) {
 			pOut.println(STANZA_TAGS.fst()+"Ref."+STANZA_TAGS.snd());
 			pOut.println("<p>");
 			for(String l: ref) {
-				pOut.println(linkAndNotify(id, l)+"<br>");
+				Line line=builder.line(lineNum++);
+				pOut.println(linkAndNotify(id, line)+"<br>");
 			}
 			pOut.println("</p>");
 		}
 		
-		List<StanzaText> stanzas=pPoemRecord.stanzas();
 		if(stanzas.size()>0) {
 			for(StanzaText s: stanzas) {
 				pOut.println(STANZA_TAGS.fst()+s.name()+STANZA_TAGS.snd());
@@ -120,7 +148,8 @@ public class PoemsReport implements AutoCloseable {
 				if(stanza.size()>0) {
 					pOut.println("<p>");
 					for(String l: stanza) {
-						pOut.println(linkAndNotify(id, l)+"<br>");
+						Line line=builder.line(lineNum++);
+						pOut.println(linkAndNotify(id, line)+"<br>");
 					}
 					pOut.println("</p>");
 				}
@@ -141,9 +170,15 @@ public class PoemsReport implements AutoCloseable {
 		return mResultsDir;
 	}
 	
-	public void genContent() throws IOException {
+	public void genContent(Thrower pThrower) throws Exception {
 		PrintWriter out=mWrapper.insert(MID);
 		for(PoemRecord rec: mPoems) {
+			try {
+				pThrower.throwCaught(Exception.class);
+			} catch(Throwable t) {
+				assert t instanceof Exception;
+				throw (Exception)t;
+			}
 			addContent(out, rec);
 		}
 	}
@@ -154,7 +189,7 @@ public class PoemsReport implements AutoCloseable {
 		mDeferred.resolve(null);
 	}
 	
-	public Promise<Void,Void,Ii<String,String>> promise() {
+	public Promise<Void,Void,Ii<Line,String>> promise() {
 		return mDeferred;
 	}
 }

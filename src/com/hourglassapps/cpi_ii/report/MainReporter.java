@@ -4,14 +4,14 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.jdeferred.DoneFilter;
@@ -22,6 +22,8 @@ import org.jdeferred.Promise;
 import com.hourglassapps.cpi_ii.PoemRecord;
 import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
+import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
+import com.hourglassapps.cpi_ii.report.LineGenerator.LineType;
 import com.hourglassapps.cpi_ii.web_search.MainDownloader;
 import com.hourglassapps.persist.FileJournal;
 import com.hourglassapps.persist.WrappedJournal;
@@ -33,7 +35,6 @@ import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
-import com.hourglassapps.util.URLUtils;
 
 public class MainReporter {
 	private final static String TAG=MainReporter.class.getName();
@@ -61,35 +62,19 @@ public class MainReporter {
 		Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
 
 		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
-			Converter<String,String> queryToFilename=new Converter<String,String>() {
-				private final static int MAX_LEN=196;
-				private Map<String,String> mLongNameToShorter=new HashMap<>();
-				private int mCurSuffix=0;
+			final Converter<String,String> shortener=new PathShortener(thrower);
+			Converter<Line,String> queryToFilename=new Converter<Line,String>() {
+				private final static String TITLE_PREFIX="eprint_id_";
 				
 				@Override
-				public String convert(String pIn) {
-					try {
-						String encoded=URLUtils.encode(pIn);
-						assert encoded.indexOf('_')==-1;
-						if(encoded.length()>MAX_LEN) {
-							/*
-							 * Assumes convert is invoked in a fixed order. If that order changes
-							 * (eg if the the conductus xml export is modified) a new report will 
-							 * have to be generated from scratch (ie by deleting the directory poems/results).
-							 */
-							if(mLongNameToShorter.containsKey(pIn)) {
-								encoded=mLongNameToShorter.get(pIn);
-							} else {
-								encoded=(encoded.substring(0,MAX_LEN)+'_')+(mCurSuffix++);
-								mLongNameToShorter.put(pIn, encoded);
-							}
-						}
-						Paths.get(encoded); //This will trigger an InvalidPathException if encoded is still too long -- if that happens reduce MAX_LEN
-						return encoded;
-					} catch (UnsupportedEncodingException e) {
-						thrower.ctch(e);
+				public String convert(Line pIn) {
+					String cleaned=pIn.cleaned();
+					assert !cleaned.matches("[0-9]");
+					if(pIn.type()==LineType.TITLE) {
+						return TITLE_PREFIX+Long.toString(pIn.eprintId());
+					} else {
+						return shortener.convert(cleaned);
 					}
-					return null;
 				}
 			};
 
@@ -99,15 +84,36 @@ public class MainReporter {
 					PoemsReport poems=new PoemsReport(mDest, queryToFilename);
 					WrappedJournal<Ii<String,Path>> journal=new WrappedJournal<>(poems.resultsDir(), new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
-					Queryer searcher=new Queryer(journal, index, analyser);
+					Queryer searcher=new Queryer(journal, index, analyser, new Converter<Line,String>() {
+
+						@Override
+						public String convert(Line pIn) {
+							if(pIn.type()==LineType.TITLE) {
+								Set<String> body=new HashSet<>();
+								body.add("\""+pIn.cleaned()+"\"");
+								Line l=pIn.next();
+								while(l!=null) {
+									if(l.type()!=LineType.BODY) {
+										continue;
+									}
+									body.add(convert(l));
+									l=l.next();
+								}
+								return Rtu.join(new ArrayList<>(body), " ");
+							} else {
+								return "\""+pIn.cleaned()+"\"";
+							}
+						}
+						
+					});
 					PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));
 					IOIterator<PoemRecord> it=parser.throwableIterator();
 					) {
-				Promise<Void,Void,Ii<String,String>> prom=poems.promise();
-				prom.progress(new ProgressCallback<Ii<String,String>>(){
+				Promise<Void,Void,Ii<Line,String>> prom=poems.promise();
+				prom.progress(new ProgressCallback<Ii<Line,String>>(){
 
 					@Override
-					public void onProgress(Ii<String, String> progress) {
+					public void onProgress(Ii<Line, String> progress) {
 						try {
 							searcher.search(progress);
 						} catch(IOException | org.apache.lucene.queryparser.classic.ParseException e) {
@@ -128,7 +134,7 @@ public class MainReporter {
 
 					poems.addTitle(rec);
 				}
-				poems.genContent();
+				poems.genContent(thrower);
 			}		
 		}
 	}

@@ -47,7 +47,7 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	private final DeferredManager mDeferredMgr=new DefaultDeferredManager();
 	@SuppressWarnings("rawtypes")
 	private final Promise[] mPendingArr=new Promise[]{};
-	private boolean mFirstCommit=false;
+	private boolean mResumingAfterInterruption=false;
 	private PrintWriter mTypesWriter=null;
 	//private final Path mPartialDoneDir;
 	//private final Path mBetweenDoneDir;
@@ -79,7 +79,7 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	public boolean addedAlready(K pKey) throws IOException {
 		boolean added=super.addedAlready(pKey);
 		if(added) {
-			mFirstCommit=true;
+			mResumingAfterInterruption=true;
 		} else {
 			tryCommitLastDone(mLastAdded);			
 		}
@@ -108,7 +108,7 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	}
 	
 	private synchronized void tryCommitLastDone(K pLastAdded) throws IOException {
-		if(mFirstCommit) {
+		if(mResumingAfterInterruption) {
 			assert mLastAdded!=null;
 			//assert mDone.mPending.size()==0 
 			List<Ii<String,Path>> srcDsts=checkWhatsDone(mLastAdded);
@@ -117,7 +117,7 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 				mDone.addNew(srcDstStr);
 			}
 			
-			mFirstCommit=false;
+			mResumingAfterInterruption=false;
 		}
 		if(mLastAdded!=null) {
 			commitLastDone(mLastAdded);

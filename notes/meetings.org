@@ -1,5 +1,6 @@
 * General
 ** Libraries
+*** JQuery and JQuery mobile
 *** jx library
 **** http://www.openjs.com/scripts/jx/
 **** BSD license (http://www.openjs.com/license.php)
@@ -68,6 +69,11 @@
 *** AsyncHttpClient
 **** http://www.whoishostingthis.com/mirrors/apache//httpcomponents/httpasyncclient/binary/httpcomponents-asyncclient-4.0.2-bin.zip
 **** Apache 2
+** Other resources
+*** Perseus treebank
+**** Need for creating a Latin stemming model for Stempel
+**** http://nlp.perseus.tufts.edu/syntax/treebank/ldt/1.5/ldt-1.5.tar.gz
+**** Creative Commons Attribution-NonCommercial-ShareAlike
 ** Data queries
 *** primary key seems to be eprintid
 **** DONE confirm
@@ -494,11 +500,13 @@
 **** = ~184.7 + 36.87hrs
 **** = 201.41 hrs or 8.39 days assuming other factors don't change
 ***** If indexer falls behind downloader to the point where it no longer benefits from file-cache things could slow down dramatically
-*** TODO Possible issue with repeated URLs in report
+*** DONE Possible issue with repeated URLs in report
+    CLOSED: [2014-12-18 Thu 14:27]
+**** Fixed by ensuring a crash doesn't result in another copy of previously downloaded files. Therefore the subtree below is obsolete
+***** When there's a crash DoneStore gets wiped
+****** therefore doubling the possible duplicates over those incurred as a result of multiple QueryThreads (above)
 **** For each downloading thread we can has a duplicate of any given URL downloaded by one of the other threads
 ***** ie DoneStore doesn't work across QueryThreads
-**** When there's a crash DoneStore gets wiped
-***** therefore doubling the possible duplicates over those incurred as a result of multiple QueryThreads (above)
 **** These duplicates can be problem
 ***** We limited the number of results to any query to 100 in order to limit the size of the report on disk
 ****** While duplicates aren't listed for the user in the report they do take up slots out of that 100 results
@@ -516,3 +524,5 @@
 **** This relates to deployment when opening report in browser from locally stored files (ie no web server)
 ***** In chrome launch with --allow-file-access-from-files switch
 ***** In firefox go to about:config -> security.fileuri.strict_origin_policy and set to false
+**** Wordnet synonym mappings
+***** Downloaded from http://wordnetcode.princeton.edu/3.0/WNprolog-3.0.tar.gz

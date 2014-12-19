@@ -30,7 +30,9 @@ import org.jdeferred.impl.DeferredObject;
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.lucene.LuceneVisitor;
 import com.hourglassapps.cpi_ii.lucene.ResultRelayer;
+import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
 import com.hourglassapps.persist.Journal;
+import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
@@ -41,20 +43,23 @@ public class Queryer implements AutoCloseable {
 	private final static int MAX_RESULTS=100;
 	private final Journal<String,Ii<String,Path>> mJournal;
 	private final Analyzer mAnalyser;
-	private final Deferred<Void,Exception,Ii<String,String>> mDeferred=new DeferredObject<>();
+	private final Deferred<Void,Exception,Ii<Line,String>> mDeferred=new DeferredObject<>();
     private final QueryParser mParser;
     private final IndexReader mReader;
 	private final IndexSearcher mSearcher;
+	private final Converter<Line,String> mLineToQuery;
 	
-	public Queryer(Journal<String,Ii<String,Path>> pJournal, IndexViewer pIndex, Analyzer pAnalyser) throws IOException {
+	public Queryer(Journal<String,Ii<String,Path>> pJournal, IndexViewer pIndex, 
+			Analyzer pAnalyser, Converter<Line,String> pQueryGenerator) throws IOException {
 		mJournal=pJournal;
 		mAnalyser=pAnalyser;
 		mParser=new QueryParser(Version.LUCENE_4_10_0, LuceneVisitor.CONTENT.s(), pAnalyser);
 		mReader=DirectoryReader.open(pIndex.dir());
 	    mSearcher = new IndexSearcher(mReader);
+	    mLineToQuery=pQueryGenerator;
 	}
 	
-	public Promise<Void,Exception,Ii<String,String>> promise() {
+	public Promise<Void,Exception,Ii<Line,String>> promise() {
 		return mDeferred;
 	}
 	
@@ -62,39 +67,43 @@ public class Queryer implements AutoCloseable {
 		return pDst+".js";
 	}
 	
-	public void search(Ii<String,String> pQueryDst) throws ParseException, IOException {
-		if(mJournal.addedAlready(key(pQueryDst.snd())) || "".equals(pQueryDst.fst())) {
-			Log.i(TAG, "found: "+Log.esc(pQueryDst));
+	public void search(Ii<Line,String> pLineDst) throws ParseException, IOException {
+		if(mJournal.addedAlready(key(pLineDst.snd())) || "".equals(pLineDst.fst())) {
+			Log.i(TAG, "found: "+Log.esc(pLineDst));
 			return;
 		}
 		try {
-			Query q=mParser.parse(pQueryDst.fst());
-			IndexViewer.interrogate(mReader, mSearcher, q, MAX_RESULTS, new ResultRelayer() {
+			String query=mLineToQuery.convert(pLineDst.fst());
+			if(!"".equals(query)) {
+				Query q=mParser.parse(query);
+				//Query q=mParser.parse("\""+pQueryDst.fst()+"\"");
+				IndexViewer.interrogate(mReader, mSearcher, q, MAX_RESULTS, new ResultRelayer() {
 
-				@Override
-				public void run(IndexReader pReader, TopDocs pResults)
-						throws IOException {
+					@Override
+					public void run(IndexReader pReader, TopDocs pResults)
+							throws IOException {
 
-					ScoreDoc[] results=pResults.scoreDocs;
-					for(int i=0; i<results.length; i++) {
-						Document doc = mSearcher.doc(results[i].doc);
-						Path path=Paths.get(doc.get(LuceneVisitor.PATH.s()));
-						String title=doc.get(LuceneVisitor.TITLE.s());
-						if (path != null) {
-							if(title==null) {
-								title="";
+						ScoreDoc[] results=pResults.scoreDocs;
+						for(int i=0; i<results.length; i++) {
+							Document doc = mSearcher.doc(results[i].doc);
+							Path path=Paths.get(doc.get(LuceneVisitor.PATH.s()));
+							String title=doc.get(LuceneVisitor.TITLE.s());
+							if (path != null) {
+								if(title==null) {
+									title="";
+								}
+								mJournal.addNew(new Ii<String,Path>(title,path));
+							} else {
+								assert(false);
 							}
-							mJournal.addNew(new Ii<String,Path>(title,path));
-						} else {
-							assert(false);
 						}
 					}
-				}
 
-			});
-			Log.i(TAG, "committing: "+Log.esc(pQueryDst));
-			mJournal.commit(key(pQueryDst.snd()));
-			mDeferred.notify(pQueryDst);
+				});
+			}
+			Log.i(TAG, "committing: "+Log.esc(pLineDst));
+			mJournal.commit(key(pLineDst.snd()));
+			mDeferred.notify(pLineDst);
 		} catch(RuntimeException|IOException|ParseException e) {
 			throw e;
 		}

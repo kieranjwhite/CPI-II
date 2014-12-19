@@ -134,7 +134,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 				boolean blacklisted=pSearchEngine.filterPhrases(new HashSet<String>(Arrays.<String>asList(new String[] {
 						//"Cantum pulcriorem invenire", //sites from Conductus don't seem to be returned 
 						"DIAMM", 
-						"MUSICARUM LATINARUM",
+						"MUSICARUM LATINARUM", //corresponding to TML
 						"Galler Schule Processionshymnen dichten", //corresponding to analectahymnicam20drev
 						"Binnenreime betrachtet werden k6nnten", //corresponding to analectahymnica21drevuoft
 						"CANT10NE8 ET MUTETE" //corresponding to analectahymnicam21drev

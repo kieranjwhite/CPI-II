@@ -31,12 +31,13 @@ public class MainStemTest {
 	}
 
 	private static void stemAndShow(String pTerm, PrintWriter pOut) throws IOException {
-		try(StemRecorderFilter filter=STEMMER_FACTORY.inst(new WhitespaceTokenizer(new StringReader(pTerm)))) {
+		try(StemRecorderFilter filter=STEMMER_FACTORY.inst(new WhitespaceTokenizer(
+				new StringReader(pTerm)))) {
 			pOut.print(filter.stem());
 		}
 	}
 	
-	public static void main(String [] pArgs) throws Throwable {
+	protected void invoke(String[] pArgs) throws Throwable {
 		if (pArgs.length < 1) {
 			usage();
 			return;
@@ -73,7 +74,8 @@ public class MainStemTest {
 				}
 
 				//Writer output=null;
-				try(PrintWriter out=new PrintWriter(new BufferedWriter(new OutputStreamWriter(outstream)))) {
+				try(PrintWriter out=new PrintWriter(new BufferedWriter(
+						new OutputStreamWriter(outstream)))) {
 					int character;
 					while ((character = reader.read()) != -1) {
 						char ch = (char) character;
@@ -94,9 +96,11 @@ public class MainStemTest {
 				if(reader!=null) {
 					reader.close();
 				}
-			}
-			
-			
-		}
+			}	
+		}		
+	}
+	
+	public static void main(String [] pArgs) throws Throwable {
+		new MainStemTest().invoke(pArgs);
 	}
 }
