@@ -8,10 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.jdeferred.DoneFilter;
@@ -31,10 +28,10 @@ import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.PoemRecordXMLParser;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
+import com.hourglassapps.util.Filter;
 import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
-import com.hourglassapps.util.Rtu;
 
 public class MainReporter {
 	private final static String TAG=MainReporter.class.getName();
@@ -45,6 +42,13 @@ public class MainReporter {
 	private final static String RESULT_END="results_end";
 	private final Path mXML;
 	private final Path mDest;
+	private final static Filter<Line> ONE_WORD_LINE_SPOTTER=new Filter<Line>(){
+		@Override
+		public boolean accept(Line pIn) {
+			return pIn.cleaned().indexOf(' ')==-1;
+		}
+	};
+	private final static Converter<Line,String> QUERY_GENERATOR=new QueryGenerator(ONE_WORD_LINE_SPOTTER);
 	
 	public MainReporter(Path pXml, Path pDocuments, Path pDest) throws IOException {
 		if(!Files.exists(pDest)) {
@@ -64,8 +68,14 @@ public class MainReporter {
 		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
 			final Converter<String,String> shortener=new PathShortener(thrower);
 			Converter<Line,String> queryToFilename=new Converter<Line,String>() {
-				private final static String TITLE_PREFIX="eprint_id_";
+				private final static String TITLE_PREFIX="eprintid_";
+				private final static String SINGLE_TAG="_single_";
 				
+				/* Counter to generate unique filenames -- only works if all filenames are generated on each run (which is currently the case)
+				 * Otherwise an interrupting a run could result in a file being generated with one filename but linked to the report on a subsequent
+				 * run as a different filename. */
+				private int mOneWordCnt=0;
+
 				@Override
 				public String convert(Line pIn) {
 					String cleaned=pIn.cleaned();
@@ -73,39 +83,22 @@ public class MainReporter {
 					if(pIn.type()==LineType.TITLE) {
 						return TITLE_PREFIX+Long.toString(pIn.eprintId());
 					} else {
-						return shortener.convert(cleaned);
+						if(ONE_WORD_LINE_SPOTTER.accept(pIn)) {
+							//we can use numbers to ensure there's no filename collision between this line and a normal multi-word line
+							return TITLE_PREFIX+Long.toString(pIn.eprintId())+SINGLE_TAG+(mOneWordCnt++);
+						} else {
+							return shortener.convert(cleaned);
+						}
 					}
 				}
 			};
 
-
 			try(
 					IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
-					PoemsReport poems=new PoemsReport(mDest, queryToFilename);
+					PoemsReport poems=new PoemsReport(mDest, queryToFilename, thrower);
 					WrappedJournal<Ii<String,Path>> journal=new WrappedJournal<>(poems.resultsDir(), new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
-					Queryer searcher=new Queryer(journal, index, analyser, new Converter<Line,String>() {
-
-						@Override
-						public String convert(Line pIn) {
-							if(pIn.type()==LineType.TITLE) {
-								Set<String> body=new HashSet<>();
-								body.add("\""+pIn.cleaned()+"\"");
-								Line l=pIn.next();
-								while(l!=null) {
-									if(l.type()!=LineType.BODY) {
-										continue;
-									}
-									body.add(convert(l));
-									l=l.next();
-								}
-								return Rtu.join(new ArrayList<>(body), " ");
-							} else {
-								return "\""+pIn.cleaned()+"\"";
-							}
-						}
-						
-					});
+					Queryer searcher=new Queryer(journal, index, analyser, QUERY_GENERATOR);
 					PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));
 					IOIterator<PoemRecord> it=parser.throwableIterator();
 					) {
@@ -134,11 +127,11 @@ public class MainReporter {
 
 					poems.addTitle(rec);
 				}
-				poems.genContent(thrower);
+				poems.genContent();
 			}		
 		}
 	}
-	
+
 	private static void usage() {
 		System.out.println("MainReporter <CONDUCTUS_XML_EXPORT>");
 	}

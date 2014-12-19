@@ -21,11 +21,14 @@ import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.FileWrapper;
 import com.hourglassapps.util.Ii;
+import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Thrower;
 import com.hourglassapps.util.URLUtils;
 
 public class PoemsReport implements AutoCloseable {
+	private final static String TAG=PoemsReport.class.getName();
+	
 	private final static String CSS="poem.css";
 	private final static String FORWARD_HTML="fwd.html";
 	private final static String RESULTS_HTML="result_list.html";
@@ -50,8 +53,11 @@ public class PoemsReport implements AutoCloseable {
 	private final static Cleaner CLEANER=new Cleaner();
 	private final Converter<Line,String> mQueryToFilename;
 	private final Path mResultsDir;
+	private final Thrower mThrower;
 	
-	public PoemsReport(Path pDest, Converter<Line,String> pQueryToFilename) throws IOException {
+	public PoemsReport(Path pDest, Converter<Line,String> pQueryToFilename, Thrower pThrower) throws IOException {
+		mThrower=pThrower;
+		
 		copy(CSS, pDest);
 		copy(POEMS_JS, pDest);
 		copy(FORWARD_HTML, pDest);
@@ -84,6 +90,7 @@ public class PoemsReport implements AutoCloseable {
 	
 	private String linkAndNotify(long pId, Line pLine) throws IOException {
 		String key=mQueryToFilename.convert(pLine);
+		Log.i(TAG, "file: "+key);
 		if(key!=null) {
 			mDeferred.notify(new Ii<Line,String>(pLine,key));
 			return href(pId, pLine.text() ,key);
@@ -120,9 +127,7 @@ public class PoemsReport implements AutoCloseable {
 				}
 				
 			}
-		}
-
-		
+		}	
 		
 		int lineNum=0;
 		pOut.println("<div data-role=\"page\" id=\"e"+pPoemRecord.id()+"\" data-theme=\"a\">");
@@ -170,11 +175,11 @@ public class PoemsReport implements AutoCloseable {
 		return mResultsDir;
 	}
 	
-	public void genContent(Thrower pThrower) throws Exception {
+	public void genContent() throws Exception {
 		PrintWriter out=mWrapper.insert(MID);
 		for(PoemRecord rec: mPoems) {
 			try {
-				pThrower.throwCaught(Exception.class);
+				mThrower.throwCaught(Exception.class);
 			} catch(Throwable t) {
 				assert t instanceof Exception;
 				throw (Exception)t;

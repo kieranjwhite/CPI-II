@@ -1,0 +1,36 @@
+Reporting on web references to the poems of the Conductus
+
+The mini project to automatically generate a report listing reference to poems in the Conductus from the World Wide Web can be broken into a number of subtasks:
+
+(1) Developing the tools necessary to index and search Latin documents.
+(2) Generating a list of search engine queries for the purpose obtaining a list of as many potentially relevant online documents as possible.
+(3) Submitting these queries to a search engine and then downloading and indexing the relevant documents.
+(4) Interrogating these downloading documents with whatever tools are at our disposal and generating a final report from the results.
+
+Each sub-task above depends on the successful completion of the tasks preceding it.
+
+(1) Developing the tools necessary to index and search Latin documents.
+
+Third party libraries dependencies and resources required by this sub-task:
+Lucene (http://lucene.apache.org),
+Perseus treebank (http://nlp.perseus.tufts.edu/syntax/treebank/ldt/1.5/ldt-1.5.tar.gz).
+
+There are many libraries already available to assist in the indexing and retrieval of documents. Primarily we've depended on Lucene, but there are other commonly available libraries as and these will be listed below in the appropriate sub-task section. However we did need to develop one Latin-specific tool: a stemmer for Latin.
+Initially we experimented with the Schinke stemmer (http://snowball.tartarus.org/otherapps/schinke/intro.html). Conveniently this stemmer is written in Snowball (http://snowball.tartarus.org/index.php), a language specifically designed for purpose of developing stemmers. Additionally Lucene provides support for Snowball based stemmers allowing for easy integration with any Apache based project --- although we did find it necessary to make minor modifications to some Lucene code in order to it to work with the version of Snowball available on the tartarus.org website. The problem with the Schinke stemmer is that it generates two stemming tables: one for nouns and the other for verbs. Therefore to use it you need to apply part-of-speech tagging to terms.
+Instead we investigated another stemmer: Stempel (http://getopt.org/stempel/). Stempel is distributed with Lucene but we needed train a Latin stemming model for it and for that we needed a Latin treebank such as that for the Perseus collection (http://nlp.perseus.tufts.edu/syntax/treebank/).
+
+(2) Generating a list of search engine queries for the purpose obtaining a list of as many potentially relevant online documents as possible.
+
+Third party libraries dependencies and resources required by this sub-task:
+Lucene (http://lucene.apache.org),
+Jackson JSON parser (https://github.com/FasterXML/jackson)
+
+An export of the Conductus collection was parsed and any text (i.e. titles, refrains and the actual stanzas) was tokenised and stemmed with the aid of Lucene and our Latin parser. We consider any terms with a common stem to comprise a stem group. 
+
+To create search engine queries we considered each distinct trigram of stemmed terms in turn. From the trigram's three respective associated stem groups, a Boolean query of disjunctions was created, with each disjunction comprising a quoted phrase of three terms, one term drawn from each stem group. Bing's query length limit meant that sometimes disjunctions containing the rarest terms had to be omitted.
+
+(3) Submitting these queries to a search engine and then downloading and indexing the relevant documents.
+
+The queries were presented in turn to Bing and up to 100 result URLs returned for each. The URLs were downloaded and indexed.
+
+//  LocalWords:  tokenised treebank disjunction unstemmed prioritised

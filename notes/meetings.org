@@ -526,3 +526,4 @@
 ***** In firefox go to about:config -> security.fileuri.strict_origin_policy and set to false
 **** Wordnet synonym mappings
 ***** Downloaded from http://wordnetcode.princeton.edu/3.0/WNprolog-3.0.tar.gz
+* For Gregorio

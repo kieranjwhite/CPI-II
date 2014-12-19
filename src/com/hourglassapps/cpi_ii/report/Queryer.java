@@ -69,11 +69,12 @@ public class Queryer implements AutoCloseable {
 	
 	public void search(Ii<Line,String> pLineDst) throws ParseException, IOException {
 		if(mJournal.addedAlready(key(pLineDst.snd())) || "".equals(pLineDst.fst())) {
-			Log.i(TAG, "found: "+Log.esc(pLineDst));
+			//Log.i(TAG, "found: "+Log.esc(pLineDst));
 			return;
 		}
 		try {
 			String query=mLineToQuery.convert(pLineDst.fst());
+			Log.i(TAG, "query: "+query);
 			if(!"".equals(query)) {
 				Query q=mParser.parse(query);
 				//Query q=mParser.parse("\""+pQueryDst.fst()+"\"");
@@ -101,7 +102,7 @@ public class Queryer implements AutoCloseable {
 
 				});
 			}
-			Log.i(TAG, "committing: "+Log.esc(pLineDst));
+			//Log.i(TAG, "committing: "+Log.esc(pLineDst));
 			mJournal.commit(key(pLineDst.snd()));
 			mDeferred.notify(pLineDst);
 		} catch(RuntimeException|IOException|ParseException e) {
