@@ -26,9 +26,6 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 public final class LatinLowerCaseFilter extends TokenFilter {
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
 
-  /**
-   * Create an IrishLowerCaseFilter that normalises Irish token text.
-   */
   public LatinLowerCaseFilter(TokenStream in) {
     super(in);
   }

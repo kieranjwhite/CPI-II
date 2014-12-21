@@ -6,7 +6,6 @@
 ** Train Stempel stemmer on the perseus treeback data.
 ** Generate trigrams from CPI export
 *** no stoplist was used when generating trigrams.
-*** The Conductus was parsed and 
 ** Query Bing
 *** Series of Boolean queries, one for each distinct stemmed trigram in the conductus.
 *** No need to send trigrams containing digits -- these were invariably stanza / verse numbers
@@ -18,8 +17,10 @@
 ***** Single threaded indexer
 ****** Did not want downloads to run to far ahead of indexer so I limited the number of download threads
 ******* It'd be nice if download were throttled if indexer fell too far behind
-**** Remember to retain source URLs
-**** Remember to retain mime info
+**** DONE Remember to retain source URLs
+     CLOSED: [2014-12-20 Sat 22:03]
+**** DONE Remember to retain mime info
+     CLOSED: [2014-12-20 Sat 22:01]
 ***** for displaying the downloaded file correctly
 ***** to know how to extract textual content from file
 ****** admittedly I relied on Tika library to guess file types
@@ -27,13 +28,15 @@
 ******** eg text/plain was the mime type returned for http://tera-3.ul.cs.cmu.edu/NASD/d23d381a-642a-4cb1-bd42-5373f518ed1d/lemur/3115.sgml
 ********* an SGML file
 *** Each query contained one quoted trigram and as many morphological variants (as determined by stem groups generated from Latin conductus poems and titles) of the terms within those trigrams as would fit in a valid Bing query.
-**** Max length of Bing API query is 2047 according to http://stackoverflow.com/questions/15334531/what-are-the-query-length-limits-for-the-bing-websearch-api
+**** DONE Max length of Bing API query is 2047 according to http://stackoverflow.com/questions/15334531/what-are-the-query-length-limits-for-the-bing-websearch-api
+     CLOSED: [2014-12-20 Sat 22:17]
 ***** If you hit the limit you get HTTP 404 Not Found error
 ***** However even allowing for the fact that + chars are converted to %20 the actual limit seem lower
 ***** I set an actual limit of 2000s and all queries tested so far seem to work.
 ****** Might be possible to increase it up a bit more.
 *** Did not filter out blacklisted websites at this stage
-**** TODO List actual blacklisted sites later
+**** DONE List actual blacklisted sites later
+     CLOSED: [2014-12-20 Sat 23:08]
 **** Initially included clauses to filter out these sites
 ***** First by using a negated sites: clause
 ****** eg clauses such as... AND NOT site:chmtl.indiana.edu/tml
@@ -102,7 +105,7 @@
 **** Total estimated time requirement: 8-9 days
 ***** assuming no crashes and that indexer can keep up with download and therefore benefit from not needing to read from disk
 *** Storage requirement
-**** 65418 trigrams, top 100 results (if present)
+**** 65490 trigrams, top 100 results (if present)
 **** Total for documents and index 567GB
 ***** Estimated space requirement: 425GB
 ***** Estimated index space: 142GB
@@ -110,9 +113,12 @@
 *** Time to generate report
 **** 
 *** Report size
+**** DONE Time to generate report
+     CLOSED: [2014-12-21 Sun 18:04]
 **** I selected top 100 documents returned
 ***** for line concordances this is more that sufficient, probably
-***** Multithreaded download pitfall
+***** DONE Multithreaded download pitfall
+      CLOSED: [2014-12-21 Sun 15:00]
 ****** I had two threads downloading files simultaneously
 ****** Each thread was unaware of which files the other had downloaded
 ****** Therefore there will be 2 copies of many files
@@ -133,7 +139,8 @@
 ****** Filtering out blacklisted sites in javascript provided flexibility
 ******* More can be added without regenerating report
 ******* However any filtered blacklisted site still occupied one of the 100 results, possibly at the cost of losing a result you're interested in (ranked below those 100 docs)
-*** Running from server or locally
+*** DONE Running from server or locally
+    CLOSED: [2014-12-21 Sun 17:26]
 **** Security issues
 ***** The issue with both of these is that I have downloaded many documents automatically without being able to vet them to check for malicious content
 ****** When running locally you need to disable same origin restrictions 
@@ -145,6 +152,9 @@
 ***** Eg http://www.archive.org/stream/cantionesetmute00churgoog/cantionesetmute00churgoog_djvu.txt
 ****** It's a html file but if the local copy is opened it is display as a  text file (ie with tags visible)
 ***** This could be fixed by hosting content on a server but a server side script would still need to provide the mime type
+** DONE OCR errors
+   CLOSED: [2014-12-21 Sun 17:26]
+** TODO Highlighting matches
 * What Alan wants
 ** to identify 
 *** general issues

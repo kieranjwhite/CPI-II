@@ -10,10 +10,6 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -27,11 +23,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hourglassapps.cpi_ii.PoemRecord;
 import com.hourglassapps.cpi_ii.Record;
 import com.hourglassapps.util.ConcreteThrower;
@@ -45,7 +36,6 @@ public class PoemRecordXMLParser implements ThrowingIterable<PoemRecord>, AutoCl
 	private final Reader mPreprocessor;
 	
 	private final List<PoemRecord> mRecords;
-	//private final Iterator<PoemRecord> mRecords;
 	
 	public PoemRecordXMLParser(Reader pPreprocessor) throws IOException, ParseException {
 		mPreprocessor=pPreprocessor;

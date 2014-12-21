@@ -41,7 +41,9 @@ public class TikaReader extends Reader implements MetaRead {
 		} catch(SAXException e) {
 			Log.e(TAG, e);
 		}
-		mDelegate=new StringReader(handler.toString());
+		String content=handler.toString();
+		System.out.println(content);
+		mDelegate=new StringReader(content);
 	}
 
 	@Override

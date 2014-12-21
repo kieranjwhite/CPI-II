@@ -29,8 +29,8 @@ public final class StandardLatinAnalyzer extends LatinAnalyzer {
 	@Override
 	protected Ii<Tokenizer, TokenStream> underlyingTokeniser(Reader pReader) {
 		final Tokenizer source = new StandardTokenizer(getVersion(), pReader);
-		TokenStream result = new StandardFilter(getVersion(), source);
-		result=new NumeralFilter(result);
+		//TokenStream result = new StandardFilter(getVersion(), source);
+		TokenStream result=new NumeralFilter(source);
 		result = new LatinLowerCaseFilter(result);
 		result = new StopFilter(getVersion(), result, stopwords);
 		return new Ii<Tokenizer, TokenStream>(source, result);
