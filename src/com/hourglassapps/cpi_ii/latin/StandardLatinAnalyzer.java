@@ -22,8 +22,8 @@ public final class StandardLatinAnalyzer extends LatinAnalyzer {
 		super();
 	}
 	
-	public StandardLatinAnalyzer(String pPackageFile) throws IOException {
-		super(pPackageFile);
+	private StandardLatinAnalyzer(String pStoplistFile) throws IOException {
+		super(pStoplistFile);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public final class StandardLatinAnalyzer extends LatinAnalyzer {
 
 	public static Analyzer searchAnalyzer() throws IOException {
 		@SuppressWarnings("resource")
-		Analyzer analyser=new StandardLatinAnalyzer(LatinAnalyzer.PERSEUS_STOPWORD_FILE).
+		Analyzer analyser=new StandardLatinAnalyzer().
 		setStemmer(new StemRecorderFilter.Factory() {
 	
 			@Override
@@ -47,6 +47,7 @@ public final class StandardLatinAnalyzer extends LatinAnalyzer {
 			}
 	
 		});
+		
 		return analyser;
 	}
 	

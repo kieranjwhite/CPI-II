@@ -159,8 +159,8 @@ public abstract class LatinAnalyzer extends StopwordAnalyzerBase {
 		this(stopwords, CharArraySet.EMPTY_SET);
 	}
 
-	public LatinAnalyzer(String pPackageFile) throws IOException {
-		this(loadStopwordSet(true, LatinAnalyzer.class, DEFAULT_STOPWORD_FILE, "#"), CharArraySet.EMPTY_SET);
+	public LatinAnalyzer(String pStoplistFile) throws IOException {
+		this(loadStopwordSet(true, LatinAnalyzer.class, pStoplistFile, "#"), CharArraySet.EMPTY_SET);
 	}
 	
 	/**

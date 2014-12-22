@@ -11,14 +11,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
-
-import com.hourglassapps.cpi_ii.latin.LatinAnalyzer;
 import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
 import com.hourglassapps.cpi_ii.lucene.LuceneVisitor;
 import com.hourglassapps.cpi_ii.lucene.Indexer;
-import com.hourglassapps.cpi_ii.stem.StemRecorderFilter;
-import com.hourglassapps.cpi_ii.stem.StempelRecorderFilter;
 import com.hourglassapps.util.Log;
 
 public class MainIndexDownloaded {
@@ -28,16 +23,7 @@ public class MainIndexDownloaded {
 	public static void main(String[] pDirs) throws IOException {
 		Thread closer;
 		try(
-				@SuppressWarnings("resource")
-				Analyzer analyser=new StandardLatinAnalyzer(LatinAnalyzer.PERSEUS_STOPWORD_FILE).
-				setStemmer(new StemRecorderFilter.Factory() {
-
-					@Override
-					public StemRecorderFilter inst(TokenStream pInput) throws IOException {
-						return new StempelRecorderFilter(pInput, false, new File("data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out"));
-					}
-
-				});
+				Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
 				final Indexer indexer=new Indexer(Paths.get(INDEX_PATH), analyser, false);
 				) {
 			closer=new Thread() {

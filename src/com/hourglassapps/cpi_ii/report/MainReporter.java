@@ -63,9 +63,9 @@ public class MainReporter {
 	}
 	
 	public void create() throws Exception {
-		Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
-
+		
 		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
+			Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
 			final Converter<String,String> shortener=new HashTagShortener(thrower);
 			Converter<Line,String> queryToHashTag=new Converter<Line,String>() {
 				private final static String TITLE_PREFIX="eprintid_";
