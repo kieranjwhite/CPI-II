@@ -54,6 +54,12 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 			final Indexer indexer=new Indexer(pIndexDir, analyser, false);
 			mCloser.after(indexer);
 
+			for(int i=0; i<pNumFeederThreads; i++) {
+				Journal<String,Path> journal=new DownloadedIndexJournal(indexer, i);
+				mCloser.after(journal);
+				mJournals.add(journal);
+			}
+
 			Thread closer=new Thread() {
 
 				@Override
@@ -61,7 +67,9 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 					try {
 						forceQuit();
 						IndexingThread.this.join();
-						mCloser.close();
+						synchronized(mCloser) {
+							mCloser.close();
+						}
 					} catch (Exception e) {
 						Log.e(TAG,e);
 					}
@@ -70,13 +78,10 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 			};
 			Runtime.getRuntime().addShutdownHook(closer);
 
-			for(int i=0; i<pNumFeederThreads; i++) {
-				Journal<String,Path> journal=new DownloadedIndexJournal(indexer, i);
-				mCloser.after(journal);
-				mJournals.add(journal);
-			}
 		} catch(IOException|RuntimeException e) {
-			mCloser.close();
+			synchronized(mCloser) {
+				mCloser.close();
+			}
 			throw e;
 		}
 	}
@@ -146,10 +151,9 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 	private void quitWhenFinished() throws InterruptedException, IOException {
 		push(TERMINAL_RECORD);
 		join();
-		commitLast();
 	}
 
-	private void commitLast() throws IOException {
+	private synchronized void commitLast() throws IOException {
 		for(int tid=0; tid<mNumFeederThreads; tid++) {
 			Journal<String,Path> journal=mJournals.get(tid);
 			Ii<Boolean,String> lastCommittableKey=mCommittableKey.get(tid);
@@ -162,6 +166,12 @@ public class IndexingThread extends Thread implements Consumer<QueryRecord<Strin
 	@Override
 	public void close() throws Exception {
 		quitWhenFinished();
-		mCloser.close();
+		synchronized(mCloser) {
+			if(mCloser.closed()) {
+				return;
+			}
+			commitLast();
+			mCloser.close();
+		}
 	}
 }

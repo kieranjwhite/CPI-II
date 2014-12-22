@@ -42,7 +42,7 @@ public class TikaReader extends Reader implements MetaRead {
 			Log.e(TAG, e);
 		}
 		String content=handler.toString();
-		System.out.println(content);
+		//System.out.println(content);
 		mDelegate=new StringReader(content);
 	}
 

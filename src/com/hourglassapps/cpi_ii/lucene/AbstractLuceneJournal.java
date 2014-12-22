@@ -64,7 +64,7 @@ public abstract class AbstractLuceneJournal<C> implements Journal<String, C> {
 	@Override
 	public void close() throws IOException {
 		mReader.close();
-		mWriter.rollback();
+		mWriter.rollback(); //this also closes mWriter
 	}
 	
 	@Override

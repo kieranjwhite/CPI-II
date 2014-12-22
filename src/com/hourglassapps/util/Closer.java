@@ -5,6 +5,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 public class Closer implements AutoCloseable {
+	private boolean mClosed=false;
 	private Deque<AutoCloseable> mCloseables=new LinkedList<>();
 	
 	/**
@@ -13,6 +14,7 @@ public class Closer implements AutoCloseable {
 	 * @return this to allow chaining
 	 */
 	public Closer before(AutoCloseable pCloseable) {
+		assert !closed();
 		if(pCloseable!=null) {
 			mCloseables.addLast(pCloseable);
 		}
@@ -25,6 +27,7 @@ public class Closer implements AutoCloseable {
 	 * @return this to allow chaining
 	 */
 	public Closer after(AutoCloseable pCloseable) {
+		assert !closed();
 		if(pCloseable!=null) {
 			mCloseables.addFirst(pCloseable);
 		}
@@ -36,15 +39,16 @@ public class Closer implements AutoCloseable {
 	 */
 	@Override
 	public void close() throws Exception {
-		try(ConcreteThrower<Exception> thrower=new ConcreteThrower<Exception>()) {
+		if(!closed()) {
+			mClosed=true;
 			AutoCloseable c;
 			while((c=mCloseables.pollFirst())!=null) {
-				try {
-					c.close();
-				} catch(Exception e) {
-					thrower.ctch(e);
-				}			
+				c.close();
 			}
 		}
+	}
+
+	public boolean closed() {
+		return mClosed;
 	}
 }
