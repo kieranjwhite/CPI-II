@@ -1,29 +1,24 @@
 package com.hourglassapps.persist;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.SelectableChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Set;
+
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
 import com.hourglassapps.util.Converter;
+import com.hourglassapps.util.Promiser;
 import com.hourglassapps.util.Typed;
 
-public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>> {
+public abstract class AbstractFilesJournal<K,C> implements Journal<K, C>, Promiser<Void,Void,Path> {
 	private final static String TAG=AbstractFilesJournal.class.getName();
 	private final static String PARTIAL_DIR_NAME="partial";
-	private final static String COMPLETED_DIR_NAME="completed";
-	protected final static int FIRST_FILENAME=1;
+	public final static String COMPLETED_DIR_NAME="completed";
+	protected final static int FIRST_FILENAME=0;
 	public final static char META_PREFIX='_';
 	protected final static String CUSTOM_PREFIX=META_PREFIX+"_";
 	
@@ -32,30 +27,23 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 	private final Converter<K,String> mFilenameGenerator;
 	private final int mFirstFilename;
 	private int mFilename;
-	private final PreDeleteAction mPreDelete;
 	protected final Path mPartialDir;
-	protected final S mContentGenerator;	
 	protected final Trail<C> mTrail;
+	private final Deferred<Void,Void,Path> mDeferred=new DeferredObject<>();
+	private final Converter<C,Typed<C>> mToTyped;
 	
 	protected interface PreDeleteAction {
 		public void run() throws IOException;
 	}
 	
-	public AbstractFilesJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, S pContentGenerator) throws IOException {
-		this(pDirectory, pFilenameGenerator, pContentGenerator, FIRST_FILENAME);
+	public AbstractFilesJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, Converter<C,Typed<C>> pToTyped) throws IOException {
+		this(pDirectory, pFilenameGenerator, pToTyped, FIRST_FILENAME);
 	}
 
 	public AbstractFilesJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
-			S pContentGenerator, int pFirstFilename) throws IOException {
-		this(pDirectory, pFilenameGenerator, pContentGenerator, pFirstFilename, new PreDeleteAction(
-				){
-					@Override
-					public void run() {
-					}});
-	}
-	
-	public AbstractFilesJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, 
-			S pContentGenerator, int pFirstFilename, PreDeleteAction pPreDelete) throws IOException {
+			Converter<C,Typed<C>> pToTyped, 
+			int pFirstFilename) throws IOException {
+		mToTyped=pToTyped;
 		mFirstFilename=pFirstFilename;
 		mDirectory=pDirectory;
 		mkdir(mDirectory);
@@ -63,10 +51,7 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 		mCompletedDir=mDirectory.resolve(COMPLETED_DIR_NAME);
 		mkdir(mCompletedDir);
 		mFilenameGenerator=pFilenameGenerator;
-		mContentGenerator=pContentGenerator;
 		mTrail=new Trail<C>(mPartialDir);
-		mPreDelete=pPreDelete;
-		mPreDelete.run();
 		setupPartial(mPartialDir);
 		mFilename=mFirstFilename;
 		mTrail.clear();
@@ -126,9 +111,13 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 	protected void incFilename() {
 		mFilename++;
 	}
-	
+
 	@Override
-	public abstract void addNew(Typed<C> pContent) throws IOException;
+	public final void addNew(C pContent) throws IOException {
+		addNew(mToTyped.convert(pContent));
+	}
+	
+	protected abstract void addNew(Typed<C> pContent) throws IOException;
 
 	protected void tryTidy(Path pDest) throws IOException {
 		if(Files.exists(mPartialDir)) {
@@ -145,6 +134,7 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 		mTrail.save(pDest);
 		assert !Files.exists(pDest);
 		Files.move(mPartialDir, pDest, StandardCopyOption.ATOMIC_MOVE);
+		mDeferred.notify(pDest);
 	}
 	
 	@Override
@@ -168,10 +158,19 @@ public abstract class AbstractFilesJournal<K,C,S> implements Journal<K, Typed<C>
 	}
 
 	protected void startEntry() throws IOException {
-		mPreDelete.run();
 		setupPartial(mPartialDir);
 		mFilename=mFirstFilename;
 		mTrail.clear();
+	}
+
+	@Override
+	public void close() throws Exception {
+		mDeferred.resolve(null);
+	}
+
+	@Override
+	public Promise<Void, Void, Path> promise() {
+		return mDeferred;
 	}
 
 }

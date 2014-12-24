@@ -22,7 +22,9 @@ import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
 import com.hourglassapps.cpi_ii.report.LineGenerator.LineType;
 import com.hourglassapps.cpi_ii.web_search.MainDownloader;
-import com.hourglassapps.persist.FileJournal;
+import com.hourglassapps.persist.FileCopyJournal;
+import com.hourglassapps.persist.ResultsJournal;
+import com.hourglassapps.persist.Shortener;
 import com.hourglassapps.persist.WrappedJournal;
 import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.PoemRecordXMLParser;
@@ -32,6 +34,7 @@ import com.hourglassapps.util.Filter;
 import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
+import com.hourglassapps.util.Typed;
 
 public class MainReporter {
 	private final static String TAG=MainReporter.class.getName();
@@ -42,6 +45,8 @@ public class MainReporter {
 	private final static String RESULT_END="results_end";
 	private final Path mXML;
 	private final Path mDest;
+	private final Path mDocDir;
+	
 	private final static Filter<Line> ONE_WORD_LINE_SPOTTER=new Filter<Line>(){
 		@Override
 		public boolean accept(Line pIn) {
@@ -51,6 +56,7 @@ public class MainReporter {
 	private final static Converter<Line,String> QUERY_GENERATOR=new QueryGenerator(ONE_WORD_LINE_SPOTTER);
 	
 	public MainReporter(Path pXml, Path pDocuments, Path pDest) throws IOException {
+		mDocDir=pDocuments;
 		if(!Files.exists(pDest)) {
 			Files.createDirectory(pDest);
 		}
@@ -66,7 +72,7 @@ public class MainReporter {
 		
 		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
 			Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
-			final Converter<String,String> shortener=new HashTagShortener(thrower);
+			final Converter<String,String> shortener=new Shortener(thrower);
 			Converter<Line,String> queryToHashTag=new Converter<Line,String>() {
 				private final static String TITLE_PREFIX="eprintid_";
 				private final static String SINGLE_TAG="_single_";
@@ -108,7 +114,8 @@ public class MainReporter {
 			try(
 					IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
 					PoemsReport poems=new PoemsReport(mDest, queryToHashTag, thrower);
-					WrappedJournal<Ii<String,Path>> journal=new WrappedJournal<>(poems.resultsDir(), new TitlePathConverter(thrower), 
+					ResultsJournal journal=new ResultsJournal(poems.resultsDir(), mDocDir, 
+							new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
 					Queryer searcher=new Queryer(journal, index, analyser, QUERY_GENERATOR);
 					PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));

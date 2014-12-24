@@ -59,13 +59,20 @@ import com.hourglassapps.util.URLUtils;
 public class MainDownloader implements AutoCloseable, Downloader<URL,ContentTypeSourceable> {
 	private final static String TAG=MainDownloader.class.getName();
 	private final static Converter<String,String> KEY_CONVERTER=JournalKeyConverter.SINGLETON;
-	private final static Path DOCUMENT_DIR=Paths.get("documents");
+	private final static Converter<URL, Typed<URL>> URL_CONVERTER=new Converter<URL, Typed<URL>>() {
+		@Override
+		public Typed<URL> convert(URL pIn) {
+			return new TypedLink(pIn);
+		}
+	};
+	public final static Path DOCUMENT_DIR=Paths.get("documents");
 	private final static String JOURNAL_NAME="journal";
 	private final static Path JOURNAL=Paths.get(JOURNAL_NAME);
-	private final static String THREAD_JOURNAL_NAME='_'+JOURNAL_NAME;
+	public final static char JOURNAL_NUM_DELIM='_';
+	public final static String THREAD_JOURNAL_NAME=JOURNAL_NUM_DELIM+JOURNAL_NAME;
 	private final static Path TEST_JOURNAL=Paths.get("test_journal");
 	private final static boolean BLACKLISTING=false;
-	private final static Journal<String,Typed<URL>> NULL_JOURNAL=new NullJournal<String,Typed<URL>>();
+	private final static Journal<String,URL> NULL_JOURNAL=new NullJournal<String,URL>();
 	
 	private final static int CONNECT_TIMEOUT=10*1000;
 	private final static int SOCKET_TIMEOUT=10*1000;
@@ -151,8 +158,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		System.out.println("About to download results for all queries.");
 		Rtu.continuePrompt();
 		try {
-			Journal<String,Typed<URL>> journal=pDummyRun?NULL_JOURNAL:new DeferredFilesJournal<String,URL,ContentTypeSourceable>(JOURNAL,
-					JournalKeyConverter.SINGLETON, this);
+			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFilesJournal<String,URL,ContentTypeSourceable>(JOURNAL,
+					KEY_CONVERTER, URL_CONVERTER, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(1,setupBlacklist(
 							(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY))), journal);
@@ -168,7 +175,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 
 	}
 	
-	public QueryThread<String> setupQuery(int pNumThreads, Journal<String,Typed<URL>> pJournal) throws Exception {
+	public QueryThread<String> setupQuery(int pNumThreads, Journal<String,URL> pJournal) throws Exception {
 		QueryThread<String> receiver=new QueryThread<String>(pNumThreads,
 				setupBlacklist(new BingSearchEngine(BingSearchEngine.AUTH_KEY)), pJournal);
 
@@ -179,8 +186,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 
 	public void downloadFiltered(String pStemPath, Filter<List<List<String>>> pFilter) throws Exception {
-		Journal<String,Typed<URL>> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
-				JOURNAL, KEY_CONVERTER, this);
+		Journal<String,URL> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
+				JOURNAL, KEY_CONVERTER, URL_CONVERTER, this);
 
 		try(QueryThread<String> receiver=setupQuery(1,journal);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
@@ -192,8 +199,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	
 	public void downloadOne(String pQueryName, URL pURL) {
 		try {
-			Journal<String,Typed<URL>> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(TEST_JOURNAL, 
-					JournalKeyConverter.SINGLETON, this);
+			Journal<String,URL> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(TEST_JOURNAL, 
+					KEY_CONVERTER, URL_CONVERTER, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(1,
 					setupBlacklist(new BingSearchEngine(BingSearchEngine.AUTH_KEY)), journal)) {
@@ -348,7 +355,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 			for(int t=0; t<numThreads; t++) {
 				DeferredFilesJournal<String,URL,ContentTypeSourceable> journal=
 						new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
-								DOCUMENT_DIR.resolve(Integer.toString(t)+THREAD_JOURNAL_NAME), KEY_CONVERTER, this);
+								DOCUMENT_DIR.resolve(Integer.toString(t)+THREAD_JOURNAL_NAME), KEY_CONVERTER, URL_CONVERTER, this);
 				receiver=setupQuery(numThreads, journal);
 				journals.add(journal);
 				receivers.add(receiver);

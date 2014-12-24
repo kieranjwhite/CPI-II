@@ -19,41 +19,34 @@ import org.jdeferred.impl.DeferredObject;
 
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Promiser;
+import com.hourglassapps.util.Rtu;
 
-public class FileJournal<A> implements Journal<String, A>, Promiser<Void,Void,Path> {
+public class FileCopyJournal implements Journal<Path, Void>, Promiser<Void,Void,Path> {
 	private final static String COMPLETED="completed";
 	private final static String PARTIAL="partial";
 	protected final Path mCompleted;
 	protected final Path mPartialFile;
 	private final Path mDir;
-	private final List<A> mPartial=new ArrayList<>();
-	protected final List<A> mProtectedPartial=Collections.unmodifiableList(mPartial);
-	protected final Converter<A,String> mAddedToString;
+	protected final Converter<Path,String> mSourceToDestFilename;
 	private final Deferred<Void,Void,Path> mDeferred=new DeferredObject<>();
 	
-	public FileJournal(Path pDir, Converter<A,String> pAddedToString) throws IOException {
+	public FileCopyJournal(Path pDir, Converter<Path,String> pAddedToString) throws IOException {
 		mDir=pDir;
 		AbstractFilesJournal.mkdir(pDir);
 		mCompleted=mDir.resolve(COMPLETED);
 		AbstractFilesJournal.mkdir(mCompleted);
 		mPartialFile=mDir.resolve(PARTIAL);
-		mAddedToString=pAddedToString;
+		mSourceToDestFilename=pAddedToString;
 	}
 
 	@Override
-	public boolean addedAlready(String pKey) throws IOException {
+	public boolean addedAlready(Path pKey) throws IOException {
 		return Files.exists(mCompleted.resolve(pKey));
 	}
 
 	@Override
-	public void addNew(A pContent) throws IOException {
-		mPartial.add(pContent);
-	}
+	public void addNew(Void pContent) {}
 
-	protected void clearPartial() {
-		mPartial.clear();
-	}
-	
 	@Override
 	public void close() {
 		mDeferred.resolve(null);
@@ -63,19 +56,14 @@ public class FileJournal<A> implements Journal<String, A>, Promiser<Void,Void,Pa
 		return mPartialFile;
 	}
 	
-	protected void tidyUp(String pKey) throws IOException {
-		Path dest=mCompleted.resolve(pKey);
+	@Override
+	public void commit(Path pKey) throws IOException {
+		Path dest=mCompleted.resolve(mSourceToDestFilename.convert(pKey));
+		Rtu.copyFile(pKey, mPartialFile);
 		Files.move(mPartialFile, dest, StandardCopyOption.ATOMIC_MOVE);
-		mPartial.clear();
 		mDeferred.notify(dest);		
 	}
 	
-	@Override
-	public void commit(String pKey) throws IOException {
-		write();
-		tidyUp(pKey);
-	}
-
 	@Override
 	public Promise<Void, Void, Path> promise() {
 		return mDeferred;
@@ -85,19 +73,9 @@ public class FileJournal<A> implements Journal<String, A>, Promiser<Void,Void,Pa
 		return new PrintWriter(new BufferedWriter(new FileWriter(mPartialFile.toFile())));
 	}
 	
-	protected void write() throws IOException {
-		try(PrintWriter writer=writer()) {
-			for(A p: mProtectedPartial) {
-				String path=mAddedToString.convert(p);
-				writer.println(path);
-			}
-		}
-	}
-
 	@Override
 	public void reset() throws IOException {
 		AbstractFilesJournal.deleteFlatDir(mCompleted);
-		clearPartial();
 	}
 
 }

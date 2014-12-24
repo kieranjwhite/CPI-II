@@ -34,7 +34,7 @@ import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Typed;
 
-public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFilesJournal<K,C,Downloader<C,R>> {
+public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFilesJournal<K,C> {
 	private final static String TAG=DeferredFilesJournal.class.getName();
 	public final static String DONE_INDEX="done_index";
 	public final static char TYPE_COLUMN_DELIMITER=' ';
@@ -54,22 +54,14 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	private final Path mDoneDir;
 	private final DoneStore mDone;
 	private K mLastAdded=null;
+	private final Downloader<C,R> mContentGenerator;
 	
 	public DeferredFilesJournal(final Path pDirectory,
-			Converter<K, String> pFilenameGenerator,
+			Converter<K, String> pFilenameGenerator, Converter<C,Typed<C>> pToTyped,
 			Downloader<C,R> pDownloader)
 			throws IOException {
-		super(pDirectory, pFilenameGenerator, pDownloader,0, new PreDeleteAction() {
-
-			@Override
-			public void run() throws IOException {
-				Path partialDoneDir=partialDir(pDirectory).resolve(DONE_INDEX);
-				if(Files.exists(partialDoneDir)) {
-					AbstractFilesJournal.deleteFlatDir(partialDoneDir);
-				}
-			}
-			
-		});
+		super(pDirectory, pFilenameGenerator, pToTyped, 0);
+		mContentGenerator=pDownloader;
 		mDoneDir=pDirectory.resolve(DONE_INDEX);
 		mDone=new DoneStore(mDoneDir);
 		mPromised=new ArrayList<>();
@@ -126,7 +118,7 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	}
 	
 	@Override
-	public void addNew(final Typed<C> pLink) throws IOException {
+	protected void addNew(final Typed<C> pLink) throws IOException {
 		incFilename();
 		final C source=pLink.get();
 		mTrail.add(source);
@@ -290,10 +282,6 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	public synchronized void reset() throws IOException {
 		mDone.reset();
 		super.reset();
-	}
-
-	@Override
-	public void close() {
 	}
 
 }

@@ -32,12 +32,12 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 	private final Deque<List<List<String>>> mInbox=new ArrayDeque<>();
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
 	private final SearchEngine<List<String>, K, URL, URL> mQ;	
-	private final Journal<K,Typed<URL>> mJournal;
+	private final Journal<K,URL> mJournal;
 	private Throttle mThrottle=Throttle.NULL_THROTTLE;
 	private final Deferred<Void, IOException, K> mDeferred=new DeferredObject<>();
 	private Closer mCloser=new Closer();
 	
-	public QueryThread(int pNumThreads, SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,Typed<URL>> pJournal) throws IOException {
+	public QueryThread(int pNumThreads, SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,URL> pJournal) throws IOException {
 		super("query "+NAME++);
 		mQ=pQ;
 		mJournal=pJournal;
@@ -55,12 +55,11 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 
 	public void search(Query<K,URL> pQuery) throws IOException {
 		Iterator<URL> links=mQ.present(pQuery);
-		Typed<URL> source;
 		while(links.hasNext()){
 			mThrottle.choke();
 			final URL link=links.next();
-			source=new TypedLink(link);
-			mJournal.addNew(source);
+			//source=new TypedLink(link);
+			mJournal.addNew(link);
 		}
 		//Log.i(TAG, "committing: "+pQuery.uniqueName()+" tid: "+Thread.currentThread().getId());
 		mJournal.commit(pQuery.uniqueName());		

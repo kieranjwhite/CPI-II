@@ -63,12 +63,8 @@ public class Queryer implements AutoCloseable {
 		return mDeferred;
 	}
 	
-	private String key(String pDst) {
-		return pDst+".js";
-	}
-	
 	public void search(Ii<Line,String> pLineDst) throws ParseException, IOException {
-		if(mJournal.addedAlready(key(pLineDst.snd())) || "".equals(pLineDst.fst())) {
+		if(mJournal.addedAlready(pLineDst.snd()) || "".equals(pLineDst.fst())) {
 			//Log.i(TAG, "found: "+Log.esc(pLineDst));
 			return;
 		}
@@ -77,7 +73,6 @@ public class Queryer implements AutoCloseable {
 			Log.i(TAG, "query: "+query);
 			if(!"".equals(query)) {
 				Query q=mParser.parse(query);
-				//Query q=mParser.parse("\""+pQueryDst.fst()+"\"");
 				IndexViewer.interrogate(mReader, mSearcher, q, MAX_RESULTS, new ResultRelayer() {
 
 					@Override
@@ -103,7 +98,7 @@ public class Queryer implements AutoCloseable {
 				});
 			}
 			//Log.i(TAG, "committing: "+Log.esc(pLineDst));
-			mJournal.commit(key(pLineDst.snd()));
+			mJournal.commit(pLineDst.snd());
 			mDeferred.notify(pLineDst);
 		} catch(RuntimeException|IOException|ParseException e) {
 			throw e;

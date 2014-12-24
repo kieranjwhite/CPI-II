@@ -20,18 +20,24 @@
 package com.hourglassapps.util;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.Serializable;
+import java.io.Writer;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -147,6 +153,27 @@ public class Rtu {
 			//src.close();
 		}
 	}
+
+	public static void copyFile(Reader src, Path dst) throws IOException {
+		copyFile(src, dst.toFile());
+	}
+	
+	public static void copyFile(Reader src, File dst) throws IOException {
+		copyFile(src, new FileWriter(dst));
+	}
+	
+	public static void copyFile(Reader src, Writer dst) throws IOException {
+		try(BufferedReader reader=new BufferedReader(src);
+			PrintWriter writer=new PrintWriter(dst);
+		) {
+			String line=reader.readLine();
+			while(line!=null) {
+				writer.println(line);
+				line=reader.readLine();
+			}
+		}
+	}
+
 	/*
 	public static byte[] copyFile(FileInputStream src, int size) throws IOException {
 		byte block[]=new byte[size];

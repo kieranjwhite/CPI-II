@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii.report;
+package com.hourglassapps.persist;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Paths;
@@ -9,13 +9,13 @@ import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.URLUtils;
 
-public class HashTagShortener implements Converter<String,String> {
+public class Shortener implements Converter<String,String> {
 	private final static int MAX_LEN=196;
 	private Map<String,String> mLongNameToShorter=new HashMap<>();
 	private int mCurSuffix=0;
 	private final ConcreteThrower<? super UnsupportedEncodingException> mThrower;
 	
-	public HashTagShortener(ConcreteThrower<? super UnsupportedEncodingException> pThrower) {
+	public Shortener(ConcreteThrower<? super UnsupportedEncodingException> pThrower) {
 		mThrower=pThrower;
 	}
 	
