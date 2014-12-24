@@ -1,17 +1,22 @@
 package com.hourglassapps.cpi_ii.report;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Collector;
@@ -47,10 +52,10 @@ public class Queryer implements AutoCloseable {
     private final QueryParser mParser;
     private final IndexReader mReader;
 	private final IndexSearcher mSearcher;
-	private final Converter<Line,String> mLineToQuery;
+	private final Converter<Line,List<String>> mLineToQuery;
 	
 	public Queryer(Journal<String,Ii<String,Path>> pJournal, IndexViewer pIndex, 
-			Analyzer pAnalyser, Converter<Line,String> pQueryGenerator) throws IOException {
+			Analyzer pAnalyser, Converter<Line,List<String>> pQueryGenerator) throws IOException {
 		mJournal=pJournal;
 		mAnalyser=pAnalyser;
 		mParser=new QueryParser(Version.LUCENE_4_10_0, LuceneVisitor.CONTENT.s(), pAnalyser);
@@ -63,13 +68,29 @@ public class Queryer implements AutoCloseable {
 		return mDeferred;
 	}
 	
+	private List<String> terms(String pPhrase) throws IOException {
+		List<String> terms=new ArrayList<>();
+		try(TokenStream ts=mAnalyser.tokenStream(LuceneVisitor.CONTENT.s(), new StringReader(pPhrase))) {
+			ts.reset();
+			while(ts.incrementToken()) { 
+				terms.add(ts.reflectAsString(true));
+			}
+		}
+		return Collections.unmodifiableList(terms);
+	}
+	
 	public void search(Ii<Line,String> pLineDst) throws ParseException, IOException {
 		if(mJournal.addedAlready(pLineDst.snd()) || "".equals(pLineDst.fst())) {
 			//Log.i(TAG, "found: "+Log.esc(pLineDst));
 			return;
 		}
 		try {
-			String query=mLineToQuery.convert(pLineDst.fst());
+			List<List<String>> phraseTerms=new ArrayList<>();
+			List<String> phrases=mLineToQuery.convert(pLineDst.fst());
+			for(String phrase: phrases) {
+				phraseTerms.add(terms(phrase));
+			}
+			String query="\""+Rtu.join(phrases,"\" \"")+"\"";
 			Log.i(TAG, "query: "+query);
 			if(!"".equals(query)) {
 				Query q=mParser.parse(query);

@@ -78,12 +78,11 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<
 			public void close() throws IOException {
 				throwCaught(null);
 			}
-
+			
 			@Override
 			public <E extends Exception> void throwCaught(Class<E> pCatchable) throws IOException {
 				thrower.throwCaught(IOException.class);
 			}
-
 		};
 	}
 

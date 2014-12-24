@@ -53,7 +53,7 @@ public class MainReporter {
 			return pIn.cleaned().indexOf(' ')==-1;
 		}
 	};
-	private final static Converter<Line,String> QUERY_GENERATOR=new QueryGenerator(ONE_WORD_LINE_SPOTTER);
+	private final static Converter<Line,List<String>> QUERY_GENERATOR=new QueryGenerator(ONE_WORD_LINE_SPOTTER);
 	
 	public MainReporter(Path pXml, Path pDocuments, Path pDest) throws IOException {
 		mDocDir=pDocuments;

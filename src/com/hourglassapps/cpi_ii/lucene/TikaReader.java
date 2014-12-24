@@ -23,7 +23,7 @@ public class TikaReader extends Reader implements MetaRead {
 	private String mTitle=null;
 	
 	//in characters
-	private final static int MAX_CONTENT_SIZE=64*1024*1024;	
+	public final static int MAX_CONTENT_SIZE=64*1024*1024;	
 	
 	private final StringReader mDelegate;
 	

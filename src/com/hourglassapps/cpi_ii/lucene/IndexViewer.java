@@ -15,13 +15,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.BytesRef;
-
-import com.hourglassapps.cpi_ii.stem.StemRecorderFilter;
-import com.hourglassapps.util.Combinator;
-import com.hourglassapps.util.ExpansionReceiver;
-import com.hourglassapps.util.Log;
-import com.hourglassapps.util.MultiMap;
 
 public class IndexViewer implements AutoCloseable {
 	private final static String TAG=IndexViewer.class.getName();

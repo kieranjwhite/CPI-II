@@ -1,9 +1,13 @@
 package com.hourglassapps.persist;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,7 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaCoreProperties;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.sax.BodyContentHandler;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 import com.hourglassapps.cpi_ii.lucene.TikaReader;
 import com.hourglassapps.cpi_ii.web_search.MainDownloader;
@@ -20,10 +33,13 @@ import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.FileWrapper;
 import com.hourglassapps.util.IdentityConverter;
 import com.hourglassapps.util.Ii;
+import com.hourglassapps.util.InputStreamFactory;
+import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Typed;
 
 public class ResultsJournal extends AbstractFilesJournal<String,Ii<String,Path>> {
+	private final static String TAG=ResultsJournal.class.getName();
 	private final Class<?> mTemplateClass;
 	private final String mStart;
 	private final String mEnd;
@@ -33,9 +49,9 @@ public class ResultsJournal extends AbstractFilesJournal<String,Ii<String,Path>>
 	private final static Path PLAIN_TEXT_DIR=Paths.get("text");
 	private FileWrapper mWrapper=null;
 	private final FileCopyJournal mFiles;
-	private final ConcreteThrower<UnsupportedEncodingException> mThrower=new ConcreteThrower<>();
+	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
 	private final Shortener mShorten=new Shortener(mThrower);
-	private final static Path DOCUMENT_DIR=MainDownloader.DOCUMENT_DIR;
+	//private final static Path DOCUMENT_DIR=MainDownloader.DOCUMENT_DIR;
 	
 	public ResultsJournal(Path pDir, Path pDocDir, final Converter<Ii<String,Path>, String> pAddedToString,
 			Class<?> pTemplateClass, String pStart, String pEnd)
@@ -64,20 +80,44 @@ public class ResultsJournal extends AbstractFilesJournal<String,Ii<String,Path>>
 
 			@Override
 			public String convert(Path pIn) {
-				DOCUMENT_DIR.relativize(pIn);
-				String journal=DOCUMENT_DIR.subpath(0,1).toString();
-				int underscore_idx=journal.indexOf(MainDownloader.JOURNAL_NUM_DELIM);
-				String journal_num;
-				if(underscore_idx==-1) {
-					journal_num=journal;
-				} else {
-					journal_num=journal.substring(0,underscore_idx);
+				try {
+					Path relativeIn=normalisePath(pIn);
+					String journal=relativeIn.subpath(0,1).toString();
+					int underscore_idx=journal.indexOf(MainDownloader.JOURNAL_NUM_DELIM);
+					String journal_num;
+					if(underscore_idx==-1) {
+						journal_num=journal;
+					} else {
+						journal_num=journal.substring(0,underscore_idx);
+					}
+					List<String> parts=new ArrayList<>();
+					parts.add(journal_num);
+					parts.add(relativeIn.subpath(2,3).toString());
+					parts.add(FilenameUtils.getBaseName(relativeIn.subpath(3,4).toString()));
+					return mShorten.convert(Rtu.join(parts, " "));
+				} catch(IOException e) {
+					mThrower.ctch(e);
+					return null;
 				}
-				List<String> parts=new ArrayList<>();
-				parts.add(journal_num);
-				parts.add(DOCUMENT_DIR.subpath(2,3).toString());
-				parts.add(FilenameUtils.getBaseName(DOCUMENT_DIR.subpath(3,4).toString()));
-				return mShorten.convert(Rtu.join(parts, " "));
+			}
+			
+		}, new InputStreamFactory(){
+			private Parser mParser=new AutoDetectParser();
+
+			@Override
+			public InputStream wrap(InputStream pIn) throws IOException {
+
+				ContentHandler handler=new BodyContentHandler(TikaReader.MAX_CONTENT_SIZE);
+				Metadata metadata=new Metadata();
+				try {
+					mParser.parse(pIn, handler, metadata, new ParseContext());
+				} catch(TikaException e) {
+					throw new IOException(e);
+				} catch(SAXException e) {
+					Log.e(TAG, e);
+				}
+				String content=handler.toString();
+				return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 			}
 			
 		});
@@ -105,29 +145,30 @@ public class ResultsJournal extends AbstractFilesJournal<String,Ii<String,Path>>
 		return mDocDir.relativize(pPath.toRealPath());
 	}
 	
-	private Path plainTextDest(Path pSrc) {
-		
-	}
-	
 	@Override
 	protected void addNew(Typed<Ii<String,Path>> pLink) throws IOException {
-		final Ii<String,Path> queryPath=pLink.get();
-		Path source=normalisePath(queryPath.snd());
-		final Path dest=dest(pLink);
 		try {
-			
-			Rtu.copyFile(new TikaReader(new FileInputStream(), null), dest);
-			mTrail.add(queryPath);
-			PrintWriter writer=wrapper().writer();
-			writer.println(mAddedToString.convert(queryPath));
-			incFilename();
-		} catch (TikaException e) {
-			throw new IOException(e);
-		}		
+			mThrower.throwCaught(IOException.class);
+		} catch(Exception e) {
+			throw (IOException)e;
+		}
+		final Ii<String,Path> queryPath=pLink.get();
+		Path source=queryPath.snd();
+		if(!mFiles.addedAlready(source)) {
+			mFiles.commit(source);
+		}
+		mTrail.add(queryPath);
+		PrintWriter writer=wrapper().writer();
+		writer.println(mAddedToString.convert(queryPath));
 	}
 
 	@Override
 	public void commit(String pKey) throws IOException {
+		try {
+			mThrower.throwCaught(IOException.class);
+		} catch(Exception e) {
+			throw (IOException)e;
+		}
 		wrapper().close();
 		mWrapper=null;
 		super.commit(pKey);

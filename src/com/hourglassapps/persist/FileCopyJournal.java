@@ -1,8 +1,10 @@
 package com.hourglassapps.persist;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -18,6 +20,7 @@ import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
 import com.hourglassapps.util.Converter;
+import com.hourglassapps.util.InputStreamFactory;
 import com.hourglassapps.util.Promiser;
 import com.hourglassapps.util.Rtu;
 
@@ -29,8 +32,10 @@ public class FileCopyJournal implements Journal<Path, Void>, Promiser<Void,Void,
 	private final Path mDir;
 	protected final Converter<Path,String> mSourceToDestFilename;
 	private final Deferred<Void,Void,Path> mDeferred=new DeferredObject<>();
+	private final InputStreamFactory mStreamFact;
 	
-	public FileCopyJournal(Path pDir, Converter<Path,String> pAddedToString) throws IOException {
+	public FileCopyJournal(Path pDir, Converter<Path,String> pAddedToString, InputStreamFactory pStreamFact) throws IOException {
+		mStreamFact=pStreamFact;
 		mDir=pDir;
 		AbstractFilesJournal.mkdir(pDir);
 		mCompleted=mDir.resolve(COMPLETED);
@@ -41,7 +46,11 @@ public class FileCopyJournal implements Journal<Path, Void>, Promiser<Void,Void,
 
 	@Override
 	public boolean addedAlready(Path pKey) throws IOException {
-		return Files.exists(mCompleted.resolve(pKey));
+		String basename=mSourceToDestFilename.convert(pKey);
+		if(basename==null) {
+			return true; //shouldn't happen but if it does reporting it is someone else's responsibility
+		}
+		return Files.exists(mCompleted.resolve(basename));
 	}
 
 	@Override
@@ -58,8 +67,14 @@ public class FileCopyJournal implements Journal<Path, Void>, Promiser<Void,Void,
 	
 	@Override
 	public void commit(Path pKey) throws IOException {
-		Path dest=mCompleted.resolve(mSourceToDestFilename.convert(pKey));
-		Rtu.copyFile(pKey, mPartialFile);
+		String basename=mSourceToDestFilename.convert(pKey);
+		if(basename==null) {
+			return; //shouldn't happen but if it does reporting it is someone else's responsibility
+		}
+		Path dest=mCompleted.resolve(basename);
+		try(InputStream in=mStreamFact.wrap(new FileInputStream(pKey.toFile()))) {
+			Rtu.copyFile(in, mPartialFile);
+		}
 		Files.move(mPartialFile, dest, StandardCopyOption.ATOMIC_MOVE);
 		mDeferred.notify(dest);		
 	}

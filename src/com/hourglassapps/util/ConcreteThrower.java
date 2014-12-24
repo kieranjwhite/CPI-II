@@ -18,6 +18,7 @@ public class ConcreteThrower<E extends Exception> implements Thrower {
 			throws E {
 		if(mThrowable!=null && (pCatchable==null || pCatchable.isAssignableFrom(mThrowable.getClass()))) {
 			try {
+				//throw pCatchable.cast(mThrowable);
 				throw mThrowable;
 			} finally  {
 				mThrowable=null;
