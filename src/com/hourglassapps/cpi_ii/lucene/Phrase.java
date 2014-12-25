@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -19,86 +20,74 @@ import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.BytesRefIterator;
 
 import com.hourglassapps.util.Ii;
 
 public class Phrase {
+	private final String mPhrase;
 	private final Analyzer mAnalyser;
 	private static ThreadLocal<TermsEnum> TERM_ENUM=new ThreadLocal<>();
 	private static ThreadLocal<DocsAndPositionsEnum> DOC_POS_ENUM=new ThreadLocal<>();
-	private List<Ii<String,BytesRef>> mTermRefs;
+	private List<BytesRef> mRefs;
 	
 	public Phrase(Analyzer pAnalyser, String pPhrase) throws IOException {
+		mPhrase=pPhrase;
 		mAnalyser=pAnalyser;
-		mTermRefs=terms(pAnalyser, pPhrase);
+		mRefs=terms(pAnalyser, pPhrase);
 	}
 	
-	private static List<Ii<String,BytesRef>> terms(Analyzer pAnalyser, String pPhrase) throws IOException {
-		List<Ii<String,BytesRef>> termRefs=new ArrayList<>();
+	@Override
+	public String toString() {
+		return mPhrase;
+	}
+	
+	private static List<BytesRef> terms(Analyzer pAnalyser, String pPhrase) throws IOException {
+		List<BytesRef> refs=new ArrayList<>();
 		try(TokenStream ts=pAnalyser.tokenStream(LuceneVisitor.CONTENT.s(), new StringReader(pPhrase))) {
 			CharTermAttribute termAtt=ts.addAttribute(CharTermAttribute.class);
 			ts.reset();
 			while(ts.incrementToken()) {
-				String term=ts.reflectAsString(true);
-				termRefs.add(new Ii<String,BytesRef>(termAtt.toString(), new BytesRef(term)));
+				String term=termAtt.toString();
+				refs.add(new BytesRef(term));
 			}
 		}
-		return Collections.unmodifiableList(termRefs);
+		return refs;
 	}
 	
 	public List<DocSpan> findIn(IndexReader pReader, int pDocId, FieldVal pField) throws IOException {
 		Document doc=pReader.document(pDocId);
 		IndexableField path=doc.getField(LuceneVisitor.PATH.s());
-		System.out.println("doc: "+path.stringValue());
+		//System.out.println("doc: "+path.stringValue());
 		
 		Terms termVector=pReader.getTermVector(pDocId, pField.s());
 		List<DocSpan> spans=new ArrayList<>();
 		
 		TermsEnum termsEnum=TERM_ENUM.get();
 		termsEnum=termVector.iterator(TERM_ENUM.get());
-		if(termsEnum.next()==null) {
-			assert false;
-		}
-		TERM_ENUM.set(termsEnum);
-
+		
+		Collections.sort(mRefs, termsEnum.getComparator());
 		DocsAndPositionsEnum docPos=DOC_POS_ENUM.get();
-		BytesRef ref=null;
-		while((ref=termsEnum.next())!=null) {
+
+		for(BytesRef ref: mRefs) {
+			//System.out.println("term: "+termRef.fst()+" ref: "+termRef.snd().utf8ToString());
+			if(!termsEnum.seekExact(ref)) {
+				continue;
+			}
+
 			docPos=termsEnum.docsAndPositions(null,docPos);
 			docPos.nextDoc();
-			//if(docPos.nextDoc()==0) {
-			//	continue;
-			//}
 			int numMatches=docPos.freq();
+			assert(numMatches>0);
+
 			for(int matchNum=0; matchNum<numMatches; matchNum++) {
 				int termPos=docPos.nextPosition();
-				System.out.println("pos: "+termPos+" start: "+docPos.startOffset()+" end: "+docPos.endOffset());				
-			}
-			
-		}
-		
-		/*
-		DocsAndPositionsEnum docPos=DOC_POS_ENUM.get();
-		long termPos;
-		for(Ii<String,BytesRef> termRef: mTermRefs) {
-			if(termsEnum.seekExact(termRef.snd())==false) {
-				return Collections.emptyList();								
-			}
-			
-			docPos=termsEnum.docsAndPositions(null, docPos, DocsAndPositionsEnum.FLAG_OFFSETS);
-			if(docPos.nextDoc()!=0) {
-				return Collections.emptyList();				
-			}
-			
-			int numMatches=docPos.freq(), matchNum=0;
-			while(matchNum++<numMatches) {
-				termPos=docPos.nextPosition();
-				System.out.println("term: "+termRef.fst()+" pos: "+termPos+" start: "+docPos.startOffset()+" end: "+docPos.endOffset());
+				//System.out.println("term: "+termRef.snd().utf8ToString()+" pos: "+termPos+" start: "+docPos.startOffset()+" end: "+docPos.endOffset());				
 			}
 		}
-		*/
 		DOC_POS_ENUM.set(docPos);
-		
+		TERM_ENUM.set(termsEnum);
+
 		return spans;
 	}
 }

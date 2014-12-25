@@ -94,6 +94,7 @@ public class Queryer implements AutoCloseable {
 						for(int i=0; i<results.length; i++) {
 							
 							for(Phrase p: phrases) {
+								System.out.println("phrase: "+p.toString());
 								p.findIn(pReader, results[i].doc, LuceneVisitor.CONTENT);
 							}
 							
