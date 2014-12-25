@@ -161,7 +161,6 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 				try {
 					mCloser.close();
 				} finally {
-					mJournal.close();
 					mDeferred.resolve(null);
 				}
 			}

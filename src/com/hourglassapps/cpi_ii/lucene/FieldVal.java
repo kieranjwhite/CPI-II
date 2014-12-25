@@ -50,7 +50,9 @@ public class FieldVal {
 	    type.setOmitNorms(!tokenise);
 	    type.setTokenized(tokenise);
 		type.setStoreTermVectors(tokenise);
-		type.setIndexOptions(tokenise?IndexOptions.DOCS_AND_FREQS_AND_POSITIONS:IndexOptions.DOCS_ONLY);
+		type.setStoreTermVectorOffsets(tokenise);
+		type.setStoreTermVectorPositions(tokenise);
+		type.setIndexOptions(tokenise?IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS:IndexOptions.DOCS_ONLY);
 	    
 	    type.freeze();
 	    return type;

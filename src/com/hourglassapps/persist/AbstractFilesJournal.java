@@ -25,7 +25,7 @@ public abstract class AbstractFilesJournal<K,C> implements Journal<K, C>, Promis
 	private final Path mDirectory;
 	private final Path mCompletedDir;
 	private final Converter<K,String> mFilenameGenerator;
-	private final int mFirstFilename;
+	protected final int mFirstFilename;
 	private int mFilename;
 	protected final Path mPartialDir;
 	protected final Trail<C> mTrail;

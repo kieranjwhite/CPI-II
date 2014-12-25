@@ -34,6 +34,7 @@ import org.jdeferred.impl.DeferredObject;
 
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.lucene.LuceneVisitor;
+import com.hourglassapps.cpi_ii.lucene.Phrase;
 import com.hourglassapps.cpi_ii.lucene.ResultRelayer;
 import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
 import com.hourglassapps.persist.Journal;
@@ -68,29 +69,18 @@ public class Queryer implements AutoCloseable {
 		return mDeferred;
 	}
 	
-	private List<String> terms(String pPhrase) throws IOException {
-		List<String> terms=new ArrayList<>();
-		try(TokenStream ts=mAnalyser.tokenStream(LuceneVisitor.CONTENT.s(), new StringReader(pPhrase))) {
-			ts.reset();
-			while(ts.incrementToken()) { 
-				terms.add(ts.reflectAsString(true));
-			}
-		}
-		return Collections.unmodifiableList(terms);
-	}
-	
 	public void search(Ii<Line,String> pLineDst) throws ParseException, IOException {
 		if(mJournal.addedAlready(pLineDst.snd()) || "".equals(pLineDst.fst())) {
 			//Log.i(TAG, "found: "+Log.esc(pLineDst));
 			return;
 		}
 		try {
-			List<List<String>> phraseTerms=new ArrayList<>();
-			List<String> phrases=mLineToQuery.convert(pLineDst.fst());
-			for(String phrase: phrases) {
-				phraseTerms.add(terms(phrase));
+			final List<Phrase> phrases=new ArrayList<>();
+			List<String> phraseStrs=mLineToQuery.convert(pLineDst.fst());
+			for(String phrase: phraseStrs) {
+				phrases.add(new Phrase(mAnalyser, phrase));
 			}
-			String query="\""+Rtu.join(phrases,"\" \"")+"\"";
+			String query="\""+Rtu.join(phraseStrs,"\" \"")+"\"";
 			Log.i(TAG, "query: "+query);
 			if(!"".equals(query)) {
 				Query q=mParser.parse(query);
@@ -102,6 +92,11 @@ public class Queryer implements AutoCloseable {
 
 						ScoreDoc[] results=pResults.scoreDocs;
 						for(int i=0; i<results.length; i++) {
+							
+							for(Phrase p: phrases) {
+								p.findIn(pReader, results[i].doc, LuceneVisitor.CONTENT);
+							}
+							
 							Document doc = mSearcher.doc(results[i].doc);
 							Path path=Paths.get(doc.get(LuceneVisitor.PATH.s()));
 							String title=doc.get(LuceneVisitor.TITLE.s());

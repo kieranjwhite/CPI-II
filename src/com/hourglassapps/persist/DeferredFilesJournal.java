@@ -60,7 +60,7 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 			Converter<K, String> pFilenameGenerator, Converter<C,Typed<C>> pToTyped,
 			Downloader<C,R> pDownloader)
 			throws IOException {
-		super(pDirectory, pFilenameGenerator, pToTyped, 0);
+		super(pDirectory, pFilenameGenerator, pToTyped, 1);
 		mContentGenerator=pDownloader;
 		mDoneDir=pDirectory.resolve(DONE_INDEX);
 		mDone=new DoneStore(mDoneDir);
@@ -119,62 +119,65 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	
 	@Override
 	protected void addNew(final Typed<C> pLink) throws IOException {
-		incFilename();
-		final C source=pLink.get();
-		mTrail.add(source);
-		int destKey=filename();
+		try {
+			final C source=pLink.get();
+			mTrail.add(source);
+			int destKey=filename();
 
-		final Path dest=dest(pLink);
-		synchronized(this) {
-			if(mTypesWriter==null) {
-				mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(TYPES_FILENAME).toString())));
-			}
-
-			Ii<String,String> srcDst=new Ii<>(pLink.get().toString(), dest.toString());
-			if(mDone.addedAlready(srcDst)) {
-				//If we return without adding to mPromised, commit() might not commit the transaction properly
-				mTypesWriter.println(destKey+Character.toString(TYPE_COLUMN_DELIMITER)+TYPE_SYMLINK);
-				
-				Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
-				deferred.resolve(null);
-				mPromised.add(deferred);
-				Log.i(TAG, Log.esc("Already downloaded: "+srcDst));
-				return;
-			}
-		}
-		
-		/*
-		 * Careful now -- be aware that holding a lock on this journal instance (which we don't) while invoking downloadLink could
-		 * result in deadlock since downloadLink uses the HttpClient library for async downloads which itself acquires another
-		 * lock from time to time, including in the HttpAsyncClient execute method and the completion callback. 
-		 * If resolving a promise in one of the completion callbacks invokes code
-		 * in this class via a 'then' callback that attempts to acquire a journal lock we could have a problem.
-		 * 
-		 * This is all hypothetical since we are not holding a journal lock when invoking downloadLink.
-		 */
-		final Promise<R,IOException,Void> download=mContentGenerator.downloadLink(source, destKey, dest);
-		Promise<Void,IOException,Void> logContentType=download.then(
-				new DonePipe<R,Void,IOException,Void>() {
-
-					@Override
-					public Promise<Void, IOException, Void> pipeDone(R pTypeInfo) {
-						Deferred<Void,IOException,Void> def=new DeferredObject<Void,IOException,Void>();
-						
-						String src=pTypeInfo.src();
-						if(src==null) {
-							src=TYPE_UNKNOWN;
-						}
-						synchronized(DeferredFilesJournal.this) {
-							mTypesWriter.println(pTypeInfo.dstKey()+Character.toString(TYPE_COLUMN_DELIMITER)+src);
-							mDone.addNew(new Ii<>(source.toString(), dest.toString()));
-						}
-						def.resolve(null);
-						return def;
-					}
+			final Path dest=dest(pLink);
+			synchronized(this) {
+				if(mTypesWriter==null) {
+					mTypesWriter=new PrintWriter(new BufferedWriter(new FileWriter(mPartialDir.resolve(TYPES_FILENAME).toString())));
 				}
 
-				);
-		mPromised.add(destKey-FIRST_FILENAME, logContentType);
+				Ii<String,String> srcDst=new Ii<>(pLink.get().toString(), dest.toString());
+				if(mDone.addedAlready(srcDst)) {
+					//If we return without adding to mPromised, commit() might not commit the transaction properly
+					mTypesWriter.println(destKey+Character.toString(TYPE_COLUMN_DELIMITER)+TYPE_SYMLINK);
+
+					Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
+					deferred.resolve(null);
+					mPromised.add(deferred);
+					Log.i(TAG, Log.esc("Already downloaded: "+srcDst));
+					return;
+				}
+			}
+
+			/*
+			 * Careful now -- be aware that holding a lock on this journal instance (which we don't) while invoking downloadLink could
+			 * result in deadlock since downloadLink uses the HttpClient library for async downloads which itself acquires another
+			 * lock from time to time, including in the HttpAsyncClient execute method and the completion callback. 
+			 * If resolving a promise in one of the completion callbacks invokes code
+			 * in this class via a 'then' callback that attempts to acquire a journal lock we could have a problem.
+			 * 
+			 * This is all hypothetical since we are not holding a journal lock when invoking downloadLink.
+			 */
+			final Promise<R,IOException,Void> download=mContentGenerator.downloadLink(source, destKey, dest);
+			Promise<Void,IOException,Void> logContentType=download.then(
+					new DonePipe<R,Void,IOException,Void>() {
+
+						@Override
+						public Promise<Void, IOException, Void> pipeDone(R pTypeInfo) {
+							Deferred<Void,IOException,Void> def=new DeferredObject<Void,IOException,Void>();
+
+							String src=pTypeInfo.src();
+							if(src==null) {
+								src=TYPE_UNKNOWN;
+							}
+							synchronized(DeferredFilesJournal.this) {
+								mTypesWriter.println(pTypeInfo.dstKey()+Character.toString(TYPE_COLUMN_DELIMITER)+src);
+								mDone.addNew(new Ii<>(source.toString(), dest.toString()));
+							}
+							def.resolve(null);
+							return def;
+						}
+					}
+
+					);
+			mPromised.add(destKey-mFirstFilename, logContentType);
+		} finally {
+			incFilename();
+		}
 	}
 
 	@Override
