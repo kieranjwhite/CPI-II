@@ -8,19 +8,31 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.WeakHashMap;
 
 import com.fasterxml.jackson.core.io.JsonStringEncoder;
+import com.hourglassapps.cpi_ii.lucene.DocSpan;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Ii;
+import com.hourglassapps.util.Rtu;
 
-public final class TitlePathConverter implements Converter<Ii<String,Path>,String> {
+public final class TitlePathConverter implements Converter<Result,String> {
 	private final Path mParent;
 	private final ConcreteThrower<Exception> mThrower;
 	private final JsonStringEncoder mEncoder=JsonStringEncoder.getInstance();
 	private final Set<SoftReference<String>> mTitles=new HashSet<>();
 	private final Map<String,String> mTitleToJsonString=new WeakHashMap<>();
+	
+	private final static Converter<DocSpan,String> DOCSPAN_TO_STRING=new Converter<DocSpan,String>(){
+
+		@Override
+		public String convert(DocSpan pIn) {
+			return "{s:"+pIn.startOffset()+",e:"+pIn.endOffset()+"}";
+		}
+		
+	};
 	
 	public TitlePathConverter(ConcreteThrower<Exception> pThrower) throws IOException {
 		mThrower=pThrower;
@@ -43,8 +55,8 @@ public final class TitlePathConverter implements Converter<Ii<String,Path>,Strin
 	}
 	
 	@Override
-	public String convert(Ii<String,Path> pTitlePath) {
-		String title=pTitlePath.fst();
+	public String convert(Result pResult) {
+		String title=pResult.title();
 		String jsonified;
 		if(mTitleToJsonString.containsKey(title)) {
 			jsonified=mTitleToJsonString.get(title);
@@ -54,12 +66,18 @@ public final class TitlePathConverter implements Converter<Ii<String,Path>,Strin
 			mTitleToJsonString.put(title, jsonified);
 		}
 		try {
-			return "{t:\""+jsonified+"\","
-					+ "p:\""+toRelURL(relativize(pTitlePath.snd().toRealPath()))+"\"},";
+			return "{t:\""+jsonified+"\","+
+					"p:\""+toRelURL(relativize(pResult.path().toRealPath()))+"\","+
+					"s:["+listSpans(pResult.matches())+"],"+
+					"},";
 		} catch(IOException e) {
 			mThrower.ctch(e);
 		}
 		return null;
+	}
+
+	private String listSpans(SortedSet<DocSpan> matches) {
+		return Rtu.join(DOCSPAN_TO_STRING, matches, ",");
 	}
 	
 }

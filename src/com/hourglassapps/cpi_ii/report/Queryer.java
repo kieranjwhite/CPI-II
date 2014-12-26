@@ -7,7 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -32,6 +37,7 @@ import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
+import com.hourglassapps.cpi_ii.lucene.DocSpan;
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.lucene.LuceneVisitor;
 import com.hourglassapps.cpi_ii.lucene.Phrase;
@@ -47,7 +53,7 @@ import com.hourglassapps.util.URLUtils;
 public class Queryer implements AutoCloseable {
 	private final static String TAG=Queryer.class.getName();
 	private final static int MAX_RESULTS=100;
-	private final Journal<String,Ii<String,Path>> mJournal;
+	private final Journal<String,Result> mJournal;
 	private final Analyzer mAnalyser;
 	private final Deferred<Void,Exception,Ii<Line,String>> mDeferred=new DeferredObject<>();
     private final QueryParser mParser;
@@ -55,7 +61,7 @@ public class Queryer implements AutoCloseable {
 	private final IndexSearcher mSearcher;
 	private final Converter<Line,List<String>> mLineToQuery;
 	
-	public Queryer(Journal<String,Ii<String,Path>> pJournal, IndexViewer pIndex, 
+	public Queryer(Journal<String,Result> pJournal, IndexViewer pIndex, 
 			Analyzer pAnalyser, Converter<Line,List<String>> pQueryGenerator) throws IOException {
 		mJournal=pJournal;
 		mAnalyser=pAnalyser;
@@ -90,12 +96,30 @@ public class Queryer implements AutoCloseable {
 					public void run(IndexReader pReader, TopDocs pResults)
 							throws IOException {
 
+						final SortedSet<DocSpan> docSpans=new TreeSet<>();
 						ScoreDoc[] results=pResults.scoreDocs;
 						for(int i=0; i<results.length; i++) {
 							
 							for(Phrase p: phrases) {
-								System.out.println("phrase: "+p.toString());
-								p.findIn(pReader, results[i].doc, LuceneVisitor.CONTENT);
+								Iterator<DocSpan> spans=p.findIn(pReader, results[i].doc, LuceneVisitor.CONTENT).iterator();
+								while(spans.hasNext()) {
+									DocSpan span=spans.next();
+									docSpans.add(span);
+								}
+							}
+							
+							Iterator<DocSpan> spans=docSpans.iterator();
+							DocSpan lastSpan=null;
+							if(spans.hasNext()) {
+								lastSpan=spans.next();
+							}
+							while(spans.hasNext()) {
+								DocSpan span=spans.next();
+								if(!lastSpan.merged(span)) {
+									lastSpan=span;
+								} else {
+									spans.remove();
+								}
 							}
 							
 							Document doc = mSearcher.doc(results[i].doc);
@@ -105,10 +129,11 @@ public class Queryer implements AutoCloseable {
 								if(title==null) {
 									title="";
 								}
-								mJournal.addNew(new Ii<String,Path>(title,path));
+								mJournal.addNew(new Result(title, path, Collections.unmodifiableSortedSet(docSpans))); //unmodifiableSortedSet or not, DocSpan instances are mutable so we could be more defensive here
 							} else {
 								assert(false);
 							}
+							docSpans.clear();
 						}
 					}
 

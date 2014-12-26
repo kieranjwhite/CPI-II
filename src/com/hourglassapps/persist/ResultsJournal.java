@@ -27,6 +27,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 import com.hourglassapps.cpi_ii.lucene.TikaReader;
+import com.hourglassapps.cpi_ii.report.Result;
 import com.hourglassapps.cpi_ii.web_search.MainDownloader;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
@@ -38,12 +39,12 @@ import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Typed;
 
-public class ResultsJournal extends AbstractFilesJournal<String,Ii<String,Path>> {
+public class ResultsJournal extends AbstractFilesJournal<String,Result> {
 	private final static String TAG=ResultsJournal.class.getName();
 	private final Class<?> mTemplateClass;
 	private final String mStart;
 	private final String mEnd;
-	private final Converter<Ii<String,Path>,String> mAddedToString;
+	private final Converter<Result,String> mAddedToString;
 	private final Path mDocDir;
 	private final static Path JS_FILENAME=Paths.get("links.js");
 	private final static Path PLAIN_TEXT_DIR=Paths.get("text");
@@ -53,14 +54,14 @@ public class ResultsJournal extends AbstractFilesJournal<String,Ii<String,Path>>
 	private final Shortener mShorten=new Shortener(mThrower);
 	//private final static Path DOCUMENT_DIR=MainDownloader.DOCUMENT_DIR;
 	
-	public ResultsJournal(Path pDir, Path pDocDir, final Converter<Ii<String,Path>, String> pAddedToString,
+	public ResultsJournal(Path pDir, Path pDocDir, final Converter<Result, String> pAddedToString,
 			Class<?> pTemplateClass, String pStart, String pEnd)
 			throws IOException {
-		super(pDir, new IdentityConverter<String>(), new Converter<Ii<String,Path>,Typed<Ii<String,Path>>>(){
+		super(pDir, new IdentityConverter<String>(), new Converter<Result,Typed<Result>>(){
 
 			@Override
-			public Typed<Ii<String,Path>> convert(final Ii<String,Path> pIn) {
-				return new Typed<Ii<String,Path>>() {
+			public Typed<Result> convert(final Result pIn) {
+				return new Typed<Result>() {
 
 					@Override
 					public String extension() {
@@ -68,7 +69,7 @@ public class ResultsJournal extends AbstractFilesJournal<String,Ii<String,Path>>
 					}
 
 					@Override
-					public Ii<String,Path> get() {
+					public Result get() {
 						return pIn;
 					}
 					
@@ -146,20 +147,21 @@ public class ResultsJournal extends AbstractFilesJournal<String,Ii<String,Path>>
 	}
 	
 	@Override
-	protected void addNew(Typed<Ii<String,Path>> pLink) throws IOException {
+	protected void addNew(Typed<Result> pLink) throws IOException {
 		try {
 			mThrower.throwCaught(IOException.class);
 		} catch(Exception e) {
 			throw (IOException)e;
 		}
-		final Ii<String,Path> queryPath=pLink.get();
-		Path source=queryPath.snd();
+		final Result r=pLink.get();
+		Path source=r.path();
 		if(!mFiles.addedAlready(source)) {
 			mFiles.commit(source);
 		}
-		mTrail.add(queryPath);
+		mTrail.add(r);
 		PrintWriter writer=wrapper().writer();
-		writer.println(mAddedToString.convert(queryPath));
+		String added=mAddedToString.convert(r);
+		writer.println(added);
 	}
 
 	@Override

@@ -42,6 +42,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 
 public class Rtu {
@@ -335,6 +336,7 @@ public class Rtu {
 		return Rtu.uuidV4().replaceAll("-","");
 	}
 
+	/*
 	public static String join(List<String> pStrings, String pJoint) {
 		if(pStrings.size()==0) {
 			return "";
@@ -347,6 +349,25 @@ public class Rtu {
 			stringsJoined.append(pJoint).append(term);
 		}
 		return stringsJoined.toString();
+	}
+	*/
+
+	private final static IdentityConverter<String> STRING_TO_STRING=new IdentityConverter<String>();
+	public static String join(Collection<String> pStrings, String pJoint) {
+		return join(STRING_TO_STRING, pStrings, pJoint);
+	}
+	
+	public static <A> String join(Converter<A,String> pPrinter, Collection<A> pItems, String pJoint) {
+		if(pItems.size()==0) {
+			return "";
+		}
+		StringBuilder joins=new StringBuilder();
+		for(A item: pItems) {
+			String stringified=pPrinter.convert(item);
+			joins.append(stringified).append(pJoint);
+		}
+		joins.delete(joins.length()-pJoint.length(), joins.length());
+		return joins.toString();
 	}
 	
 	public static void continuePrompt() {
