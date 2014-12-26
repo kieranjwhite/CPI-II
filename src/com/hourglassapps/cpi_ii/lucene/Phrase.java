@@ -2,6 +2,7 @@ package com.hourglassapps.cpi_ii.lucene;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,8 +30,13 @@ import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.BytesRefIterator;
 
+import com.hourglassapps.util.Cache;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
+import com.hourglassapps.util.NullIterable;
+import com.hourglassapps.util.TimeKeeper;
+import com.hourglassapps.util.TimeKeeper.StopWatch;
+import com.hourglassapps.util.Clock;
 
 public class Phrase {
 	private final static String TAG=Phrase.class.getName();
@@ -39,19 +45,25 @@ public class Phrase {
 	private static ThreadLocal<DocsAndPositionsEnum> DOC_POS_ENUM=new ThreadLocal<>();
 	private final List<BytesRef> mOrigRefs; //these are in word order as per line of poem
 	private final Map<BytesRef,Integer> mRefToIndex;
-
+	private final Clock mTimes;
+	private Cache<Integer,Terms> mTermCache;
+	
 	//private List<List<Integer>> mPositionAbsolutes=new ArrayList<>();
 	
-	public Phrase(Analyzer pAnalyser, String pPhrase) throws IOException {
-		mPhrase=pPhrase;
-		mOrigRefs=Collections.unmodifiableList(terms(pAnalyser, pPhrase));
-		Map<BytesRef,Integer> refToIdx=new HashMap<>();
-		int idx=0;
-		for(BytesRef ref: mOrigRefs) {
-			refToIdx.put(ref, idx);
-			idx++;
+	public Phrase(Analyzer pAnalyser, String pPhrase, Clock pTimes, Cache<Integer,Terms> pTermCache) throws IOException {
+		mTermCache=pTermCache;
+		mTimes=pTimes;
+		try(StopWatch w=mTimes.time("phrase constructor")) {
+			mPhrase=pPhrase;
+			mOrigRefs=Collections.unmodifiableList(terms(pAnalyser, pPhrase));
+			Map<BytesRef,Integer> refToIdx=new HashMap<>();
+			int idx=0;
+			for(BytesRef ref: mOrigRefs) {
+				refToIdx.put(ref, idx);
+				idx++;
+			}
+			mRefToIndex=Collections.unmodifiableMap(refToIdx);
 		}
-		mRefToIndex=Collections.unmodifiableMap(refToIdx);
 	}
 	
 	@Override
@@ -72,65 +84,75 @@ public class Phrase {
 		return Collections.unmodifiableList(refs);
 	}
 	
-	public Iterable<DocSpan> findIn(IndexReader pReader, int pDocId, FieldVal pField) throws IOException {
-		final Map<BytesRef,NavigableSet<Integer>> refsToPositions=new HashMap<>();
-		final Map<Integer, Integer> posToStartOffsets=new HashMap<Integer,Integer>();
-		final Map<Integer, Integer> posToEndOffsets=new HashMap<Integer,Integer>();
-		
-		BytesRef firstRef=mOrigRefs.get(0);
-		
-		Document doc=pReader.document(pDocId);
-		IndexableField path=doc.getField(LuceneVisitor.PATH.s());
-		//System.out.println("doc: "+path.stringValue());
-		
-		Terms termVector=pReader.getTermVector(pDocId, pField.s());
-		
-		TermsEnum termsEnum=TERM_ENUM.get();
-		termsEnum=termVector.iterator(TERM_ENUM.get());
-		
-		List<BytesRef> sortedTerms=new ArrayList<>(mOrigRefs);
-		Collections.sort(sortedTerms, termsEnum.getComparator());
+	public Iterable<DocSpan> findIn(IndexReader pReader, int pDocId) throws IOException {
+		try(StopWatch findWatch=mTimes.time("find")) {
+			final Map<BytesRef,NavigableSet<Integer>> refsToPositions=new HashMap<>();
+			final Map<Integer, Integer> posToStartOffsets=new HashMap<Integer,Integer>();
+			final Map<Integer, Integer> posToEndOffsets=new HashMap<Integer,Integer>();
 
-		DocsAndPositionsEnum docPos=DOC_POS_ENUM.get();
+			BytesRef firstRef=mOrigRefs.get(0);
 
-		for(BytesRef ref: sortedTerms) {
-			//System.out.println("term: "+termRef.fst()+" ref: "+termRef.snd().utf8ToString());
-			if(!termsEnum.seekExact(ref)) {
-				continue;
+			Document doc=pReader.document(pDocId);
+			IndexableField path=doc.getField(LuceneVisitor.PATH.s());
+			//System.out.println("doc: "+path.stringValue());
+
+			Terms termVector;
+			try(StopWatch vectorWatch=findWatch.time("vector")) {
+				termVector=mTermCache.get(pDocId);
 			}
+			if(termVector==null) {
+				return new NullIterable<DocSpan>();
+			}
+			TermsEnum termsEnum=TERM_ENUM.get();
+			termsEnum=termVector.iterator(TERM_ENUM.get());
 
-			NavigableSet<Integer> positions=new TreeSet<>();
-			refsToPositions.put(ref, positions);
-			
-			docPos=termsEnum.docsAndPositions(null,docPos);
-			docPos.nextDoc();
-			int numMatches=docPos.freq();
-			assert(numMatches>0);
+			List<BytesRef> sortedTerms=new ArrayList<>(mOrigRefs);
+			Collections.sort(sortedTerms, termsEnum.getComparator());
 
-			for(int matchNum=0; matchNum<numMatches; matchNum++) {
-				int termPos=docPos.nextPosition(); /* nextPosition returns the number of terms into document the first match was found 
+			DocsAndPositionsEnum docPos=DOC_POS_ENUM.get();
+			try(StopWatch termWatch=findWatch.time("terms")) {
+				for(BytesRef ref: sortedTerms) {
+					//System.out.println("term: "+termRef.fst()+" ref: "+termRef.snd().utf8ToString());
+					if(!termsEnum.seekExact(ref)) {
+						continue;
+					}
+
+					NavigableSet<Integer> positions=new TreeSet<>();
+					refsToPositions.put(ref, positions);
+
+					docPos=termsEnum.docsAndPositions(null,docPos);
+					docPos.nextDoc();
+					int numMatches=docPos.freq();
+					assert(numMatches>0);
+
+					try(StopWatch matchWatch=termWatch.time("matches")) {
+						for(int matchNum=0; matchNum<numMatches; matchNum++) {
+							int termPos=docPos.nextPosition(); /* nextPosition returns the number of terms into document the first match was found 
 													  or for subsequent matches the number of tokens since the previous match */
-				positions.add(termPos);
-				if(ref==firstRef) {
-					posToStartOffsets.put(termPos, docPos.startOffset());
+							positions.add(termPos);
+							if(ref==firstRef) {
+								posToStartOffsets.put(termPos, docPos.startOffset());
+							}
+							posToEndOffsets.put(termPos, docPos.endOffset());
+							//System.out.println("term: "+termRef.snd().utf8ToString()+" pos: "+termPos+" start: "+docPos.startOffset()+" end: "+docPos.endOffset());				
+						}
+					}
 				}
-				posToEndOffsets.put(termPos, docPos.endOffset());
-				//System.out.println("term: "+termRef.snd().utf8ToString()+" pos: "+termPos+" start: "+docPos.startOffset()+" end: "+docPos.endOffset());				
 			}
+			DOC_POS_ENUM.set(docPos);
+			TERM_ENUM.set(termsEnum);
+
+			return new Iterable<DocSpan>(){
+
+				@Override
+				public Iterator<DocSpan> iterator() {
+					return Phrase.this.iterator(refsToPositions, posToStartOffsets, posToEndOffsets);
+				}
+
+			};
 		}
-		DOC_POS_ENUM.set(docPos);
-		TERM_ENUM.set(termsEnum);
-
-		return new Iterable<DocSpan>(){
-
-			@Override
-			public Iterator<DocSpan> iterator() {
-				return Phrase.this.iterator(refsToPositions, posToStartOffsets, posToEndOffsets);
-			}
-			
-		};
 	}
-	
+
 	private boolean nextAt(final Map<BytesRef,NavigableSet<Integer>> pRefsToPositions, BytesRef pRef, int pRequiredPos) {
 		NavigableSet<Integer> refPositions=pRefsToPositions.get(pRef);
 		if(refPositions==null) {

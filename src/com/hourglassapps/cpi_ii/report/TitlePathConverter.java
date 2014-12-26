@@ -13,6 +13,7 @@ import java.util.WeakHashMap;
 
 import com.fasterxml.jackson.core.io.JsonStringEncoder;
 import com.hourglassapps.cpi_ii.lucene.DocSpan;
+import com.hourglassapps.util.Cache;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Ii;
@@ -22,9 +23,14 @@ public final class TitlePathConverter implements Converter<Result,String> {
 	private final Path mParent;
 	private final ConcreteThrower<Exception> mThrower;
 	private final JsonStringEncoder mEncoder=JsonStringEncoder.getInstance();
-	private final Set<SoftReference<String>> mTitles=new HashSet<>();
-	private final Map<String,String> mTitleToJsonString=new WeakHashMap<>();
-	
+	private final Cache<String,String> mEncodingCache=new Cache<>(new Converter<String,String>(){
+
+		@Override
+		public String convert(String pIn) {
+			return new String(mEncoder.quoteAsString(pIn));
+		}
+		
+	});
 	private final static Converter<DocSpan,String> DOCSPAN_TO_STRING=new Converter<DocSpan,String>(){
 
 		@Override
@@ -57,14 +63,7 @@ public final class TitlePathConverter implements Converter<Result,String> {
 	@Override
 	public String convert(Result pResult) {
 		String title=pResult.title();
-		String jsonified;
-		if(mTitleToJsonString.containsKey(title)) {
-			jsonified=mTitleToJsonString.get(title);
-		} else {
-			jsonified=new String(mEncoder.quoteAsString(title));
-			mTitles.add(new SoftReference<String>(jsonified));
-			mTitleToJsonString.put(title, jsonified);
-		}
+		String jsonified=mEncodingCache.get(title);
 		try {
 			return "{t:\""+jsonified+"\","+
 					"p:\""+toRelURL(relativize(pResult.path().toRealPath()))+"\","+
