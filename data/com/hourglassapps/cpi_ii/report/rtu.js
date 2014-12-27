@@ -102,6 +102,14 @@ var hourglassapps_rtu=function() {
 	return (CaretPos);
     };
 
+
+    r.escapeHTML=function(str) {
+	var div = document.createElement('div');
+	var text = document.createTextNode(str);
+	div.appendChild(text);
+	return div.innerHTML;
+    };
+    
     r.loadJSFile=function(filename) {
 	var fileref=document.createElement('script');
 	fileref.setAttribute("type","text/javascript");

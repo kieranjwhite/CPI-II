@@ -11,13 +11,21 @@ import org.jdeferred.DoneCallback;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
-public class TimeKeeper implements Clock, AutoCloseable {
-	private final static String TAG=TimeKeeper.class.getName();
+/***
+ * Times the duration between creation of Clocks (via the time method) and closing them.
+ * This duration is accumulated anytime a new clock is created with the same name.
+ * Time measured for Clocks returned by a StopWatch.time() method is subtracted from time measured by the
+ * parent StopWatch when reporting, hence the ExclusiveTimeKeeper name.
+ * @author kieran
+ *
+ */
+public class ExclusiveTimeKeeper implements Clock, AutoCloseable {
+	private final static String TAG=ExclusiveTimeKeeper.class.getName();
 	private final static String ARROW="->";
 	private final Map<String,StopWatch> mLabelToWatches=new HashMap<>();
 	private final Map<String,Long> mLabelToAccumulatedInterval=new HashMap<>();
 	
-	public TimeKeeper() {
+	public ExclusiveTimeKeeper() {
 	}
 	
 	private Ii<Long,String> report(String pParentLabel, Map<String,StopWatch> pChildWatches) {
@@ -79,7 +87,7 @@ public class TimeKeeper implements Clock, AutoCloseable {
 		return w;
 	}
 	
-	public class StopWatch implements AutoCloseable, Comparable<StopWatch>, Promiser<Long,Void,Void>, Clock {
+	private class StopWatch implements AutoCloseable, Comparable<StopWatch>, Promiser<Long,Void,Void>, Clock {
 		private final Map<String,StopWatch> mLabelToWatches=new HashMap<>();
 		private final Map<String,Long> mLabelToAccumulatedInterval=new HashMap<>();
 
@@ -131,6 +139,11 @@ public class TimeKeeper implements Clock, AutoCloseable {
 			return total;
 		}
 		
+		/**
+		 * Any time spent between the returning of this new StopWatch and the closing of it later 
+		 * will be subtracted from the time reported for 'this'. A separate entry in the report
+		 * will created for the returned StopWatch instances.
+		 */
 		@Override
 		public StopWatch time(String pLabel) {
 			StopWatch w=createWatch(mLabelToWatches, mLabelToAccumulatedInterval, pLabel);

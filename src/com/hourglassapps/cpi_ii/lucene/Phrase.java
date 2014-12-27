@@ -2,40 +2,28 @@ package com.hourglassapps.cpi_ii.lucene;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.TreeSet;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.index.DocsAndPositionsEnum;
-import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.BytesRef;
-import org.apache.lucene.util.BytesRefIterator;
 
 import com.hourglassapps.util.Cache;
-import com.hourglassapps.util.Ii;
-import com.hourglassapps.util.Log;
 import com.hourglassapps.util.NullIterable;
-import com.hourglassapps.util.TimeKeeper;
-import com.hourglassapps.util.TimeKeeper.StopWatch;
 import com.hourglassapps.util.Clock;
 
 public class Phrase {
@@ -53,7 +41,7 @@ public class Phrase {
 	public Phrase(Analyzer pAnalyser, String pPhrase, Clock pTimes, Cache<Integer,Terms> pTermCache) throws IOException {
 		mTermCache=pTermCache;
 		mTimes=pTimes;
-		try(StopWatch w=mTimes.time("phrase constructor")) {
+		try(Clock w=mTimes.time("phrase constructor")) {
 			mPhrase=pPhrase;
 			mOrigRefs=Collections.unmodifiableList(terms(pAnalyser, pPhrase));
 			Map<BytesRef,Integer> refToIdx=new HashMap<>();
@@ -85,7 +73,7 @@ public class Phrase {
 	}
 	
 	public Iterable<DocSpan> findIn(IndexReader pReader, int pDocId) throws IOException {
-		try(StopWatch findWatch=mTimes.time("find")) {
+		try(Clock findWatch=mTimes.time("find")) {
 			final Map<BytesRef,NavigableSet<Integer>> refsToPositions=new HashMap<>();
 			final Map<Integer, Integer> posToStartOffsets=new HashMap<Integer,Integer>();
 			final Map<Integer, Integer> posToEndOffsets=new HashMap<Integer,Integer>();
@@ -97,7 +85,7 @@ public class Phrase {
 			//System.out.println("doc: "+path.stringValue());
 
 			Terms termVector;
-			try(StopWatch vectorWatch=findWatch.time("vector")) {
+			try(Clock vectorWatch=findWatch.time("vector")) {
 				termVector=mTermCache.get(pDocId);
 			}
 			if(termVector==null) {
@@ -110,7 +98,7 @@ public class Phrase {
 			Collections.sort(sortedTerms, termsEnum.getComparator());
 
 			DocsAndPositionsEnum docPos=DOC_POS_ENUM.get();
-			try(StopWatch termWatch=findWatch.time("terms")) {
+			try(Clock termWatch=findWatch.time("terms")) {
 				for(BytesRef ref: sortedTerms) {
 					//System.out.println("term: "+termRef.fst()+" ref: "+termRef.snd().utf8ToString());
 					if(!termsEnum.seekExact(ref)) {
@@ -125,7 +113,7 @@ public class Phrase {
 					int numMatches=docPos.freq();
 					assert(numMatches>0);
 
-					try(StopWatch matchWatch=termWatch.time("matches")) {
+					try(Clock matchWatch=termWatch.time("matches")) {
 						for(int matchNum=0; matchNum<numMatches; matchNum++) {
 							int termPos=docPos.nextPosition(); /* nextPosition returns the number of terms into document the first match was found 
 													  or for subsequent matches the number of tokens since the previous match */

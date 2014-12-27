@@ -64,6 +64,16 @@
 	}
 	return source;
     };
+
+    var pathToTextCopy=function(path) {
+	var middleArr=path.split('/');
+	var journalName=middleArr[1];
+	var journalNum=journalName.split('_')[0];
+	var ngram=middleArr[3];
+	var numExtn=middleArr[4];
+	var num=numExtn.split('.')[0];
+	return "results/completed/"+journalNum+'+'+g.rtu.escapeHTML(ngram)+'+'+num+"/links.js";
+    };
     
     var listItem=function(data, original_url, hidden) {
 	var style;

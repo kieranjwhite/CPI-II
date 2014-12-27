@@ -1,39 +1,26 @@
 package com.hourglassapps.cpi_ii.report;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.WeakHashMap;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
@@ -52,8 +39,7 @@ import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
-import com.hourglassapps.util.TimeKeeper;
-import com.hourglassapps.util.URLUtils;
+import com.hourglassapps.util.ExclusiveTimeKeeper;
 
 public class Queryer implements AutoCloseable {
 	private final static String TAG=Queryer.class.getName();
@@ -65,7 +51,7 @@ public class Queryer implements AutoCloseable {
     private final IndexReader mReader;
 	private final IndexSearcher mSearcher;
 	private final Converter<Line,List<String>> mLineToQuery;
-	private final TimeKeeper mTimes=new TimeKeeper();
+	private final ExclusiveTimeKeeper mTimes=new ExclusiveTimeKeeper();
 	private int mSearchCnt=0;
 	private final Cache<Integer,Terms> mTermCache;
 	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<>();

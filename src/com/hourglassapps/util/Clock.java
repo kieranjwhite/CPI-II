@@ -1,7 +1,8 @@
 package com.hourglassapps.util;
 
-import com.hourglassapps.util.TimeKeeper.StopWatch;
-
-public interface Clock {
-	public StopWatch time(String pLabel);
+public interface Clock extends AutoCloseable {
+	public Clock time(String pLabel);
+	
+	@Override
+	public void close();
 }
