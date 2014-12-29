@@ -27,11 +27,12 @@
 		title=hashTag.f;
 	    }
 
+	    $("div[data-role='header']>h2").html(title);
 	    if(hashTag.hasOwnProperty('n')) {
 		result_num=hashTag.n;
+		$("div[data-role='header']").addClass('ui-header-fixed');
 	    }
 	    
-	    $("div[data-role='header']>h2").html(title);
 	},
 
 	setBlacklist:function(pBlacklist) {
@@ -185,7 +186,9 @@
 	if(result_num===null) {
 	    var page=$("#pageone").first();
 	    var l="<ul id=\"list\" data-role=\"listview\" data-split-icon=\"arrow-d\" data-split-theme=\"d\" data-inset=\"true\"></ul>";
-	    page.append(l);
+	    if($("#list").length==0) {
+		page.append(l);
+	    }
 	    $("#list").first().listview();
 	    listResults(results);
 	} else {
