@@ -39,6 +39,8 @@ public class PoemsReport implements AutoCloseable {
 	private final static String JX_JS="jx_V3.01.A.js";
 	private final static String RTU_JS="rtu.js";
 	private final static String RTU_DOMLESS_JS="rtu_domless.js";
+	private final static String BASE64_JS="base64.js";
+	private final static String JSON_JS="json.js";
 	private final static String POEM_PANE_NAME="poems.html";
 	private final static String RESULTS_DIR="results"; //If this is changed then the corresponding string in result_list.html must be changed
 	private final static String START="poems_start";
@@ -51,11 +53,11 @@ public class PoemsReport implements AutoCloseable {
 	private final List<PoemRecord> mPoems=new ArrayList<>();
 	private final Deferred<Void,Void,Ii<Line,String>> mDeferred=new DeferredObject<>();
 	private final static Cleaner CLEANER=new Cleaner();
-	private final Converter<Line,String> mQueryToHashTag;
+	private final Converter<Line,Ii<String,String>> mQueryToHashTagFilename;
 	private final Path mResultsDir;
 	private final Thrower mThrower;
 	
-	public PoemsReport(Path pDest, Converter<Line,String> pQueryToHashTag, Thrower pThrower) throws IOException {
+	public PoemsReport(Path pDest, Converter<Line,Ii<String,String>> pQueryToHashTagFilename, Thrower pThrower) throws IOException {
 		mThrower=pThrower;
 		
 		copy(CSS, pDest);
@@ -68,9 +70,11 @@ public class PoemsReport implements AutoCloseable {
 		copy(JX_JS, pDest);
 		copy(RTU_JS, pDest);
 		copy(RTU_DOMLESS_JS, pDest);
+		copy(BASE64_JS, pDest);
+		copy(JSON_JS, pDest);
 		
 		mResultsDir=pDest.resolve(RESULTS_DIR);
-		mQueryToHashTag=pQueryToHashTag;
+		mQueryToHashTagFilename=pQueryToHashTagFilename;
 		mWrapper=new FileWrapper(PoemsReport.class, START, END, pDest.resolve(POEM_PANE_NAME));
 		mOut=mWrapper.writer();
 	}
@@ -89,12 +93,13 @@ public class PoemsReport implements AutoCloseable {
 	}
 	
 	private String linkAndNotify(long pId, Line pLine) throws IOException {
-		String key=mQueryToHashTag.convert(pLine);
-		Log.i(TAG, "file: "+Log.esc(key));
-		if(key!=null) {
-			mDeferred.notify(new Ii<Line,String>(pLine,key));
-			return href(pId, pLine.text() ,key);
+		Ii<String,String> hashIdFilename=mQueryToHashTagFilename.convert(pLine);
+		if(hashIdFilename!=null) {
+			Log.i(TAG, "file: "+Log.esc(hashIdFilename.snd()));
+			mDeferred.notify(new Ii<Line,String>(pLine,hashIdFilename.snd()));
+			return href(pId, pLine.text() ,hashIdFilename.fst());
 		}
+		Log.e(TAG, "null file");
 		return pLine.text();
 
 	}

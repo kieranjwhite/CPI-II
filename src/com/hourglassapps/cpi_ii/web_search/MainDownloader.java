@@ -372,7 +372,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					@Override
 					public void onProgress(
 							Ii<Integer, String> pTidDir) {
-						indexer.push(new QueryRecord<String>(pTidDir.fst(), pTidDir.snd(), journals.get(pTidDir.fst()).path(KEY_CONVERTER.convert(pTidDir.snd()))));
+						indexer.push(new QueryRecord<String>(pTidDir.fst(), pTidDir.snd(), journals.get(pTidDir.fst()).path(
+								KEY_CONVERTER.convert(pTidDir.snd()))));
 					}
 				});
 				CPIUtils.listAllTokenExpansions(index, stemPath, dist);

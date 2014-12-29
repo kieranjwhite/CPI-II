@@ -199,6 +199,30 @@ function() {
 	    return entityMap[s];
 	});
     };
+
+    r.trList = function(str, fromChars, to) {  
+	var toChars = to.split("");  
+	var mapTable = {};  
+
+	for(var i = 0; i < fromChars.length; i++) {  
+            var c = i < toChars.length ? toChars[i] : "";  
+            mapTable[fromChars[i]] = c;  
+	}  
+
+	var re = new RegExp(fromChars.join("|"), "g");  
+	str = str.replace(re, function(c) { 
+            return mapTable[c]; 
+	});  
+
+	return str;  
+    };
+    
+    //copied from http://blog.versed.se/2008/07/transliterate-in-javascript.html
+    //converts from to a regular expression so be careful with its value.
+    r.tr = function(str, from, to) {  
+	var fromChars = from.split("");  
+	return r.trList(str, fromChars, to);
+    };
     
     return glb;
 };

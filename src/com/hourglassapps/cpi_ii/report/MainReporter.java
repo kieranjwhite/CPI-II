@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -23,6 +25,7 @@ import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
 import com.hourglassapps.cpi_ii.report.LineGenerator.LineType;
 import com.hourglassapps.cpi_ii.web_search.MainDownloader;
 import com.hourglassapps.persist.FileCopyJournal;
+import com.hourglassapps.persist.MainHashTagDict;
 import com.hourglassapps.persist.ResultsJournal;
 import com.hourglassapps.persist.Shortener;
 import com.hourglassapps.persist.WrappedJournal;
@@ -35,9 +38,11 @@ import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Typed;
+import com.hourglassapps.util.URLUtils;
 
 public class MainReporter {
 	private final static String TAG=MainReporter.class.getName();
+	private final static int MAX_PATH_LEN=32;
 	public final Path DOWNLOAD_PATH=Paths.get("downloaded_index");
 	private final static String POEM_DIR_NAME="poems";
 	final static Path DOCUMENT_DIR=Paths.get("./documents");
@@ -72,48 +77,42 @@ public class MainReporter {
 		
 		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
 			Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
-			final Converter<String,String> shortener=new Shortener(thrower);
-			Converter<Line,String> queryToHashTag=new Converter<Line,String>() {
+			final Converter<String,String> shortener=new Shortener(MAX_PATH_LEN, thrower);
+			Converter<Line,Ii<String,String>> queryToHashIdFilename=new Converter<Line,Ii<String,String>>() {
 				private final static String TITLE_PREFIX="eprintid_";
 				private final static String SINGLE_TAG="_single_";
-				
-				/* Counter to generate unique filenames -- only works if all filenames are generated on each run (which is currently the case)
-				 * Otherwise an interrupting a run could result in a file being generated with one filename but linked to the report on a subsequent
-				 * run as a different filename. */
 				private int mOneWordCnt=0;
-
 				@Override
-				public String convert(Line pIn) {
-					/*
-					 * HashTags have a particular format.
-					 * 
-					 * If they contain a '_' character they are singled out for special treatment in result_list.js when displaying results 
-					 * header and the word between the first two spaces (or '+' signs as they'll be url encoded) is displayed as a label.
-					 * Then a colon is inserted followed by the remaining string. Any text preceding the first plus is not included in the
-					 * header.
-					 * 
-					 * If there is no '_' then the entire string returned by this function is displayed in the header.
-					 * 
-					 */
+				public Ii<String,String> convert(Line pIn) {
+
+					MainHashTagDict hashTag=new MainHashTagDict();
+
 					String cleaned=pIn.cleaned();
 					assert cleaned.indexOf('_')==-1;
 					assert !cleaned.matches("[0-9]");
+
+					String shortenedLine=shortener.convert(cleaned);
+					String filename;
+					
 					if(pIn.type()==LineType.TITLE) {
-						return shortener.convert(TITLE_PREFIX+Long.toString(pIn.eprintId())+" Entire "+cleaned);
+						hashTag.put("t", "Entire: "+shortenedLine);
+						filename=TITLE_PREFIX+pIn.eprintId();
 					} else {
 						if(ONE_WORD_LINE_SPOTTER.accept(pIn)) {
-							//we can use numbers to ensure there's no filename collision between this line and a normal multi-word line
-							return shortener.convert(TITLE_PREFIX+Long.toString(pIn.eprintId())+SINGLE_TAG+(mOneWordCnt++)+" Adjacent "+cleaned);
+							hashTag.put("t", "Adjacent: "+shortener.convert(cleaned));
+							filename=TITLE_PREFIX+pIn.eprintId()+SINGLE_TAG+(mOneWordCnt++);
 						} else {
-							return shortener.convert(cleaned);
+							filename=shortenedLine;
 						}
 					}
+					hashTag.put("f", filename);
+					return new Ii<String,String>(hashTag.encode(), filename);
 				}
 			};
 
 			try(
 					IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
-					PoemsReport poems=new PoemsReport(mDest, queryToHashTag, thrower);
+					PoemsReport poems=new PoemsReport(mDest, queryToHashIdFilename, thrower);
 					ResultsJournal journal=new ResultsJournal(poems.resultsDir(), mDocDir, 
 							new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
@@ -125,9 +124,9 @@ public class MainReporter {
 				prom.progress(new ProgressCallback<Ii<Line,String>>(){
 
 					@Override
-					public void onProgress(Ii<Line, String> progress) {
+					public void onProgress(Ii<Line, String> pProgress) {
 						try {
-							searcher.search(progress);
+							searcher.search(pProgress);
 						} catch(IOException | org.apache.lucene.queryparser.classic.ParseException e) {
 							thrower.ctch(e);
 						}

@@ -1,5 +1,9 @@
 * General
 ** Libraries
+*** base64.js
+**** new BSD
+***** http://opensource.org/licenses/BSD-3-Clause
+**** base 64 encoder for old browsers
 *** JQuery and JQuery mobile
 *** jx library
 **** http://www.openjs.com/scripts/jx/

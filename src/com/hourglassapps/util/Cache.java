@@ -16,8 +16,12 @@ public class Cache<A,B> implements Thrower {
 	}
 	
 	/*
+	 */
+	/**
 	 * Returns a cached item or creates it if it's not already in the cache.
 	 * Please ensure than references to pKey do not hang around. The cached item will remain in the cache at least as long of pKey (and references to it) exists.
+	 * @param pKey
+	 * @return item from cache, or null if that was returned by the Converter when creating the item
 	 */
 	public B get(A pKey) {
 		B cached=mKeyToCached.get(pKey);

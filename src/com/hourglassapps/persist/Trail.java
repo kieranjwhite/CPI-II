@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hourglassapps.util.Converter;
+import com.hourglassapps.util.Log;
 
 public class Trail<C> {
+	private final static String TAG=Trail.class.getName();
+	
 	private final List<C> mTrail=new ArrayList<>();
 	private final Path mPartialDir;
 	
@@ -29,6 +32,7 @@ public class Trail<C> {
 	}
 
 	public void save(Path pDest) throws IOException {
+		Log.i(TAG, Log.esc("trail file: "+mPartialDir.resolve(AbstractFilesJournal.META_PREFIX+pDest.getFileName().toString()).toString()));
 		try(PrintWriter out=
 				new PrintWriter(new BufferedWriter(
 						new FileWriter(mPartialDir.resolve(AbstractFilesJournal.META_PREFIX+pDest.getFileName().toString()).toString())))) {

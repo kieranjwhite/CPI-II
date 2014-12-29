@@ -13,7 +13,7 @@ public class LineGenerator {
 	private final Converter<String,String> mCleaner;
 	private final long mEprintId;
 	private boolean mBuilt=false;
-
+	
 	private List<Line> mLines=new ArrayList<>();
 
 	public LineGenerator(long pEprintId, Converter<String,String> pCleaner) {
@@ -42,6 +42,7 @@ public class LineGenerator {
 	}
 	
 	public class Line {
+		private String mCleaned=null;
 		private final int mLineNum;
 		private final String mText;
 		private final LineType mType;
@@ -61,7 +62,10 @@ public class LineGenerator {
 		}
 
 		public String cleaned() {
-			return mCleaner.convert(mText);
+			if(mCleaned==null) {
+				mCleaned=mCleaner.convert(mText);
+			}
+			return mCleaned;
 		}
 		
 		public LineType type() {

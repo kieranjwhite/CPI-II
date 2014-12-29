@@ -12,10 +12,13 @@ import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
 /***
- * Times the duration between creation of Clocks (via the time method) and closing them.
- * This duration is accumulated anytime a new clock is created with the same name.
+ * <p>Times the duration between creation of Clocks (via the time method) and closing them.
+ * This duration is accumulated any time a new clock is created with the same name.
  * Time measured for Clocks returned by a StopWatch.time() method is subtracted from time measured by the
- * parent StopWatch when reporting, hence the ExclusiveTimeKeeper name.
+ * parent Clock when reporting, hence the ExclusiveTimeKeeper name.</p>
+ * 
+ * <p>Durations are logged when the Clock is closed.</p>
+ * 
  * @author kieran
  *
  */
@@ -81,6 +84,9 @@ public class ExclusiveTimeKeeper implements Clock, AutoCloseable {
 		return w;		
 	}
 	
+	/**
+	 * Returns a clock that times the duration between its return and its subsequent closing.
+	 */
 	@Override
 	public StopWatch time(String pLabel) {
 		StopWatch w=createWatch(mLabelToWatches, mLabelToAccumulatedInterval, pLabel);
@@ -176,7 +182,7 @@ public class ExclusiveTimeKeeper implements Clock, AutoCloseable {
 	public void close() {
 		for(StopWatch w: mLabelToWatches.values()) {
 			w.close();
-			Log.i(TAG, "Times: \n"+toString());
 		}
+		Log.i(TAG, "Times: \n"+toString());
 	}
 }

@@ -67,7 +67,7 @@ public final class TitlePathConverter implements Converter<Result,String> {
 		try {
 			return "{t:\""+jsonified+"\","+
 					"p:\""+toRelURL(relativize(pResult.path().toRealPath()))+"\","+
-					"s:["+listSpans(pResult.matches())+"],"+
+					"s:["+listSpans(pResult.matches())+"]"+
 					"},";
 		} catch(IOException e) {
 			mThrower.ctch(e);

@@ -10,12 +10,14 @@ import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.URLUtils;
 
 public class Shortener implements Converter<String,String> {
-	private final static int MAX_LEN=196;
+	private final static int MAX_SUFFIX_CHARS=1+(int)Math.floor(Math.log10(Integer.MAX_VALUE)+1);
 	private Map<String,String> mLongNameToShorter=new HashMap<>();
 	private int mCurSuffix=0;
 	private final ConcreteThrower<? super UnsupportedEncodingException> mThrower;
-	
-	public Shortener(ConcreteThrower<? super UnsupportedEncodingException> pThrower) {
+	private final int mMaxLen;
+
+	public Shortener(int pMaxLen, ConcreteThrower<? super UnsupportedEncodingException> pThrower) {
+		mMaxLen=pMaxLen;
 		mThrower=pThrower;
 	}
 	
@@ -23,7 +25,7 @@ public class Shortener implements Converter<String,String> {
 	public String convert(String cleaned) {
 		try {
 			String encoded=URLUtils.encode(cleaned);
-			if(encoded.length()>MAX_LEN) {
+			if(encoded.length()>mMaxLen) {
 				/*
 				 * Assumes convert is invoked in a fixed order. If that order changes
 				 * (eg if the the conductus xml export is modified) a new report will 
@@ -32,7 +34,7 @@ public class Shortener implements Converter<String,String> {
 				if(mLongNameToShorter.containsKey(cleaned)) {
 					encoded=mLongNameToShorter.get(cleaned);
 				} else {
-					encoded=(encoded.substring(0,MAX_LEN)+'_')+(mCurSuffix++);
+					encoded=(encoded.substring(0,mMaxLen-MAX_SUFFIX_CHARS)+'_')+(mCurSuffix++);
 					mLongNameToShorter.put(cleaned, encoded);
 				}
 			}

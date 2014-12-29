@@ -41,6 +41,7 @@ import com.hourglassapps.util.Typed;
 
 public class ResultsJournal extends AbstractFilesJournal<String,Result> {
 	private final static String TAG=ResultsJournal.class.getName();
+	private final static int MAX_PATH_LEN=38;
 	private final Class<?> mTemplateClass;
 	private final String mStart;
 	private final String mEnd;
@@ -51,7 +52,7 @@ public class ResultsJournal extends AbstractFilesJournal<String,Result> {
 	private FileWrapper mWrapper=null;
 	private final FileCopyJournal mFiles;
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
-	private final Shortener mShorten=new Shortener(mThrower);
+	private final Shortener mShorten=new Shortener(MAX_PATH_LEN, mThrower);
 	//private final static Path DOCUMENT_DIR=MainDownloader.DOCUMENT_DIR;
 	
 	public ResultsJournal(Path pDir, Path pDocDir, final Converter<Result, String> pAddedToString,

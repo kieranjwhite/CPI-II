@@ -12,17 +12,21 @@
     <script src="jx_V3.01.A.js"></script>
     <script src="rtu_domless.js"></script>
     <script src="rtu.js"></script>
+    <!--script src="json.js"></script-->
+    <script src="base64.js"></script>
     <script src="result_list.js"></script>
     <script src="blacklist.js"></script>
     <!--script src="result_list.js"></script-->
     <script>
       $(function() {
+
+      if (!window.btoa) window.btoa = base64.encode;
+      if (!window.atob) window.atob = base64.decode;
+      
       var g=glb();
-      var query=window.location.hash.substring(1);
-      g.results.setQuery(query);
-      g.results.setPage("results");
+      g.results.setupPage();
       $("div[data-role='page']").first().attr("id",g.results.page);
-      glb().rtu.loadJSFile(glb().results.root+query+"/links.js");
+      glb().rtu.loadJSFile(glb().results.query+"/links.js");
       });
     </script>
   </head>
@@ -31,10 +35,9 @@
       <div data-role="header" data-theme="b">
 	<h2>Blank</h2>
       </div>
-
-      <ul id="list" data-role="listview" data-split-icon="arrow-d" data-split-theme="d" data-inset="true">
-      </ul>
+      <!--ul id="list" data-role="listview" data-split-icon="arrow-d" data-split-theme="d" data-inset="true">
+      </ul-->
     </div><!-- /page -->
-    
+
   </body>
 </html>
