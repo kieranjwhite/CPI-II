@@ -103,7 +103,7 @@
 	var ngram=middle_arr[3];
 	var num_extn=middle_arr[4];
 	var num=num_extn.split('.')[0];
-	return "results/completed/"+journal_num+'+'+(g.rtu.escapeHTML(ngram)).replace(/\+/g,'%20')+'+'+num+"/links.js";
+	return "results/text/completed/"+journal_num+'+'+(g.rtu.escapeHTML(ngram)).replace(/\+/g,'%252B')+'+'+num;
     };
     
     var listItem=function(result_idx, data, original_url, hidden) {
@@ -130,12 +130,13 @@
     var Doc=function(result) {
 	var textPath=pathToTextCopy(result.p);
 	var text=null;
+	var highlighted="";
 	var spans=result.s; //byte offsets
 
 	var loaded=jx.load(textPath, 'text/plain');
 
 	var offsetToIdx=function(offset) {
-	    return offset<<1;
+	    return offset;
 	};
 	
 	var identityWrapper=function(input) {
@@ -143,35 +144,38 @@
 	};
 
 	var highlightWrapper=function(input) {
-	    return "<div class=\"highlight\">"+input+"</div>";
+	    return "<span class=\"highlight\">"+input+"</span>";
 	};
 	
-	var addSection=function(jquery_obj, start_offset, end_offset, wrapper) {
+	var addSection=function(start_offset, end_offset, wrapper) {
 	    if(typeof wrapper==='undefined') {
 		wrapper=identityWrapper;
 	    }
 	    
-	    var content=wrapper(g.rtu.escapeHtml(text.substring(offsetToIdx(start_offset), offsetToIdx(end_offset))).replace(/\n{2,}/g, '<br><br>').replace(/\n/, '<br>'));
-	    jquery_obj.append(content);
+	    var content=wrapper(g.rtu.escapeHtml(text.substring(offsetToIdx(start_offset), offsetToIdx(end_offset))).replace(/\n{2,}/g, '\n\n'));
+	    highlighted+=content;
 	};
 
 	var displayed=when.defer();
 	this.display=function(jquery_obj) {
 	    loaded.then(function(response) {
 		var from_offset=0;
-		text=response;
+		text=response.result;
+		highlighted+="<pre>";
 		for(var i=0; i<spans.length; i++) {
-		    addSection(jquery_obj, from_offset, spans[i].s);
-		    addSection(jquery_obj, spans[i].s, spans[i].e, highlightWrapper);
+		    addSection(from_offset, spans[i].s);
+		    addSection(spans[i].s, spans[i].e, highlightWrapper);
 		    from_offset=spans[i].e;
 		}
-		addSection(jquery_obj, from_offset, text.length);
+		addSection(from_offset, text.length);
+		highlighted+="</pre>";
+		jquery_obj.append(highlighted);
 		displayed.resolve();
 	    });
 	};
 
 	this.jump=function(span_num) {
-	    displayed.then(function(){
+	    displayed.promise.then(function(){
 		
 	    });
 	};
