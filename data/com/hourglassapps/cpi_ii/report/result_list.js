@@ -172,7 +172,8 @@
 	    loaded.then(function(response) {
 		var from_offset=0;
 		text=response.result;
-		highlighted+="<div id=\"top\">";
+		//the <br> tags on the next line are unfortunately needed because jquery mobile allows the header to overlap the content. Adjusting top-margin to compensate had no effect -- probably need to figure how to force layout change.
+		highlighted+="<div id=\"top\" class=\"plain\"><br><br>>"; 
 		num_highlights=spans.length;
 		for(var i=0; i<num_highlights; i++) {
 		    addSection(from_offset, spans[i].s);
@@ -182,7 +183,6 @@
 		addSection(from_offset, text.length);
 		highlighted+="</div>";
 		jquery_obj.append(highlighted);
-		jquery_obj.page();
 		displayed.resolve();
 	    });
 	};
@@ -199,7 +199,7 @@
 		return;
 	    }
 	    displayed.promise.then(function(){
-		$("body").scrollTop(Math.max(0,(($("#h"+span_num).position().top-$("div[data-role='header']").height())-space_at_top)));
+		$("body,html").scrollTop(Math.max(0,(($("#h"+span_num).position().top-$("div[data-role='header']").height())-space_at_top)));
 	    });
 	    cur_highlight=span_num;
 	};
@@ -233,11 +233,9 @@
 
     g.list=function(results) {
 	if(result_num===null) {
-	    var page=$("#pageone").first();
+	    var page=$("#content").first();
 	    var l="<ul id=\"list\" data-role=\"listview\" data-split-icon=\"arrow-d\" data-split-theme=\"d\" data-inset=\"true\"></ul>";
-	    if($("#list").length==0) {
-		page.append(l);
-	    }
+	    page.html(l);
 	    $("#list").first().listview();
 	    listResults(results);
 	} else {
@@ -247,7 +245,7 @@
 <li><a href=\"#\" data-icon=\"forward\" data-rel=\"external\" onclick=\"glb().results.doc.ret();return false\">Reposition</a></li>\
 <li><a href=\"#\" data-icon=\"arrow-d\" data-rel=\"external\" onclick=\"glb().results.doc.next();return false\">Next</a></li></ul></div>");
 	    glb().results.doc=new Doc(results[result_num]);
-	    glb().results.doc.display($("#pageone").first());
+	    glb().results.doc.display($("#content").first());
 	    /*
 	    if(doc_hash_id!==null) {
 		doc.jump(doc_hash_id);

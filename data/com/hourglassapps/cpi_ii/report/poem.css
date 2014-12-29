@@ -60,6 +60,11 @@ iframe.file {
     padding: 0.35em 0.5em;
 }
 
+.plain {
+    margin-left: 2em;
+    margin-right: 2em;
+}
+
 .highlight {
     background: #ffff28;
 }

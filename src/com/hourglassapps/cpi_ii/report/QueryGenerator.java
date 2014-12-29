@@ -20,14 +20,10 @@ public class QueryGenerator implements Converter<Line,List<String>> {
 	}
 	
 	private String join(Line pFst, Line pSnd) {
-		String adjoined="";
-		if(pFst!=null && pFst.type()!=LineType.TITLE) {
-			adjoined+=pFst.cleaned()+' ';
+		if(pFst!=null && pFst.type()!=LineType.TITLE && pSnd!=null && pSnd.type()!=LineType.TITLE) {
+			return (pFst.cleaned()+' '+pSnd.cleaned()).trim();
 		}
-		if(pSnd!=null && pSnd.type()!=LineType.TITLE) {
-			adjoined+=pSnd.cleaned();
-		}
-		return adjoined.trim();
+		return "";
 	}
 
 	@Override
@@ -62,7 +58,11 @@ public class QueryGenerator implements Converter<Line,List<String>> {
 				} 
 				return phrases;
 			} else {
-				return Collections.singletonList(pIn.cleaned());
+				if(pIn.cleaned().length()==0) {
+					return Collections.emptyList();
+				} else {
+					return Collections.singletonList(pIn.cleaned());
+				}
 			}
 		}
 	}

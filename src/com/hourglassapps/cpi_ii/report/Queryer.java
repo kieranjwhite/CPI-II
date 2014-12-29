@@ -100,6 +100,7 @@ public class Queryer implements AutoCloseable {
 			final List<Phrase> phrases=new ArrayList<>();
 			List<String> phraseStrs=mLineToQuery.convert(pLineDst.fst());
 			for(String phrase: phraseStrs) {
+				assert(phrase.length()!=0);
 				phrases.add(new Phrase(mAnalyser, phrase, mTimes, mTermCache));
 			}
 			String query="\""+Rtu.join(phraseStrs,"\" \"")+"\"";
