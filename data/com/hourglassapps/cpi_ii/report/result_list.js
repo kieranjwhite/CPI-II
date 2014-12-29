@@ -7,10 +7,12 @@
     var blacklist=[];
     var num_blacklisted=0;
     var result_num=null;
+    var doc_hash_id=null;
     var me=null;
     
     g.results={
 	root:"results/completed/",
+	doc:null,
 	query:null,
 	
 	setupPage:function() {
@@ -31,6 +33,10 @@
 	    if(hashTag.hasOwnProperty('n')) {
 		result_num=hashTag.n;
 		$("div[data-role='header']").addClass('ui-header-fixed');
+	    }
+	    
+	    if(hashTag.hasOwnProperty('h')) {
+		doc_hash_id=hashTag.h;
 	    }
 	    
 	},
@@ -132,8 +138,12 @@
 	var textPath=pathToTextCopy(result.p);
 	var text=null;
 	var highlighted="";
+	var num_highlighted=0;
 	var spans=result.s; //byte offsets
-
+	var num_highlights=null;
+	var cur_highlight=null;
+	var space_at_top=20;
+	
 	var loaded=jx.load(textPath, 'text/plain');
 
 	var offsetToIdx=function(offset) {
@@ -145,7 +155,7 @@
 	};
 
 	var highlightWrapper=function(input) {
-	    return "<span class=\"highlight\">"+input+"</span>";
+	    return "<span id=\"h"+(num_highlighted++)+"\" class=\"highlight\">"+input+"</span>";
 	};
 	
 	var addSection=function(start_offset, end_offset, wrapper) {
@@ -153,7 +163,7 @@
 		wrapper=identityWrapper;
 	    }
 	    
-	    var content=wrapper(g.rtu.escapeHtml(text.substring(offsetToIdx(start_offset), offsetToIdx(end_offset))).replace(/\n{2,}/g, '\n\n'));
+	    var content=wrapper(g.rtu.escapeHtml(text.substring(offsetToIdx(start_offset), offsetToIdx(end_offset))).replace(/\n\n+/g, '<br><br>').replace(/\n/g, "<br>"));
 	    highlighted+=content;
 	};
 
@@ -162,23 +172,62 @@
 	    loaded.then(function(response) {
 		var from_offset=0;
 		text=response.result;
-		highlighted+="<pre>";
-		for(var i=0; i<spans.length; i++) {
+		highlighted+="<div id=\"top\">";
+		num_highlights=spans.length;
+		for(var i=0; i<num_highlights; i++) {
 		    addSection(from_offset, spans[i].s);
 		    addSection(spans[i].s, spans[i].e, highlightWrapper);
 		    from_offset=spans[i].e;
 		}
 		addSection(from_offset, text.length);
-		highlighted+="</pre>";
+		highlighted+="</div>";
 		jquery_obj.append(highlighted);
+		jquery_obj.page();
 		displayed.resolve();
 	    });
 	};
 
 	this.jump=function(span_num) {
+	    if(span_num<0 || span_num>=num_highlights) {
+		var msg;
+		if(span_num<0) {
+		    msg="No prior matches";
+		} else {
+		    msg="No more matches";
+		}
+		g.rtu.showMessage(msg, 1500);
+		return;
+	    }
 	    displayed.promise.then(function(){
-		
+		$("body").scrollTop(Math.max(0,(($("#h"+span_num).position().top-$("div[data-role='header']").height())-space_at_top)));
 	    });
+	    cur_highlight=span_num;
+	};
+
+	this.ret=function() {
+	    var document=this;
+	    displayed.promise.then(function(){
+		var body=$("body");
+		if(cur_highlight===null) {
+		    body.scrollTop((body.position().top-$("div[data-role='header']").height()));
+		} else {
+		    document.jump(cur_highlight);
+		}
+	    });
+	};
+
+	this.prev=function() {
+	    if(cur_highlight===null) {
+		cur_highlight=num_highlights;
+	    }
+	    this.jump(cur_highlight-1);
+	};
+
+	this.next=function() {
+	    if(cur_highlight===null) {
+		cur_highlight=-1;
+	    }
+	    this.jump(cur_highlight+1);
 	};
     };
 
@@ -193,9 +242,18 @@
 	    listResults(results);
 	} else {
 	    //show document
-	    var doc=new Doc(results[result_num]);
-	    doc.display($("#pageone").first());
-	    doc.jump(0);
+	    $("div[data-role='header']").append("<div data-iconpos=\"left\" data-role=\"navbar\">\
+<ul><li><a href=\"#\" data-icon=\"arrow-u\" data-rel=\"external\" onclick=\"glb().results.doc.prev();return false\">Previous</a></li>\
+<li><a href=\"#\" data-icon=\"forward\" data-rel=\"external\" onclick=\"glb().results.doc.ret();return false\">Reposition</a></li>\
+<li><a href=\"#\" data-icon=\"arrow-d\" data-rel=\"external\" onclick=\"glb().results.doc.next();return false\">Next</a></li></ul></div>");
+	    glb().results.doc=new Doc(results[result_num]);
+	    glb().results.doc.display($("#pageone").first());
+	    /*
+	    if(doc_hash_id!==null) {
+		doc.jump(doc_hash_id);
+	    }
+	     */
+	    $("[data-role=\"navbar\"]").navbar();
 	}
     };
     

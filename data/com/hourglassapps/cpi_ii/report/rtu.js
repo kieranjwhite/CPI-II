@@ -1,4 +1,4 @@
-/*global $,jQuery, glb, Module
+/*global $,jQuery, glb, Module, setTimeout
  */
 
 var hourglassapps_rtu=function() {
@@ -130,6 +130,15 @@ var hourglassapps_rtu=function() {
 	}
     };
     
+    r.showMessage=function(message, delay) {
+	$.mobile.loading('show',
+			 { theme: "b", text: (message || 'ERROR'),
+			   textonly: true, textVisible: true });
+	setTimeout(function() {
+            $.mobile.loading('hide');
+	}, ((delay && delay > 0) ? delay : 1000));
+    };
+
     return glb;
 };
 
