@@ -191,3 +191,12 @@ Generate report
 ===============
 
 java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.MainReporter <CONDUCTUS_XML_EXPORT>
+
+-------------------------------------------------------
+
+Decode Base64 HTML HashIds from Report
+=================================
+
+Links to results / documents in the report are JSON objects encoded as Base64 strings. In this way arguments are passed to the appropriate script. We rely on hash ids to pass arguments since currently the report is viewed with a browser running on the same computer as the report (as opposed to retrieving pages from a server). Viewing the report locally means we can't pass arguments with the usual URL encoding method.
+
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.persist.MainHashTagDict J2eyJ0IjoiQWRqYWNlbnQ6IExlY3RpbyIsImYiOiJlcHJpbnRpZF8yNDYwX3NpbmdsZV83NDAifQ

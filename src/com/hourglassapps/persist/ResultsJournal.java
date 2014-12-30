@@ -1,24 +1,18 @@
 package com.hourglassapps.persist;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
-import org.apache.tika.metadata.TikaCoreProperties;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
@@ -52,7 +46,7 @@ public class ResultsJournal extends AbstractFilesJournal<String,Result> {
 	private FileWrapper mWrapper=null;
 	private final FileCopyJournal mFiles;
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
-	private final Shortener mShorten=new Shortener(MAX_PATH_LEN, mThrower);
+	//private final Converter<String,String> mShorten=new Shortener(MAX_PATH_LEN, mThrower);
 	//private final static Path DOCUMENT_DIR=MainDownloader.DOCUMENT_DIR;
 	
 	public ResultsJournal(Path pDir, Path pDocDir, final Converter<Result, String> pAddedToString,
@@ -73,10 +67,10 @@ public class ResultsJournal extends AbstractFilesJournal<String,Result> {
 					public Result get() {
 						return pIn;
 					}
-					
+
 				};
 			}
-			
+
 		});
 		mFiles=new FileCopyJournal(pDir.resolve(PLAIN_TEXT_DIR), new Converter<Path,String>(){
 
@@ -96,7 +90,16 @@ public class ResultsJournal extends AbstractFilesJournal<String,Result> {
 					parts.add(journal_num);
 					parts.add(relativeIn.subpath(2,3).toString());
 					parts.add(FilenameUtils.getBaseName(relativeIn.subpath(3,4).toString()));
-					return mShorten.convert(Rtu.join(parts, " "));
+					/* KW 30/12/2014. mShorten is not needed here as the longest path will never exceed 255 chars .
+					 * (BTW the longest stemmed trigram is 46 chars only, but here we're dealing with unstemmed trigrams).
+					 * If it turns out I'm wrong and shortening is required don't use mShorten like this anyway -- if there's a crash,
+					 * after restart files from the document journal will be traversed in a different order (skipping some
+					 * at the start), breaking the Shortener -- so you'll need a different solution -- one that actually works.
+					 * Another problem with this 'solution' is that the generated filename needs to be transformable into the one
+					 * the file in question was saved under in the document Journal -- I don't think the output from mShorten is.
+					 */
+					//return mShorten.convert(Rtu.join(parts, " ")); 
+					return Rtu.join(parts, " ");
 				} catch(IOException e) {
 					mThrower.ctch(e);
 					return null;

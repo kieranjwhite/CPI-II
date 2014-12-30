@@ -160,6 +160,34 @@ public class Queryer implements AutoCloseable {
 					}
 
 				});
+				
+				/*
+				 * Query q
+				 * foreach interrogate(q): doc
+				 * 	foreach phrases.findIn(doc): phrase, span
+				 * 		Set<PartialResult> parts=partials.get(doc, phrase);
+				 * 		foreach parts: partial
+				 * 			Results fullResult=partial.addSpan(span)
+				 * 			if fullResult!=null:
+				 * 				partials.delete(partial)
+				 * 				if q.contains(phrase):
+				 * 					journal.addNew(fullResult)
+				 * assert !partials.contains(q)
+				 * 
+				 * 
+				 * 
+				 * foreach document: doc
+				 * 	foreach phrases.findIn(doc): phrase, span
+				 * 		Set<PartialResult> parts=partials.get(doc, phrase);
+				 * 		foreach parts: partial
+				 * 			Result fullResult=partial.addSpan(span)
+				 *  		if fullResult!=null:
+				 *  			partials.delete(partial)
+				 *  			mJournal.addNew(fullResult)
+				 *  	
+				 *  			
+				 */
+				
 			}
 			//Log.i(TAG, "committing: "+Log.esc(pLineDst));
 			mJournal.commit(pLineDst.snd());

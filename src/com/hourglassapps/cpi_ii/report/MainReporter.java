@@ -24,11 +24,9 @@ import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
 import com.hourglassapps.cpi_ii.report.LineGenerator.LineType;
 import com.hourglassapps.cpi_ii.web_search.MainDownloader;
-import com.hourglassapps.persist.FileCopyJournal;
 import com.hourglassapps.persist.MainHashTagDict;
 import com.hourglassapps.persist.ResultsJournal;
 import com.hourglassapps.persist.Shortener;
-import com.hourglassapps.persist.WrappedJournal;
 import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.PoemRecordXMLParser;
 import com.hourglassapps.util.ConcreteThrower;
@@ -92,28 +90,28 @@ public class MainReporter {
 					assert !cleaned.matches("[0-9]");
 
 					String shortenedLine=shortener.convert(cleaned);
-					String filename;
+					String filename; //this filename will be one of the files in poems/results/completed/
 					
 					if(pIn.type()==LineType.TITLE) {
 						hashTag.put("t", "Entire: "+shortenedLine);
 						filename=TITLE_PREFIX+pIn.eprintId();
 					} else {
 						if(ONE_WORD_LINE_SPOTTER.accept(pIn)) {
-							hashTag.put("t", "Adjacent: "+shortener.convert(cleaned));
+							hashTag.put("t", "Adjacent: "+shortenedLine);
 							filename=TITLE_PREFIX+pIn.eprintId()+SINGLE_TAG+(mOneWordCnt++);
 						} else {
 							filename=shortenedLine;
 						}
 					}
 					hashTag.put("f", filename);
-					return new Ii<String,String>(hashTag.encode(), filename);
+					return new Ii<String,String>(hashTag.encode(), filename); //this will be passed to the Queryer instance view the onProgress method invocation below
 				}
 			};
 
 			try(
 					IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
 					PoemsReport poems=new PoemsReport(mDest, queryToHashIdFilename, thrower);
-					ResultsJournal journal=new ResultsJournal(poems.resultsDir(), mDocDir, 
+					ResultsJournal journal=new ResultsJournal(poems.resultsDir(), mDocDir,
 							new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
 					Queryer searcher=new Queryer(journal, index, analyser, QUERY_GENERATOR);

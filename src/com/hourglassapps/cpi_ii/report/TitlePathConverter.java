@@ -23,6 +23,7 @@ public final class TitlePathConverter implements Converter<Result,String> {
 	private final Path mParent;
 	private final ConcreteThrower<Exception> mThrower;
 	private final JsonStringEncoder mEncoder=JsonStringEncoder.getInstance();
+	/*
 	private final Cache<String,String> mEncodingCache=new Cache<>(new Converter<String,String>(){
 
 		@Override
@@ -31,6 +32,7 @@ public final class TitlePathConverter implements Converter<Result,String> {
 		}
 		
 	});
+	*/
 	private final static Converter<DocSpan,String> DOCSPAN_TO_STRING=new Converter<DocSpan,String>(){
 
 		@Override
@@ -63,7 +65,8 @@ public final class TitlePathConverter implements Converter<Result,String> {
 	@Override
 	public String convert(Result pResult) {
 		String title=pResult.title();
-		String jsonified=mEncodingCache.get(title);
+		//String jsonified=mEncodingCache.get(title);
+		String jsonified=new String(mEncoder.quoteAsString(title));
 		try {
 			return "{t:\""+jsonified+"\","+
 					"p:\""+toRelURL(relativize(pResult.path().toRealPath()))+"\","+

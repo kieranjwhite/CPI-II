@@ -91,8 +91,7 @@ public class Phrase {
 			if(termVector==null) {
 				return new NullIterable<DocSpan>();
 			}
-			TermsEnum termsEnum=TERM_ENUM.get();
-			termsEnum=termVector.iterator(TERM_ENUM.get());
+			TermsEnum termsEnum=termVector.iterator(TERM_ENUM.get());
 
 			List<BytesRef> sortedTerms=new ArrayList<>(mOrigRefs);
 			Collections.sort(sortedTerms, termsEnum.getComparator());
