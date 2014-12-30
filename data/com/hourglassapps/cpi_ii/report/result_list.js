@@ -28,7 +28,7 @@
 	    } else {
 		title=hashTag.f;
 	    }
-	    document.title=title;
+	    document.title=unescape(title);
 	    
 	    $("div[data-role='header']>h2").html(title);
 	    if(hashTag.hasOwnProperty('n')) {
@@ -170,7 +170,7 @@
 	};
 
 	var displayed=when.defer();
-	var context_size=50*1024;
+	var context_size=5*1024;
 	var snip_str="<br><p style=\"text-align: center\"><b>...snip...</b></p><br>";
 	this.display=function(jquery_obj) {
 	    loaded.then(function(response) {
