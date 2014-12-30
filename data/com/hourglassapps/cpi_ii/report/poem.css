@@ -68,3 +68,10 @@ iframe.file {
 .highlight {
     background: #ffff28;
 }
+
+.snippet {
+    margin-left: 1em;
+    margin-right: 1em;
+    font-size: 0.7em;
+    line-height: 1;    
+}

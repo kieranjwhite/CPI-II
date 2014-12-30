@@ -113,6 +113,26 @@
 	var num=num_extn.split('.')[0];
 	return "results/text/completed/"+journal_num+'+'+(g.rtu.escapeHTML(ngram)).replace(/\+/g,'%252B')+'+'+num;
     };
+
+    var provideSnippets=function(path, spans, size, total_size) {
+	var textPath=pathToTextCopy(path);
+	return jx.load(textPath, 'text/plain').then(function(response){
+	    var text=response.result;
+	    var snippets=new SnippetsBuilder(text, spans, size, false).buildList();
+	    if(snippets.length===0) {
+		g.rtu.localError("zero snippets found in "+path);
+	    }
+	    var accum_size=0;
+	    var s=0;
+	    for(; s<snippets.length; s++) {
+		if(accum_size>=total_size) {
+		    break;
+		}
+		accum_size+=snippets[s].length;
+	    }
+	    return snippets.slice(0,s).join("...");
+	});
+    };
     
     var listItem=function(result_idx, data, original_url, hidden) {
 	var style;
@@ -128,14 +148,18 @@
 	    title=data.t;
 	}
 	var encoded_title=g.rtu.escapeHtml(title);
-	
+
 	return "<li "+style+">"+
-	    "<a href=\""+original_url+"\" data-rel=\"external\" target=\"_blank\"><h3>"+encoded_title+"</h3><p>"+g.rtu.escapeHtml(original_url)+"</p></a>"+
-	    "<a href=\""+me+'#'+encodeHashId(result_idx, encoded_title)+"\" data-rel=\"external\" target=\"_blank\">Local copy</a>"+
+	    "<a href=\""+original_url+"\" data-rel=\"external\" target=\"_blank\"><h3>"+encoded_title+"</h3><p>"+g.rtu.escapeHtml(original_url)+"</p>"+
+	    "<p id=\"r"+result_idx+"\" class=\"snippet\" style=\"white-space: normal;\"></p></a>"+
+	    "<a href=\""+me+'#'+encodeHashId(result_idx, encoded_title)+"\" data-rel=\"external\" target=\"_blank\">All snippets</a>"+
 	    "</li>\n";
     };
 
-    var SnippetsBuilder=function(text, spans, size) {
+    var SnippetsBuilder=function(text, spans, size, navigable) {
+	if(typeof navigable==="undefined") {
+	    navigable=true;
+	}
 	var highlighted=[];
 	var hl_num=0;
 	var num_highlighted=0;
@@ -145,7 +169,11 @@
 	};
 
 	var highlightWrapper=function(input) {
-	    return "<span id=\"h"+(num_highlighted++)+"\" class=\"highlight\">"+input+"</span>";
+	    if(navigable) {
+		return "<span id=\"h"+(num_highlighted++)+"\" class=\"highlight\">"+input+"</span>";
+	    } else {
+		return "<span class=\"highlight\">"+input+"</span>";
+	    }
 	};
 	
 	var section=function(start_offset, end_offset, wrapper) {
@@ -153,11 +181,14 @@
 		wrapper=identityWrapper;
 	    }
 	    
-	    var content=wrapper(g.rtu.escapeHtml(text.substring(start_offset, end_offset)).replace(/\n/g, "<br>"));
-	    return content;
+	    var content=g.rtu.escapeHtml(text.substring(start_offset, end_offset));
+	    if(navigable) {
+		content=content.replace(/\n/g, "<br>");
+	    }
+	    return wrapper(content);
 	};
 
-	this.snippets=function() {
+	this.buildList=function() {
 	    var cur_snip=[];
 	    var from_offset=0;
 	    var num_highlights=spans.length;
@@ -213,7 +244,7 @@
 	
 	this.snippets=function(size) {
 	    return loaded.then(function(){
-		return new SnippetsBuilder(text, spans, size).snippets();
+		return new SnippetsBuilder(text, spans, size).buildList();
 	    });
 	};
 	
@@ -317,19 +348,36 @@
 			urlToIdx[original_url]=source.i;
 		    }
 		    var changes="";
+		    var new_results=[];
 		    idxToPendingURL[source.i]=original_url;
 		    if(source.i===todo) {
 			var any_visible=false;
 			while(idxToPendingURL.hasOwnProperty(todo)) {
 			    var visible=(urlToIdx[idxToPendingURL[todo]]===todo);
 			    any_visible=any_visible || visible;
-			    changes+=listItem(i,results[todo], original_url, !visible);
+			    var r=results[todo];
+			    changes+=listItem(todo,r, original_url, !visible);
+			    new_results.push({i:todo, res:r}); //can't do anything with these until 'changes' has been added to the list
+
 			    delete(idxToPendingURL[todo]);
 			    todo++;
 			}
 		    }
 		    if(changes.length>0) {
 			list.append(changes);
+			for(var new_idx=0; new_idx<new_results.length; new_idx++) {
+			    var idx_result=new_results[new_idx];
+			    var added_idx=idx_result.i;
+			    var res=idx_result.res;
+			    var prom=provideSnippets(res.p, res.s, 30, 512);
+			    prom.then(
+				function(snippetHTML) {
+				    $("#r"+added_idx).html(snippetHTML.trim());
+				    list.listview("refresh");
+				}
+			    );
+			}
+			new_results=[];
 		    }
 		    if(any_visible) {
 			list.listview("refresh");

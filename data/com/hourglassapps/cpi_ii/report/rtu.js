@@ -124,7 +124,7 @@ var hourglassapps_rtu=function() {
     r.resizeEl=function(el) {
 	var top=el.offset().top;
 	var bottom=$(window).height();
-	var new_height=Math.max((bottom-top)-10,300);
+	var new_height=Math.max((bottom-top)-10,400);
 	if(new_height>=0) {
 	    el.height(new_height);
 	}
