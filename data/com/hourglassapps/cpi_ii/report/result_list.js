@@ -135,22 +135,10 @@
 	    "</li>\n";
     };
 
-    var Doc=function(result) {
-	var textPath=pathToTextCopy(result.p);
-	var text=null;
+    var SnippetsBuilder=function(text, spans, size) {
 	var highlighted=[];
 	var hl_num=0;
 	var num_highlighted=0;
-	var spans=result.s; //byte offsets
-	var num_highlights=null;
-	var cur_highlight=null;
-	var space_at_top=20;
-	
-	var loaded=jx.load(textPath, 'text/plain');
-
-	var offsetToIdx=function(offset) {
-	    return offset;
-	};
 	
 	var identityWrapper=function(input) {
 	    return input;
@@ -160,54 +148,77 @@
 	    return "<span id=\"h"+(num_highlighted++)+"\" class=\"highlight\">"+input+"</span>";
 	};
 	
-	var addSection=function(start_offset, end_offset, wrapper) {
+	var section=function(start_offset, end_offset, wrapper) {
 	    if(typeof wrapper==='undefined') {
 		wrapper=identityWrapper;
 	    }
 	    
-	    var content=wrapper(g.rtu.escapeHtml(text.substring(offsetToIdx(start_offset), offsetToIdx(end_offset))).replace(/\n\n+/g, '<br><br>').replace(/\n/g, "<br>"));
-	    highlighted[hl_num++]=content;
+	    var content=wrapper(g.rtu.escapeHtml(text.substring(start_offset, end_offset)).replace(/\n/g, "<br>"));
+	    return content;
 	};
+
+	this.snippets=function() {
+	    var cur_snip=[];
+	    var from_offset=0;
+	    var num_highlights=spans.length;
+	    var snippet_end;
+	    for(var i=0; i<num_highlights; i++) {
+		snippet_end=from_offset+size;
+		var snippet_start=spans[i].s-size;
+		if(snippet_end>snippet_start) {
+		    cur_snip.push(section(from_offset, spans[i].s));
+		} else {
+		    cur_snip.push(section(from_offset, snippet_end));
+		    highlighted[hl_num++]=cur_snip.join();
+		    cur_snip=[];
+		    cur_snip.push(section(snippet_start, spans[i].s));
+		}
+		cur_snip.push(section(spans[i].s, spans[i].e, highlightWrapper));
+		from_offset=spans[i].e;
+	    }
+	    snippet_end=Math.min(from_offset+size, text.length);
+	    cur_snip.push(section(from_offset, snippet_end));
+	    if(snippet_end<text.length) {
+		highlighted[hl_num++]=cur_snip.join();
+		cur_snip=[""];
+	    }
+	    highlighted[hl_num++]=cur_snip.join();
+	    return highlighted;
+	};
+
+    };
+    
+    var Doc=function(result) {
+	var textPath=pathToTextCopy(result.p);
+	var text=null;
+	var spans=result.s; //byte offsets
+	var cur_highlight=null;
+	var space_at_top=20;
+	
+	var loaded=jx.load(textPath, 'text/plain').then(function(response){
+	    text=response.result;
+	});
 
 	var displayed=when.defer();
 	var context_size=5*1024;
-	var snip_str="<br><p style=\"text-align: center\"><b>...snip...</b></p><br>";
+	var snip_str="<br><p style=\"text-align: center\"><b>...non-matching content omitted...</b></p><br>";
+
 	this.display=function(jquery_obj) {
-	    loaded.then(function(response) {
-		var from_offset=0;
-		text=response.result;
+	    this.snippets(context_size).then(function(snippets) {
 		//the <br> tags on the next line are unfortunately needed because jquery mobile allows the header to overlap the content. Adjusting top-margin to compensate had no effect -- probably need to figure how to force layout change.
-		highlighted[hl_num++]="<div id=\"top\" class=\"plain\"><br><br><br>>"; 
-		num_highlights=spans.length;
-		var i;
-		var snippet_end;
-		for(i=0; i<num_highlights; i++) {
-		    snippet_end=from_offset+context_size;
-		    var snippet_start=spans[i].s-context_size;
-		    if(snippet_end>snippet_start) {
-			addSection(from_offset, spans[i].s);
-		    } else {
-			addSection(from_offset, snippet_end);
-			highlighted[hl_num++]=snip_str;
-			addSection(snippet_start, spans[i].s);
-		    }
-		    addSection(spans[i].s, spans[i].e, highlightWrapper);
-		    from_offset=spans[i].e;
-		}
-		snippet_end=Math.min(from_offset+context_size, text.length);
-		addSection(from_offset, snippet_end);
-		if(snippet_end<text.length) {
-			highlighted[hl_num++]=snip_str;
-		}
-		//addSection(from_offset, text.length);
-		highlighted[hl_num++]="</div>";
-		jquery_obj.html(highlighted);
+		jquery_obj.html("<div id=\"top\" class=\"plain\"><br><br><br>"+snippets.join(snip_str)+"</div>");
 		displayed.resolve();
 	    });
 	};
-
+	
+	this.snippets=function(size) {
+	    return loaded.then(function(){
+		return new SnippetsBuilder(text, spans, size).snippets();
+	    });
+	};
+	
 	this.jump=function(span_num) {
-	    if(span_num<0 || span_num>=num_highlights) {
+	    if(span_num<0 || span_num>=spans.length) {
 		var msg;
 		if(span_num<0) {
 		    msg="No prior matches";
@@ -224,29 +235,35 @@
 	};
 
 	this.ret=function() {
-	    var document=this;
+	    var doc=this;
 	    displayed.promise.then(function(){
 		var body=$("body");
 		if(cur_highlight===null) {
 		    body.scrollTop((body.position().top-$("div[data-role='header']").height()));
 		} else {
-		    document.jump(cur_highlight);
+		    doc.jump(cur_highlight);
 		}
 	    });
 	};
 
 	this.prev=function() {
-	    if(cur_highlight===null) {
-		cur_highlight=num_highlights;
-	    }
-	    this.jump(cur_highlight-1);
+	    var doc=this;
+	    displayed.promise.then(function(){
+		if(cur_highlight===null) {
+		    cur_highlight=spans.length;
+		}
+		doc.jump(cur_highlight-1);
+	    });
 	};
 
 	this.next=function() {
-	    if(cur_highlight===null) {
-		cur_highlight=-1;
-	    }
-	    this.jump(cur_highlight+1);
+	    var doc=this;
+	    displayed.promise.then(function(){
+		if(cur_highlight===null) {
+		    cur_highlight=-1;
+		}
+		doc.jump(cur_highlight+1);
+	    });
 	};
     };
 
