@@ -28,7 +28,8 @@
 	    } else {
 		title=hashTag.f;
 	    }
-
+	    document.title=title;
+	    
 	    $("div[data-role='header']>h2").html(title);
 	    if(hashTag.hasOwnProperty('n')) {
 		result_num=hashTag.n;
@@ -137,7 +138,8 @@
     var Doc=function(result) {
 	var textPath=pathToTextCopy(result.p);
 	var text=null;
-	var highlighted="";
+	var highlighted=[];
+	var hl_num=0;
 	var num_highlighted=0;
 	var spans=result.s; //byte offsets
 	var num_highlights=null;
@@ -164,25 +166,42 @@
 	    }
 	    
 	    var content=wrapper(g.rtu.escapeHtml(text.substring(offsetToIdx(start_offset), offsetToIdx(end_offset))).replace(/\n\n+/g, '<br><br>').replace(/\n/g, "<br>"));
-	    highlighted+=content;
+	    highlighted[hl_num++]=content;
 	};
 
 	var displayed=when.defer();
+	var context_size=50*1024;
+	var snip_str="<br><p style=\"text-align: center\"><b>...snip...</b></p><br>";
 	this.display=function(jquery_obj) {
 	    loaded.then(function(response) {
 		var from_offset=0;
 		text=response.result;
 		//the <br> tags on the next line are unfortunately needed because jquery mobile allows the header to overlap the content. Adjusting top-margin to compensate had no effect -- probably need to figure how to force layout change.
-		highlighted+="<div id=\"top\" class=\"plain\"><br><br>>"; 
+		highlighted[hl_num++]="<div id=\"top\" class=\"plain\"><br><br><br>>"; 
 		num_highlights=spans.length;
-		for(var i=0; i<num_highlights; i++) {
-		    addSection(from_offset, spans[i].s);
+		var i;
+		var snippet_end;
+		for(i=0; i<num_highlights; i++) {
+		    snippet_end=from_offset+context_size;
+		    var snippet_start=spans[i].s-context_size;
+		    if(snippet_end>snippet_start) {
+			addSection(from_offset, spans[i].s);
+		    } else {
+			addSection(from_offset, snippet_end);
+			highlighted[hl_num++]=snip_str;
+			addSection(snippet_start, spans[i].s);
+		    }
 		    addSection(spans[i].s, spans[i].e, highlightWrapper);
 		    from_offset=spans[i].e;
 		}
-		addSection(from_offset, text.length);
-		highlighted+="</div>";
-		jquery_obj.append(highlighted);
+		snippet_end=Math.min(from_offset+context_size, text.length);
+		addSection(from_offset, snippet_end);
+		if(snippet_end<text.length) {
+			highlighted[hl_num++]=snip_str;
+		}
+		//addSection(from_offset, text.length);
+		highlighted[hl_num++]="</div>";
+		jquery_obj.html(highlighted);
 		displayed.resolve();
 	    });
 	};
