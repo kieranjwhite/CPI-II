@@ -37,6 +37,7 @@ import com.hourglassapps.cpi_ii.lucene.Phrases;
 import com.hourglassapps.cpi_ii.lucene.Phrases.SpanFinder;
 import com.hourglassapps.cpi_ii.lucene.ResultRelayer;
 import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
+import com.hourglassapps.cpi_ii.report.QueryPhrases.Answers;
 import com.hourglassapps.persist.Journal;
 import com.hourglassapps.util.Cache;
 import com.hourglassapps.util.ConcreteThrower;
@@ -102,7 +103,7 @@ public class Queryer implements AutoCloseable {
 		return mDeferred;
 	}
 	
-	private void docSearch(Batch pBatch) throws ParseException, IOException {
+	private void docSearch(final Batch pBatch) throws ParseException, IOException {
 		for(final QueryPhrases qPhrases: pBatch.queries()) {
 			final Query q=qPhrases.parse();
 			IndexViewer.interrogate(mReader, mSearcher, q, MAX_RESULTS, new ResultRelayer() {
@@ -110,8 +111,8 @@ public class Queryer implements AutoCloseable {
 				@Override
 				public void run(IndexReader pReader, TopDocs pResults)
 						throws IOException {
-					final SortedSet<DocSpan> docSpans=new TreeSet<>();
 					ScoreDoc[] results=pResults.scoreDocs;
+					Answers ans=pBatch.startAnswering(qPhrases, results.length);
 					for(int i=0; i<results.length; i++) {
 
 						Document doc = mSearcher.doc(results[i].doc);
@@ -122,7 +123,7 @@ public class Queryer implements AutoCloseable {
 								title="";
 							}
 							//mJournal.addNew(new Result(title, path, Collections.unmodifiableSortedSet(docSpans))); //unmodifiableSortedSet or not, DocSpan instances are mutable so we could be more defensive here
-							qPhrases.answer(results[i].doc, path, title);
+							ans.answer(results[i].doc, path, title);
 						} else {
 							assert(false);
 						}
@@ -138,11 +139,26 @@ public class Queryer implements AutoCloseable {
 			SpanFinder spans=pBatch.allPhrases();
 			for(Integer docId: pBatch.docIds()) {
 				for(Map.Entry<String, Set<DocSpan>> phraseSpans: spans.findIn(mReader, docId).entrySet()) {
-					Set<PartialResult> parts=pBatch.partialResults(docId, phraseSpans.getKey());
+					Set<DocResult> results=pBatch.docResults(docId, phraseSpans.getKey());
+					for(DocResult result: results) {
+						for(DocSpan span: phraseSpans.getValue()) {
+							result.addSpan(span);
+						}
+					}
 				}
 			}
 			
+			for(final QueryPhrases qPhrases: pBatch.queries()) {
+				Answers answers=qPhrases.answers();
+				if(answers!=null) {
+					for(Result res: answers.results()) {
+						mJournal.addNew(res);
+					}
+				}
+				mJournal.commit(qPhrases.dst());
+			}			
 			
+			/*
 			final List<Phrases> phrases=new ArrayList<>();
 			List<String> phraseStrs=mLineToQuery.convert(pLineDst.fst());
 			for(String phrase: phraseStrs) {
@@ -207,40 +223,11 @@ public class Queryer implements AutoCloseable {
 
 				});
 				
-				/* Create 50 phrases instances each containing phrases of 1/50 of the queries. 
-				 * QueryPhrases q
-				 * foreach SortedSet<Phrases> phrases:
-				 * foreach interrogate(q): doc
-				 * 	if !doneDocs.contains(doc_id)
-				 * 		foreach phrases.findIn(doc): phrase, doc_span
-				 * 			Set<PartialResult> parts=partials.get(doc, phrase); //parts is a set of all partial results (one per query that contains phrase) that contains doc   
-				 * 			foreach parts: partial  //partial contains spans for one or more phrases in the same query + doc title and path
-				 * 				Result fullResult=partial.addSpan(span) //partial returns a fullResult when spans have been added for all phrases for its query 
-				 * 				if fullResult!=null:
-				 * 					partials.delete(partial)
-				 * 					completeResults.add(result)
-				 * 		doneDocs.add(doc_id)
-				 * 	List<Result> list=completeResults.getAndDelete(q)
-				 * 	foreach list: fullResult
-				 * 		journal.addNew(fullResult)
-				 * 	journal.commit(q.dst())
-				 * 	
-				 * Data structures:
-				 * QueryPhrases all phrases in a query
-				 * Set<Integer> doneDocs
-				 * Phrase (one phrase in a query)
-				 * DocSpan, start and end offsets for a match in a document
-				 * Phrases contains all phrases for all queries
-				 * PartialResult: a single document result from a particular query, typically without all document spans added
-				 * Partials maps phrase->doc->partial implement as (phrase -> queries) and (query -> doc_id) -> partial
-				 * CompleteResult QueryPhrases -> Array<Result>
-				 * Set<Integer> doneDocs 
-				 */
-				
 			}
 			//Log.i(TAG, "committing: "+Log.esc(pLineDst));
 			mJournal.commit(pLineDst.snd());
 			mDeferred.notify(pLineDst);
+			*/
 		} catch(RuntimeException|IOException|ParseException e) {
 			throw e;
 		}

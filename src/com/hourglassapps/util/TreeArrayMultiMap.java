@@ -18,6 +18,15 @@ public class TreeArrayMultiMap<K extends Comparable<K>, E> extends AbstractMulti
 		mDelegateMap=new TreeMap<K, List<E>>();
 	}
 
+	private TreeArrayMultiMap(SortedMap<K,List<E>> pDelegate) {
+		super(new ListFactory<E>());
+		mDelegateMap=pDelegate;
+	}
+
+	public static <K extends Comparable<K>, E> TreeArrayMultiMap<K,E> view(SortedMap<K,List<E>> pDelegate) {
+		return new TreeArrayMultiMap<K,E>(pDelegate);
+	}
+	
 	public TreeArrayMultiMap(Comparator<K> pComparator) {
 		super(new ListFactory<E>());
 		mDelegateMap=new TreeMap<K, List<E>>(pComparator);

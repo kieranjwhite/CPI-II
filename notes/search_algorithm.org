@@ -3,13 +3,12 @@
 ** foreach batch.query interrogate(QueryPhrases q): doc
 *** q.answer(doc)
 ** Phrases phrases=batch.phrases()
-*** foreach phrases.findIn(doc): phrase, doc_span
-**** Set<PartialResult> parts=batch.partialResults(doc, phrase); //parts is a set of all partial results (one per query that contains phrase) that contains doc   
-**** foreach parts: partial  //partial contains spans for one or more phrases in the same query + doc title and path
-***** Result fullResult=partial.addSpan(span) //partial returns a fullResult when spans have been added for all phrases for its query 
-***** if fullResult!=null:
-****** partials.delete(partial)
-****** completeResults.put(q,result)
+*** foreach batch: doc_id
+**** foreach phrases.findIn(doc_id): map phrase -> doc_spans
+***** Set<DocResult> results=batch.docResults(doc, phrase); //results is a set of all  results (one per query that contains phrase) that contains doc   
+***** foreach results: result  //result contains spans for one or more phrases in the same query + doc title and path
+****** foerach doc_spans: span
+******* result.addSpan(span) 
 *** List<Result> list=completeResults.getAndDelete(q)
 *** foreach list: fullResult
 **** journal.addNew(fullResult)
@@ -23,7 +22,7 @@
 *** String
 ** DocSpan, start and end offsets for a match in a document
 ** Phrases contains all phrases for all queries
-** PartialResult: a single document result from a particular query, typically without all document spans added
+** PartialResult: a single document result from a particular query
 *** map query -> result_idx -> doc, list<doc_span>
 ** Partials maps phrase->doc->partial implement as (phrase -> Set<QueryPhrases> queries) and (Set<QueryPhrases> queries -> doc_id) -> partial
 *** Batcher
@@ -40,5 +39,6 @@
 **** Foreach doc returned
 *** Foreach doc returned
 **** Foreach term in that doc
-**** Foreach phrase
-***** For each span
+***** Foreach span 
+****** Foreach phrase at that span
+

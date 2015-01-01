@@ -3,9 +3,11 @@ package com.hourglassapps.cpi_ii.report;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeSet;
@@ -14,11 +16,13 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 
 import com.hourglassapps.cpi_ii.lucene.Phrases;
 import com.hourglassapps.cpi_ii.lucene.Phrases.SpanFinder;
+import com.hourglassapps.cpi_ii.report.QueryPhrases.Answers;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Rtu;
+import com.hourglassapps.util.SortedMultiMap;
 
 public class Batch implements Accumulator<Integer> {
-	private final SortedMap<String, List<List<String>>> mPhraseToQuery;
+	private final SortedMultiMap<String, List<QueryPhrases>, QueryPhrases> mPhraseToQuery;
 	private final Map<String, Map<Integer,QueryPhrases>> mPhraseToIdxToQueryPhrases;
 	private final String mAfterPhrase;
 	private final String mFirstPhrase;
@@ -26,7 +30,7 @@ public class Batch implements Accumulator<Integer> {
 	private final Phrases mPhrases;
 	private final Set<Integer> mDocIdsFound=new TreeSet<Integer>();
 	
-	Batch(QueryParser pParser, Phrases pPhrases, SortedMap<String, List<List<String>>> pPhraseToQuery,
+	Batch(QueryParser pParser, Phrases pPhrases, SortedMultiMap<String, List<QueryPhrases>, QueryPhrases> pPhraseToQuery,
 			String pNextPhrase) {
 		mPhrases=pPhrases;
 		mParser=pParser;
@@ -51,7 +55,7 @@ public class Batch implements Accumulator<Integer> {
 	
 	private boolean mine(String pPhrase, int pQueryIdx) {
 		assert(mPhraseToQuery.containsKey(pPhrase));
-		List<String> q=mPhraseToQuery.get(pPhrase).get(pQueryIdx);
+		List<String> q=mPhraseToQuery.get(pPhrase).get(pQueryIdx).phrases();
 		assert(q.size()>0);
 		if(mFirstPhrase==null) {
 			assert mAfterPhrase==null;
@@ -66,7 +70,7 @@ public class Batch implements Accumulator<Integer> {
 		if(pPhrase==null || pQueryIdx==Integer.MAX_VALUE || !mine(pPhrase, pQueryIdx)) {
 			return false;
 		}
-		List<List<String>> phraseQueries=mPhraseToQuery.get(pPhrase);
+		List<QueryPhrases> phraseQueries=mPhraseToQuery.get(pPhrase);
 		if(phraseQueries.get(pQueryIdx)==mPhraseToQuery.get(pCurrentPhrase).get(pCurrentQueryIdx)) {
 			//either this query is not the responsibility of pPhrase, or it is but was already returned
 			return false;
@@ -74,93 +78,54 @@ public class Batch implements Accumulator<Integer> {
 		return Rtu.safeEq(pPhrase, phraseQueries.get(0));
 	}
 	
-	private class QueryIterator implements Iterator<Ii<String,Integer>> {
-		private final Iterator<String> mPhrases=mPhraseToQuery.keySet().iterator();
-		
-		private int mPhraseQueriesSize;
-		
-		private String mPhrase=null;
-		private int mQueryIdx=Integer.MAX_VALUE;
-		
-		private Ii<String,Integer> mNext;
-		
-		public QueryIterator() {
-			Ii<String,Integer> next=nextQueryFromPhrases();
-			mPhrase=next.fst();
-			mQueryIdx=next.snd();
-		}
-		
-		private int nextQuery(int pIdx) {
-			while(pIdx<mPhraseQueriesSize) {
-				pIdx++;
-				if(todo(mPhrase, pIdx, mPhrase, mQueryIdx)) {
-					break;
-				}
-			}
-			if(todo(mPhrase, pIdx, mPhrase, mQueryIdx)) {
-				return pIdx;
-			} else {
-				return Integer.MAX_VALUE;
-			}
-		}
-		
-		private Ii<String,Integer> nextQueryFromPhrases() {
-			while((mQueryIdx=nextQuery(mQueryIdx))==Integer.MAX_VALUE && mPhrases.hasNext()) {
-				mQueryIdx=0;
-				mPhrase=mPhrases.next();
-				mPhraseQueriesSize=mPhraseToQuery.get(mPhrase).size();
-			}
-			return new Ii<String,Integer>(mPhrase, mQueryIdx);
-		}
-		
-		@Override
-		public boolean hasNext() {
-			return mQueryIdx==Integer.MAX_VALUE;
-		}
-
-		@Override
-		public Ii<String,Integer> next() {
-			try {
-				return mNext;
-			} finally {
-				mNext=nextQueryFromPhrases();
-			}
-		}
-
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-	}
-	
-	public Iterable<QueryPhrases> querie() {
+	public Iterable<QueryPhrases> queries() {
 		return new Iterable<QueryPhrases>(){
-			Iterator<Ii<String,Integer>> mQueryIt=new QueryIterator();
+			//Iterator<Ii<String,Integer>> mQueryIt=new QueryIterator();
 			@Override
 			public Iterator<QueryPhrases> iterator() {
 				return new Iterator<QueryPhrases>() {
+					private Iterator<Entry<String, List<QueryPhrases>>> phraseQueriesIt=mPhraseToQuery.entrySet().iterator();
+					
+					private Entry<String, List<QueryPhrases>> mQueryPhraseArgs=null;
+					private int mQueryIdx=Integer.MAX_VALUE;
+					private QueryPhrases mNext=null;
+					
+					{
+						setNextPhraseAll();
+					}
+					
+					private void setNextPhraseOne() {
+						if(mQueryIdx<mQueryPhraseArgs.getValue().size()) {
+							String phrase=mQueryPhraseArgs.getKey();
+							mNext=mPhraseToQuery.get(phrase).get(mQueryIdx);
 
+							mQueryIdx++;
+						} else {
+							mNext=null;
+						}
+					}
+					
+					private void setNextPhraseAll() {
+						setNextPhraseOne();
+						while(mNext==null && phraseQueriesIt.hasNext()) {
+							mQueryIdx=0;
+							mQueryPhraseArgs=phraseQueriesIt.next();
+							setNextPhraseOne();
+						}
+					}
+					
 					@Override
 					public boolean hasNext() {
-						return mQueryIt.hasNext();
+						return mNext!=null;
 					}
 
 					@Override
 					public QueryPhrases next() {
-						Ii<String,Integer> phraseIdx=mQueryIt.next();
-						String phrase=phraseIdx.fst();
-						Map<Integer,QueryPhrases> idxToQueryPhrases=mPhraseToIdxToQueryPhrases.get(phrase);
-						if(idxToQueryPhrases==null) {
-							idxToQueryPhrases=new HashMap<Integer,QueryPhrases>(mPhraseToQuery.get(phrase).size());
-							mPhraseToIdxToQueryPhrases.put(phrase, idxToQueryPhrases);
+						try {
+							return mNext;
+						} finally {
+							setNextPhraseAll();
 						}
-						int idx=phraseIdx.snd();
-						QueryPhrases q=idxToQueryPhrases.get(idx);
-						if(q==null) {
-							q=new QueryPhrases(mParser, mPhraseToQuery.get(phraseIdx.fst()).get(phraseIdx.snd()), Batch.this);
-							idxToQueryPhrases.put(idx,q);
-						}
-						return q;
 					}
 
 					@Override
@@ -182,13 +147,25 @@ public class Batch implements Accumulator<Integer> {
 		return Collections.unmodifiableSet(mDocIdsFound);
 	}
 	
-	public Set<PartialResult> partialResults(int pDocId, String pPhrase) {
+	public Set<DocResult> docResults(int pDocId, String pPhrase) {
 		assert(mPhraseToQuery.containsKey(pPhrase));
 		assert(mPhraseToIdxToQueryPhrases.containsKey(pPhrase));
-		for(Map<Integer,QueryPhrases> idxToQuery: mPhraseToIdxToQueryPhrases.get(pPhrase).values()) {
-			for(QueryPhrases q=idxToQuery.values()) {
-				
+		
+		Set<DocResult> partials=new HashSet<>();
+		
+		for(QueryPhrases queries: mPhraseToIdxToQueryPhrases.get(pPhrase).values()) {
+			Answers answers=queries.answers();
+			assert answers!=null;
+			DocResult partial=answers.docResult(pDocId);
+			if(partial!=null) {
+				partials.add(partial);
 			}
 		}
+		
+		return partials;
+	}
+
+	public Answers startAnswering(QueryPhrases qPhrases, int pNumAnswers) {
+		return qPhrases.startAnswering(pNumAnswers, this);
 	}
 }

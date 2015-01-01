@@ -129,7 +129,7 @@ public class MainReporter {
 						public void onProgress(Ii<Line, String> pProgress) {
 							try {
 								searcher.include(pProgress);
-							} catch(IOException | org.apache.lucene.queryparser.classic.ParseException e) {
+							} catch(IOException e) {
 								thrower.ctch(e);
 							}
 						}

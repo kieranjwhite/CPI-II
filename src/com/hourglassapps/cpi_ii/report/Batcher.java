@@ -17,7 +17,7 @@ import com.hourglassapps.util.TreeArrayMultiMap;
 
 public class Batcher implements Iterable<Batch> {
 	private final static int EXPECTED_MAX_NUM_LINES=27000;
-	private SortedMultiMap<String, List<List<String>>, List<String>> mPhraseToFullQuery=null;
+	private SortedMultiMap<String, List<QueryPhrases>, QueryPhrases> mPhraseToFullQuery=null;
 	private int mNumBatches;
 	private final List<Ii<Line,String>> mLineDsts=new ArrayList<>(EXPECTED_MAX_NUM_LINES);
 	private final Converter<Line,List<String>> mLineToQuery;
@@ -39,7 +39,7 @@ public class Batcher implements Iterable<Batch> {
 		private final int mPhrasesPerBatch;
 
 		private String mNextPhrase=null;
-		private SortedMap<String,List<List<String>>> mNextBatch;
+		private SortedMultiMap<String, List<QueryPhrases>, QueryPhrases> mNextBatch;
 		
 		public BatchIterator() {
 			if(mPhraseToFullQuery==null) {
@@ -48,7 +48,7 @@ public class Batcher implements Iterable<Batch> {
 					List<String> queryPhrases=mLineToQuery.convert(lineDst.fst());
 					Collections.sort(queryPhrases);
 					for(String phrase: queryPhrases) {
-						mPhraseToFullQuery.addOne(phrase.toLowerCase(), queryPhrases);
+						mPhraseToFullQuery.addOne(phrase.toLowerCase(), new QueryPhrases(mParser, queryPhrases, lineDst));
 					}
 				}
 			}
@@ -59,7 +59,7 @@ public class Batcher implements Iterable<Batch> {
 		
 		private String nextBatch(String pNextPhrase) {
 			if(pNextPhrase!=null) {
-				mNextBatch=mPhraseToFullQuery.tailMap(pNextPhrase);
+				mNextBatch=TreeArrayMultiMap.view(mPhraseToFullQuery.tailMap(pNextPhrase));
 			} else {
 				mNextBatch=mPhraseToFullQuery;					
 			}
