@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.jdeferred.DoneCallback;
 import org.jdeferred.DoneFilter;
 import org.jdeferred.DonePipe;
 import org.jdeferred.ProgressCallback;
@@ -110,40 +111,57 @@ public class MainReporter {
 
 			try(
 					IndexViewer index=new IndexViewer(MainDownloader.downloadIndex());
-					PoemsReport poems=new PoemsReport(mDest, queryToHashIdFilename, thrower);
-					ResultsJournal journal=new ResultsJournal(poems.resultsDir(), mDocDir,
+					ResultsJournal journal=new ResultsJournal(PoemsReport.resultsDir(mDest), mDocDir,
 							new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
 					Queryer searcher=new Queryer(journal, index, analyser, QUERY_GENERATOR);
-					PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));
-					IOIterator<PoemRecord> it=parser.throwableIterator();
 					) {
-				Promise<Void,Void,Ii<Line,String>> prom=poems.promise();
-				prom.progress(new ProgressCallback<Ii<Line,String>>(){
+				Promise<Void,Void,Ii<Line,String>> prom;
+				try(	
+						PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));
+						IOIterator<PoemRecord> it=parser.throwableIterator();
+						PoemsReport poems=new PoemsReport(mDest, queryToHashIdFilename, thrower);
+						) {
+					prom=poems.promise();
+					prom.progress(new ProgressCallback<Ii<Line,String>>(){
+
+						@Override
+						public void onProgress(Ii<Line, String> pProgress) {
+							try {
+								searcher.include(pProgress);
+							} catch(IOException | org.apache.lucene.queryparser.classic.ParseException e) {
+								thrower.ctch(e);
+							}
+						}
+
+					});
+
+					while(it.hasNext()) {
+						if(thrower.fallThrough()) {
+							break;
+						}
+						PoemRecord rec=it.next();
+						if(!PoemRecord.LANG_LATIN.equals(rec.getLanguage())) {
+							continue;
+						}
+
+						poems.addTitle(rec);
+					}
+					poems.genContent();
+					
+				}
+				prom.then(new DoneCallback<Void>(){
 
 					@Override
-					public void onProgress(Ii<Line, String> pProgress) {
+					public void onDone(Void result) {
 						try {
-							searcher.search(pProgress);
+							searcher.search();
 						} catch(IOException | org.apache.lucene.queryparser.classic.ParseException e) {
 							thrower.ctch(e);
 						}
 					}
-
+					
 				});
-
-				while(it.hasNext()) {
-					if(thrower.fallThrough()) {
-						break;
-					}
-					PoemRecord rec=it.next();
-					if(!PoemRecord.LANG_LATIN.equals(rec.getLanguage())) {
-						continue;
-					}
-
-					poems.addTitle(rec);
-				}
-				poems.genContent();
 			}		
 		}
 	}

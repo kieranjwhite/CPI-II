@@ -5,8 +5,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -29,7 +33,8 @@ import org.jdeferred.impl.DeferredObject;
 import com.hourglassapps.cpi_ii.lucene.DocSpan;
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.lucene.LuceneVisitor;
-import com.hourglassapps.cpi_ii.lucene.Phrase;
+import com.hourglassapps.cpi_ii.lucene.Phrases;
+import com.hourglassapps.cpi_ii.lucene.Phrases.SpanFinder;
 import com.hourglassapps.cpi_ii.lucene.ResultRelayer;
 import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
 import com.hourglassapps.persist.Journal;
@@ -40,21 +45,26 @@ import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.ExclusiveTimeKeeper;
+import com.hourglassapps.util.SortedMultiMap;
+import com.hourglassapps.util.TreeArrayMultiMap;
 
 public class Queryer implements AutoCloseable {
 	private final static String TAG=Queryer.class.getName();
 	private final static int MAX_RESULTS=100;
+	private final static int NUM_BATCHES=50;
+	
 	private final Journal<String,Result> mJournal;
 	private final Analyzer mAnalyser;
 	private final Deferred<Void,Exception,Ii<Line,String>> mDeferred=new DeferredObject<>();
     private final QueryParser mParser;
     private final IndexReader mReader;
 	private final IndexSearcher mSearcher;
-	private final Converter<Line,List<String>> mLineToQuery;
+	//private final Converter<Line,List<String>> mLineToQuery;
 	private final ExclusiveTimeKeeper mTimes=new ExclusiveTimeKeeper();
 	private int mSearchCnt=0;
 	private final Cache<Integer,Terms> mTermCache;
 	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<>();
+	private final Batcher mPartials;
 	
 	public Queryer(Journal<String,Result> pJournal, IndexViewer pIndex, 
 			Analyzer pAnalyser, Converter<Line,List<String>> pQueryGenerator) throws IOException {
@@ -63,7 +73,8 @@ public class Queryer implements AutoCloseable {
 		mParser=new QueryParser(Version.LUCENE_4_10_0, LuceneVisitor.CONTENT.s(), pAnalyser);
 		mReader=DirectoryReader.open(pIndex.dir());
 	    mSearcher = new IndexSearcher(mReader);
-	    mLineToQuery=pQueryGenerator;
+	    //mLineToQuery=pQueryGenerator;
+	    mPartials=new Batcher(NUM_BATCHES, pQueryGenerator, mParser, new Phrases(mAnalyser, mReader, mTimes));
 	    mTermCache=new Cache<Integer,Terms>(new Converter<Integer,Terms>(){
 	    	
 			@Override
@@ -91,17 +102,52 @@ public class Queryer implements AutoCloseable {
 		return mDeferred;
 	}
 	
-	public void search(Ii<Line,String> pLineDst) throws ParseException, IOException {
-		if(mJournal.addedAlready(pLineDst.snd()) || "".equals(pLineDst.fst())) {
-			//Log.i(TAG, "found: "+Log.esc(pLineDst));
-			return;
+	private void docSearch(Batch pBatch) throws ParseException, IOException {
+		for(final QueryPhrases qPhrases: pBatch.queries()) {
+			final Query q=qPhrases.parse();
+			IndexViewer.interrogate(mReader, mSearcher, q, MAX_RESULTS, new ResultRelayer() {
+
+				@Override
+				public void run(IndexReader pReader, TopDocs pResults)
+						throws IOException {
+					final SortedSet<DocSpan> docSpans=new TreeSet<>();
+					ScoreDoc[] results=pResults.scoreDocs;
+					for(int i=0; i<results.length; i++) {
+
+						Document doc = mSearcher.doc(results[i].doc);
+						Path path=Paths.get(doc.get(LuceneVisitor.PATH.s()));
+						String title=doc.get(LuceneVisitor.TITLE.s());
+						if (path != null) {
+							if(title==null) {
+								title="";
+							}
+							//mJournal.addNew(new Result(title, path, Collections.unmodifiableSortedSet(docSpans))); //unmodifiableSortedSet or not, DocSpan instances are mutable so we could be more defensive here
+							qPhrases.answer(results[i].doc, path, title);
+						} else {
+							assert(false);
+						}
+					}
+				}
+			});
 		}
+	}
+	
+	private void search(Batch pBatch) throws ParseException, IOException {
 		try {
-			final List<Phrase> phrases=new ArrayList<>();
+			docSearch(pBatch);
+			SpanFinder spans=pBatch.allPhrases();
+			for(Integer docId: pBatch.docIds()) {
+				for(Map.Entry<String, Set<DocSpan>> phraseSpans: spans.findIn(mReader, docId).entrySet()) {
+					Set<PartialResult> parts=pBatch.partialResults(docId, phraseSpans.getKey());
+				}
+			}
+			
+			
+			final List<Phrases> phrases=new ArrayList<>();
 			List<String> phraseStrs=mLineToQuery.convert(pLineDst.fst());
 			for(String phrase: phraseStrs) {
 				assert(phrase.length()!=0);
-				phrases.add(new Phrase(mAnalyser, phrase, mTimes, mTermCache));
+				phrases.add(new Phrases(mAnalyser, mReader, mTimes));
 			}
 			String query="\""+Rtu.join(phraseStrs,"\" \"")+"\"";
 			Log.i(TAG, "query: "+query);
@@ -117,7 +163,7 @@ public class Queryer implements AutoCloseable {
 						ScoreDoc[] results=pResults.scoreDocs;
 						for(int i=0; i<results.length; i++) {
 							
-							for(Phrase p: phrases) {
+							for(Phrases p: phrases) {
 								Iterator<DocSpan> spans=p.findIn(pReader, results[i].doc).iterator();
 								while(spans.hasNext()) {
 									DocSpan span=spans.next();
@@ -154,38 +200,41 @@ public class Queryer implements AutoCloseable {
 							docSpans.clear();
 						}
 						mSearchCnt++;
-						if(mSearchCnt%50==0) {
+						if(mSearchCnt%100==0) {
 							Log.i(TAG, "Searches: "+mSearchCnt+"\n"+mTimes.toString());
 						}
 					}
 
 				});
 				
-				/*
-				 * Query q
+				/* Create 50 phrases instances each containing phrases of 1/50 of the queries. 
+				 * QueryPhrases q
+				 * foreach SortedSet<Phrases> phrases:
 				 * foreach interrogate(q): doc
-				 * 	foreach phrases.findIn(doc): phrase, span
-				 * 		Set<PartialResult> parts=partials.get(doc, phrase);
-				 * 		foreach parts: partial
-				 * 			Results fullResult=partial.addSpan(span)
-				 * 			if fullResult!=null:
-				 * 				partials.delete(partial)
-				 * 				if q.contains(phrase):
-				 * 					journal.addNew(fullResult)
-				 * assert !partials.contains(q)
-				 * 
-				 * 
-				 * 
-				 * foreach document: doc
-				 * 	foreach phrases.findIn(doc): phrase, span
-				 * 		Set<PartialResult> parts=partials.get(doc, phrase);
-				 * 		foreach parts: partial
-				 * 			Result fullResult=partial.addSpan(span)
-				 *  		if fullResult!=null:
-				 *  			partials.delete(partial)
-				 *  			mJournal.addNew(fullResult)
-				 *  	
-				 *  			
+				 * 	if !doneDocs.contains(doc_id)
+				 * 		foreach phrases.findIn(doc): phrase, doc_span
+				 * 			Set<PartialResult> parts=partials.get(doc, phrase); //parts is a set of all partial results (one per query that contains phrase) that contains doc   
+				 * 			foreach parts: partial  //partial contains spans for one or more phrases in the same query + doc title and path
+				 * 				Result fullResult=partial.addSpan(span) //partial returns a fullResult when spans have been added for all phrases for its query 
+				 * 				if fullResult!=null:
+				 * 					partials.delete(partial)
+				 * 					completeResults.add(result)
+				 * 		doneDocs.add(doc_id)
+				 * 	List<Result> list=completeResults.getAndDelete(q)
+				 * 	foreach list: fullResult
+				 * 		journal.addNew(fullResult)
+				 * 	journal.commit(q.dst())
+				 * 	
+				 * Data structures:
+				 * QueryPhrases all phrases in a query
+				 * Set<Integer> doneDocs
+				 * Phrase (one phrase in a query)
+				 * DocSpan, start and end offsets for a match in a document
+				 * Phrases contains all phrases for all queries
+				 * PartialResult: a single document result from a particular query, typically without all document spans added
+				 * Partials maps phrase->doc->partial implement as (phrase -> queries) and (query -> doc_id) -> partial
+				 * CompleteResult QueryPhrases -> Array<Result>
+				 * Set<Integer> doneDocs 
 				 */
 				
 			}
@@ -195,6 +244,22 @@ public class Queryer implements AutoCloseable {
 		} catch(RuntimeException|IOException|ParseException e) {
 			throw e;
 		}
+		
+		
+	}
+	
+	public void search() throws ParseException, IOException {
+		for(Batch batch: mPartials) {
+			search(batch);
+		}
+	}
+	
+	public void include(Ii<Line,String> pLineDst) throws IOException {
+		if(mJournal.addedAlready(pLineDst.snd()) || "".equals(pLineDst.fst())) {
+			//Log.i(TAG, "found: "+Log.esc(pLineDst));
+			return;
+		}
+		mPartials.add(pLineDst);
 	}
 
 	@Override

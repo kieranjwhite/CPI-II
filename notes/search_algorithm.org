@@ -1,23 +1,19 @@
 * Create 50 Batch instances each containing phrases of 1/50 of the queries. 
-* QueryPhrases q
 * for Batch batch: partials:
-** foreach batch.query interrogate(q): doc
+** foreach batch.query interrogate(QueryPhrases q): doc
 *** q.answer(doc)
 ** Phrases phrases=batch.phrases()
-******************** if !doneDocs.contains(doc_id)
-**** foreach phrases.findIn(doc): phrase, doc_span
-***** Set<PartialResult> parts=batch.get(doc, phrase); //parts is a set of all partial results (one per query that contains phrase) that contains doc   
-***** foreach parts: partial  //partial contains spans for one or more phrases in the same query + doc title and path
-****** Result fullResult=partial.addSpan(span) //partial returns a fullResult when spans have been added for all phrases for its query 
-****** if fullResult!=null:
-******* partials.delete(partial)
-******* completeResults.add(result)
-************************* doneDocs.add(doc_id)
+*** foreach phrases.findIn(doc): phrase, doc_span
+**** Set<PartialResult> parts=batch.partialResults(doc, phrase); //parts is a set of all partial results (one per query that contains phrase) that contains doc   
+**** foreach parts: partial  //partial contains spans for one or more phrases in the same query + doc title and path
+***** Result fullResult=partial.addSpan(span) //partial returns a fullResult when spans have been added for all phrases for its query 
+***** if fullResult!=null:
+****** partials.delete(partial)
+****** completeResults.put(q,result)
 *** List<Result> list=completeResults.getAndDelete(q)
 *** foreach list: fullResult
 **** journal.addNew(fullResult)
 *** journal.commit(q.dst())
-* 	
 * Data structures:
 ** QueryPhrases all phrases in a query
 ** Set<Integer> doneDocs
@@ -28,7 +24,21 @@
 ** DocSpan, start and end offsets for a match in a document
 ** Phrases contains all phrases for all queries
 ** PartialResult: a single document result from a particular query, typically without all document spans added
-** Partials maps phrase->doc->partial implement as (phrase -> Set queries) and (Set queries -> doc_id) -> partial
+*** map query -> result_idx -> doc, list<doc_span>
+** Partials maps phrase->doc->partial implement as (phrase -> Set<QueryPhrases> queries) and (Set<QueryPhrases> queries -> doc_id) -> partial
 *** Batcher
 ** CompleteResult QueryPhrases -> Array<Result>
 ** Set<Integer> doneDocs 
+* Old
+** Foreach query
+*** Foreach doc returned
+**** For each term in that doc
+***** For each span for the doc, term pairs
+* New
+** N times
+*** Foreach query
+**** Foreach doc returned
+*** Foreach doc returned
+**** Foreach term in that doc
+**** Foreach phrase
+***** For each span

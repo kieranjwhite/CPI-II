@@ -1,15 +1,21 @@
 package com.hourglassapps.cpi_ii.lucene;
 
 public class DocSpan implements Comparable<DocSpan> {
+	private String mPhrase;
 	private int mStartOffset;
 	private int mEndOffset;
 	
-	public DocSpan(int pStartOffset, int pEndOffset) {
+	public DocSpan(String pPhrase,int pStartOffset, int pEndOffset) {
 		if(pStartOffset>pEndOffset) {
 			throw new IllegalArgumentException("start: "+pStartOffset+" end: "+pEndOffset);
 		}
+		mPhrase=pPhrase;
 		mStartOffset=pStartOffset;
 		mEndOffset=pEndOffset;
+	}
+	
+	public String phrase() {
+		return mPhrase;
 	}
 	
 	public int startOffset() {

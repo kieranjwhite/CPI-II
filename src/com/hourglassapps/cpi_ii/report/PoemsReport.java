@@ -54,7 +54,6 @@ public class PoemsReport implements AutoCloseable {
 	private final Deferred<Void,Void,Ii<Line,String>> mDeferred=new DeferredObject<>();
 	private final static Cleaner CLEANER=new Cleaner();
 	private final Converter<Line,Ii<String,String>> mQueryToHashTagFilename;
-	private final Path mResultsDir;
 	private final Thrower mThrower;
 	
 	public PoemsReport(Path pDest, Converter<Line,Ii<String,String>> pQueryToHashTagFilename, Thrower pThrower) throws IOException {
@@ -73,7 +72,6 @@ public class PoemsReport implements AutoCloseable {
 		copy(BASE64_JS, pDest);
 		copy(JSON_JS, pDest);
 		
-		mResultsDir=pDest.resolve(RESULTS_DIR);
 		mQueryToHashTagFilename=pQueryToHashTagFilename;
 		mWrapper=new FileWrapper(PoemsReport.class, START, END, pDest.resolve(POEM_PANE_NAME));
 		mOut=mWrapper.writer();
@@ -176,8 +174,8 @@ public class PoemsReport implements AutoCloseable {
 		
 	}
 	
-	public Path resultsDir() {
-		return mResultsDir;
+	public static Path resultsDir(Path pDest) {
+		return pDest.resolve(RESULTS_DIR);
 	}
 	
 	public void genContent() throws Exception {
