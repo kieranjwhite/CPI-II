@@ -32,6 +32,11 @@ public class QueryPhrases {
 		mLineDst=pLineDst;
 	}
 	
+	@Override
+	public String toString() {
+		return mLineDst.toString();
+	}
+	
 	public Line line() {
 		return mLineDst.fst();
 	}
@@ -58,9 +63,13 @@ public class QueryPhrases {
 		return mAnswers;
 	}
 	
+	public boolean answered() {
+		return mAnswers!=null;
+	}
+	
 	public Answers startAnswering(int pNumAnswers, Accumulator<Integer> pDocIdHarvester) {
 		if(mAnswers!=null) {
-			throw new IllegalStateException("Answers already initialised");
+			return null; //can occur if there are duplicate lines in a poem
 		}
 		
 		mAnswers=new Answers(pNumAnswers, pDocIdHarvester);
@@ -115,6 +124,13 @@ public class QueryPhrases {
 			}
 			return mDocIds.get(pDocId);
 		}
+	}
+
+	public String firstPhrase() {
+		if(mQueryPhrases.size()==0) {
+			return null;
+		}
+		return mQueryPhrases.get(0);
 	}
 	
 	

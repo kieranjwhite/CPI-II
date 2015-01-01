@@ -46,9 +46,13 @@ public class Batcher implements Iterable<Batch> {
 				mPhraseToFullQuery=new TreeArrayMultiMap<>();
 				for(Ii<Line,String> lineDst: mLineDsts) {
 					List<String> queryPhrases=mLineToQuery.convert(lineDst.fst());
-					//Collections.sort(queryPhrases); //necessary for Batch instance to be able to check if same line is repeated within a poem
+					List<String> queryPhrasesLower=new ArrayList<>(queryPhrases.size());
 					for(String phrase: queryPhrases) {
-						mPhraseToFullQuery.addOne(phrase.toLowerCase(), new QueryPhrases(mParser, queryPhrases, lineDst));
+						queryPhrasesLower.add(phrase.toLowerCase());
+					}
+					//Collections.sort(queryPhrases); //necessary for Batch instance to be able to check if same line is repeated within a poem
+					for(String phrase: queryPhrasesLower) {
+						mPhraseToFullQuery.addOne(phrase, new QueryPhrases(mParser, queryPhrasesLower, lineDst));
 					}
 				}
 			}
@@ -84,7 +88,7 @@ public class Batcher implements Iterable<Batch> {
 		public Batch next() {
 			try {
 				mPhrases.reset();
-				return new Batch(mParser, mPhrases, mNextBatch, mNextPhrase);
+				return new Batch(mPhrases, mNextBatch, mNextPhrase);
 			} finally {
 				mNextPhrase=nextBatch(mNextPhrase);
 			}

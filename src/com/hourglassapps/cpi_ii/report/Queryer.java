@@ -100,6 +100,9 @@ public class Queryer implements AutoCloseable {
 	
 	private void docSearch(final Batch pBatch) throws ParseException, IOException {
 		for(final QueryPhrases qPhrases: pBatch.queries()) {
+			if(qPhrases.answered()) {
+				continue;
+			}
 			final Query q=qPhrases.parse();
 			IndexViewer.interrogate(mReader, mSearcher, q, MAX_RESULTS, new ResultRelayer() {
 

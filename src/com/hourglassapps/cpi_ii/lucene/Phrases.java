@@ -47,7 +47,7 @@ public class Phrases {
 	//private Cache<Integer,Terms> mTermCache;
 	private final Analyzer mAnalyser;
 	private final IndexReader mReader;
-	private boolean mBuilt=false;
+	private SpanFinder mFinder=null;
 	//private List<List<Integer>> mPositionAbsolutes=new ArrayList<>();
 	
 	private final MultiMap<BytesRef,List<String>,String> mFirstRefToPhrases=new HashArrayMultiMap<>();
@@ -60,7 +60,7 @@ public class Phrases {
 	}
 	
 	public void reset() {
-		mBuilt=false;
+		mFinder=null;
 		//mPhrases.clear();
 		mPhraseToRefs.clear();
 		mFirstRefToPhrases.clear();
@@ -68,7 +68,7 @@ public class Phrases {
 	}
 	
 	public void add(String pPhrase) throws IOException {
-		if(mBuilt) {
+		if(mFinder!=null) {
 			throw new IllegalStateException("already built");
 		}
 		try(Clock w=mTimes.time("phrase constructor")) {
@@ -89,8 +89,10 @@ public class Phrases {
 	}
 	
 	public SpanFinder build() {
-		mBuilt=true;
-		return new SpanFinder();
+		if(mFinder==null) {
+			mFinder=new SpanFinder();
+		}
+		return mFinder;
 	}
 	
 	@Override
@@ -115,8 +117,6 @@ public class Phrases {
 		private final Set<BytesRef> mFirstRefs=new HashSet<>();
 		private final Set<BytesRef> mLastRefs=new HashSet<>();
 		
-		private final NavigableMap<Integer,BytesRef> mPosToRef=new TreeMap<>();
-		
 		private SpanFinder() {
 			for(List<BytesRef> phraseRefs: mPhraseToRefs.values()) {
 				if(phraseRefs.size()==0) {
@@ -133,8 +133,10 @@ public class Phrases {
 				final Map<BytesRef,NavigableSet<Integer>> refsToPositions=new HashMap<>();
 				final Map<Integer, Integer> posToStartOffsets=new HashMap<Integer,Integer>();
 				final Map<Integer, Integer> posToEndOffsets=new HashMap<Integer,Integer>();
+				final NavigableMap<Integer,BytesRef> posToRef=new TreeMap<>();
+				
 
-				Document doc=pReader.document(pDocId);
+				//Document doc=pReader.document(pDocId);
 				
 				Terms termVector;
 				try(Clock vectorWatch=findWatch.time("vector")) {
@@ -172,13 +174,13 @@ public class Phrases {
 								int termPos=docPos.nextPosition(); /* nextPosition returns the number of terms into document the first match was found 
 														  or for subsequent matches the number of tokens since the previous match */
 								positions.add(termPos);
-								mPosToRef.put(termPos, ref);
+								posToRef.put(termPos, ref);
 								
 								if(mFirstRefs.contains(ref)) {
 									posToStartOffsets.put(termPos, docPos.startOffset());
 								}
 								if(mLastRefs.contains(ref)) {
-									posToEndOffsets.put(termPos, docPos.endOffset());
+									posToEndOffsets.put(termPos+1, docPos.endOffset());
 								}
 							}
 						}
@@ -187,7 +189,7 @@ public class Phrases {
 				DOC_POS_ENUM.set(docPos);
 				TERM_ENUM.set(termsEnum);
 
-				return genPhraseToSpans(mPosToRef, posToStartOffsets, posToEndOffsets);
+				return genPhraseToSpans(posToRef, posToStartOffsets, posToEndOffsets);
 				/*
 				return new Iterable<Ii<String,DocSpan>>(){
 
@@ -227,14 +229,22 @@ public class Phrases {
 						} //else one word phrase => we already have a match
 						if(found) {
 							int startPhrasePos=posRef.getKey();
+							Integer start=pPosToStartOffsets.get(startPhrasePos);
+							assert start!=null;
+							Integer after=pPosToEndOffsets.get(startPhrasePos+numPhraseTerms);
+							assert after!=null;
 							phraseToSpans.addOne(candidate, 
-									new DocSpan(candidate, pPosToStartOffsets.get(startPhrasePos), pPosToEndOffsets.get(startPhrasePos+mPhraseToRefs.size())));
+									new DocSpan(candidate, start, after));
 						}
 					}
 				}
 			}
 			return phraseToSpans;
 		}
+	}
+
+	public boolean built() {
+		return mFinder!=null;
 	}
 	
 	/*
