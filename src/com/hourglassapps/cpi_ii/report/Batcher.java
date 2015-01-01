@@ -46,7 +46,7 @@ public class Batcher implements Iterable<Batch> {
 				mPhraseToFullQuery=new TreeArrayMultiMap<>();
 				for(Ii<Line,String> lineDst: mLineDsts) {
 					List<String> queryPhrases=mLineToQuery.convert(lineDst.fst());
-					Collections.sort(queryPhrases);
+					//Collections.sort(queryPhrases); //necessary for Batch instance to be able to check if same line is repeated within a poem
 					for(String phrase: queryPhrases) {
 						mPhraseToFullQuery.addOne(phrase.toLowerCase(), new QueryPhrases(mParser, queryPhrases, lineDst));
 					}

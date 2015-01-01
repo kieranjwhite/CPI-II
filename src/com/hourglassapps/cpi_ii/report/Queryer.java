@@ -43,16 +43,11 @@ import com.hourglassapps.util.Cache;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Ii;
-import com.hourglassapps.util.Log;
-import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.ExclusiveTimeKeeper;
-import com.hourglassapps.util.SortedMultiMap;
-import com.hourglassapps.util.TreeArrayMultiMap;
 
 public class Queryer implements AutoCloseable {
 	private final static String TAG=Queryer.class.getName();
 	private final static int MAX_RESULTS=100;
-	private final static int NUM_BATCHES=50;
 	
 	private final Journal<String,Result> mJournal;
 	private final Analyzer mAnalyser;
@@ -68,14 +63,14 @@ public class Queryer implements AutoCloseable {
 	private final Batcher mPartials;
 	
 	public Queryer(Journal<String,Result> pJournal, IndexViewer pIndex, 
-			Analyzer pAnalyser, Converter<Line,List<String>> pQueryGenerator) throws IOException {
+			Analyzer pAnalyser, Converter<Line,List<String>> pQueryGenerator, int pNumBatches) throws IOException {
 		mJournal=pJournal;
 		mAnalyser=pAnalyser;
 		mParser=new QueryParser(Version.LUCENE_4_10_0, LuceneVisitor.CONTENT.s(), pAnalyser);
 		mReader=DirectoryReader.open(pIndex.dir());
 	    mSearcher = new IndexSearcher(mReader);
 	    //mLineToQuery=pQueryGenerator;
-	    mPartials=new Batcher(NUM_BATCHES, pQueryGenerator, mParser, new Phrases(mAnalyser, mReader, mTimes));
+	    mPartials=new Batcher(pNumBatches, pQueryGenerator, mParser, new Phrases(mAnalyser, mReader, mTimes));
 	    mTermCache=new Cache<Integer,Terms>(new Converter<Integer,Terms>(){
 	    	
 			@Override

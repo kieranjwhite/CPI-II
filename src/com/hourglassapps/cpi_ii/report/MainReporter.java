@@ -72,7 +72,7 @@ public class MainReporter {
 		mDest=pDest;
 	}
 	
-	public void create() throws Exception {
+	public void create(int pNumBatches) throws Exception {
 		
 		try(final ConcreteThrower<Exception> thrower=new ConcreteThrower<>()) {
 			Analyzer analyser=StandardLatinAnalyzer.searchAnalyzer();
@@ -114,7 +114,7 @@ public class MainReporter {
 					ResultsJournal journal=new ResultsJournal(PoemsReport.resultsDir(mDest), mDocDir,
 							new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
-					Queryer searcher=new Queryer(journal, index, analyser, QUERY_GENERATOR);
+					Queryer searcher=new Queryer(journal, index, analyser, QUERY_GENERATOR, pNumBatches);
 					) {
 				Promise<Void,Void,Ii<Line,String>> prom;
 				try(	
@@ -167,19 +167,20 @@ public class MainReporter {
 	}
 
 	private static void usage() {
-		System.out.println("MainReporter <CONDUCTUS_XML_EXPORT>");
+		System.out.println("MainReporter <CONDUCTUS_XML_EXPORT> <NUM_BATCHES>");
 	}
 
 	public static void main(String pArgs[]) throws IOException, ParseException {
 		try {
-			if(pArgs.length!=1) {
+			if(pArgs.length!=2) {
 				usage();
 				System.exit(-1);
 			}
 
 			Path xml=Paths.get(pArgs[0]);
+			int numBatches=Integer.valueOf(pArgs[1]);
 			Path dest=Paths.get(POEM_DIR_NAME);
-			new MainReporter(xml, DOCUMENT_DIR, dest).create();
+			new MainReporter(xml, DOCUMENT_DIR, dest).create(numBatches);
 		} catch(Exception e) {
 			Log.e(TAG,e);
 		}

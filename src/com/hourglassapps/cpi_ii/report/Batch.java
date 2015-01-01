@@ -61,9 +61,9 @@ public class Batch implements Accumulator<Integer> {
 			assert mAfterPhrase==null;
 			return false;
 		}
-		String firstAlphabetically=q.get(0);
-		return firstAlphabetically.compareTo(mFirstPhrase)>=0 && 
-				(mAfterPhrase==null || firstAlphabetically.compareTo(mAfterPhrase)<0);
+		String firstLine=q.get(0);
+		return firstLine.compareTo(mFirstPhrase)>=0 && 
+				(mAfterPhrase==null || firstLine.compareTo(mAfterPhrase)<0);
 	}
 
 	private boolean todo(String pPhrase, int pQueryIdx, String pCurrentPhrase, int pCurrentQueryIdx) {
@@ -88,30 +88,36 @@ public class Batch implements Accumulator<Integer> {
 					
 					private Entry<String, List<QueryPhrases>> mQueryPhraseArgs=null;
 					private int mQueryIdx=Integer.MAX_VALUE;
+					private String mLastPhrase=null;
 					private QueryPhrases mNext=null;
 					
 					{
-						setNextPhraseAll();
+						setNextPhrase();
 					}
 					
-					private void setNextPhraseOne() {
+					private void setNextQueryIdx() {
+						int idx=mQueryIdx;
 						if(mQueryIdx<mQueryPhraseArgs.getValue().size()) {
 							String phrase=mQueryPhraseArgs.getKey();
-							mNext=mPhraseToQuery.get(phrase).get(mQueryIdx);
-
-							mQueryIdx++;
+							
+							if(todo(phrase, idx, mLastPhrase, mQueryIdx)) {
+								mNext=mPhraseToQuery.get(phrase).get(mQueryIdx);
+							}
+							idx++;
 						} else {
 							mNext=null;
 						}
+						mQueryIdx=idx;
 					}
 					
-					private void setNextPhraseAll() {
-						setNextPhraseOne();
+					private void setNextPhrase() {
+						setNextQueryIdx();
 						while(mNext==null && phraseQueriesIt.hasNext()) {
 							mQueryIdx=0;
 							mQueryPhraseArgs=phraseQueriesIt.next();
-							setNextPhraseOne();
+							setNextQueryIdx();
 						}
+						mLastPhrase=mQueryPhraseArgs.getKey();
 					}
 					
 					@Override
@@ -124,7 +130,7 @@ public class Batch implements Accumulator<Integer> {
 						try {
 							return mNext;
 						} finally {
-							setNextPhraseAll();
+							setNextPhrase();
 						}
 					}
 
