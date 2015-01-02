@@ -148,8 +148,10 @@ public class Queryer implements AutoCloseable {
 	
 	private void search(Batch pBatch) throws ParseException, IOException {
 		try {
+			Log.i(TAG, "Document Search");
 			docSearch(pBatch);
 			SpanFinder spans=pBatch.allPhrases();
+			Log.i(TAG, "Locating Spans");
 			for(Integer docId: pBatch.docIds()) {
 				for(Map.Entry<String, Set<DocSpan>> phraseSpans: spans.findIn(mReader, docId).entrySet()) {
 					Set<DocResult> results=pBatch.docResults(docId, phraseSpans.getKey());
@@ -161,6 +163,7 @@ public class Queryer implements AutoCloseable {
 				}
 			}
 			
+			Log.i(TAG, "Saving to Journal");
 			List<QueryPhrases> phrases=new ArrayList<>(pBatch.size());
 			for(final QueryPhrases qPhrases: pBatch.queries()) {
 				phrases.add(qPhrases);

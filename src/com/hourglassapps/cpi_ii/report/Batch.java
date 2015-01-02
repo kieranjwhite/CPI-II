@@ -1,6 +1,7 @@
 package com.hourglassapps.cpi_ii.report;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,36 +27,35 @@ import com.hourglassapps.util.TreeArrayMultiMap;
 
 public class Batch implements Accumulator<Integer> {
 	private final static String TAG=Batch.class.getName();
+	private final SortedMultiMap<String, List<QueryPhrases>, QueryPhrases> mPhraseToQueryFull;
 	private final SortedMultiMap<String, List<QueryPhrases>, QueryPhrases> mPhraseToQuery;
-	private final String mAfterPhrase;
-	private final String mFirstPhrase;
 	private final Phrases mPhrases;
 	private final Set<Integer> mDocIdsFound=new TreeSet<Integer>();
 	private final int mSize;
 	
-	public Batch(Phrases pPhrases, SortedMultiMap<String, List<QueryPhrases>, QueryPhrases> pPhraseToQuery,
-			String pNextPhrase) {
+	public Batch(Phrases pPhrases, SortedMultiMap<String, List<QueryPhrases>, QueryPhrases> pPhraseToQueryFull,
+			String pStartPhrase, String pNextPhrase) {
+		mPhraseToQueryFull=pPhraseToQueryFull;
 		mPhrases=pPhrases;
-		mAfterPhrase=pNextPhrase;
-		if(mAfterPhrase==null) {
-			mPhraseToQuery=pPhraseToQuery;
+		
+		SortedMultiMap<String, List<QueryPhrases>, QueryPhrases> phraseToQuery;
+		if(pNextPhrase==null) {
+			phraseToQuery=pPhraseToQueryFull;
 		} else {
-			mPhraseToQuery=TreeArrayMultiMap.view(pPhraseToQuery.headMap(mAfterPhrase));
+			phraseToQuery=TreeArrayMultiMap.view(pPhraseToQueryFull.headMap(pNextPhrase));
 		}
+		if(pStartPhrase!=null) {
+			phraseToQuery=TreeArrayMultiMap.view(phraseToQuery.tailMap(pStartPhrase));
+		}
+		mPhraseToQuery=phraseToQuery;
 		
 		int size=0;
 		for(List<QueryPhrases> mPhrases: mPhraseToQuery.values()) {
 			size+=mPhrases.size();
 		}
 		mSize=size;
-		
-		String first=mPhraseToQuery.firstKey();
-		if(first!=null) {
-			mFirstPhrase=first;
-		} else {
-			mFirstPhrase=mAfterPhrase;
-		}
 	}
+
 	
 	public int size() {
 		return mSize;
@@ -63,26 +63,17 @@ public class Batch implements Accumulator<Integer> {
 	
 	public SpanFinder allPhrases() throws IOException {
 		if(!mPhrases.built()) {
-			for(String phrase: mPhraseToQuery.keySet()) {
-				mPhrases.add(phrase);
+			for(List<QueryPhrases> phrases: mPhraseToQuery.values()) {
+				for(QueryPhrases qPhrases: phrases) {
+					for(String phrase: qPhrases.phrases()) {
+						mPhrases.add(phrase);
+					}
+				}
 			}
 		}
 		return mPhrases.build();
 	}
 	
-	private boolean mine(String pPhrase, int pQueryIdx) {
-		assert(mPhraseToQuery.containsKey(pPhrase));
-		List<String> q=mPhraseToQuery.get(pPhrase).get(pQueryIdx).phrases();
-		assert(q.size()>0);
-		if(mFirstPhrase==null) {
-			assert mAfterPhrase==null;
-			return false;
-		}
-		String firstLine=q.get(0);
-		return firstLine.compareTo(mFirstPhrase)>=0 && 
-				(mAfterPhrase==null || firstLine.compareTo(mAfterPhrase)<0);
-	}
-
 	/**
 	 * Determine (1) if this Batch instance should handle the query represent by pPhrase, pQueryIdx pair and (2) if the first
 	 * phrase of the query matches the pPhrase key. The purpose of the second condition is to ensure that multi-phrase queries
@@ -92,7 +83,7 @@ public class Batch implements Accumulator<Integer> {
 	 * @return
 	 */
 	private boolean todo(String pPhrase, int pQueryIdx) {
-		return mine(pPhrase, pQueryIdx) && Rtu.safeEq(mPhraseToQuery.get(pPhrase).get(pQueryIdx).firstPhrase(), pPhrase);
+		return mPhraseToQuery.containsKey(pPhrase) && Rtu.safeEq(mPhraseToQuery.get(pPhrase).get(pQueryIdx).firstPhrase(), pPhrase);
 	}
 
 	public Iterable<QueryPhrases> queries() {
@@ -174,25 +165,19 @@ public class Batch implements Accumulator<Integer> {
 	}
 	
 	public Set<DocResult> docResults(int pDocId, String pPhrase) {
-		assert(mPhraseToQuery.containsKey(pPhrase));
-		
 		Set<DocResult> partials=new HashSet<>();
-		int queryIdx=0;
-		for(QueryPhrases queries: mPhraseToQuery.get(pPhrase)) {
-			if(todo(pPhrase, queryIdx)) {
-				Answers answers=queries.answers();
-				if(answers==null) {
-					//Log.i(TAG, Log.esc("skipping query for: "+queries.dst()+" It seems to be a duplicate."));
-					continue;
-				} else {
-					//Log.i(TAG, Log.esc("recording results for: "+queries.dst()));					
-				}
-				DocResult partial=answers.docResult(pDocId);
-				if(partial!=null) {
-					partials.add(partial);
-				}
+		for(QueryPhrases queries: mPhraseToQueryFull.get(pPhrase)) {
+			Answers answers=queries.answers();
+			if(answers==null) {
+				//Log.i(TAG, Log.esc("skipping query for: "+queries.dst()+" It seems to be a duplicate."));
+				continue;
+			} else {
+				//Log.i(TAG, Log.esc("recording results for: "+queries.dst()));					
 			}
-			queryIdx++;
+			DocResult partial=answers.docResult(pDocId);
+			if(partial!=null) {
+				partials.add(partial);
+			}
 		}
 
 		return partials;
