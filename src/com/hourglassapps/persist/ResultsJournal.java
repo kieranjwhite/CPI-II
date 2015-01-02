@@ -32,6 +32,7 @@ import com.hourglassapps.util.InputStreamFactory;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 import com.hourglassapps.util.Typed;
+import com.hourglassapps.util.URLUtils;
 
 public class ResultsJournal extends AbstractFilesJournal<String,Result> {
 	private final static String TAG=ResultsJournal.class.getName();
@@ -99,7 +100,7 @@ public class ResultsJournal extends AbstractFilesJournal<String,Result> {
 					 * the file in question was saved under in the document Journal -- I don't think the output from mShorten is.
 					 */
 					//return mShorten.convert(Rtu.join(parts, " ")); 
-					return Rtu.join(parts, " ");
+					return URLUtils.encode(Rtu.join(parts, " "));
 				} catch(IOException e) {
 					mThrower.ctch(e);
 					return null;
