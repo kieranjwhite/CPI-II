@@ -28,7 +28,6 @@ public class DocResult {
 				spans.remove();
 			}
 		}
-		mSpans=Collections.unmodifiableSortedSet(mSpans); //don't want to merge a second time or add more spans
 		return mSpans;
 	}
 	

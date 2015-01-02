@@ -44,6 +44,8 @@ import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Converter;
 import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.ExclusiveTimeKeeper;
+import com.hourglassapps.util.Log;
+import com.hourglassapps.util.Rtu;
 
 public class Queryer implements AutoCloseable {
 	private final static String TAG=Queryer.class.getName();
@@ -99,10 +101,23 @@ public class Queryer implements AutoCloseable {
 	}
 	
 	private void docSearch(final Batch pBatch) throws ParseException, IOException {
+		List<QueryPhrases> phrases=new ArrayList<>(pBatch.size());
 		for(final QueryPhrases qPhrases: pBatch.queries()) {
-			if(qPhrases.answered()) {
+			phrases.add(qPhrases);
+		}
+		Collections.sort(phrases);
+		
+		QueryPhrases last=null;
+		for(final QueryPhrases qPhrases: phrases) {
+			if(Rtu.safeEq(qPhrases, last)) {
+				//Log.i(TAG, "docSearch: skipping "+qPhrases.dst());
 				continue;
 			}
+			last=qPhrases;
+			
+			//if(qPhrases.answered()) {
+			//	continue;
+			//}
 			final Query q=qPhrases.parse();
 			IndexViewer.interrogate(mReader, mSearcher, q, MAX_RESULTS, new ResultRelayer() {
 
@@ -146,7 +161,20 @@ public class Queryer implements AutoCloseable {
 				}
 			}
 			
+			List<QueryPhrases> phrases=new ArrayList<>(pBatch.size());
 			for(final QueryPhrases qPhrases: pBatch.queries()) {
+				phrases.add(qPhrases);
+			}
+			Collections.sort(phrases);			
+
+			QueryPhrases last=null;
+			for(final QueryPhrases qPhrases: phrases) {
+				if(Rtu.safeEq(qPhrases, last)) {
+					//Log.i(TAG, "search: skipping "+qPhrases.dst());
+					continue;
+				}
+				last=qPhrases;
+				
 				Answers answers=qPhrases.answers();
 				if(answers!=null) {
 					for(Result res: answers.results()) {

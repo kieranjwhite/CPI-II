@@ -32,7 +32,7 @@ public class Trail<C> {
 	}
 
 	public void save(Path pDest) throws IOException {
-		Log.i(TAG, Log.esc("trail file: "+mPartialDir.resolve(AbstractFilesJournal.META_PREFIX+pDest.getFileName().toString()).toString()));
+		//Log.i(TAG, Log.esc("trail file: "+mPartialDir.resolve(AbstractFilesJournal.META_PREFIX+pDest.getFileName().toString()).toString()));
 		try(PrintWriter out=
 				new PrintWriter(new BufferedWriter(
 						new FileWriter(mPartialDir.resolve(AbstractFilesJournal.META_PREFIX+pDest.getFileName().toString()).toString())))) {

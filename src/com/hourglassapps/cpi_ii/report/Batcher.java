@@ -51,8 +51,9 @@ public class Batcher implements Iterable<Batch> {
 						queryPhrasesLower.add(phrase.toLowerCase());
 					}
 					//Collections.sort(queryPhrases); //necessary for Batch instance to be able to check if same line is repeated within a poem
+					QueryPhrases qPhrases=new QueryPhrases(mParser, queryPhrasesLower, lineDst);
 					for(String phrase: queryPhrasesLower) {
-						mPhraseToFullQuery.addOne(phrase, new QueryPhrases(mParser, queryPhrasesLower, lineDst));
+						mPhraseToFullQuery.addOne(phrase, qPhrases);
 					}
 				}
 			}

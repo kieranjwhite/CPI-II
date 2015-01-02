@@ -18,7 +18,7 @@ import com.hourglassapps.util.Ii;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
 
-public class QueryPhrases {
+public class QueryPhrases implements Comparable<QueryPhrases> {
 	private final static String TAG=QueryPhrases.class.getName();
 	
 	private final List<String> mQueryPhrases;
@@ -132,6 +132,47 @@ public class QueryPhrases {
 		}
 		return mQueryPhrases.get(0);
 	}
+
 	
+	@Override
+	public boolean equals(Object pOther) {
+        if (this == pOther) {
+            return true;
+        }
+        if (pOther == null) {
+            return false;
+		}
+        if (!(pOther instanceof QueryPhrases)) {
+        	return false;
+        }
+        
+        QueryPhrases other=(QueryPhrases)pOther;
+        return mLineDst.snd().equals(other.mLineDst.snd());
+	}
+
+	@Override
+	public int hashCode() {
+		return mLineDst.snd().hashCode();
+	}
+
+	@Override
+	public int compareTo(QueryPhrases pOther) {
+		if (this==pOther) {
+			return 0;
+		}
+		if (pOther==null) {
+			return 1;
+		}
+
+		String myDst=mLineDst.snd();
+		String oDst=pOther.mLineDst.snd();
+		
+		assert myDst!=null;
+		assert oDst!=null;
+		
+		return myDst.compareTo(oDst);
+
+	}
+
 	
 }

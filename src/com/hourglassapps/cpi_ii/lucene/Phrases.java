@@ -71,7 +71,12 @@ public class Phrases {
 		if(mFinder!=null) {
 			throw new IllegalStateException("already built");
 		}
+		if(mPhraseToRefs.containsKey(pPhrase)) {
+			return;
+		}
+
 		try(Clock w=mTimes.time("phrase constructor")) {
+			
 			//mPhrases.add(pPhrase);
 			mPhraseToRefs.put(pPhrase, Collections.unmodifiableList(terms(mAnalyser, pPhrase)));
 			Map<BytesRef,Integer> refToIdx=new HashMap<>();
