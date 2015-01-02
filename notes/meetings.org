@@ -73,6 +73,10 @@
 *** AsyncHttpClient
 **** http://www.whoishostingthis.com/mirrors/apache//httpcomponents/httpasyncclient/binary/httpcomponents-asyncclient-4.0.2-bin.zip
 **** Apache 2
+*** Guava
+**** Google's java lbirary
+**** https://code.google.com/p/guava-libraries/
+**** Apache 2
 ** Other resources
 *** Perseus treebank
 **** Need for creating a Latin stemming model for Stempel

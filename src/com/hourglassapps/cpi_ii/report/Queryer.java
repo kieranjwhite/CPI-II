@@ -76,7 +76,7 @@ public class Queryer implements AutoCloseable {
 				return null;
 			}
 	    	
-	    }) {
+	    }, 400) {
 
 			@Override
 			public <E extends Exception> void throwCaught(Class<E> pCatchable)

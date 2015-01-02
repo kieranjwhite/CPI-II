@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="lib/httpasyncclient-4.0.2.jar" sourcepath="/home/kieran/projects/conductus/httpcomponents/httpcomponents-asyncclient-4.0.2-src.zip"/>
 	<classpathentry kind="lib" path="lib/httpcore-nio-4.3.2.jar" sourcepath="/home/kieran/projects/conductus/httpcomponents/src/httpcomponents-core-4.3.3/httpcore-nio/src/main/java"/>
 	<classpathentry kind="lib" path="lib/tika-app-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/guava-18.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

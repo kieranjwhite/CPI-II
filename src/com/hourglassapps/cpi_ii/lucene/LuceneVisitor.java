@@ -108,7 +108,7 @@ public class LuceneVisitor implements FileVisitor<Path> {
 						doc.add(TITLE.field(title));
 					}
 
-					System.out.println("updating " + pathStr);
+					System.out.println("indexing " + pathStr);
 					mWriter.updateDocument(PATH.term(pathStr), doc);
 
 				}

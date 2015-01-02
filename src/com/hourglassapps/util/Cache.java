@@ -1,17 +1,13 @@
 package com.hourglassapps.util;
 
-import java.lang.ref.SoftReference;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import com.google.common.cache.CacheBuilder;
 
-public class Cache<A,B> implements Thrower {
-	private final Set<SoftReference<A>> mKeys=new HashSet<>();
-	private final Map<A,B> mKeyToCached=new WeakHashMap<>();
+public class Cache<A extends Comparable<A>,B> implements Thrower {
+	private final com.google.common.cache.Cache<A,B> mCache;
 	private final Converter<A,B> mCachedCreator;
 	
-	public Cache(Converter<A,B> pCachedCreator) {
+	public Cache(Converter<A,B> pCachedCreator, int pCacheSize) {
+		mCache=CacheBuilder.newBuilder().maximumSize(pCacheSize).build();
 		mCachedCreator=pCachedCreator;
 	}
 	
@@ -24,11 +20,10 @@ public class Cache<A,B> implements Thrower {
 	 * @return item from cache, or null if that was returned by the Converter when creating the item
 	 */
 	public B get(A pKey) {
-		B cached=mKeyToCached.get(pKey);
+		B cached=mCache.getIfPresent(pKey);
 		if(cached==null) {
 			cached=mCachedCreator.convert(pKey);
-			mKeyToCached.put(pKey, cached);
-			mKeys.add(new SoftReference<A>(pKey));
+			mCache.put(pKey, cached);
 		}
 		return cached;
 	}

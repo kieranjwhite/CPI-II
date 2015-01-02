@@ -9,7 +9,9 @@ The mini project to automatically generate a report listing reference to poems i
 
 Each sub-task above depends on the successful completion of the tasks preceding it. Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II.
 
-Before reading the remainder if this document it is suggested that you first read the Lucene analysis package summary document at https://lucene.apache.org/core/4_10_1/core/org/apache/lucene/analysis/package-summary.html. Ensure you understand what the Lucene Analyzer, Tokenizer and TokenFilter classes do and the part they play in the overall Lucene library.
+Before reading the remainder of this document it is suggested that you first read the Lucene analysis package summary document at https://lucene.apache.org/core/4_10_1/core/org/apache/lucene/analysis/package-summary.html. Ensure you understand what the Lucene Analyzer, Tokenizer and TokenFilter classes do and the part they play in the overall Lucene library.
+
+Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of a Linux command line is assumed in any instructions, but it is not thought to be required.
 
 (1) Developing the tools necessary to index and search Latin documents.
 
@@ -21,11 +23,21 @@ This slightly convoluted approach of needing a Factory to instantiate the stemme
 
 There are instances of StempelRecorderFilter, SnowballRecorderFilter and IdentityRecorderFilter available as static fields in the LatinAnalyzer class. These instances have already been configured to record stem groups and are intended for use by the MainIndexConductus class -- our trigram generator.
 
+Finally, while the existing model we provided for Stempel apparently works quite well, it may be important to know how to train a new model. Invoke the following (note this will overwrite the existing model):
+
+grep <path to unzipped Perseus treebank file>/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]' '[:lower:]'|sed -nr -e "s/^.* form=\"([^\"]*)\" lemma=\"([^\"]*)\".*$/\\2 \\1/p"| grep -v "[^a-zA-Z0-9 ]" |sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p" | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.stem.MainGenStempelModel - data/com/hourglassapps/cpi_ii/latin/stem/stempel/model
+
+The StandardLatinAnalyzer.searchAnalyer() method mentioned above assumes that the model has been saved to the path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.
+
 (2) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.
 
 A JSON export of the Conductus collection was parsed and any text in Latin poems (i.e. titles, refrains and the actual stanzas) was tokenised and stemmed with the aid of Lucene and Stempel. The JSON export had to be preprocessed before a complete parse was successful due to certain special characters not being escaped. There is also an XML export of the same collection which does not seem to suffer from the same issue.
 
 No stopword filtering was performed at this point. We consider any terms with a common stem to comprise a stem group. 
+
+Parse the Conductus with the following:
+
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.MainIndexConductus <path to json export>/CPI-poem.json --serialise > misc/stem_maps/3grams.dat
 
 To create search engine queries we considered each distinct trigram of stemmed terms in turn --- there were 65490 in total. A Boolean query of disjunctions was created from a trigram's three respective associated stem groups, with each disjunction comprising a quoted phrase of three terms, one term drawn from each stem group.
 
@@ -46,6 +58,10 @@ The resulting Boolean query which was submitted to Bing was therefore:
 "mundi pro salute" OR "mundi pro salutis" OR "mundi pro salutem" OR "mundi pro salus" OR "mundo pro salute" OR "mundo pro salutis" OR "mundo pro salutem" OR "mundo pro salus".
 
 Our chosen search engine, Bing, has a query length limit of approximately 2000 characters and this meant that sometimes, when this limit was exceeded, disjunctions containing the rarest terms had to be omitted.
+
+--
+
+In our implementation we submit the search engine queries to Bing as they are generated and the process for doing that is described next.
 
 (3) Submitting these queries to a search engine and then downloading and indexing the relevant documents.
 
