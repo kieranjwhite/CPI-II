@@ -44,6 +44,7 @@ import com.hourglassapps.util.ExclusiveTimeKeeper;
 public class Queryer implements AutoCloseable {
 	private final static String TAG=Queryer.class.getName();
 	private final static int MAX_RESULTS=100;
+	private final static int NUM_CACHE_ENTRIES=400;
 	private final Journal<String,Result> mJournal;
 	private final Analyzer mAnalyser;
 	private final Deferred<Void,Exception,Ii<Line,String>> mDeferred=new DeferredObject<>();
@@ -76,7 +77,7 @@ public class Queryer implements AutoCloseable {
 				return null;
 			}
 	    	
-	    }, 400) {
+	    }, NUM_CACHE_ENTRIES) {
 
 			@Override
 			public <E extends Exception> void throwCaught(Class<E> pCatchable)

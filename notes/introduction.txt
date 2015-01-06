@@ -1,0 +1,164 @@
+Online references to the poems of the Conductus
+
+The mini project to automatically generate a report listing reference to poems in the Conductus from the World Wide Web can be broken into a number of subtasks:
+
+(1) Developing and identifying the tools necessary to index and search Latin documents.
+(2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.
+(2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.
+(3) Interrogating these downloaded documents and generating a final report from the results.
+
+Each sub-task above depends on the successful completion of the tasks preceding it. Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II.
+
+Before reading the remainder of this document it is suggested that you first read the Lucene analysis package summary document at https://lucene.apache.org/core/4_10_1/core/org/apache/lucene/analysis/package-summary.html. Ensure you understand what the Lucene Analyzer, Tokenizer and TokenFilter classes do and the part they play in the overall Lucene library.
+
+Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of a Linux command line is assumed in any instructions, but it is not thought to be required.
+
+(1) Developing the tools necessary to index and search Latin documents.
+
+Primarily we've depended on Lucene for this sub-task but we also needed to identify a Latin stemmer. Initially we experimented with the Schinke stemmer (Schinke, Greengrass, Robertson & Willet, 1996) (http://snowball.tartarus.org/otherapps/schinke/intro.html) but found that it generates two stemming tables: one for nouns and the other for verbs. Therefore to use it you need to apply part-of-speech tagging to terms. Consequently we investigated another stemmer: Stempel (Galambos, 2001, 2004) (http://getopt.org/stempel/). Stempel is distributed with Lucene but we needed to train a Latin stemming model for it and for that we needed a Latin treebank such as that of the Perseus project (Bamman and Crane, 2006) (http://nlp.perseus.tufts.edu/syntax/treebank/).
+
+In our code the stemmer (either Stempel, Schinke or no stemming) and can be specified during the creation of a StandardLatinAnalyzer (a subclass of Lucene's Analyzer class) object. For most indexing and searching we invoke the static StandardLatinAnalyzer.searchAnalyer() method to instantiate the StandardLatinAnalyzer. The searchAnalyzer() method itself calls a setStemmer() method passing in an argument to a Factory that generates a stemmer instance when required to do so. This Factory can return instances of either StempelRecorderFilter (for Stempel), SnowballRecorderFilter (for Schinke) or IdentityRecorderFilter (to disable stemming). As their names suggest these three classes not only stem terms but can also record stem groups if that is required.
+
+This slightly convoluted approach of having a Factory instantiate the stemmer is needed because the stemmers' constructors each require a TokenStream argument (providing access to the input tokens) and this is provided by the Analyzer.createComponents method. However we wish to be able to specify the stemmer from the outset and before the Analyzer.createComponents method is even invoked.
+
+There are also instances of StempelRecorderFilter, SnowballRecorderFilter and IdentityRecorderFilter available as static fields in the LatinAnalyzer class. These instances have already been configured to record stem groups and are intended for use by the MainIndexConductus class -- our trigram generator.
+
+While the existing model we provided for Stempel apparently works quite well, it may be important to know how to train a new model. Invoke the following (note this will overwrite the existing model):
+
+grep <path to unzipped Perseus treebank file>/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]' '[:lower:]'|sed -nr -e "s/^.* form=\"([^\"]*)\" lemma=\"([^\"]*)\".*$/\\2 \\1/p"| grep -v "[^a-zA-Z0-9 ]" |sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p" | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.stem.MainGenStempelModel - data/com/hourglassapps/cpi_ii/latin/stem/stempel/model
+
+The StandardLatinAnalyzer.searchAnalyer() method mentioned above assumes that the model should be saved to the path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.
+
+Finally, our StandardLatinAnalyzer instance doesn't filter stopwords. This can be changed easily by instantiating a StandardLatinAnalyzer with a single argument:
+
+Analyzer analyser=new StandardLatinAnalyzer(LatinAnalyzer.PERSEUS_STOPWORD_FILE);
+
+That will configure the StandardLatinAnalyzer to filter out 92 commonly occurring Latin words selected by the Perseus project. However omitting a stoplist does simplify the highlighting of matching phrases during the report generation task. 
+
+(2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.
+
+A JSON export of the Conductus collection was parsed and any text in Latin poems (i.e. titles, refrains and the actual stanzas) was tokenised and stemmed with the aid of Lucene and Stempel. The JSON export had to be preprocessed before a complete parse was successful due to certain special characters not being escaped. There is also an XML export of the same collection which does not seem to suffer from the same issue. 
+
+No stopword filtering was performed at this point. We consider any terms with a common stem to comprise a stem group.
+
+Parse the Conductus with the following:
+
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.MainIndexConductus <path to json export>/CPI-poem.json --serialise > <path to ngrams>/3grams.dat
+
+A number of resources are generated by this command:
+* A file containing stemmed (term -> unstemmed) term mappings:  <path to ngrams>/3grams.dat
+* Index from which we can obtain the total frequency of each unstemmed term in the Conductus, allowing us to order morphological variations of the same ngram by the frequency of its constituent terms:  ./unstemmed_term_index
+* Index to allow iterating through all unstemmed ngrams which in combination with our (stemmed -> unstemmed) term mapping above allows us to group morphological variations of the same ngram together in the one Boolean Bing query: ./unstemmed_to_stemmed_index
+* Index recording the eprintid of the poem associated with each unstemmed ngram --- used primarily during the creation of the other indexes: ./unstemmed_index
+
+The length of any ngrams saved by the MainIndexConductus program is specified by the MainIndexConductus.NGRAM_LENGTH field. It is currently configured to generate and save trigrams.
+
+(2b) To create search engine queries we considered each distinct trigram of stemmed terms in turn --- there were 65490 in total. A Boolean query of disjunctions was created from a trigram's three respective associated stem groups, with each disjunction comprising a quoted phrase of three terms, one term drawn from each stem group.
+
+For example consider the trigram "mundi pro salute" from "Ad cultum tue laudis". The following are the relevant stem groups:
+
+mundi
+mundo
+
+pro
+
+salute
+salutis
+salutem
+salus
+
+The resulting Boolean query which was submitted to Bing was therefore:
+
+"mundi pro salute" OR "mundi pro salutis" OR "mundi pro salutem" OR "mundi pro salus" OR "mundo pro salute" OR "mundo pro salutis" OR "mundo pro salutem" OR "mundo pro salus".
+
+Our chosen search engine, Bing, has a query length limit of approximately 2000 characters and this meant that sometimes, when this limit was exceeded, disjunctions containing the rarest terms had to be omitted.
+
+The queries were presented in turn to Bing as there were generated and up to 100 URLs were returned for each. The URLs were saved to allow us to open these links later. The documents at these URLs were downloaded. We also recorded the "Content-Type" HTTP header field value of each document as this information can be helpful when indexing and also again when displaying local copies of the documents. We do not currently make use of this information however. Text was extracted from the documents with the aid of the Apache Tika library. This text was tokenised, terms were stemmed by Stempel and then finally indexed per document by Lucene.
+
+We found Bing's behaviour to be inconsistent at times. Mostly it returned a set of URLs of documents that satisfied our Boolean query. However on occasion the documents were completely unrelated to our query. Sometimes this seems to be a result of the document having changed since Bing indexed it but some queries returned links to phone reviews and other content from unrelated topics; possibly these were advertisements. On rare occasions adding a disjunction to the submitted Boolean query reduced the number of URLs returned --- something which should never occur.
+
+It should be noted that this part of our task can be quite time consuming; querying Bing, downloading URLs and indexing those document may take 1-2 weeks. The downloaded documents also require storage space, approximately 500-600GB. The index itself requires an additional 100-200GB. These figures are all estimates as we have only tested the process on a subset of queries.
+
+Due to the time it takes to complete this task it is necessary to ensure that in the event the program crashes, upon a restart it continues its downloading from a point close to where it stopped, rather than returning to the beginning. Additionally care may need to be taken that in the event of an unreliable network connection the program does not simply run to completion, failing to download any results. To achieve this we pinged a site such as http://google.com regularly and killed the downloading process in the case of a failed ping. The jpingy library (https://code.google.com/p/jpingy/downloads/detail?name=jpingy0_1-alpha.jar&can=2&q=) with some modifications was helpful: it provides a Java wrapper around the ping command.
+
+The following command will generate Boolean queries (one corresponding to each stemmed ngram), submit them to Bing and download and then index the top 100 matching documents (when available) for each:
+
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.web_search.MainDownloader threads <path to ngrams>/3grams.dat NUM_THREADS
+
+The command stakes as input the stemmed (term -> unstemmed term) mappings of 3grams.dat (mentioned above) and the Lucene index of unstemmed trigrams (./unstemmed_to_stemmed_index). The name of the index is currently hard-coded.
+
+The results from each query are all downloaded asynchronously. However a downloading thread does not proceed to the next query until all results from the current query have either been downloaded or timed out during a download. To ensure that the downloader is not stalled by a small number of slow sites for a given query we typically have more than one downloading thread (specified by the NUM_THREADS argument). After the relevant documents for a query have all been downloaded, their paths are passed to an indexing thread. There is only one of these so ideally we wish to increase the value of NUM_THREADS as much as possible while ensuring the the downloading threads do not outpace the indexing thread. If they do, downloaded documents will have been removed from the operating system's file cache before needing to be read again for indexing, thus slowing the whole process down considerably. For most runs we have set NUM_THREADS to 2 while running MainDownloader on a 2.2GHz dual core mid-range laptop from 2010 with 4GB of RAM. On a faster computer with more memory a larger value can be used.
+
+The downloaded documents and the index of those document will be saved to the ./documents directory. There will be a subdirectory matching the glob ./documents/*_journal for each downloading thread: documents downloaded by the first downloading thread are saved to ./documents/0_journal/completed, by the second download thread to ./document/1_journal/completed etc. The *_journal directories themselves contain a number of directories one corresponding to each Bing query and are named based on one of the trigrams in the query. In addition the ./documents/downloaded_index directory contains the Lucene index generated from these documents.
+
+There are other files in these directory that may also be of interest. Files named __types.txt contain the list of mime types for each downloaded document as indicated by the "Content-Type" HTTP header in a server's response. Each line in __types.txt comprises a number field followed by the mime type. The mime type is that of the file with a name starting with the value of the number field (followed by an extension where one is provided). For example the line:
+
+5 text/html; charset=iso-8859-1
+
+means that the file in that directory with a filename, excluding its extension, of "5" was reported by the server as having a mime type of "text/html; charset=iso-8859-1".
+
+Any files with names beginning with single underscore ('_') character contain the URLs we downloaded (below we will refer to these files as URL files) The file with a filename of 1 corresponds the URL on the first line of this file and so on. Sometimes a file corresponding to a particular line will be absent; this corresponds to a failed download. If a URL has an extension then that extension will be appended to the downloaded file's filename. So if the URL on the first line is http://www.thelatinlibrary.com/ambrose/mysteriis.html then the corresponding downloaded file will be the file in the same directory named 1.html
+
+(3) Interrogating these downloaded documents and generating a final report from the results.
+
+An individual query was generated from most lines of text in the Conductus. The lines were tokenised, stopwords were removed and remaining terms were stemmed as above. A phrasal search was performed in Lucene for each query where a match between a query and document was only recognised where all stemmed terms in a line were found adjacent to each other and in the same order in an indexed document. A ranked list of up to 100 results were generated in this manner for each line in the collection except for poem titles and those lines containing a single word.
+
+Lines containing a single word were not considered sufficiently discriminatory. Therefore for these lines two phrases were generated, one where the the single word line was appended to its preceding line and the other where it prefixed its succeeding line. These two phrases then comprised a single Boolean query of two disjunctions from which up to 100 matching documents were generated.
+
+Poem titles were also treated differently. As these were typically identical to the first line of a poem, generating a query as above would usually result in a redundant list of results. Therefore this time phrases were generated for all other lines in the poem in the manner described above and the query presented to Lucene comprised all these phrases. The returned results could then be considered to be those documents most similar to the poem as a whole.
+
+Finally a HTML report was generated for the user linking all lines in each poem to a matching list of results. For the full complement of 65490 queries this should take approximately 1-2 days. As we were linking lines from poems to lists of relevant documents we needed to format each poem on the screen. Since the Conductus JSON export did not retain any newline information for the poems' content we had to rely of the Conductus XML export instead. The report contained links to relevant documents as well as links to local versions of those documents so that if the original documents were ever taken down, the user would still have a local copy available.
+
+We wished to filter out certain known URLs such as diamm.ac.uk and chmtl.indiana.edu/tml and this task was performed by a simple Javascript function within the report itself, allowing the set of blacklisted sites to be changed easily at a later date. Filtering blacklisted sites could also have been attempted when submitting queries to Bing and doing so would have saved us downloading and indexing blacklisted documents. However attempts to apply filtering when querying the search engine were not consistently successful: for some queries Bing seemingly interpreted the additional "AND NOT site:..." Boolean clauses to be additional desired keywords.
+
+There was another type of result filtering performed on the result list: due to the multi-threaded implementation of our downloading program in task (2b) above, two independent stores of documents were downloaded in response to queries. It's likely that certain documents will have been downloaded twice with one copy in each store. Anytime such duplicates were encountered in the results list one of them is removed and not displayed to the user. In a worst case scenario then, of the 100 results retrieved, 50 might be duplicates and in that case the user will only ever see 50 results for a given line in a poem.
+
+Some of the links in our report are to pertinent documents with numerous OCR errors. It's possible that there are relevant documents that are not listed due to such errors impeding the search. A fuzzy matching algorithm could alleviate this problem. However that doesn't seem to be necessary as even if some lines fail to match due to an error in an indexed document, more than likely other lines will not contain an error and will therefore match the corresponding line in the Conductus.
+
+The report can be generated with the command:
+
+java -Xmx1700m -ea -cp lib/guava-18.0.jar:lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.MainReporter <CONDUCTUS_XML_EXPORT_PATH>
+
+This command takes as input the XML export of the Conductus as well as the directory of downloaded documents and Lucene index produced by the previous step. The result is a HTML report relying on some Javascript saved to the ./poems directory. Any static content (files or parts of files) included in this report can be found in the data/com/hourglassapps/cpi_ii/report/ of the git repository. When viewing the report you will need to ensure that the "poems" directory shares a directory with the "documents" directory of the previous step, as the report retrieves the original URLs from the "documents" directory's URL files. If disk space is limited, it is possible to view the report even if the downloaded files themselves (ie those with names starting with a number) and the "download_index" have been deleted. Those particular files and directories are not needed to view the report.
+
+Please note that MainReporter requires an unusually large heap size (as specified by the -Xmx1700m switch). This is due to its caching of Lucene document vectors during report generation. If required the size of this cache (and consequently the maximum heap size) can be reduced by changing the value of the static field Query.NUM_CACHE_ENTRIES. Obviously this may affect the speed with which the report is generated. However it might be worthwhile evaluating the effectiveness of this cache and optimising the report generation algorithm as there was not sufficient time to adequately optimise the report generator prior the the conclusion of my contribution to this project.
+
+The report can be viewed by opening the poems/poems.html file in a web browser. Due to restrictions imposed by browsers on the viewing of locally stored files you may need to configure your browser to relax these security precautions. If viewing the report in Chrome (or Chromium) you will need to launch the browser with the --allow-file-access-from-files switch. In Firefox a configuration option needs to be changed as follows:
+
+In the Firefox address bar type:
+about:config
+and hit return. A warning will be displayed. Proceed past the warning. A list of configurable settings will appear. In the search field below the address bar type security.fileuri.strict_origin_policy
+Double-click on the 'true' value of the security.fileuri.strict_origin_policy entry, changing it to false. Now you should be able to open poems.html and view the links in the report. 
+
+Alternatively hosting the report on a webserver will avoid these problems entirely. The easiest way to do this on a Linux computer is to change to the parent directory of the "poems" and "documents" directories and invoke the command:
+python -mSimpleHTTPServer
+Now opening your browser at http://localhost:8000/poems/poems.html will display the report.
+
+References
+
+Bamman, David and Gregory Crane (2006), "The Design and Use of a Latin Dependency Treebank," Proceedings of the Fifth International Workshop on Treebanks and Linguistic Theories (TLT 2006) (Prague), pp. 67-78.
+Galambos, L. (2001), Lemmatizer for Document Information Retrieval Systems in JAVA. <http://www.informatik.uni-trier.de/%7Eley/db/conf/sofsem/sofsem2001.html#Galambos01> SOFSEM 2001, Piestany, Slovakia. 
+Galambos, L. (2004), Semi-automatic Stemmer Evaluation. International Intelligent Information Processing and Web Mining Conference, 2004, Zakopane, Poland.
+Schinke R, Greengrass M, Robertson AM and Willett P (1996), A stemming algorithm for Latin text databases. Journal of Documentation, 52: 172-187. 
+
+Third party libraries and API dependencies:
+
+Apache HTTPAsyncClient (http://www.whoishostingthis.com/mirrors/apache//httpcomponents/httpasyncclient/binary/httpcomponents-asyncclient-4.0.2-bin.zip): Asynchronous HTTP request library,
+Apache Tika (https://tika.apache.org/download.html): Library to extract text from different types of files,
+Bing Web Search (https://datamarket.azure.com/dataset/bing/searchweb): HTTP REST API for searching Bing,
+Jackson (https://github.com/FasterXML/jackson): JSON parsing library,
+jdeferred (https://github.com/jdeferred/jdeferred): Promises API for Java that simplifies the ordering of asynchronous methods, 
+jpingy (https://code.google.com/p/jpingy/downloads/detail?name=jpingy0_1-alpha.jar&can=2&q=): Ping command invocation from Java,
+jQuery (http://jquery.com): General purpose Javascript library that is particularly helpful for accessing the DOM,
+jQuery Mobile (http://jquerymobile.com): Cross platform user interface library for Javascript,
+jx (http://www.openjs.com/scripts/jx/): Simple AJAX library,
+Lucene (http://lucene.apache.org): tokenising, indexing and searching library,
+when.js (https://github.com/cujojs/when): Javascript Promises implementation to facilitate asynchronous function calls, required by our version of jx,
+
+Linguistic resources:
+
+Perseus treebank (http://nlp.perseus.tufts.edu/syntax/treebank/ldt/1.5/ldt-1.5.tar.gz): training Latin stemming model for Stempel.
+Latin stoplist from the Perseus Hopper project (http://sourceforge.net/projects/perseus-hopper/files/perseus-hopper/hopper-20110527/hopper-source-20110527.tar.gz/download): 92 common Latin words.
+
+//  LocalWords:  tokenised treebank disjunction unstemmed prioritised
+LocalWords:  Conductus

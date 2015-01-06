@@ -83,7 +83,6 @@ public abstract class LatinAnalyzer extends StopwordAnalyzerBase {
 
 	};
 
-	//Set this as the DEFAULT_STEMMER_FACTORY to disable stemming
 	public final static Factory IDENTITY_RECORDER_FACTORY=new StemRecorderFilter.Factory() {
 
 		@Override
@@ -96,26 +95,6 @@ public abstract class LatinAnalyzer extends StopwordAnalyzerBase {
 	private Factory mStemmerFactory=IDENTITY_RECORDER_FACTORY;
 	private boolean mRealised=false;
 
-	/*
-	 * TODO consider for Latin
-  private static final CharArraySet DEFAULT_ARTICLES = CharArraySet.unmodifiableSet(
-      new CharArraySet(
-          Arrays.asList(
-              "d", "m", "b"
-          ), true));
-	 */
-
-	/** TODO consider for Latin
-	 * When StandardTokenizer splits t‑athair into {t, athair}, we don't
-	 * want to cause a position increment, otherwise there will be problems
-	 * with phrase queries versus tAthair (which would not have a gap).
-	 *
-  private static final CharArraySet HYPHENATIONS = CharArraySet.unmodifiableSet(
-      new CharArraySet(
-          Arrays.asList(
-              "h", "n", "t"
-          ), true));
-	 */
 	/**
 	 * Returns an unmodifiable instance of the default stop words set.
 	 * @return default stop words set.
