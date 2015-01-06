@@ -1,5 +1,8 @@
 Online references to the poems of the Conductus
 
+Introduction
+------------
+
 The mini project to automatically generate a report listing reference to poems in the Conductus from the World Wide Web can be broken into a number of subtasks:
 
 (1) Developing and identifying the tools necessary to index and search Latin documents.
@@ -7,13 +10,19 @@ The mini project to automatically generate a report listing reference to poems i
 (2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.
 (3) Interrogating these downloaded documents and generating a final report from the results.
 
-Each sub-task above depends on the successful completion of the tasks preceding it. Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II.
+Each sub-task above depends on the successful completion of the tasks preceding it. Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. You can checkout this branch by first cloning the repository and then checking out the branch as follows:
+
+git clone https://github.com/kieranjwhite/CPI-II.git
+git checkout original_report_generation
+
+Your java classpath should include the jar files in the lib/ directory and when compiling please ensure that the sourcepath includes both the src/ and data/ directories.
 
 Before reading the remainder of this document it is suggested that you first read the Lucene analysis package summary document at https://lucene.apache.org/core/4_10_1/core/org/apache/lucene/analysis/package-summary.html. Ensure you understand what the Lucene Analyzer, Tokenizer and TokenFilter classes do and the part they play in the overall Lucene library.
 
-Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of a Linux command line is assumed in any instructions, but it is not thought to be required.
+Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of a Linux command line is assumed in any instructions, but should no be required.
 
-(1) Developing the tools necessary to index and search Latin documents.
+(1) Developing the tools necessary to index and search Latin documents
+----------------------------------------------------------------------
 
 Primarily we've depended on Lucene for this sub-task but we also needed to identify a Latin stemmer. Initially we experimented with the Schinke stemmer (Schinke, Greengrass, Robertson & Willet, 1996) (http://snowball.tartarus.org/otherapps/schinke/intro.html) but found that it generates two stemming tables: one for nouns and the other for verbs. Therefore to use it you need to apply part-of-speech tagging to terms. Consequently we investigated another stemmer: Stempel (Galambos, 2001, 2004) (http://getopt.org/stempel/). Stempel is distributed with Lucene but we needed to train a Latin stemming model for it and for that we needed a Latin treebank such as that of the Perseus project (Bamman and Crane, 2006) (http://nlp.perseus.tufts.edu/syntax/treebank/).
 
@@ -35,7 +44,8 @@ Analyzer analyser=new StandardLatinAnalyzer(LatinAnalyzer.PERSEUS_STOPWORD_FILE)
 
 That will configure the StandardLatinAnalyzer to filter out 92 commonly occurring Latin words selected by the Perseus project. However omitting a stoplist does simplify the highlighting of matching phrases during the report generation task. 
 
-(2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.
+(2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 A JSON export of the Conductus collection was parsed and any text in Latin poems (i.e. titles, refrains and the actual stanzas) was tokenised and stemmed with the aid of Lucene and Stempel. The JSON export had to be preprocessed before a complete parse was successful due to certain special characters not being escaped. There is also an XML export of the same collection which does not seem to suffer from the same issue. 
 
@@ -53,7 +63,10 @@ A number of resources are generated by this command:
 
 The length of any ngrams saved by the MainIndexConductus program is specified by the MainIndexConductus.NGRAM_LENGTH field. It is currently configured to generate and save trigrams.
 
-(2b) To create search engine queries we considered each distinct trigram of stemmed terms in turn --- there were 65490 in total. A Boolean query of disjunctions was created from a trigram's three respective associated stem groups, with each disjunction comprising a quoted phrase of three terms, one term drawn from each stem group.
+(2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents
+---------------------------------------------------------------------------------------------------------
+
+To create search engine queries we considered each distinct trigram of stemmed terms in turn --- there were 65490 in total. A Boolean query of disjunctions was created from a trigram's three respective associated stem groups, with each disjunction comprising a quoted phrase of three terms, one term drawn from each stem group.
 
 For example consider the trigram "mundi pro salute" from "Ad cultum tue laudis". The following are the relevant stem groups:
 
@@ -99,7 +112,8 @@ means that the file in that directory with a filename, excluding its extension, 
 
 Any files with names beginning with single underscore ('_') character contain the URLs we downloaded (below we will refer to these files as URL files) The file with a filename of 1 corresponds the URL on the first line of this file and so on. Sometimes a file corresponding to a particular line will be absent; this corresponds to a failed download. If a URL has an extension then that extension will be appended to the downloaded file's filename. So if the URL on the first line is http://www.thelatinlibrary.com/ambrose/mysteriis.html then the corresponding downloaded file will be the file in the same directory named 1.html
 
-(3) Interrogating these downloaded documents and generating a final report from the results.
+(3) Interrogating these downloaded documents and generating a final report from the results
+-------------------------------------------------------------------------------------------
 
 An individual query was generated from most lines of text in the Conductus. The lines were tokenised, stopwords were removed and remaining terms were stemmed as above. A phrasal search was performed in Lucene for each query where a match between a query and document was only recognised where all stemmed terms in a line were found adjacent to each other and in the same order in an indexed document. A ranked list of up to 100 results were generated in this manner for each line in the collection except for poem titles and those lines containing a single word.
 
