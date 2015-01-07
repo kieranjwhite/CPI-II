@@ -383,31 +383,31 @@ A Converter instance the takes as input a String representing a possibly invalid
 References
 ==========
 
-Bamman, David and Gregory Crane (2006), "The Design and Use of a Latin Dependency Treebank," Proceedings of the Fifth International Workshop on Treebanks and Linguistic Theories (TLT 2006) (Prague), pp. 67-78.
-Galambos, L. (2001), Lemmatizer for Document Information Retrieval Systems in JAVA. http://www.informatik.uni-trier.de/%7Eley/db/conf/sofsem/sofsem2001.html#Galambos01 SOFSEM 2001, Piestany, Slovakia. 
-Galambos, L. (2004), Semi-automatic Stemmer Evaluation. International Intelligent Information Processing and Web Mining Conference, 2004, Zakopane, Poland.
-Schinke R, Greengrass M, Robertson AM and Willett P (1996), A stemming algorithm for Latin text databases. Journal of Documentation, 52: 172-187. 
+Bamman, David and Gregory Crane (2006), "The Design and Use of a Latin Dependency Treebank," Proceedings of the Fifth International Workshop on Treebanks and Linguistic Theories (TLT 2006) (Prague), pp. 67-78.<br>
+Galambos, L. (2001), Lemmatizer for Document Information Retrieval Systems in JAVA. http://www.informatik.uni-trier.de/%7Eley/db/conf/sofsem/sofsem2001.html#Galambos01 SOFSEM 2001, Piestany, Slovakia. <br>
+Galambos, L. (2004), Semi-automatic Stemmer Evaluation. International Intelligent Information Processing and Web Mining Conference, 2004, Zakopane, Poland.<br>
+Schinke R, Greengrass M, Robertson AM and Willett P (1996), A stemming algorithm for Latin text databases. Journal of Documentation, 52: 172-187. <br>
 
 Third party libraries and API dependencies
 ==========================================
 
-Apache HTTPAsyncClient (http://www.whoishostingthis.com/mirrors/apache//httpcomponents/httpasyncclient/binary/httpcomponents-asyncclient-4.0.2-bin.zip): Asynchronous HTTP request library,
-Apache Tika (https://tika.apache.org/download.html): Library to extract text from different types of files,
-Bing Web Search (https://datamarket.azure.com/dataset/bing/searchweb): HTTP REST API for searching Bing,
-Jackson (https://github.com/FasterXML/jackson): JSON parsing library,
-jdeferred (https://github.com/jdeferred/jdeferred): Promises API for Java that simplifies the ordering of asynchronous methods, 
-jpingy (https://code.google.com/p/jpingy/downloads/detail?name=jpingy0_1-alpha.jar&can=2&q=): Ping command invocation from Java,
-jQuery (http://jquery.com): General purpose Javascript library that is particularly helpful for accessing the DOM,
-jQuery Mobile (http://jquerymobile.com): Cross platform user interface library for Javascript,
-jx (http://www.openjs.com/scripts/jx/): Simple AJAX library,
-Lucene (http://lucene.apache.org): tokenising, indexing and searching library,
-when.js (https://github.com/cujojs/when): Javascript Promises implementation to facilitate asynchronous function calls, required by our version of jx,
+Apache HTTPAsyncClient (http://www.whoishostingthis.com/mirrors/apache//httpcomponents/httpasyncclient/binary/httpcomponents-asyncclient-4.0.2-bin.zip): Asynchronous HTTP request library,<br>
+Apache Tika (https://tika.apache.org/download.html): Library to extract text from different types of files,<br>
+Bing Web Search (https://datamarket.azure.com/dataset/bing/searchweb): HTTP REST API for searching Bing,<br>
+Jackson (https://github.com/FasterXML/jackson): JSON parsing library,<br>
+jdeferred (https://github.com/jdeferred/jdeferred): Promises API for Java that simplifies the ordering of asynchronous methods, <br>
+jpingy (https://code.google.com/p/jpingy/downloads/detail?name=jpingy0_1-alpha.jar&can=2&q=): Ping command invocation from Java,<br>
+jQuery (http://jquery.com): General purpose Javascript library that is particularly helpful for accessing the DOM,<br>
+jQuery Mobile (http://jquerymobile.com): Cross platform user interface library for Javascript,<br>
+jx (http://www.openjs.com/scripts/jx/): Simple AJAX library,<br>
+Lucene (http://lucene.apache.org): tokenising, indexing and searching library,<br>
+when.js (https://github.com/cujojs/when): Javascript Promises implementation to facilitate asynchronous function calls, required by our version of jx,<br>
 
 Linguistic resources
 ====================
 
-Perseus treebank (http://nlp.perseus.tufts.edu/syntax/treebank/ldt/1.5/ldt-1.5.tar.gz): training Latin stemming model for Stempel.
-Latin stoplist from the Perseus Hopper project (http://sourceforge.net/projects/perseus-hopper/files/perseus-hopper/hopper-20110527/hopper-source-20110527.tar.gz/download): 92 common Latin words.
+Perseus treebank (http://nlp.perseus.tufts.edu/syntax/treebank/ldt/1.5/ldt-1.5.tar.gz): training Latin stemming model for Stempel.<br>
+Latin stoplist from the Perseus Hopper project (http://sourceforge.net/projects/perseus-hopper/files/perseus-hopper/hopper-20110527/hopper-source-20110527.tar.gz/download): 92 common Latin words.<br>
 
 //  LocalWords:  tokenised treebank disjunction unstemmed prioritised
 LocalWords:  Conductus
