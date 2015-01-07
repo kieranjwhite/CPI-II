@@ -165,7 +165,7 @@ Description of selected classes
 * src/com/hourglassapps/threading/FilterTemplate.java.
 Converts a task representation (eg a list of trigrams for submission to Bing) to a ThreadFunction that selects a thread to process the task.
 * src/com/hourglassapps/threading/ThreadFunction.java.
-Interface for any object that determines which thread is responsible for a given task. An instance of FilterTemplate will generate a ThreadFunction instance from a representation of a task. In the case of our MainDownloader program, this is how Boolean queries are distributed between QueryThread instances. Tasks are represented as List<List<String>> argument which is simply a list of ngrams.
+Interface for any object that determines which thread is responsible for a given task. An instance of FilterTemplate will generate a ThreadFunction instance from a representation of a task. In the case of our MainDownloader program, this is how Boolean queries are distributed between QueryThread instances. Tasks are represented as a list of ngrams.
 * src/com/hourglassapps/threading/HashTemplate.java.
 Instantiates a ThreadFunction that accepts a different thread depending on the hashCode() of the argument passed to the HashTemplate.convert() method.
 * src/com/hourglassapps/threading/JobDelegator.java.
@@ -332,7 +332,7 @@ Creates the report, except for the contents of the poems/results subdirectory.
 -------------------------------------------------------
 
 * src/com/hourglassapps/cpi_ii/lucene/Phrase.java.
-The findIn() method of Phrase instances returns an Iterator<DocSpan> instance listing all matches to the phrase in a given document.
+The findIn() method of Phrase instances returns an Iterator over DocSpan instances listing all matches to the phrase in a given document.
 * src/com/hourglassapps/cpi_ii/lucene/DocSpan.java.
 A DocSpan instance contains the start and end character offsets to a matching phrase within a relevant document.
 
@@ -380,7 +380,7 @@ References
 ==========
 
 Bamman, David and Gregory Crane (2006), "The Design and Use of a Latin Dependency Treebank," Proceedings of the Fifth International Workshop on Treebanks and Linguistic Theories (TLT 2006) (Prague), pp. 67-78.
-Galambos, L. (2001), Lemmatizer for Document Information Retrieval Systems in JAVA. <http://www.informatik.uni-trier.de/%7Eley/db/conf/sofsem/sofsem2001.html#Galambos01> SOFSEM 2001, Piestany, Slovakia. 
+Galambos, L. (2001), Lemmatizer for Document Information Retrieval Systems in JAVA. http://www.informatik.uni-trier.de/%7Eley/db/conf/sofsem/sofsem2001.html#Galambos01 SOFSEM 2001, Piestany, Slovakia. 
 Galambos, L. (2004), Semi-automatic Stemmer Evaluation. International Intelligent Information Processing and Web Mining Conference, 2004, Zakopane, Poland.
 Schinke R, Greengrass M, Robertson AM and Willett P (1996), A stemming algorithm for Latin text databases. Journal of Documentation, 52: 172-187. 
 
