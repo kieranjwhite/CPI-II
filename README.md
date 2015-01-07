@@ -140,7 +140,7 @@ java -Xmx1700m -ea -cp lib/guava-18.0.jar:lib/jackson-annotations-2.4.2.jar:lib/
 
 This command takes as input the XML export of the Conductus as well as the directory of downloaded documents and Lucene index produced by the previous step. The result is a HTML report relying on some Javascript saved to the ./poems directory. Any static content (files or parts of files) will have been copied from the data/com/hourglassapps/cpi_ii/report/ directory of the git repository. The blacklist.js file in that directory may be of particular interest as it includes a list of regular expressions matching all blacklisted sites that have been determined not be of interest to the user. Changing this list will change which URLs are deemed to have been blacklisted.
 
-When viewing the report you will need to ensure that the "poems" directory shares a directory with the "documents" directory of the previous step, as the report retrieves the original URLs from the "documents" directory's URL files. If disk space is limited, it is possible to view the report even if the downloaded files themselves (ie those with names starting with a number) and the "download_index" have been deleted. Those particular files and directories are not needed to view the report.
+When viewing the report you will need to ensure that the "poems" directory shares a directory with the "documents" directory of the previous step, as the report retrieves the original URLs from the "documents" directory's URL files. If disk space is limited, it is possible to view the report even if the downloaded files themselves (ie those with names starting with a number within the "documents" directory) and the "download_index" have been deleted. Those particular files and directories are not needed to view the report.
 
 Please note that MainReporter requires an unusually large heap size (as specified by the -Xmx1700m switch). This is due to its caching of Lucene document vectors during report generation. If required the size of this cache (and consequently the maximum heap size) can be reduced by changing the value of the static field Query.NUM_CACHE_ENTRIES. Obviously this may affect the speed with which the report is generated. However it might be worthwhile evaluating the effectiveness of this cache and optimising the report generation algorithm as there was not sufficient time to adequately optimise the report generator prior the the conclusion of my contribution to this project.
 
@@ -162,14 +162,14 @@ Opening your browser at http://localhost:8000/poems/poems.html will now display 
 Description of selected classes
 ===============================
 
+* src/com/hourglassapps/threading/FilterTemplate.java.
+Converts a task representation (eg a list of trigrams for submission to Bing) to a ThreadFunction that selects a thread to process the task.
 * src/com/hourglassapps/threading/ThreadFunction.java.
-Interface for any object that determines which thread is responsible for a given task. An instance of FilterTemplate will generate a ThreadFunction instance from a representation of a task. In the case of our MainDownloader program, this is how Boolean queries are distributed between QueryThread instances and tasks are represented a List<List<String>> argument which is simply a list of ngrams.
+Interface for any object that determines which thread is responsible for a given task. An instance of FilterTemplate will generate a ThreadFunction instance from a representation of a task. In the case of our MainDownloader program, this is how Boolean queries are distributed between QueryThread instances. Tasks are represented as List<List<String>> argument which is simply a list of ngrams.
 * src/com/hourglassapps/threading/HashTemplate.java.
 Instantiates a ThreadFunction that accepts a different thread depending on the hashCode() of the argument passed to the HashTemplate.convert() method.
 * src/com/hourglassapps/threading/JobDelegator.java.
 This is instantiated with a FilterTemplate which it converts to one or more Filter instances (one per thread typically). These filters accept a task (eg a list of ngrams for submission to Bing) and return a boolean value to indicate whether a given thread should accept responsibility for the task.
-* src/com/hourglassapps/threading/FilterTemplate.java.
-Converts a task representation (eg a list of trigrams for submission to Bing) to a ThreadFunction that select a thread to process the task.
 
 -------------------------------------------------------
 
