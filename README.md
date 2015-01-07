@@ -186,7 +186,7 @@ Immutable couple implementation.
 -------------------------------------------------------
 
 * src/com/hourglassapps/util/ExclusiveTimeKeeper.java.
-A class for measuring the length of time it takes to execute blocks of code. Instantiate the ExclusiveTimeKeeper object at the beginning of a try block in a try-with-resources statement. When the block closes, the timer is paused until the block is entered again. Sub-blocks, also surrounded by try statements, allow for further, more detailed, timing information to be recorded. Times recorded in sub-blocks are subtracted from the times associated with the outer-block -- hence the name ExclusiveTimeKeeper.
+A class for measuring the length of time it takes to execute blocks of code. Instantiate the ExclusiveTimeKeeper object at the beginning of a try block in a try-with-resources statement. When the block closes, the timer is paused until the block is entered again. Sub-blocks, also surrounded by try statements, allow for further, more fine-grained, timing information to be recorded. Times recorded in sub-blocks are subtracted from the times associated with the outer-block -- hence the name ExclusiveTimeKeeper.
 * src/com/hourglassapps/util/Clock.java.
 An interface allowing 'child' clocks to be instantiated from the ExclusiveTimeKeeper instance as well any other Clock.
 
@@ -197,6 +197,7 @@ An interface allowing 'child' clocks to be instantiated from the ExclusiveTimeKe
 For all queries:
     Receives an unsorted list of ngrams corresponding to a single Boolean query for Bing and
     Sorts them according to a provided Comparator.
+
 Later For all the sorted queries:
     The query is distributed to a single QueryThread which generates and submits a Bing query.
     Once the query's top results are all downloaded the ExpansionDistributer instance notifies
@@ -204,8 +205,8 @@ Later For all the sorted queries:
      newly saved documents that require indexing.
 </pre>
 * src/com/hourglassapps/util/AsyncExpansionReceiver.java.
-Receives a list of elements (3 long for trigrams) corresponding to a single permutation of unstemmed terms for current stemmed trigram via the onExpansion method.
-An AsyncExpansionReceiver instance is notified when the permutations of the current stemmed trigram are exhausted when the onGroupDone() method is invoked.
+Receives a list of elements (3 long for trigrams) corresponding to a single permutation of unstemmed terms for the current stemmed trigram via the onExpansion method.
+An AsyncExpansionReceiver instance is notified when the permutations of the current stemmed trigram are exhausted by the onGroupDone() method being invoked.
 
 -------------------------------------------------------
 
@@ -217,6 +218,9 @@ This was written to kill the MainDownloader program in the case of network probl
 
 * src/com/hourglassapps/util/Filter.java.
 A single method interface returning a Boolean value in response to a single argument.
+
+-------------------------------------------------------
+
 * src/com/hourglassapps/util/FileWrapper.java.
 A FileWrapper instance creates a file with a static beginning and end (saved as files themselves within the data/ directory) but with a middle section that must be created at runtime.
 
@@ -314,7 +318,7 @@ The Schinke Latin stemmer
 -------------------------------------------------------
 
 * src/com/hourglassapps/cpi_ii/synonyms
-This package was intended for any classes that required for synonym recognition using WordNet. This aspect of the project is incomplete.
+This package was intended for any classes required for synonym recognition using WordNet. This aspect of the project is incomplete.
 
 -------------------------------------------------------
 
@@ -348,7 +352,7 @@ foreach allTransactions transaction:
       j.commit(transaction.key)
 </pre>
 
-If the process dies before all transactions have been committed then after a restart the process will iterate through the same list of transactions (allTransactions) again, checking in turn whether each transaction has been committed and if not works through any uncommitted transaction from its beginning. Any work done on a transaction before a commit is lost if the process crashes before transaction.commit() takes effect. Whether each transaction in allTransactions is independent of the others, or whether transactions must be committed in a certain order is implementation dependent.
+If the process dies before all transactions have been committed then after a restart the process will iterate through the same list of transactions (allTransactions) again, checking in turn whether each transaction has been committed. Any uncommitted transactions are processed anew. Any work done on a transaction before a commit is lost if the process crashes before transaction.commit() takes effect. Whether each transaction in allTransactions is independent of the others, or whether transactions must be committed in a certain order is implementation dependent.
 * src/com/hourglassapps/persist/FileCopyJournal.java.
 Journal implementation where a commit results in the creation of a single file. The addNew() method does nothing and the transaction key passed to the addedAlready() and commit() methods is the Path of an existing file.
 * src/com/hourglassapps/persist/FileJournal.java.
