@@ -6,21 +6,23 @@ Introduction
 
 The mini project to automatically generate a report listing reference to poems in the Conductus from the World Wide Web can be broken into a number of subtasks:
 
-(1) Developing and identifying the tools necessary to index and search Latin documents.
-(2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.
-(2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.
-(3) Interrogating these downloaded documents and generating a final report from the results.
+(1) Developing and identifying the tools necessary to index and search Latin documents.<br>
+(2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.<br>
+(2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.<br>
+(3) Interrogating these downloaded documents and generating a final report from the results.<br>
 
 Each sub-task above depends on the successful completion of the tasks preceding it. Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. You can checkout this branch by first cloning the repository and then checking out the branch as follows:
 
+<pre>
 git clone https://github.com/kieranjwhite/CPI-II.git
 git checkout original_report_generation
+</pre>
 
 Your java classpath should include the jar files in the lib/ directory and when compiling please ensure that the sourcepath includes both the src/ and data/ directories.
 
 Before reading the remainder of this document it is suggested that you first read the Lucene analysis package summary document at https://lucene.apache.org/core/4_10_1/core/org/apache/lucene/analysis/package-summary.html. Ensure you understand what the Lucene Analyzer, Tokenizer and TokenFilter classes do and the part they play in the overall Lucene library.
 
-Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of a Linux command line is assumed in any instructions, but should no be required.
+Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of a Linux command line is assumed in any instructions, but should not be required.
 
 (1) Developing the tools necessary to index and search Latin documents
 ======================================================================
@@ -70,7 +72,7 @@ The length of any ngrams saved by the MainIndexConductus program is specified by
 To create search engine queries we considered each distinct trigram of stemmed terms in turn --- there were 65490 in total. A Boolean query of disjunctions was created from a trigram's three respective associated stem groups, with each disjunction comprising a quoted phrase of three terms, one term drawn from each stem group.
 
 For example consider the trigram "mundi pro salute" from "Ad cultum tue laudis". The following are the relevant stem groups:
-
+<pre>
 mundi
 mundo
 
@@ -80,7 +82,7 @@ salute
 salutis
 salutem
 salus
-
+</pre>
 The resulting Boolean query which was submitted to Bing was therefore:
 
 "mundi pro salute" OR "mundi pro salutis" OR "mundi pro salutem" OR "mundi pro salus" OR "mundo pro salute" OR "mundo pro salutis" OR "mundo pro salutem" OR "mundo pro salus".
@@ -108,9 +110,9 @@ The results from each query are all downloaded asynchronously. However a downloa
 The downloaded documents and the index of those document will be saved to the ./documents directory. There will be a subdirectory matching the glob ./documents/*_journal for each downloading thread: documents downloaded by the first downloading thread are saved to ./documents/0_journal/completed, by the second download thread to ./document/1_journal/completed etc. The *_journal directories themselves contain a number of directories one corresponding to each Bing query and are named based on one of the trigrams in the query. In addition the ./documents/downloaded_index directory contains the Lucene index generated from these documents.
 
 There are other files in these directory that may also be of interest. Files named __types.txt contain the list of mime types for each downloaded document as indicated by the "Content-Type" HTTP header in a server's response. Each line in __types.txt comprises a number field followed by the mime type. The mime type is that of the file with a name starting with the value of the number field (followed by an extension where one is provided). For example the line:
-
+<pre>
 5 text/html; charset=iso-8859-1
-
+</pre>
 means that the file in that directory with a filename, excluding its extension, of "5" was reported by the server as having a mime type of "text/html; charset=iso-8859-1".
 
 Any files with names beginning with single underscore ('_') character contain the URLs we downloaded (below we will refer to these files as URL files) The file with a filename of 1 corresponds the URL on the first line of this file and so on. Sometimes a file corresponding to a particular line will be absent; this corresponds to a failed download. If a URL has an extension then that extension will be appended to the downloaded file's filename. So if the URL on the first line is http://www.thelatinlibrary.com/ambrose/mysteriis.html then the corresponding downloaded file will be the file in the same directory named 1.html
@@ -145,12 +147,16 @@ Please note that MainReporter requires an unusually large heap size (as specifie
 The report can be viewed by opening the poems/poems.html file in a web browser. Due to restrictions imposed by browsers on the viewing of locally stored files you may need to configure your browser to relax these security precautions. If viewing the report in Chrome (or Chromium) you will need to launch the browser with the --allow-file-access-from-files switch. In Firefox a configuration option needs to be changed as follows:
 
 In the Firefox address bar type:
+<pre>
 about:config
+</pre>
 and hit return. A warning will be displayed. Proceed past the warning. A list of configurable settings will appear. In the search field below the address bar type security.fileuri.strict_origin_policy
 Double-click on the 'true' value of the security.fileuri.strict_origin_policy entry, changing it to false. Now you should be able to open poems.html and view the links in the report. 
 
 Alternatively hosting the report on a webserver will avoid these problems entirely. The easiest way to do this on a Linux computer is to change to the parent directory of the "poems" and "documents" directories and invoke the command:
+<pre>
 python -mSimpleHTTPServer
+</pre>
 Opening your browser at http://localhost:8000/poems/poems.html will now display the report.
 
 Description of selected classes
@@ -221,6 +227,7 @@ An attempt to solve the problem of interface or subclass implementations that th
 
 Within a method that does not permit SomeException to be thrown:
 <pre>
+//mThrower is a ConcreteThrower instance
 ...
 try {
     //do something
@@ -313,9 +320,9 @@ This package was intended for any classes that required for synonym recognition 
 
 * src/com/hourglassapps/cpi_ii/report/Queryer.java.
 An instance of this class populates the poems/results directory during report generation.
-The search() method of this class is invoked for each line in the Conductus. It is passed two arguments: the line from the poem and name of the directory to save a Javascript file (called links.js) of results data.
+The search() method of this class is invoked for each line in the Conductus. It is passed two arguments: the line from the poem and name of the directory in which to save a Javascript file (called links.js) of results data.
 
-A Lucene query is created from the Line instance and the Lucene index that was created while downloading URLs from Bing's result is searched. The following results data is saved to the links.js file for each document in the order of document's rank in the results list: document title, path to local copy the document and a list of absolute start-end character offsets corresponding to query phrase matches within the document.
+A Lucene query is instantiated from the Line instance and the Lucene index that was created while downloading URLs from Bing's result is searched. The following results data is saved to the links.js file for each document in the order of document's rank in the results list: document title, path to local copy the document and a list of absolute start-end character offsets corresponding to query phrase matches within the document.
 
 -------------------------------------------------------
 
@@ -331,12 +338,8 @@ A DocSpan instance contains the start and end character offsets to a matching ph
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/persist/FileCopyJournal.java.
-Journal implementation where a commit results in the creation of a single file. The addNew() method does nothing and the transaction key passed to the addedAlready() and commit() methods is the Path of an existing file.
-* src/com/hourglassapps/persist/FileJournal.java.
-Journal implementation that saves a new file on commit() with each respective line in the file corresponding to an argument passed to the addNew() method.
 * src/com/hourglassapps/persist/Journal.java.
-Implementations provides Atomic / Durable transactions. The usual idiom clients of a Journal (j) follow is:
+Implementations provides Atomic / Durable transactions. The usual idiom clients of a Journal (j) implement is:
 <pre>
 foreach allTransactions transaction:
    if !j.addedAlready(transaction.key): 
@@ -346,6 +349,10 @@ foreach allTransactions transaction:
 </pre>
 
 If the process dies before all transactions have been committed then after a restart the process will iterate through the same list of transactions (allTransactions) again, checking in turn whether each transaction has been committed and if not works through any uncommitted transaction from its beginning. Any work done on a transaction before a commit is lost if the process crashes before transaction.commit() takes effect. Whether each transaction in allTransactions is independent of the others, or whether transactions must be committed in a certain order is implementation dependent.
+* src/com/hourglassapps/persist/FileCopyJournal.java.
+Journal implementation where a commit results in the creation of a single file. The addNew() method does nothing and the transaction key passed to the addedAlready() and commit() methods is the Path of an existing file.
+* src/com/hourglassapps/persist/FileJournal.java.
+Journal implementation that saves a new file on commit() with each respective line in the file corresponding to an argument passed to the addNew() method.
 * src/com/hourglassapps/persist/NullJournal.java.
 Journal implementation that does nothing.
 
