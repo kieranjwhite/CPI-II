@@ -99,6 +99,10 @@ public class MainHashTagDict {
 	}
 	
 	public static void main(String[] pArgs) {
+		/*
+		 * If there is no argument a (very) simple unit test will be run.
+		 * Otherwise the first argument will be decoded and displayed. The argument should included all characters in the hash id after (but not including) the '#' character.
+		 */
 		String encoded;
 		if(pArgs.length==0) {
 			MainHashTagDict dict=new MainHashTagDict();

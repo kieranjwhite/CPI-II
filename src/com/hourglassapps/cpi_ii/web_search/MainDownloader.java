@@ -276,8 +276,15 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					stemPath=pArgs[lastIdx++];
 					int numThreads=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println(numThreads+" thread download beginning...");
-					//downloader.downloadAndIndex(stemPath, numThreads, new HashTemplate<List<List<String>>>());
+
+					/* For testing we currently pass a RandomTemplate instance to the downloadAnIndex method. This ensures that only a small
+					 * proportion of randomly selection queries are submitted to Bing. For a full run where all queries are submitted please
+					 * replace the current call to download.downloadAndIndex and replace with the commented out line below it. 
+					 * 
+					 */
 					downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.013361));
+					//downloader.downloadAndIndex(stemPath, numThreads, new HashTemplate<List<List<String>>>());
+					
 					break;
 				case PARTITION:
 					if(pArgs.length!=4) {
@@ -297,8 +304,6 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					stemPath=pArgs[lastIdx++];
 					int seed=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println("Querying search engine with random queries...");
-					//downloader.downloadFiltered(stemPath, 
-					//		new ConverterReceiver<List<List<String>>>(new RandomConverter<List<List<String>>>(seed, 0.0015385)).filter());
 					downloader.downloadFiltered(stemPath, 
 							new JobDelegator<List<List<String>>>(1, new RandomTemplate<List<List<String>>>(1, seed, 0.0046155)).filter());
 					break;

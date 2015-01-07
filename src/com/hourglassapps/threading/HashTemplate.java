@@ -11,7 +11,7 @@ public class HashTemplate<I> implements FilterTemplate<I> {
 	
 	@Override
 	public ThreadFunction convert(final I pIn) {
-		final int hash=pIn.hashCode();
+		final int hash=pIn.hashCode(); //we can't use hash directly as it won't be randomly distributed so instead we seed a random number generator with this value.
 		return new ThreadFunction() {
 			@Override
 			public boolean accept(int pTid, int pNumThreads) {

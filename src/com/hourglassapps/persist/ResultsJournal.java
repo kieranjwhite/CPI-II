@@ -91,7 +91,7 @@ public class ResultsJournal extends AbstractFilesJournal<String,Result> {
 					parts.add(journal_num);
 					parts.add(relativeIn.subpath(2,3).toString());
 					parts.add(FilenameUtils.getBaseName(relativeIn.subpath(3,4).toString()));
-					/* KW 30/12/2014. mShorten is not needed here as the longest path will never exceed 255 chars .
+					/* KW 30/12/2014. mShorten is not needed here as the longest filename will never exceed 255 chars .
 					 * (BTW the longest stemmed trigram is 46 chars only, but here we're dealing with unstemmed trigrams).
 					 * If it turns out I'm wrong and shortening is required don't use mShorten like this anyway -- if there's a crash,
 					 * after restart files from the document journal will be traversed in a different order (skipping some
