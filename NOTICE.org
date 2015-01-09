@@ -1,0 +1,87 @@
+* This document is intended for viewing in Emacs within its org-mode, but can be opened and edited in any text editor
+* Licences
+** This codebase is released under the Apache 2 Licence
+*** See LICENSE.md
+** Third party libraries
+*** base64.js
+**** new BSD
+***** http://opensource.org/licenses/BSD-3-Clause
+**** base 64 encoder for old browsers
+*** JQuery and JQuery mobile
+*** jx library
+**** http://www.openjs.com/scripts/jx/
+**** BSD license (http://www.openjs.com/license.php)
+**** Small javascript ajax lib
+*** when.js
+**** Javascript promises -- this is a dependency of my version of the jx lib above
+***** It's a dependency of js, instead of my using jQuery promises, because I needed jx to work in a javascript worker and therefore couldn't assume the existence of the DOM
+**** https://github.com/cujojs/when
+**** MIT license https://github.com/cujojs/when/blob/master/LICENSE.txt
+*** moustache
+**** A few lines to escape html strings in javascript
+**** https://github.com/janl/mustache.js/blob/master/mustache.js
+***** entityMap and escapeHtml definitions were copied to rtu_domless.js
+**** https://github.com/janl/mustache.js/blob/master/LICENSE
+***** MIT
+*** Apache Tika
+**** Extracts text from files with different mime types
+**** Apache 2
+**** https://tika.apache.org/download.html
+*** jpingy
+**** https://code.google.com/p/jpingy/downloads/detail?name=jpingy0_1-alpha.jar&can=2&q=
+**** MIT License
+***** http://www.opensource.org/licenses/mit-license.php
+*** Apache Commons
+**** Lang
+***** http://commons.apache.org/proper/commons-lang/download_lang.cgi
+**** IO
+***** https://commons.apache.org/proper/commons-io/download_io.cgi
+**** Apache 2
+*** Lucene
+**** http://www.whoishostingthis.com/mirrors/apache/lucene/java/4.10.1/
+**** Apache 2
+**** Jars
+***** lucene-analyzers-common-4.10.1.jar
+***** lucene-expressions-4.10.1.jar
+***** lucene-core-4.10.1.jar
+***** lucene-facet-4.10.1.jar
+***** lucene-queries-4.10.1.jar
+***** lucene-queryparser-4.10.1.jar
+***** lucene-analyzers-stempel-4.10.1.jar
+*** Jackson
+**** Download links
+***** http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.4.2/jackson-core-2.4.2.jar
+***** http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.4.2/jackson-annotations-2.4.2.jar
+***** http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.4.2/jackson-databind-2.4.2.jar
+**** Apache 2
+*** Snowball
+**** Download
+***** http://snowball.tartarus.org/index.php
+**** part compiler and we distribute the output
+***** http://snowball.tartarus.org/dist/snowball_code.tgz
+**** part library
+***** http://snowball.tartarus.org/dist/libstemmer_java.tgz
+**** BSD licence
+***** http://snowball.tartarus.org/license.php
+*** Schinke
+**** Don't actually use this, but we still distribute it with the rest of the source/binary
+**** http://snowball.tartarus.org/otherapps/schinke/intro.html
+**** Schinke R, Greengrass M, Robertson AM and Willett P (1996) A stemming algorithm for Latin text databases. Journal of Documentation, 52: 172-187.
+**** We distribute Snowball-compiled version
+**** Licence unspecified
+*** jdeferred
+**** Promises implemented in Java
+**** https://github.com/jdeferred/jdeferred
+**** Apache 2
+*** AsyncHttpClient
+**** http://www.whoishostingthis.com/mirrors/apache//httpcomponents/httpasyncclient/binary/httpcomponents-asyncclient-4.0.2-bin.zip
+**** Apache 2
+*** Guava
+**** Google's java lbirary
+**** https://code.google.com/p/guava-libraries/
+**** Apache 2
+** Other resources
+*** Perseus treebank
+**** Need for creating a Latin stemming model for Stempel
+**** http://nlp.perseus.tufts.edu/syntax/treebank/ldt/1.5/ldt-1.5.tar.gz
+**** Creative Commons Attribution-NonCommercial-ShareAlike
