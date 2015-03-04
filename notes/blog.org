@@ -1,0 +1,40 @@
+* English usage
+** Paragraph 1
+*** As a matter of fact
+**** 'seem' in the subsequent clause suggests it's a matter of opinion
+*** repertory
+**** new word to me so I can comment on its correctness
+*** texts set to music cover a wide range of topics
+**** music probably doesn't determine topics so it seems strange to mention it like this
+*** The known manuscript sources of the conductus (i.e. musical and/or poetical thoroughly organised collections)
+**** Reword? organised collections of music and poetry?
+** Paragraph 2
+*** This accidental discovery & This fascinating discovery... text portions
+**** Repetition + text portions (it seems incorrect to refer to a portion of text, possibly since portion disregards the role of sequential ordering in language)
+***** suggest eleminating 'this fascinating discovery' and joining two sentences with conjunction:
+****** This accidental discovery ..on the World Wide Web and prompted searches of extracts
+*** how many other conducti do appear -> how many other conducti appear
+**** I don't think the original is gramatically incorrect, just that it seems cumbersome
+*** can we develop a digital tool that, basing on the digital edition of the 900 poems available
+**** can we develop a digital tool that, based on the digital edition of the 900 poems available
+** Paragraph 3
+*** Kieran, Mark and myself -> Kieran, Mark and me.
+*** an HTML report -> a HTML report
+**** I believe English people would tend to use 'a HTML report' whereas Americans would describe it as 'an HTML report' due to differences of pronunciation of the letter 'H'.
+*** Through these tools -> With these tools
+** Paragraph 4
+*** considerably limiting the possibility of miss relevant data
+**** considerably limiting the possibility of missing out on relevant data.
+*** in each poem links to a 
+**** in each poem link to a
+* Technical aspects
+** Paragraphs 3
+*** Stempel is not actually a Latin stemmer. I've seen it described as a universal algorithmic stemmer (http://getopt.org/stempel/index.html) and seems to have been developed with highly inflected languages in mind, Normally it's distributed with stemming tables for the Polish language. I trained it on Latin text and this created similar stemming tables for Latin.
+*** The search engine queries were performed on the basis of trigrams of stemmed terms (more than 65,000 in total)...stem groups:
+**** More than 65,000 search engine queries were generated. Each query corresponded to a trigram of stemmed terms in the Conductus and was composed of multiple morphological variations of the trigram. In this way documents containing various inflections of the terms were included in the list of returned results
+***** a declension does not apply to verbs which is why I refer to the more general term inflections
+**** For instance, the trigram ‘mundi+pro+salute’ from ‘Ad cultum tue laudis’ was associated with a query seeking all phrases that could be generated from the following three groups of terms:
+***** mundi, mundo + pro + salute, salutis, salutem, salus
+** Paragraph 4
+*** The queries submitted to Bing were downloaded, indexed, and also extracted as text, in order to avoid missing them in case those documents were removed from the Web.
+**** The queries submitted to Bing and relevant documents were downloaded and indexed. Plain text versions of the documents were also saved in case the originals were removed from the Web.
