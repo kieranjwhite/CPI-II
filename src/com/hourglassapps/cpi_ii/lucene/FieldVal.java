@@ -62,6 +62,10 @@ public class FieldVal {
 		return new Field(s(), pVal, mType);
 	}
 	
+	public Field nullField() {
+		throw new UnsupportedOperationException();
+	}
+	
 	public Field field(Reader pVal) {
 		return new Field(s(), pVal, mType);
 	}
@@ -72,6 +76,10 @@ public class FieldVal {
 
 	public Term term(String termText) {
 		return new Term(s(), termText);
+	}
+
+	public boolean isNull(String pFieldVal) {
+		return false;
 	}
 
 }

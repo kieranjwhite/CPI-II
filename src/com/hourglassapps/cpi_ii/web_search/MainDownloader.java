@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.config.RequestConfig;
@@ -154,11 +155,12 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		return pSearchEngine;
 	}
 	
-	public void downloadAll(String pPath, boolean pDummyRun) {
+	public void downloadAll(String pPath, boolean pDummyRun, Set<String> pFilteredURLs) {
 		System.out.println("About to download results for all queries.");
 		Rtu.continuePrompt();
 		try {
-			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFilesJournal<String,URL,ContentTypeSourceable>(JOURNAL,
+			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
+					JOURNAL, pFilteredURLs,
 					KEY_CONVERTER, URL_CONVERTER, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(1,setupBlacklist(
@@ -185,9 +187,9 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		return receiver;
 	}
 
-	public void downloadFiltered(String pStemPath, Filter<List<List<String>>> pFilter) throws Exception {
+	public void downloadFiltered(String pStemPath, Filter<List<List<String>>> pFilter, Set<String> pFilteredURLs) throws Exception {
 		Journal<String,URL> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
-				JOURNAL, KEY_CONVERTER, URL_CONVERTER, this);
+				JOURNAL, pFilteredURLs, KEY_CONVERTER, URL_CONVERTER, this);
 
 		try(QueryThread<String> receiver=setupQuery(1,journal);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
@@ -199,7 +201,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	
 	public void downloadOne(String pQueryName, URL pURL) {
 		try {
-			Journal<String,URL> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(TEST_JOURNAL, 
+			Journal<String,URL> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
+					TEST_JOURNAL, Collections.<String>emptySet(),
 					KEY_CONVERTER, URL_CONVERTER, this);
 
 			try(QueryThread<String> receiver=new QueryThread<String>(1,
@@ -230,24 +233,44 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 
 	private static void usage() {
-		System.out.println("Usage java com.hourglassapps.cpi_ii.web_search.MainDownload all <STEM_FILE>");
-		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload all --real <STEM_FILE>");
-		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload random <STEM_FILE> <SEED>");
-		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload partition <STEM_FILE> <NUM_PROCESSES> <MOD_RESULT>");
-		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload threads <STEM_FILE> <NUM_PROCESSES>");
-		System.out.println("      echo <URL_QUERY> | java com.hourglassapps.cpi_ii.web_search.MainDownload one <KEY_NAME>");
+		System.out.println("Usage echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader all <STEM_FILE>");
+		System.out.println("      echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader all --real <STEM_FILE>");
+		System.out.println("      echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader random <STEM_FILE> <SEED>");
+		System.out.println("      echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader partition <STEM_FILE> <NUM_PROCESSES> <MOD_RESULT>");
+		System.out.println("      echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader threads <STEM_FILE> <NUM_PROCESSES>");
+		System.out.println("      echo <URL_QUERY> | java com.hourglassapps.cpi_ii.web_search.MainDownloader one <KEY_NAME>");
 		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload download <URL> <FILENAME>");
+		System.exit(-1);
 	}
-	
+
+	private static List<String> readStdIn() throws IOException {
+		List<String> lines=new ArrayList<>();
+		try(
+				BufferedReader reader=new BufferedReader(new InputStreamReader(System.in));
+				) {
+			lines.add(reader.readLine());
+		}
+		return lines;
+	}
+
 	public static void main(String pArgs[]) throws IOException, InterruptedException {
 		if(pArgs.length<2) {
 			usage();
 		}
-
+		
 		int lastIdx=0;
-
 		try {
+			
 			Cmd cmd=Cmd.inst(pArgs[lastIdx++]);
+			Set<String> filteredURLs=null;
+			switch(cmd) {
+			case ALL:
+			case THREADS:
+			case PARTITION:
+			case RANDOM:
+				filteredURLs=new HashSet<>(readStdIn());
+			}
+			
 			try(MainDownloader downloader=new MainDownloader()) {
 				String stemPath;
 				switch(cmd) {
@@ -267,7 +290,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 						System.out.println("Querying search engine with all queries...");
 					}
 					
-					downloader.downloadAll(stemPath, dummyRun);
+					downloader.downloadAll(stemPath, dummyRun, filteredURLs);
 					break;
 				case THREADS:
 					if(pArgs.length!=3) {
@@ -282,7 +305,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					 * replace the current call to download.downloadAndIndex and replace with the commented out line below it. 
 					 * 
 					 */
-					downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.013361));
+					downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.013361), filteredURLs);
 					//downloader.downloadAndIndex(stemPath, numThreads, new HashTemplate<List<List<String>>>());
 					
 					break;
@@ -295,7 +318,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					int modResult=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println("Querying search engine with partitioned queries ("+modResult+"/"+numProcesses+")...");
 					downloader.downloadFiltered(stemPath, 
-							new JobDelegator<List<List<String>>>(numProcesses, new HashTemplate<List<List<String>>>()).filter(modResult));
+							new JobDelegator<List<List<String>>>(numProcesses, new HashTemplate<List<List<String>>>()).filter(modResult), filteredURLs);
 					break;
 				case RANDOM:
 					if(pArgs.length!=3) {
@@ -305,7 +328,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					int seed=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println("Querying search engine with random queries...");
 					downloader.downloadFiltered(stemPath, 
-							new JobDelegator<List<List<String>>>(1, new RandomTemplate<List<List<String>>>(1, seed, 0.0046155)).filter());
+							new JobDelegator<List<List<String>>>(1, new RandomTemplate<List<List<String>>>(1, seed, 0.0046155)).filter(), filteredURLs);
 					break;
 				case ONE:
 					if(pArgs.length!=2) {
@@ -341,7 +364,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		}
 	}
 
-	private void downloadAndIndex(String stemPath, int numThreads, FilterTemplate<List<List<String>>> pFilter) throws Exception {
+	private void downloadAndIndex(String stemPath, int numThreads, FilterTemplate<List<List<String>>> pFilter, Set<String> pFilteredURLs) throws Exception {
 		if(!Files.exists(DOCUMENT_DIR)) {
 			Files.createDirectories(DOCUMENT_DIR);
 		} else {
@@ -360,7 +383,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 			for(int t=0; t<numThreads; t++) {
 				DeferredFilesJournal<String,URL,ContentTypeSourceable> journal=
 						new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
-								DOCUMENT_DIR.resolve(Integer.toString(t)+THREAD_JOURNAL_NAME), KEY_CONVERTER, URL_CONVERTER, this);
+								DOCUMENT_DIR.resolve(Integer.toString(t)+THREAD_JOURNAL_NAME), pFilteredURLs, KEY_CONVERTER, URL_CONVERTER, this);
 				receiver=setupQuery(numThreads, journal);
 				journals.add(journal);
 				receivers.add(receiver);

@@ -5,27 +5,19 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.lucene.document.Field;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexCommit;
 import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Terms;
-import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.util.BytesRef;
 
-import com.hourglassapps.cpi_ii.CPIFields;
 import com.hourglassapps.cpi_ii.lucene.FieldVal;
 import com.hourglassapps.cpi_ii.lucene.Indexer;
-import com.hourglassapps.cpi_ii.lucene.ResultGenerator;
 import com.hourglassapps.util.Ii;
 
 /**
@@ -36,7 +28,19 @@ import com.hourglassapps.util.Ii;
  */
 public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path> {
 	private final static String TAG=DoneStore.class.getName();
+	//private final static String NULL_PATH="__null__";
 	private final Path mDir;
+	public final static Linker LINKER=new Linker() {
+		public void link(Path pLink, Path pOrig) throws IOException {
+			try {
+				Files.createSymbolicLink(pLink, pLink.relativize(pOrig));
+			} catch(FileAlreadyExistsException e) {
+				//necessary to catch this since this function needs to be idempotent
+			}
+		}		
+	};
+
+	private final static DocTracker RES_GEN=new DocTracker(DoneFields.DST.fieldVal(), LINKER);
 	
 	private Indexer mIndex=null;
 	
@@ -45,7 +49,20 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 	
 	private enum DoneFields {
 		//SRC is the URL of a document, DST is the path of the document in final directory (ie not the journal's partial directory)
-		SRC(new FieldVal("src", false)), DST(new FieldVal("dst", false));
+		SRC(new FieldVal("src", false)), DST(new FieldVal("dst", false){
+			private final String NULL_VAL="__null__";
+			private final Field NULL_FIELD=field(NULL_VAL);
+			
+			@Override
+			public boolean isNull(String pFieldVal) {
+				return NULL_VAL.equals(pFieldVal);
+			}
+			
+			@Override
+			public Field nullField() {
+				return NULL_FIELD;
+			}
+		});
 		
 		private final FieldVal mField;
 		
@@ -63,52 +80,72 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 	 * @param pDir Directory where a record of which URLs have been downloaded is saved
 	 * @throws IOException
 	 */
-	public DoneStore(Path pDir) throws IOException {
+	public DoneStore(Path pDir, Set<String> pFilteredURLs) throws IOException {
 		mDir=pDir;
 		index(mDir).close();
 		mIndex=index(mDir);
+
+		List<IndexCommit> commits=DirectoryReader.listCommits(mIndex.writer().getDirectory());
+		if(commits.size()==1) {
+			try(IndexReader reader=DirectoryReader.open(commits.get(0))) {
+				insertURLs(mIndex, reader, pFilteredURLs);
+			} catch(IndexNotFoundException e) {
+				insertURLs(mIndex, null, pFilteredURLs);
+			}
+		} else {
+			insertURLs(mIndex, null, pFilteredURLs);			
+		}
 	}
 
+		/**
+		 * Facilitates adding URLs to DoneStore prior to download so that these URLs can be skipped.
+		 * @param pReader If this IndexReader is null then it will be assumed that none of the provided URLs have already been committed to the DoneStore
+		 * @param pFilteredURLs. URLs to be added to DoneStore prior to downloading documents. 
+		 * @throws IOException 
+		 */
+	private static void insertURLs(Indexer pIndex, IndexReader pReader, Set<String> pFilteredURLs) throws IOException {
+		for(String filtered: pFilteredURLs) {
+			if(!indexHas(pIndex, pReader, filtered)) {				
+				pIndex.add(DoneFields.SRC.fieldVal().field(filtered), DoneFields.DST.fieldVal().nullField());
+			}
+		}
+		pIndex.writer().commit();		
+	}
+	
 	private static Indexer index(Path pDir) throws IOException {
 		return new Indexer(pDir, null, false);
 	}
-	
+		
 	private boolean indexHas(final Ii<String,String> pKey) throws IOException {
 		if(mIndex==null) {
 			mIndex=index(mDir);
 		}
-		ResultGenerator<Boolean> resGen=new ResultGenerator<Boolean>() {
-			private Boolean mFound=Boolean.FALSE;
 
-			@Override
-			public void run(IndexReader pReader, TopDocs pResults)
-					throws IOException {
-				if(pReader.numDocs()>0) {
-					String original=pReader.document(pResults.scoreDocs[0].doc, 
-							Collections.singleton(DoneFields.DST.fieldVal().s())).get(DoneFields.DST.fieldVal().s());
-					link(Paths.get(pKey.snd()), Paths.get(original));
-					mFound=Boolean.TRUE;
-				}
-			}
+		RES_GEN.setLink(pKey.snd());
 
-			@Override
-			public Boolean result() {
-				return mFound;
-			}
-
-		};
-		try {
-			List<IndexCommit> commits=DirectoryReader.listCommits(mIndex.writer().getDirectory());
-			assert(commits.size()==1);
+		List<IndexCommit> commits=DirectoryReader.listCommits(mIndex.writer().getDirectory());
+		if(commits.size()==1) {
 			try(IndexReader reader=DirectoryReader.open(commits.get(0))) {
-				mIndex.interrogate(reader, DoneFields.SRC.fieldVal(), pKey.fst(), 1, resGen);
+				mIndex.interrogate(reader, DoneFields.SRC.fieldVal(), pKey.fst(), 1, RES_GEN);
+			} catch(IndexNotFoundException e) {
+				//no commits yet
+				return false;
 			}
-		} catch(IndexNotFoundException e) {
-			//no commits yet
+		} else {
+			assert(commits.size()==0);
+		}
+		
+		return RES_GEN.result();
+	}
+	
+	private static boolean indexHas(Indexer pIndex, IndexReader pReader, String pURL) throws IOException {
+		if(pIndex==null) {
 			return false;
 		}
 		
-		return resGen.result();
+		RES_GEN.set();
+		pIndex.interrogate(pReader, DoneFields.SRC.fieldVal(), pURL, 1, RES_GEN);
+		return RES_GEN.result();
 	}
 	
 	/**
@@ -118,18 +155,10 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 	@Override
 	public boolean addedAlready(Ii<String,String> pSrcDst) throws IOException {
 		if(mPending.containsKey(pSrcDst.fst())) {
-			link(Paths.get(pSrcDst.snd()), Paths.get(mPending.get(pSrcDst.fst())));
+			LINKER.link(Paths.get(pSrcDst.snd()), Paths.get(mPending.get(pSrcDst.fst())));
 			return true;
 		}
 		return indexHas(pSrcDst);
-	}
-
-	private void link(Path pLink, Path pOrig) throws IOException {
-		try {
-			Files.createSymbolicLink(pLink, pLink.relativize(pOrig));
-		} catch(FileAlreadyExistsException e) {
-			//necessary to catch this since this function needs to be idempotent
-		}
 	}
 
 	/**

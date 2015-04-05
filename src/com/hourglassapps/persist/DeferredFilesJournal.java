@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jdeferred.Deferred;
 import org.jdeferred.DeferredManager;
@@ -56,14 +57,14 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	private K mLastAdded=null;
 	private final Downloader<C,R> mContentGenerator;
 	
-	public DeferredFilesJournal(final Path pDirectory,
+	public DeferredFilesJournal(final Path pDirectory, final Set<String> pFilteredURLs,
 			Converter<K, String> pFilenameGenerator, Converter<C,Typed<C>> pToTyped,
 			Downloader<C,R> pDownloader)
 			throws IOException {
 		super(pDirectory, pFilenameGenerator, pToTyped, 1);
 		mContentGenerator=pDownloader;
 		mDoneDir=pDirectory.resolve(DONE_INDEX);
-		mDone=new DoneStore(mDoneDir);
+		mDone=new DoneStore(mDoneDir, pFilteredURLs);
 		mPromised=new ArrayList<>();
 	}
 
