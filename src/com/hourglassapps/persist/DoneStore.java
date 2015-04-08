@@ -40,8 +40,7 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 		}		
 	};
 
-	private final static DocTracker RES_GEN=new DocTracker(DoneFields.DST.fieldVal(), LINKER);
-	
+	private final DocTracker mResGen=new DocTracker(DoneFields.DST.fieldVal(), LINKER); //this can't be static if you're using multiple download threads
 	private Indexer mIndex=null;
 	
 	//Maps the URL of a document to its path in partial dir
@@ -88,12 +87,12 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 		List<IndexCommit> commits=DirectoryReader.listCommits(mIndex.writer().getDirectory());
 		if(commits.size()==1) {
 			try(IndexReader reader=DirectoryReader.open(commits.get(0))) {
-				insertURLs(mIndex, reader, pFilteredURLs);
+				insertURLs(mResGen, mIndex, reader, pFilteredURLs);
 			} catch(IndexNotFoundException e) {
-				insertURLs(mIndex, null, pFilteredURLs);
+				insertURLs(mResGen, mIndex, null, pFilteredURLs);
 			}
 		} else {
-			insertURLs(mIndex, null, pFilteredURLs);			
+			insertURLs(mResGen, mIndex, null, pFilteredURLs);			
 		}
 	}
 
@@ -103,9 +102,9 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 		 * @param pFilteredURLs. URLs to be added to DoneStore prior to downloading documents. 
 		 * @throws IOException 
 		 */
-	private static void insertURLs(Indexer pIndex, IndexReader pReader, Set<String> pFilteredURLs) throws IOException {
+	private static void insertURLs(DocTracker pResGen, Indexer pIndex, IndexReader pReader, Set<String> pFilteredURLs) throws IOException {
 		for(String filtered: pFilteredURLs) {
-			if(!indexHas(pIndex, pReader, filtered)) {				
+			if(!indexHas(pResGen, pIndex, pReader, filtered)) {				
 				pIndex.add(DoneFields.SRC.fieldVal().field(filtered), DoneFields.DST.fieldVal().nullField());
 			}
 		}
@@ -121,12 +120,12 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 			mIndex=index(mDir);
 		}
 
-		RES_GEN.setLink(pKey.snd());
+		mResGen.setLink(pKey.snd());
 
 		List<IndexCommit> commits=DirectoryReader.listCommits(mIndex.writer().getDirectory());
 		if(commits.size()==1) {
 			try(IndexReader reader=DirectoryReader.open(commits.get(0))) {
-				mIndex.interrogate(reader, DoneFields.SRC.fieldVal(), pKey.fst(), 1, RES_GEN);
+				mIndex.interrogate(reader, DoneFields.SRC.fieldVal(), pKey.fst(), 1, mResGen);
 			} catch(IndexNotFoundException e) {
 				//no commits yet
 				return false;
@@ -135,17 +134,17 @@ public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path
 			assert(commits.size()==0);
 		}
 		
-		return RES_GEN.result();
+		return mResGen.result();
 	}
 	
-	private static boolean indexHas(Indexer pIndex, IndexReader pReader, String pURL) throws IOException {
+	private static boolean indexHas(DocTracker pResGen, Indexer pIndex, IndexReader pReader, String pURL) throws IOException {
 		if(pIndex==null) {
 			return false;
 		}
 		
-		RES_GEN.set();
-		pIndex.interrogate(pReader, DoneFields.SRC.fieldVal(), pURL, 1, RES_GEN);
-		return RES_GEN.result();
+		pResGen.set();
+		pIndex.interrogate(pReader, DoneFields.SRC.fieldVal(), pURL, 1, pResGen);
+		return pResGen.result();
 	}
 	
 	/**

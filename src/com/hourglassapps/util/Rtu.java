@@ -48,7 +48,7 @@ import java.util.List;
 public class Rtu {
 	private final static String TAG="com.hourglassapps.Rtu";
 	
-	public static boolean RELEASE=true;
+	public static boolean RELEASE=false;
 	public final static String ID_COL_NAME="_id";
 	
 	public static String[] EMPTY_STRING_ARRAY=new String[]{};

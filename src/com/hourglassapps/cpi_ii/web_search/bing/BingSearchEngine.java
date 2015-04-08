@@ -161,64 +161,69 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	
 	@Override
 	public Iterator<URL> present(final Query<String,URL> pQuery) throws IOException {
-		mSearchInvoked=true;
-		if(mThrower.fallThrough()) {
-			return Collections.<URL>emptyList().iterator();
-		}
-		if(pQuery.empty()) {
-			//no room for disjunctions in query
-			return Collections.<URL>emptyList().iterator();
-		}
-		assert(pQuery.raw()!=null);
 		try {
-			final Response resp = page(pQuery.uniqueName(), pQuery.raw());
-			return new Iterator<URL>() {
-				private int mPageNum=0;
-				private Response mResponse=resp;
-				private Iterator<URL> mPage=mResponse.urls().iterator();
+			mSearchInvoked=true;
+			if(mThrower.fallThrough()) {
+				return Collections.<URL>emptyList().iterator();
+			}
+			if(pQuery.empty()) {
+				//no room for disjunctions in query
+				return Collections.<URL>emptyList().iterator();
+			}
+			assert(pQuery.raw()!=null);
+			try {
+				final Response resp = page(pQuery.uniqueName(), pQuery.raw());
+				return new Iterator<URL>() {
+					private int mPageNum=0;
+					private Response mResponse=resp;
+					private Iterator<URL> mPage=mResponse.urls().iterator();
 
-				@Override
-				public boolean hasNext() {
-					if(mThrower.fallThrough()) {
-						return false;
+					@Override
+					public boolean hasNext() {
+						if(mThrower.fallThrough()) {
+							return false;
+						}
+						try {
+							return mPage.hasNext() || retrievedMore();
+						} catch (IOException | URISyntaxException e) {
+							mThrower.ctch(e);
+							return false;
+						}
 					}
-					try {
-						return mPage.hasNext() || retrievedMore();
-					} catch (IOException | URISyntaxException e) {
-						mThrower.ctch(e);
-						return false;
-					}
-				}
 
-				private boolean retrievedMore() throws ClientProtocolException, IOException, URISyntaxException {
-					assert !mPage.hasNext();
-					if(mPageNum+1>=MAX_RESULT_PAGES) {
-						return false;
+					private boolean retrievedMore() throws ClientProtocolException, IOException, URISyntaxException {
+						assert !mPage.hasNext();
+						if(mPageNum+1>=MAX_RESULT_PAGES) {
+							return false;
+						}
+						URL next=mResponse.next();
+						if(next==null) {
+							return false;
+						}
+						mResponse=page(pQuery.uniqueName(), next);
+						mPageNum++;
+						mPage=mResponse.urls().iterator();
+						return mPage.hasNext();
 					}
-					URL next=mResponse.next();
-					if(next==null) {
-						return false;
+
+					@Override
+					public URL next() {
+						assert mPageNum<MAX_RESULT_PAGES;
+						return mPage.next();
 					}
-					mResponse=page(pQuery.uniqueName(), next);
-					mPageNum++;
-					mPage=mResponse.urls().iterator();
-					return mPage.hasNext();
-				}
 
-				@Override
-				public URL next() {
-					assert mPageNum<MAX_RESULT_PAGES;
-					return mPage.next();
-				}
-
-				@Override
-				public void remove() {
-					throw new UnsupportedOperationException();
-				}
-			};
-		} catch (URISyntaxException e) {
-			mThrower.ctch(e);
-			return Collections.<URL>emptyList().iterator();
+					@Override
+					public void remove() {
+						throw new UnsupportedOperationException();
+					}
+				};
+			} catch (URISyntaxException e) {
+				mThrower.ctch(e);
+				return Collections.<URL>emptyList().iterator();
+			}
+		} catch(Throwable e) {
+			Log.e(TAG, e, "when sending query "+pQuery.uniqueName());
+			throw e;
 		}
 	}
 

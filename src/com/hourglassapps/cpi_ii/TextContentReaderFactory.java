@@ -58,7 +58,7 @@ public class TextContentReaderFactory implements MetaReadFactory {
 				int fileNum=Integer.parseInt(parts[0]);
 				String mimeType=parts[1];
 				if(DeferredFilesJournal.TYPE_UNKNOWN.equals(mimeType) ||
-						DeferredFilesJournal.TYPE_SYMLINK.equals(mimeType)) {
+						DeferredFilesJournal.TYPE_SKIPPED.equals(mimeType)) {
 					mimeType=null;
 				}
 				mFileNumToType.put(fileNum, mimeType);

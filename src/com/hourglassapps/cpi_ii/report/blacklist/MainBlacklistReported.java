@@ -18,7 +18,7 @@ public class MainBlacklistReported {
 	private final static String TAG=MainBlacklistReported.class.getName();
 	private final static Path RESULTS_SUBDIR=Paths.get("results/completed");
 	
-	private final static URLCanonicaliser URL_2_CANONICAL_URL=new URLCanonicaliser();
+	//private final static URLCanonicaliser URL_2_CANONICAL_URL=new URLCanonicaliser();
 	private final Path mResultsDir;
 	private final DocPath2URL mIndexReader;
 	
@@ -34,14 +34,13 @@ public class MainBlacklistReported {
 		Set<Path> docs=aggregator.get();
 		for(Path doc: docs) {
 			try {
-				String urlStr=mIndexReader.convert(doc).toLowerCase();
+				String urlStr=mIndexReader.convert(doc);
 				mIndexReader.throwCaught(IOException.class);
 
-				URL url=URL_2_CANONICAL_URL.convert(new URL(urlStr));
-				URL_2_CANONICAL_URL.throwCaught(MalformedURLException.class);
+				//URL url=URL_2_CANONICAL_URL.convert(new URL(urlStr));
+				//URL_2_CANONICAL_URL.throwCaught(MalformedURLException.class);
 				
-				//URL canonical=new URL("http", url.getAuthority().toLowerCase(), url.getPort(), url.getFile());
-				urls.add(url.toString());
+				urls.add(urlStr);
 			} catch(Throwable e) {
 				Log.e(TAG, e);
 			}

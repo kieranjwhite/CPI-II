@@ -233,12 +233,12 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 
 	private static void usage() {
-		System.out.println("Usage echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader all <STEM_FILE>");
-		System.out.println("      echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader all --real <STEM_FILE>");
-		System.out.println("      echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader random <STEM_FILE> <SEED>");
-		System.out.println("      echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader partition <STEM_FILE> <NUM_PROCESSES> <MOD_RESULT>");
-		System.out.println("      echo <FILTERED_URLS> | java com.hourglassapps.cpi_ii.web_search.MainDownloader threads <STEM_FILE> <NUM_PROCESSES>");
-		System.out.println("      echo <URL_QUERY> | java com.hourglassapps.cpi_ii.web_search.MainDownloader one <KEY_NAME>");
+		System.out.println("Usage cat <FILTERED_URLS_FILE> | java com.hourglassapps.cpi_ii.web_search.MainDownloader all <STEM_FILE>");
+		System.out.println("      cat <FILTERED_URLS_FILE> | java com.hourglassapps.cpi_ii.web_search.MainDownloader all --real <STEM_FILE>");
+		System.out.println("      cat <FILTERED_URLS_FILE> | java com.hourglassapps.cpi_ii.web_search.MainDownloader random <STEM_FILE> <SEED>");
+		System.out.println("      cat <FILTERED_URLS_FILE> | java com.hourglassapps.cpi_ii.web_search.MainDownloader partition <STEM_FILE> <NUM_PROCESSES> <MOD_RESULT>");
+		System.out.println("      cat <FILTERED_URLS_FILE> | java com.hourglassapps.cpi_ii.web_search.MainDownloader threads <STEM_FILE> <NUM_PROCESSES>");
+		System.out.println("      cat <URL_QUERY> | java com.hourglassapps.cpi_ii.web_search.MainDownloader one <KEY_NAME>");
 		System.out.println("      java com.hourglassapps.cpi_ii.web_search.MainDownload download <URL> <FILENAME>");
 		System.exit(-1);
 	}
@@ -248,7 +248,11 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		try(
 				BufferedReader reader=new BufferedReader(new InputStreamReader(System.in));
 				) {
-			lines.add(reader.readLine());
+			String line=reader.readLine();
+			while(line!=null) {
+				lines.add(line);
+				line=reader.readLine();
+			}
 		}
 		return lines;
 	}
@@ -305,7 +309,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					 * replace the current call to download.downloadAndIndex and replace with the commented out line below it. 
 					 * 
 					 */
-					downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.013361), filteredURLs);
+					//downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.013361), filteredURLs);
+					downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 234561, 0.013361), filteredURLs);
 					//downloader.downloadAndIndex(stemPath, numThreads, new HashTemplate<List<List<String>>>());
 					
 					break;

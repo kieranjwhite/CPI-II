@@ -40,7 +40,7 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 	public final static String DONE_INDEX="done_index";
 	public final static char TYPE_COLUMN_DELIMITER=' ';
 	public final static String TYPE_UNKNOWN="UNKNOWN";
-	public final static String TYPE_SYMLINK="SYMLINK";
+	public final static String TYPE_SKIPPED="SKIPPED";
 	public final static String TYPES_FILENAME=CUSTOM_PREFIX+"types.txt";
 	//TIMEOUT is in ms
 	private final List<Promise<Void,IOException,Void>> mPromised;
@@ -134,7 +134,7 @@ public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFile
 				Ii<String,String> srcDst=new Ii<>(pLink.get().toString(), dest.toString());
 				if(mDone.addedAlready(srcDst)) {
 					//If we return without adding to mPromised, commit() might not commit the transaction properly
-					mTypesWriter.println(destKey+Character.toString(TYPE_COLUMN_DELIMITER)+TYPE_SYMLINK);
+					mTypesWriter.println(destKey+Character.toString(TYPE_COLUMN_DELIMITER)+TYPE_SKIPPED);
 
 					Deferred<Void,IOException,Void> deferred=new DeferredObject<Void,IOException,Void>();
 					deferred.resolve(null);
