@@ -11,7 +11,7 @@ The mini project to automatically generate a report listing reference to poems i
 (2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.<br>
 (3) Interrogating these downloaded documents and generating a final report from the results.<br>
 
-Each sub-task above depends on the successful completion of the tasks preceding it. Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. You can checkout this branch by first cloning the repository and then checking out the branch as follows:
+Each sub-task above depends on the successful completion of the tasks preceding it. Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. You access this branch by first cloning the repository and then checking out the branch as follows:
 
 <pre>
 git clone https://github.com/kieranjwhite/CPI-II.git
@@ -22,7 +22,7 @@ Your java classpath should include the jar files in the lib/ directory and when 
 
 Before reading the remainder of this document it is suggested that you first read the Lucene analysis package summary document at https://lucene.apache.org/core/4_10_1/core/org/apache/lucene/analysis/package-summary.html. Ensure you understand what the Lucene Analyzer, Tokenizer and TokenFilter classes do and the part they play in the overall Lucene library.
 
-Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of a Linux command line is assumed in any instructions below, but should not be required.
+Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of the bash shell is assumed in any instructions below, but should not be required.
 
 (1) Developing the tools necessary to index and search Latin documents
 ======================================================================
@@ -99,7 +99,7 @@ Due to the time it takes to complete this task it is necessary to ensure that in
 
 The following command will generate Boolean queries (one corresponding to each stemmed ngram), submit them to Bing and download and then index the top 100 matching documents (when available) for each:
 
-java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.web_search.MainDownloader threads <path to ngrams>/3grams.dat NUM_THREADS
+echo | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.web_search.MainDownloader threads <path to ngrams>/3grams.dat NUM_THREADS
 
 Please note that for testing purposes this command currently only sends a subset of Boolean queries to Bing. Instructions on submitting a full run of queries to Bing can be found in a comment in the MainDownloader.main() method.
 
@@ -158,6 +158,10 @@ Alternatively hosting the report on a webserver will avoid these problems entire
 python -mSimpleHTTPServer
 </pre>
 Opening your browser at http://localhost:8000/poems/poems.html will now display the report.
+
+Finally if you wish to generate a list of any URLs included in the report you can do so with the following command:
+
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.blacklist.MainBlacklistReported ../../reports/20150102_random_2thrd_1600_123456/poems/ ../../reports/20150102_random_2thrd_1600_123456/documents/ > ../../reports/20150102_random_2thrd_1600_123456/poems_urls.txt
 
 Description of selected classes
 ===============================

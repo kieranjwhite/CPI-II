@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 public class BlacklistAggregator implements FileVisitor<Path> {
 	private final static Path LINKS_FILE=Paths.get("links.js");
-	private final static Pattern mDocPathPattern=Pattern.compile("^\\{t:.*p:\"(documents/.*/[0-9]+(?:\\.[^\"]+))\",s:\\[.*$");
+	private final static Pattern mDocPathPattern=Pattern.compile("^\\{t:.*p:\"(documents/.*/[0-9]+(?:\\.[^\"]+)?)\",s:\\[.*$");
 	//private final static Pattern mDocPathPattern=Pattern.compile("^\\{t:.*p:\"(documents/.*/[0-9]+.*)\",s:\\[.*$");
 	private final SortedSet<Path> mDocuments=new TreeSet<>();
 
