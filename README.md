@@ -122,7 +122,7 @@ There are other files in these directory that may also be of interest. Files nam
 </pre>
 means that the file in that directory with a filename, excluding its extension, of "5" was reported by the server as having a mime type of "text/html; charset=iso-8859-1".
 
-Any files with names beginning with a single underscore ('_') character contain the URLs we downloaded (below we will refer to these files as URL files) The file with a filename of 1 corresponds the URL on the first line of this file and so on. Sometimes a file corresponding to a particular line will be absent; this corresponds to a failed download. If a URL has an extension then that extension will be appended to the downloaded file's filename. So if the URL on the first line is http://www.thelatinlibrary.com/ambrose/mysteriis.html then the corresponding downloaded file will be the file in the same directory named 1.html
+Any files with names beginning with a single underscore ('_') character contain the URLs we downloaded (below we will refer to these files as URL files). The file with a filename of 1 corresponds the URL on the first line of this file and so on. Sometimes a file corresponding to a particular line will be absent; this corresponds to a failed download. If a URL has an extension then that extension will be appended to the downloaded file's filename. So if the URL on the first line is http://www.thelatinlibrary.com/ambrose/mysteriis.html then the corresponding downloaded file will be the file in the same directory named 1.html
 
 (3) Interrogating these downloaded documents and generating a final report from the results
 ===========================================================================================
