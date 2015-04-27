@@ -76,7 +76,7 @@ The length of any ngrams saved by the MainIndexConductus program is specified by
 (2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents
 =========================================================================================================
 
-To create search engine queries we considered each distinct trigram of stemmed terms in turn --- there were 65490 in total. A Boolean query of disjunctions was created from a trigram's three respective associated stem groups, with each disjunction comprising a quoted phrase of three terms, one term drawn from each stem group.
+To create search engine queries we considered each distinct trigram of stemmed terms in turn --- there were 65,490 in total. A Boolean query of disjunctions was created from a trigram's three respective associated stem groups, with each disjunction comprising a quoted phrase of three terms, with one term drawn from each stem group.
 
 For example consider the trigram "mundi pro salute" from "Ad cultum tue laudis". The following are the relevant stem groups:
 <pre>
