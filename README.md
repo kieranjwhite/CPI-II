@@ -190,7 +190,7 @@ java -Xmx1700m -ea -cp lib/guava-18.0.jar:lib/jackson-annotations-2.4.2.jar:lib/
 
 Steps 2 and 3 above require changes to be made to the codebase in order to operate on a different collection. Firstly, the MainIndexConductus class which indexes the collection must be altered to facilitate the generation of n-grams and consequently the downloading and indexing of the documents listed in Bing results. Secondly, minor modifications must be made to the MainReporter class to allow the final report to be generated.
 
-Altering MainIndexConductus
+<h3>Altering MainIndexConductus</h3>
 
 MainIndexConductus currently employs a parser, JSONParser to read the collection and generate a series of Id-Content couples. The Id in each couple is a Long instance and a unique identifier for an individual poem as defined by the collection. The Content is a String and as the name suggests in each case is the words of poem itself. You will need to modify MainIndexConductus to allow it to parse your collection (a file specified by the mInput field) by modifying the indexById method. In this method instantiate a parser that implements a ThrowableIterator that iterates through a series of Id-Content couples of the type Record<Long, String> by replacing the
 <pre>
@@ -205,7 +205,7 @@ CustomParser<Long,String,CustomRecord> parser=new CustomParser<>(
 
 After making these changes you should be able to perform Step 2 above on your collection.
 
-Changes to MainReporter
+<h3>Changes to MainReporter</h3>
 
 MainReporter also relies on a parser, PoemRecordXMLParser. Ideally this would have been the same parser as we used earlier (JSONParser) but during development we discovered that the Conductus JSON export lacked the some of the information we needed to create a presentable report so instead we turned to the Conductus XML export in order to complete our task. Assuming that you have a single export of your collection with all the information you require, then a single parser should suffice.
 
