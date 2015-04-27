@@ -167,6 +167,7 @@ python -mSimpleHTTPServer
 Opening your browser at http://localhost:8000/poems/poems.html will now display the report.
 
 (4) Regenerating a report at a later date
+=========================================
 
 Sometimes a user will create a report as described above, but at a later date wish to create another with any previously downloaded URLs filtered out. This will reduce the effort involved in manually inspecting all snippets in the new report. The first step in doing so is to invoke the following:
 
@@ -185,6 +186,7 @@ When reading the results returned by Bing this command will not download any URL
 java -Xmx1700m -ea -cp lib/guava-18.0.jar:lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.MainReporter <CONDUCTUS_XML_EXPORT_PATH>
 
 (5) Modifying the codebase to generate reports for alternative repertories
+==========================================================================
 
 Steps 2 and 3 above require changes to be made to the codebase in order to operate on a different collection. Firstly, the MainIndexConductus class which indexes the collection must be altered to facilitate the generation of n-grams and consequently the downloading and indexing of the documents listed in Bing results. Secondly, minor modifications must be made to the MainReporter class to allow the final report to be generated.
 
