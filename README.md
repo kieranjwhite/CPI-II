@@ -6,17 +6,17 @@ Introduction
 
 The objective of the mini-project Medieval Music, Big Data and the Research Blend (http://www.southampton.ac.uk/music/news/2014/04/11_medieval_music_big_data_and_research_blend.page) is to identify the purpose of the Conductus, a corpus of almost 900 thirteenth-century Latin poems variably set to monophonic and polyphonic music. The known manuscript sources of the Conductus (i.e. organised collections of music and poetry) do not provide much information about the significance and scope of the genre.
 
-Manual text searches of web pages led to the discovery by members of the Cantum pulcriorem invenire (http://www.southampton.ac.uk/music/research/projects/cantum_pulcriorem_invenire.page) research project of text from the poem "Naturas Deus regulis" on the Web. This in turn inspired the development of a more systematic and automated approach to searching for online references to more Conductus material --- this project. The goal was to automatically generate a report listing reference to poems in the Conductus from the World Wide Web. The project that can be broken into a number of subtasks:
+Manual text searches of web pages led to the discovery by members of the Cantum pulcriorem invenire (http://www.southampton.ac.uk/music/research/projects/cantum_pulcriorem_invenire.page) research project of text from the poem "Naturas Deus regulis" on the Web. This in turn inspired the development of a more systematic and automated approach to searching for online references to more Conductus material: this project. The goal was to automatically generate a report listing likely references to poems in the Conductus from the World Wide Web. The project can be broken into a number of subtasks:
 
 (1) Developing and identifying the tools necessary to index and search Latin documents.<br>
 (2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.<br>
 (2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.<br>
-(3) Interrogating these downloaded documents and generating a final report from the results.<br>
+(3) Interrogating these downloaded documents with Lucene and generating a final report from the results.<br>
 
-Descriptions of how we completed each of these as well as how another person can avail of this codebase to accomplish these tasks are provided below. Each sub-task above depends on the successful completion of the tasks preceding it. There are a number of other possible uses for this codebase that we will also explain how to perform these in more detail:
+Descriptions of how we completed each of these steps as well as how another person can avail of this codebase to accomplish the same tasks are provided below. Each sub-task above depends on the successful completion of the tasks preceding it. There are a number of other possible uses for this codebase and we will also explain how to perform these in more detail:
 
-(4) Regenerating a report at a later date
-(5) Modifying the codebase to generate reports for alternative repertories
+(4) Regenerating a report at a later date.<br>
+(5) Modifying the codebase to generate reports for other collections of Latin poetry.<br>
 
 Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. You access this branch by first cloning the repository and then checking out the branch as follows:
 
@@ -29,12 +29,12 @@ Your java classpath should include the jar files in the lib/ directory and when 
 
 Before reading the remainder of this document it is suggested that you first read the Lucene analysis package summary document at https://lucene.apache.org/core/4_10_1/core/org/apache/lucene/analysis/package-summary.html. Ensure you understand what the Lucene Analyzer, Tokenizer and TokenFilter classes do and the part they play in the overall Lucene library.
 
-Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of the bash shell is assumed in any instructions below, but should not be required.
+Prior to running any of the commands listed below, set your working directory to the parent of the lib directory in your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of the bash shell is assumed in any instructions below, but should not be required.
 
 (1) Developing the tools necessary to index and search Latin documents
 ======================================================================
 
-Primarily we've depended on Lucene for this sub-task but we also needed to identify a Latin stemmer. Initially we experimented with the Schinke stemmer (Schinke, Greengrass, Robertson & Willet, 1996) (http://snowball.tartarus.org/otherapps/schinke/intro.html) but found that it generates two stemming tables: one for nouns and the other for verbs. Therefore to use it you need to apply part-of-speech tagging to terms. Consequently we investigated another stemmer: Stempel (Galambos, 2001, 2004) (http://getopt.org/stempel/). Stempel is distributed with Lucene but we needed to train a Latin stemming model for it and for that we needed a Latin treebank such as that of the Perseus project (Bamman and Crane, 2006) (http://nlp.perseus.tufts.edu/syntax/treebank/).
+Primarily we depended on Lucene for this sub-task but we also needed to identify a Latin stemmer. Initially we experimented with the Schinke stemmer (Schinke, Greengrass, Robertson & Willet, 1996) (http://snowball.tartarus.org/otherapps/schinke/intro.html) but found that it generates two stemming tables: one for nouns and the other for verbs. Therefore to use it you need to apply part-of-speech tagging to terms. Consequently we investigated another stemmer: Stempel (Galambos, 2001, 2004) (http://getopt.org/stempel/). Stempel is distributed with Lucene but we needed to train a Latin stemming model for it and for that we needed a Latin treebank such as that of the Perseus project (Bamman and Crane, 2006) (http://nlp.perseus.tufts.edu/syntax/treebank/).
 
 In our code the stemmer (either Stempel, Schinke or no stemming) and can be specified during the creation of a StandardLatinAnalyzer (a subclass of Lucene's Analyzer class) object. For most indexing and searching we invoke the static StandardLatinAnalyzer.searchAnalyer() method to instantiate the StandardLatinAnalyzer. The searchAnalyzer() method itself calls a setStemmer() method passing in an argument to a Factory that generates a stemmer instance when required to do so. This Factory can return instances of either StempelRecorderFilter (for Stempel), SnowballRecorderFilter (for Schinke) or IdentityRecorderFilter (to disable stemming). As their names suggest these three classes not only stem terms but can also record stem groups if that is required.
 
@@ -42,11 +42,11 @@ This slightly convoluted approach of having a Factory instantiate the stemmer is
 
 There are also instances of StempelRecorderFilter, SnowballRecorderFilter and IdentityRecorderFilter available as static fields in the LatinAnalyzer class. These instances have already been configured to record stem groups and are intended for use by the MainIndexConductus class -- our trigram generator.
 
-Stempel must be trained and the result of this is a stemming model. The file at path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model is the model we created. It works quite well, but it may be important to know how to train a new model. Invoke the following to replace the existing model with a newly trained version:
+Stempel must be trained and the result of this is a stemming model. The file at path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out is the model we created. It works quite well, but it may be important to know how to train a new model. Invoke the following to replace the existing model with a newly trained version:
 
 grep <path to unzipped Perseus treebank file>/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]' '[:lower:]'|sed -nr -e "s/^.* form=\"([^\"]*)\" lemma=\"([^\"]*)\".*$/\\2 \\1/p"| grep -v "[^a-zA-Z0-9 ]" |sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p" | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.stem.MainGenStempelModel - data/com/hourglassapps/cpi_ii/latin/stem/stempel/model
 
-The StandardLatinAnalyzer.searchAnalyer() method mentioned above assumes that the model should be saved to the path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.
+The StandardLatinAnalyzer.searchAnalyer() method mentioned above assumes that the model should be saved to the path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out.
 
 Finally, our StandardLatinAnalyzer instance doesn't filter stopwords. This can be changed easily by instantiating a StandardLatinAnalyzer with a single argument:
 <pre>
@@ -67,16 +67,16 @@ java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/ja
 
 A number of resources are generated by this command:
 * A file containing stemmed (term -> unstemmed) term mappings: PATH_TO_STEM_GROUPS/3grams.dat
-* Index from which we can obtain the total frequency of each unstemmed term in the Conductus, allowing us to order morphological variations of the same ngram by the frequency of its constituent terms:  ./unstemmed_term_index
-* Index to allow iterating through all unstemmed ngrams which in combination with our (stemmed -> unstemmed) term mapping above allows us to group morphological variations of the same ngram together in the one Boolean Bing query: ./unstemmed_to_stemmed_index
-* Index recording the eprintid of the poem associated with each unstemmed ngram --- used primarily during the creation of the other indexes: ./unstemmed_index
+* An index from which we can obtain the total frequency of each unstemmed term in the Conductus, allowing us to order morphological variations of the same ngram by the frequency of its constituent terms:  ./unstemmed_term_index
+* An index to allow iterating through all unstemmed ngrams which in combination with our (stemmed -> unstemmed) term mapping above allows us to group morphological variations of the same ngram together in the one Boolean Bing query: ./unstemmed_to_stemmed_index
+* An index recording the eprintid of the poem associated with each unstemmed ngram --- used primarily during the creation of the other indexes: ./unstemmed_index
 
 The length of any ngrams saved by the MainIndexConductus program is specified by the MainIndexConductus.NGRAM_LENGTH field. It is currently configured to generate and save trigrams.
 
 (2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents
 =========================================================================================================
 
-To create search engine queries we considered each distinct trigram of stemmed terms in turn --- there were 65490 in total. A Boolean query of disjunctions was created from a trigram's three respective associated stem groups, with each disjunction comprising a quoted phrase of three terms, one term drawn from each stem group.
+To create search engine queries we considered each distinct trigram of stemmed terms in turn --- there were 65,490 in total. A Boolean query of disjunctions was created from a trigram's three respective associated stem groups, with each disjunction comprising a quoted phrase of three terms, with one term drawn from each stem group.
 
 For example consider the trigram "mundi pro salute" from "Ad cultum tue laudis". The following are the relevant stem groups:
 <pre>
@@ -112,9 +112,9 @@ Please note that for testing purposes this command currently only sends a subset
 
 The above command takes as input the (term -> unstemmed term) mappings of 3grams.dat (mentioned above) and the Lucene index of unstemmed trigrams (./unstemmed_to_stemmed_index). The name of the index is currently hard-coded.
 
-The results from each query are all downloaded asynchronously. However a downloading thread does not proceed to the next query until all results from the current query have either been downloaded or timed out during a download. To ensure that the downloader is not stalled by a small number of slow sites for a given query we typically have more than one downloading thread (specified by the NUM_THREADS argument). After the relevant documents for a query have all been downloaded, their paths are passed to an indexing thread. There is only one of these so ideally we wish to increase the value of NUM_THREADS as much as possible while ensuring the the downloading threads do not outpace the indexing thread. If they do, downloaded documents will have been removed from the operating system's file cache before needing to be read again for indexing, thus slowing the whole process down considerably. For most runs we have set NUM_THREADS to 2 while running MainDownloader on a 2.2GHz dual core mid-range laptop from 2010 with 4GB of RAM. On a faster computer with more memory a larger value can be used.
+The results from each query are all downloaded asynchronously. However a downloading thread does not proceed to the next query until all results from the current query have either been downloaded or timed out during a download. To ensure that the downloader is not stalled by a small number of slow sites for a given query we typically have more than one downloading thread (specified by the NUM_THREADS argument). After the relevant documents for a query have all been downloaded, their paths are passed to an indexing thread. There is only one of these so ideally we wish to increase the value of NUM_THREADS as much as possible while ensuring that the downloading threads do not outpace the indexing thread. If they do, downloaded documents will have been removed from the operating system's file cache before needing to be read again for indexing, thus slowing the whole process down considerably. For most runs we have set NUM_THREADS to 2 while running MainDownloader on a 2.2GHz dual core mid-range laptop from 2010 with 4GB of RAM. On a faster computer with more memory a larger value can be used.
 
-The downloaded documents and the index of those document will be saved to the ./documents directory. There will be a subdirectory matching the glob ./documents/*_journal for each downloading thread: documents downloaded by the first downloading thread are saved to ./documents/0_journal/completed, by the second download thread to ./document/1_journal/completed etc. The *_journal directories themselves contain a number of directories one corresponding to each Bing query and are named based on one of the trigrams in the query. In addition the ./documents/downloaded_index directory contains the Lucene index generated from these documents.
+The downloaded documents and the index of those document will be saved to the ./documents directory. There will be a subdirectory matching the glob ./documents/*_journal for each downloading thread: documents downloaded by the first downloading thread are saved to ./documents/0_journal/completed, by the second downloading thread to ./document/1_journal/completed etc. The 'completed' directories themselves contain a number of directories one corresponding to each Bing query and are named based on one of the trigrams in the query. In addition the ./documents/downloaded_index directory contains the Lucene index generated from these documents.
 
 There are other files in these directory that may also be of interest. Files named __types.txt contain the list of mime types for each downloaded document as indicated by the "Content-Type" HTTP header in a server's response. Each line in __types.txt comprises a number field followed by the mime type. The mime type is that of the file with a name starting with the value of the number field (followed by an extension where one is provided). For example the line:
 <pre>
@@ -122,7 +122,7 @@ There are other files in these directory that may also be of interest. Files nam
 </pre>
 means that the file in that directory with a filename, excluding its extension, of "5" was reported by the server as having a mime type of "text/html; charset=iso-8859-1".
 
-Any files with names beginning with a single underscore ('_') character contain the URLs we downloaded (below we will refer to these files as URL files) The file with a filename of 1 corresponds the URL on the first line of this file and so on. Sometimes a file corresponding to a particular line will be absent; this corresponds to a failed download. If a URL has an extension then that extension will be appended to the downloaded file's filename. So if the URL on the first line is http://www.thelatinlibrary.com/ambrose/mysteriis.html then the corresponding downloaded file will be the file in the same directory named 1.html
+Any files with names beginning with a single underscore ('_') character contain the URLs we downloaded (below we will refer to these files as URL files). The file with a filename of 1 corresponds the URL on the first line of this file and so on. Sometimes a file corresponding to a particular line will be absent; this corresponds to a failed download. If a URL has an extension then that extension will be appended to the downloaded file's filename. So if the URL on the first line is http://www.thelatinlibrary.com/ambrose/mysteriis.html then the corresponding downloaded file will be the file in the same directory named 1.html
 
 (3) Interrogating these downloaded documents and generating a final report from the results
 ===========================================================================================
@@ -167,6 +167,7 @@ python -mSimpleHTTPServer
 Opening your browser at http://localhost:8000/poems/poems.html will now display the report.
 
 (4) Regenerating a report at a later date
+=========================================
 
 Sometimes a user will create a report as described above, but at a later date wish to create another with any previously downloaded URLs filtered out. This will reduce the effort involved in manually inspecting all snippets in the new report. The first step in doing so is to invoke the following:
 
@@ -185,10 +186,13 @@ When reading the results returned by Bing this command will not download any URL
 java -Xmx1700m -ea -cp lib/guava-18.0.jar:lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.MainReporter <CONDUCTUS_XML_EXPORT_PATH>
 
 (5) Modifying the codebase to generate reports for alternative repertories
+==========================================================================
+
+<h3>Outline</h3>
 
 Steps 2 and 3 above require changes to be made to the codebase in order to operate on a different collection. Firstly, the MainIndexConductus class which indexes the collection must be altered to facilitate the generation of n-grams and consequently the downloading and indexing of the documents listed in Bing results. Secondly, minor modifications must be made to the MainReporter class to allow the final report to be generated.
 
-Altering MainIndexConductus
+<h3>Altering MainIndexConductus</h3>
 
 MainIndexConductus currently employs a parser, JSONParser to read the collection and generate a series of Id-Content couples. The Id in each couple is a Long instance and a unique identifier for an individual poem as defined by the collection. The Content is a String and as the name suggests in each case is the words of poem itself. You will need to modify MainIndexConductus to allow it to parse your collection (a file specified by the mInput field) by modifying the indexById method. In this method instantiate a parser that implements a ThrowableIterator that iterates through a series of Id-Content couples of the type Record<Long, String> by replacing the
 <pre>
@@ -203,7 +207,7 @@ CustomParser<Long,String,CustomRecord> parser=new CustomParser<>(
 
 After making these changes you should be able to perform Step 2 above on your collection.
 
-Changes to MainReporter
+<h3>Changes to MainReporter</h3>
 
 MainReporter also relies on a parser, PoemRecordXMLParser. Ideally this would have been the same parser as we used earlier (JSONParser) but during development we discovered that the Conductus JSON export lacked the some of the information we needed to create a presentable report so instead we turned to the Conductus XML export in order to complete our task. Assuming that you have a single export of your collection with all the information you require, then a single parser should suffice.
 
