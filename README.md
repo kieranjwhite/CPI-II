@@ -11,7 +11,7 @@ Manual text searches of web pages led to the discovery by members of the Cantum 
 (1) Developing and identifying the tools necessary to index and search Latin documents.<br>
 (2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.<br>
 (2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.<br>
-(3) Interrogating these downloaded documents and generating a final report from the results.<br>
+(3) Interrogating these downloaded documents with Lucene and generating a final report from the results.<br>
 
 Descriptions of how we completed each of these steps as well as how another person can avail of this codebase to accomplish the same tasks are provided below. Each sub-task above depends on the successful completion of the tasks preceding it. There are a number of other possible uses for this codebase and we will also explain how to perform these in more detail:
 
