@@ -188,6 +188,8 @@ java -Xmx1700m -ea -cp lib/guava-18.0.jar:lib/jackson-annotations-2.4.2.jar:lib/
 (5) Modifying the codebase to generate reports for alternative repertories
 ==========================================================================
 
+<h3>Outline</h3>
+
 Steps 2 and 3 above require changes to be made to the codebase in order to operate on a different collection. Firstly, the MainIndexConductus class which indexes the collection must be altered to facilitate the generation of n-grams and consequently the downloading and indexing of the documents listed in Bing results. Secondly, minor modifications must be made to the MainReporter class to allow the final report to be generated.
 
 <h3>Altering MainIndexConductus</h3>
