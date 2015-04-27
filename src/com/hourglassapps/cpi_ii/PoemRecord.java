@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.hourglassapps.cpi_ii.report.ReportRecord;
 import com.hourglassapps.util.Ii;
 
 /**
@@ -16,7 +17,7 @@ import com.hourglassapps.util.Ii;
  * Setter implementations are required by Jackson and are invoked to set field values.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PoemRecord implements Record<Long, String> {
+public class PoemRecord implements ReportRecord<Long> {
 	private static final String TEXT_INCIPIT_ONLY = "Text incipit only";
 	public static final String LANG_LATIN="Latin";
 	private String _poem_text_3;
@@ -90,23 +91,6 @@ public class PoemRecord implements Record<Long, String> {
 		return text.toString().trim();
 	}
 
-	public static class StanzaText {
-		private final String mName;
-		private final List<String> mLines;
-		public StanzaText(String pName, List<String> pStanzaLines) {
-			mName=pName;
-			mLines=new ArrayList<>(pStanzaLines);
-		}
-		
-		public String name() {
-			return mName;
-		}
-
-		public List<String> lines() {
-			return mLines;
-		}
-	}
-
 	public List<StanzaText> stanzas() {
 		if(!LANG_LATIN.equals(getLanguage())) {
 			throw new IllegalStateException("wrong language");
@@ -160,6 +144,12 @@ public class PoemRecord implements Record<Long, String> {
 		return content().split("\r\n");
 	}
 	
+	/**
+	 * Usually multiple PoemRecords will be return by a parser to some client class. It might be
+	 * the case that some of these records should not be processed if e.g. they are in the wrong language.
+	 * This method indicates which records the client should skip.
+	 * @return true if this record should be skipped, false otherwise. 
+	 */
 	@Override
 	public boolean ignore() {
 		return !LANG_LATIN.equals(getLanguage());

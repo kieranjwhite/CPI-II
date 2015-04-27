@@ -35,7 +35,8 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	private final static boolean FILTER_BY_SITE=false;
 	public final static int RESULTS_PER_PAGE=50;
 	
-	private final static String SEARCH_PATH_PREFIX="/Bing/SearchWeb/Web?Query=%27%28";
+	//private final static String SEARCH_PATH_PREFIX="/Bing/SearchWeb/Web?Query=%27%28";
+	private final static String SEARCH_PATH_PREFIX="/Bing/Search/Web?Query=%27%28";
 	private final static String SEARCH_URI_PREFIX=
 			"https://api.datamarket.azure.com"+SEARCH_PATH_PREFIX;
 	private final static String CLOSING_BRACKET="%29";

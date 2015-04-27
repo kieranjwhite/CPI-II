@@ -87,10 +87,10 @@ public class MainIndexConductus {
 						new RemoveUnescapesReader(
 								new BufferedReader(
 										new FileReader(mInput))), PoemRecord.class);
-				IOIterator<PoemRecord> text=parser.throwableIterator();
+				IOIterator<Record<Long, String>> text=parser.throwableIterator();
 				) {
 			while(text.hasNext()) {
-				PoemRecord record=text.next();
+				Record<Long, String> record=text.next();
 				if(record==null) {
 					//an exception will cause this -- it'll be thrown when parser is closed
 					break;

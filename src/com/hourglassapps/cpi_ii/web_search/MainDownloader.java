@@ -57,7 +57,7 @@ import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.Typed;
 import com.hourglassapps.util.URLUtils;
 
-public class MainDownloader implements AutoCloseable, Downloader<URL,ContentTypeSourceable> {
+public class MainDownloader implements AutoCloseable {
 	private final static String TAG=MainDownloader.class.getName();
 	private final static Converter<String,String> KEY_CONVERTER=JournalKeyConverter.SINGLETON;
 	private final static Converter<URL, Typed<URL>> URL_CONVERTER=new Converter<URL, Typed<URL>>() {
@@ -78,53 +78,80 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	private final static int CONNECT_TIMEOUT=10*1000;
 	private final static int SOCKET_TIMEOUT=10*1000;
 	private final static int COMPLETION_TIMEOUT=180*1000;
-	private final RequestConfig mRequestConfig;
 
-	private CloseableHttpAsyncClient mClient;
+	private final Closer mCloser=new Closer();
 	
 	public static Path downloadIndex() {
 		return DOCUMENT_DIR.resolve(MainIndexDownloaded.INDEX_PATH);
 	}
 	
 	public MainDownloader() {
-		 mRequestConfig= RequestConfig.custom()
-		            .setConnectTimeout(CONNECT_TIMEOUT)
-		            .setSocketTimeout(SOCKET_TIMEOUT)
-		            .build();
-		mClient=client(mRequestConfig);
+		
 	}
 
-	@Override
-	public Promise<ContentTypeSourceable, IOException, Void> downloadLink(
-			URL pSource, int pDstKey, Path pDst) throws IOException {
-		URL encoded=URLUtils.reencode(pSource);
-
-		/*
-		 * This deferred should be rejected for any exceptions that are caused by local issues. That should
-		 * cause the QueryThread and consequently the process to quit.
-		 * Where there's an exception due to a failed download due to a HTTP error or other network / remote site
-		 * issues the deferred should be accepted causing only that download to be skipped. Remaining downloads
-		 * for the same query, and later queries, will continue as normal. 
-		 */
-		final Deferred<ContentTypeSourceable,IOException,Void> deferred=
-				new DownloadableDeferredObject<ContentTypeSourceable,IOException,Void>(encoded, pDst);
-		try {
-			ZeroCopyConsumer<File> consumer=new DeferredZeroCopyConsumer(pDstKey, pDst.toFile(), deferred, COMPLETION_TIMEOUT);
-			mClient.execute(HttpAsyncMethods.createGet(encoded.toString()), consumer, null);
-		} catch(IllegalArgumentException e) {
-			//This will be caused by a URISyntaxException triggered by illegal characters in some download links
-			deferred.resolve(new ContentTypeSourceable(pDstKey, null));
-			Log.e(TAG, e);
-		} catch(Exception e) {
-			deferred.resolve(new ContentTypeSourceable(pDstKey, null));
-			Log.e(TAG, e, Log.esc("Exception for: "+deferred));
-			throw new IOException(e);
-		}
-		return deferred;
-	}	
+	public ApacheDownloader createClient() {
+		ApacheDownloader downloader=new ApacheDownloader();
+		mCloser.before(downloader);
+		return downloader;
+	}
 	
-	public void downloadSynchronous(URL pSource, Path pDst) throws IOException, InterruptedException {
-		downloadLink(pSource, 0, pDst).waitSafely();
+	private static class ApacheDownloader implements AutoCloseable, Downloader<URL, ContentTypeSourceable> {
+
+		private CloseableHttpAsyncClient mClient;
+		private final RequestConfig mRequestConfig;
+
+		public ApacheDownloader() {
+			mRequestConfig= RequestConfig.custom()
+					.setConnectTimeout(CONNECT_TIMEOUT)
+					.setSocketTimeout(SOCKET_TIMEOUT)
+					.build();
+			mClient=client(mRequestConfig);
+
+		}
+
+		@Override
+		public void reset() throws IOException {
+			mClient.close();
+			mClient=client(mRequestConfig);
+		}
+
+		@Override
+		public Promise<ContentTypeSourceable, IOException, Void> downloadLink(
+				URL pSource, int pDstKey, Path pDst) throws IOException {
+			URL encoded=URLUtils.reencode(pSource);
+
+			/*
+			 * This deferred should be rejected for any exceptions that are caused by local issues. That should
+			 * cause the QueryThread and consequently the process to quit.
+			 * Where there's an exception due to a failed download due to a HTTP error or other network / remote site
+			 * issues the deferred should be accepted causing only that download to be skipped. Remaining downloads
+			 * for the same query, and later queries, will continue as normal. 
+			 */
+			final Deferred<ContentTypeSourceable,IOException,Void> deferred=
+					new DownloadableDeferredObject<ContentTypeSourceable,IOException,Void>(encoded, pDst);
+			try {
+				ZeroCopyConsumer<File> consumer=new DeferredZeroCopyConsumer(pDstKey, pDst.toFile(), deferred, COMPLETION_TIMEOUT);
+				mClient.execute(HttpAsyncMethods.createGet(encoded.toString()), consumer, null);
+			} catch(IllegalArgumentException e) {
+				//This will be caused by a URISyntaxException triggered by illegal characters in some download links
+				deferred.resolve(new ContentTypeSourceable(pDstKey, null));
+				Log.e(TAG, e);
+			} catch(Exception e) {
+				deferred.resolve(new ContentTypeSourceable(pDstKey, null));
+				Log.e(TAG, e, Log.esc("Exception for: "+deferred));
+				throw new IOException(e);
+			}
+			return deferred;
+		}
+
+		public void downloadSynchronous(URL pSource, Path pDst) throws IOException, InterruptedException {
+			downloadLink(pSource, 0, pDst).waitSafely();
+		}
+		
+		@Override
+		public void close() throws Exception {
+			mClient.close();
+		}	
 	}
 	
 	public static RestrictedSearchEngine<String,URL,URL> setupBlacklist(RestrictedSearchEngine<String,URL,URL>  pSearchEngine) throws UnsupportedEncodingException {
@@ -155,13 +182,15 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		return pSearchEngine;
 	}
 	
+	
+	
 	public void downloadAll(String pPath, boolean pDummyRun, Set<String> pFilteredURLs) {
 		System.out.println("About to download results for all queries.");
 		Rtu.continuePrompt();
 		try {
 			Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
 					JOURNAL, pFilteredURLs,
-					KEY_CONVERTER, URL_CONVERTER, this);
+					KEY_CONVERTER, URL_CONVERTER, this.createClient());
 
 			try(QueryThread<String> receiver=new QueryThread<String>(1,setupBlacklist(
 							(pDummyRun?new BingSearchEngine() : new BingSearchEngine(BingSearchEngine.AUTH_KEY))), journal);
@@ -189,7 +218,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 
 	public void downloadFiltered(String pStemPath, Filter<List<List<String>>> pFilter, Set<String> pFilteredURLs) throws Exception {
 		Journal<String,URL> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
-				JOURNAL, pFilteredURLs, KEY_CONVERTER, URL_CONVERTER, this);
+				JOURNAL, pFilteredURLs, KEY_CONVERTER, URL_CONVERTER, this.createClient());
 
 		try(QueryThread<String> receiver=setupQuery(1,journal);
 				IndexViewer index=new IndexViewer(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX);
@@ -203,7 +232,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 		try {
 			Journal<String,URL> journal=new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
 					TEST_JOURNAL, Collections.<String>emptySet(),
-					KEY_CONVERTER, URL_CONVERTER, this);
+					KEY_CONVERTER, URL_CONVERTER, this.createClient());
 
 			try(QueryThread<String> receiver=new QueryThread<String>(1,
 					setupBlacklist(new BingSearchEngine(BingSearchEngine.AUTH_KEY)), journal)) {
@@ -222,14 +251,8 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 	}
 	
 	@Override
-	public void reset() throws IOException {
-		mClient.close();
-		mClient=client(mRequestConfig);
-	}
-
-	@Override
-	public void close() throws IOException {
-		mClient.close();
+	public void close() throws Exception {
+		mCloser.close();
 	}
 
 	private static void usage() {
@@ -275,7 +298,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 				filteredURLs=new HashSet<>(readStdIn());
 			}
 			
-			try(MainDownloader downloader=new MainDownloader()) {
+			try(MainDownloader downloaderManager=new MainDownloader()) {
 				String stemPath;
 				switch(cmd) {
 				case ALL:
@@ -294,7 +317,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 						System.out.println("Querying search engine with all queries...");
 					}
 					
-					downloader.downloadAll(stemPath, dummyRun, filteredURLs);
+					downloaderManager.downloadAll(stemPath, dummyRun, filteredURLs);
 					break;
 				case THREADS:
 					if(pArgs.length!=3) {
@@ -310,7 +333,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					 * 
 					 */
 					//downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.013361), filteredURLs);
-					downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 234561, 0.013361), filteredURLs);
+					downloaderManager.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 234561, 0.00066), filteredURLs);
 					//downloader.downloadAndIndex(stemPath, numThreads, new HashTemplate<List<List<String>>>());
 					
 					break;
@@ -322,7 +345,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					int numProcesses=Integer.valueOf(pArgs[lastIdx++]);
 					int modResult=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println("Querying search engine with partitioned queries ("+modResult+"/"+numProcesses+")...");
-					downloader.downloadFiltered(stemPath, 
+					downloaderManager.downloadFiltered(stemPath, 
 							new JobDelegator<List<List<String>>>(numProcesses, new HashTemplate<List<List<String>>>()).filter(modResult), filteredURLs);
 					break;
 				case RANDOM:
@@ -332,7 +355,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					stemPath=pArgs[lastIdx++];
 					int seed=Integer.valueOf(pArgs[lastIdx++]);
 					System.out.println("Querying search engine with random queries...");
-					downloader.downloadFiltered(stemPath, 
+					downloaderManager.downloadFiltered(stemPath, 
 							new JobDelegator<List<List<String>>>(1, new RandomTemplate<List<List<String>>>(1, seed, 0.0046155)).filter(), filteredURLs);
 					break;
 				case ONE:
@@ -347,7 +370,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 						if(key.indexOf(File.separatorChar)!=-1) {
 							throw new UnrecognisedSyntaxException();
 						}
-						downloader.downloadOne(key, queryUrl);
+						downloaderManager.downloadOne(key, queryUrl);
 					}
 					break;
 				case DOWNLOAD:
@@ -357,7 +380,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 					}
 					URL downloadUrl=new URL(pArgs[lastIdx++]);
 					Path dest=Paths.get(pArgs[lastIdx++]);
-					downloader.downloadSynchronous(downloadUrl, dest);
+					downloaderManager.createClient().downloadSynchronous(downloadUrl, dest);
 					break;
 				}
 			}
@@ -388,7 +411,7 @@ public class MainDownloader implements AutoCloseable, Downloader<URL,ContentType
 			for(int t=0; t<numThreads; t++) {
 				DeferredFilesJournal<String,URL,ContentTypeSourceable> journal=
 						new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
-								DOCUMENT_DIR.resolve(Integer.toString(t)+THREAD_JOURNAL_NAME), pFilteredURLs, KEY_CONVERTER, URL_CONVERTER, this);
+								DOCUMENT_DIR.resolve(Integer.toString(t)+THREAD_JOURNAL_NAME), pFilteredURLs, KEY_CONVERTER, URL_CONVERTER, this.createClient());
 				receiver=setupQuery(numThreads, journal);
 				journals.add(journal);
 				receivers.add(receiver);

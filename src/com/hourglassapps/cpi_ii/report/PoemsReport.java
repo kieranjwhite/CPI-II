@@ -14,7 +14,7 @@ import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
 import com.hourglassapps.cpi_ii.PoemRecord;
-import com.hourglassapps.cpi_ii.PoemRecord.StanzaText;
+import com.hourglassapps.cpi_ii.StanzaText;
 import com.hourglassapps.cpi_ii.report.LineGenerator.Line;
 import com.hourglassapps.cpi_ii.report.LineGenerator.LineType;
 import com.hourglassapps.util.ConcreteThrower;
@@ -50,7 +50,7 @@ public class PoemsReport implements AutoCloseable {
 	private final static Ii<String,String> STANZA_TAGS=new Ii<>("<h4 class=\"heading\">","</h4>");
 	private final Writer mOut;
 	private final FileWrapper mWrapper;
-	private final List<PoemRecord> mPoems=new ArrayList<>();
+	private final List<ReportRecord<Long>> mPoems=new ArrayList<>();
 	private final Deferred<Void,Void,Ii<Line,String>> mDeferred=new DeferredObject<>();
 	private final static Cleaner CLEANER=new Cleaner();
 	private final Converter<Line,Ii<String,String>> mQueryToHashTagFilename;
@@ -85,7 +85,7 @@ public class PoemsReport implements AutoCloseable {
 		}
 	}
 	
-	public void addTitle(PoemRecord pRec) throws IOException {
+	public void add(ReportRecord<Long> pRec) throws IOException {
 		Ii<Long,String> idTitle=new Ii<>(pRec.id(), pRec.getTitle());
 		mOut.write("<a href=\"#e"+pRec.id()+"\" data-role=\"button\"><div align=\"left\">"+
 				idTitle.snd()+"</div></a>\n");
@@ -108,7 +108,7 @@ public class PoemsReport implements AutoCloseable {
 		return "<a href=\"fwd.html#"+pLink+"\" target=\"results_"+pId+"\">"+pLine+"</a>";
 	}
 	
-	private void addContent(PrintWriter pOut, PoemRecord pPoemRecord) throws IOException {
+	private void addContent(PrintWriter pOut, ReportRecord<Long> pPoemRecord) throws IOException {
 		long id=pPoemRecord.id();
 		LineGenerator builder=new LineGenerator(id, CLEANER);
 		if(pPoemRecord.getTitle()!=null) {
@@ -182,7 +182,7 @@ public class PoemsReport implements AutoCloseable {
 	
 	public void genContent() throws Exception {
 		PrintWriter out=mWrapper.insert(MID);
-		for(PoemRecord rec: mPoems) {
+		for(ReportRecord<Long> rec: mPoems) {
 			try {
 				mThrower.throwCaught(Exception.class);
 			} catch(Throwable t) {

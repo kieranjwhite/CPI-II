@@ -69,7 +69,7 @@ public class DocPath2URL implements Converter<Path, String>, Thrower {
 			}
 
 			if(entryNum>mCurURLs.size()) {
-				throw new IllegalArgumentException("entry number too large: "+entryNum+" vs "+mCurURLs.size());
+				throw new IllegalArgumentException("entry number too large: "+entryNum+" vs "+mCurURLs.size()+" for "+pFile.toString());
 			}
 
 			return mCurURLs.get(entryNum-1);

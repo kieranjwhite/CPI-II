@@ -15,7 +15,7 @@ import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.IOIterator;
 import com.hourglassapps.util.ThrowingIterable;
 
-public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<R>, AutoCloseable {
+public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<Record<I,C>>, AutoCloseable {
 	private JsonParser mParser;
 	private JsonToken mNextToken;
 	private ObjectMapper mMapper=new ObjectMapper();
@@ -23,6 +23,7 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<
 	private Class<R> mClass;
 	private final Reader mPreprocessor;
 	private final JsonFactory mF=new JsonFactory();
+	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();
 
 	public JSONParser(Reader pPreprocessor, Class<R> pClass) throws IOException, ParseException {
 		mPreprocessor=pPreprocessor;
@@ -30,26 +31,25 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<
 	}
 
 	@Override
-	public Iterator<R> iterator() {
+	public Iterator<Record<I,C>> iterator() {
 		return throwableIterator();
 	}
 
 	@Override
-	public IOIterator<R> throwableIterator() {
-		final ConcreteThrower<IOException> thrower=new ConcreteThrower<IOException>();
+	public IOIterator<Record<I,C>> throwableIterator() {
 		try {
 			mParser=mF.createJsonParser(mPreprocessor);
 			mParser.nextToken(); //advances mParser to start of array
 			mNextToken=mParser.nextToken(); //advances mParser to first element
 		} catch (IOException e1) {
-			thrower.ctch(e1);
+			mThrower.ctch(e1);
 			mNextToken=JsonToken.NOT_AVAILABLE;
 		}
 
-		return new IOIterator<R>() {
+		return new IOIterator<Record<I,C>>() {
 			@Override
 			public boolean hasNext() {
-				if(thrower.fallThrough()) {
+				if(mThrower.fallThrough()) {
 					return false;
 				}
 				return mNextToken==JsonToken.START_OBJECT;
@@ -62,7 +62,7 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<
 					rec = mMapper.readValue(mParser, mClass);
 					mNextToken=mParser.nextToken();
 				} catch (IOException e) {
-					thrower.ctch(e);
+					mThrower.ctch(e);
 					mNextToken=JsonToken.NOT_AVAILABLE;
 					return null;
 				}
@@ -81,13 +81,14 @@ public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<
 			
 			@Override
 			public <E extends Exception> void throwCaught(Class<E> pCatchable) throws IOException {
-				thrower.throwCaught(IOException.class);
+				mThrower.throwCaught(IOException.class);
 			}
 		};
 	}
 
 	@Override
 	public void close() throws IOException {
+		mThrower.close();
 		mPreprocessor.close();
 	}
 

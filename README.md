@@ -1,17 +1,24 @@
-Online references to the poems of the Conductus
+Discovering online references to the poems of the Conductus
 ===============================================
 
 Introduction
 ============
 
-The mini project to automatically generate a report listing reference to poems in the Conductus from the World Wide Web can be broken into a number of subtasks:
+The objective of the mini-project Medieval Music, Big Data and the Research Blend (http://www.southampton.ac.uk/music/news/2014/04/11_medieval_music_big_data_and_research_blend.page) is to identify the purpose of the Conductus, a corpus of almost 900 thirteenth-century Latin poems variably set to monophonic and polyphonic music. The known manuscript sources of the Conductus (i.e. organised collections of music and poetry) do not provide much information about the significance and scope of the genre.
+
+Manual text searches of web pages led to the discovery by members of the Cantum pulcriorem invenire (http://www.southampton.ac.uk/music/research/projects/cantum_pulcriorem_invenire.page) research project of text from the poem "Naturas Deus regulis" on the Web. This in turn inspired the development of a more systematic and automated approach to searching for online references to more Conductus material --- this project. The goal was to automatically generate a report listing reference to poems in the Conductus from the World Wide Web. The project that can be broken into a number of subtasks:
 
 (1) Developing and identifying the tools necessary to index and search Latin documents.<br>
 (2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.<br>
 (2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.<br>
 (3) Interrogating these downloaded documents and generating a final report from the results.<br>
 
-Each sub-task above depends on the successful completion of the tasks preceding it. Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. You access this branch by first cloning the repository and then checking out the branch as follows:
+Descriptions of how we completed each of these as well as how another person can avail of this codebase to accomplish these tasks are provided below. Each sub-task above depends on the successful completion of the tasks preceding it. There are a number of other possible uses for this codebase that we will also explain how to perform these in more detail:
+
+(4) Regenerating a report at a later date
+(5) Modifying the codebase to generate reports for alternative repertories
+
+Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. You access this branch by first cloning the repository and then checking out the branch as follows:
 
 <pre>
 git clone https://github.com/kieranjwhite/CPI-II.git
@@ -35,7 +42,7 @@ This slightly convoluted approach of having a Factory instantiate the stemmer is
 
 There are also instances of StempelRecorderFilter, SnowballRecorderFilter and IdentityRecorderFilter available as static fields in the LatinAnalyzer class. These instances have already been configured to record stem groups and are intended for use by the MainIndexConductus class -- our trigram generator.
 
-While the existing model we provided for Stempel apparently works quite well, it may be important to know how to train a new model. Invoke the following (note this will overwrite the existing model):
+Stempel must be trained and the result of this is a stemming model. The file at path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model is the model we created. It works quite well, but it may be important to know how to train a new model. Invoke the following to replace the existing model with a newly trained version:
 
 grep <path to unzipped Perseus treebank file>/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]' '[:lower:]'|sed -nr -e "s/^.* form=\"([^\"]*)\" lemma=\"([^\"]*)\".*$/\\2 \\1/p"| grep -v "[^a-zA-Z0-9 ]" |sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p" | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.stem.MainGenStempelModel - data/com/hourglassapps/cpi_ii/latin/stem/stempel/model
 
@@ -59,7 +66,7 @@ Parse the Conductus with the following:
 java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.MainIndexConductus PATH_TO_JSON_EXPORT/CPI-poem.json --serialise > PATH_TO_STEM_GROUPS/3grams.dat
 
 A number of resources are generated by this command:
-* A file containing stemmed (term -> unstemmed) term mappings:  PATH_TO_STEM_GROUPS/3grams.dat
+* A file containing stemmed (term -> unstemmed) term mappings: PATH_TO_STEM_GROUPS/3grams.dat
 * Index from which we can obtain the total frequency of each unstemmed term in the Conductus, allowing us to order morphological variations of the same ngram by the frequency of its constituent terms:  ./unstemmed_term_index
 * Index to allow iterating through all unstemmed ngrams which in combination with our (stemmed -> unstemmed) term mapping above allows us to group morphological variations of the same ngram together in the one Boolean Bing query: ./unstemmed_to_stemmed_index
 * Index recording the eprintid of the poem associated with each unstemmed ngram --- used primarily during the creation of the other indexes: ./unstemmed_index
@@ -159,9 +166,61 @@ python -mSimpleHTTPServer
 </pre>
 Opening your browser at http://localhost:8000/poems/poems.html will now display the report.
 
-Finally if you wish to generate a list of any URLs included in the report you can do so with the following command:
+(4) Regenerating a report at a later date
 
-java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.blacklist.MainBlacklistReported ../../reports/20150102_random_2thrd_1600_123456/poems/ ../../reports/20150102_random_2thrd_1600_123456/documents/ > ../../reports/20150102_random_2thrd_1600_123456/poems_urls.txt
+Sometimes a user will create a report as described above, but at a later date wish to create another with any previously downloaded URLs filtered out. This will reduce the effort involved in manually inspecting all snippets in the new report. The first step in doing so is to invoke the following:
+
+mv poems old_poems
+mv documents old_documents
+java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.blacklist.MainBlacklistReported old_poems/ old_documents/ > poems_urls.txt
+
+This will first move the report (in the poems directory) and its constituent documents (in the documents directory) out of the way and then save a list of all URLs in the report to the poems_urls.txt file. The command needs to be able to access the directory of downloaded documents too so this must be provided as one of the arguments. The file poems_urls.txt is merely a text file of all URLs that comprise the reports source documents. Files like this can be concatenated into one larger file if if the user wishes to filter out URLs from multiple earlier reports.
+
+Now when finally downloading documents for the latest report you use a command similar to this:
+
+cat poems_urls.txt | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.web_search.MainDownloader threads misc/stem_maps/3grams.dat 2
+
+When reading the results returned by Bing this command will not download any URLs included in the poems_urls.txt file. Once the command has run to completion any new documents downloaded will be in the documents directory. Now simply generate a report in the poems directory as before:
+
+java -Xmx1700m -ea -cp lib/guava-18.0.jar:lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.MainReporter <CONDUCTUS_XML_EXPORT_PATH>
+
+(5) Modifying the codebase to generate reports for alternative repertories
+
+Steps 2 and 3 above require changes to be made to the codebase in order to operate on a different collection. Firstly, the MainIndexConductus class which indexes the collection must be altered to facilitate the generation of n-grams and consequently the downloading and indexing of the documents listed in Bing results. Secondly, minor modifications must be made to the MainReporter class to allow the final report to be generated.
+
+Altering MainIndexConductus
+
+MainIndexConductus currently employs a parser, JSONParser to read the collection and generate a series of Id-Content couples. The Id in each couple is a Long instance and a unique identifier for an individual poem as defined by the collection. The Content is a String and as the name suggests in each case is the words of poem itself. You will need to modify MainIndexConductus to allow it to parse your collection (a file specified by the mInput field) by modifying the indexById method. In this method instantiate a parser that implements a ThrowableIterator that iterates through a series of Id-Content couples of the type Record<Long, String> by replacing the
+<pre>
+JSONParser<Long,String,PoemRecord> parser=...
+</pre>
+line with something similar to
+<pre>
+CustomParser<Long,String,CustomRecord> parser=new CustomParser<>(
+				       new BufferedReader(
+				       	   new FileReader(mInput)), CustomRecord.class);
+</pre>
+
+After making these changes you should be able to perform Step 2 above on your collection.
+
+Changes to MainReporter
+
+MainReporter also relies on a parser, PoemRecordXMLParser. Ideally this would have been the same parser as we used earlier (JSONParser) but during development we discovered that the Conductus JSON export lacked the some of the information we needed to create a presentable report so instead we turned to the Conductus XML export in order to complete our task. Assuming that you have a single export of your collection with all the information you require, then a single parser should suffice.
+
+You need to alter the create method. Similarly to before, change the line
+<pre>
+PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mInput.toFile())));
+</pre>
+to
+<pre>
+CustomParser<Long,String,CustomRecord> parser=new CustomParser<>(
+				       new BufferedReader(
+				       	   new FileReader(mInput.toFile())));
+</pre>
+
+MainReporter's create method requires that your parser can return a ThrowableIterator of ReportRecords, instances of a subinterface of Record.
+
+Now Step 3 can also be run on your collection.
 
 Description of selected classes
 ===============================

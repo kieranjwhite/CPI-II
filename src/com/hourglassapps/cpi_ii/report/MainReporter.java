@@ -46,7 +46,7 @@ public class MainReporter {
 	final static Path DOCUMENT_DIR=Paths.get("./documents");
 	private final static String RESULT_START="results_start";
 	private final static String RESULT_END="results_end";
-	private final Path mXML;
+	private final Path mInput;
 	private final Path mDest;
 	private final Path mDocDir;
 	
@@ -67,7 +67,7 @@ public class MainReporter {
 			throw new IllegalArgumentException(pDest+" must be a writeable and directory");
 		}
 		
-		mXML=pXml;
+		mInput=pXml;
 		mDest=pDest;
 	}
 	
@@ -115,7 +115,7 @@ public class MainReporter {
 							new TitlePathConverter(thrower), 
 							MainReporter.class, RESULT_START, RESULT_END);
 					Queryer searcher=new Queryer(journal, index, analyser, QUERY_GENERATOR);
-					PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mXML.toFile())));
+					PoemRecordXMLParser parser=new PoemRecordXMLParser(new BufferedReader(new FileReader(mInput.toFile())));
 					IOIterator<PoemRecord> it=parser.throwableIterator();
 					) {
 				Promise<Void,Void,Ii<Line,String>> prom=poems.promise();
@@ -137,11 +137,11 @@ public class MainReporter {
 						break;
 					}
 					PoemRecord rec=it.next();
-					if(!PoemRecord.LANG_LATIN.equals(rec.getLanguage())) {
+					if(rec.ignore()) {
 						continue;
 					}
 
-					poems.addTitle(rec);
+					poems.add(rec);
 				}
 				poems.genContent();
 			}		

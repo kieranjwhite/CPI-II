@@ -22,7 +22,7 @@ public class Closer implements AutoCloseable {
 	}
 	
 	/**
-	 * Adds an AutoCloseable instance to the end of our list of AutoCloseables.
+	 * Adds an AutoCloseable instance to the start of our list of AutoCloseables.
 	 * @param pCloseable - if <code>null</code> nothing will be added.
 	 * @return this to allow chaining
 	 */
