@@ -46,7 +46,7 @@ Stempel must be trained and the result of this is a stemming model. The file at 
 
 grep <path to unzipped Perseus treebank file>/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]' '[:lower:]'|sed -nr -e "s/^.* form=\"([^\"]*)\" lemma=\"([^\"]*)\".*$/\\2 \\1/p"| grep -v "[^a-zA-Z0-9 ]" |sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p" | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.stem.MainGenStempelModel - data/com/hourglassapps/cpi_ii/latin/stem/stempel/model
 
-The StandardLatinAnalyzer.searchAnalyer() method mentioned above assumes that the model should be saved to the path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.
+The StandardLatinAnalyzer.searchAnalyer() method mentioned above assumes that the model should be saved to the path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out.
 
 Finally, our StandardLatinAnalyzer instance doesn't filter stopwords. This can be changed easily by instantiating a StandardLatinAnalyzer with a single argument:
 <pre>
