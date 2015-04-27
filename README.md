@@ -15,8 +15,8 @@ Manual text searches of web pages led to the discovery by members of the Cantum 
 
 Descriptions of how we completed each of these as well as how another person can avail of this codebase to accomplish these tasks are provided below. Each sub-task above depends on the successful completion of the tasks preceding it. There are a number of other possible uses for this codebase that we will also explain how to perform these in more detail:
 
-(4) Regenerating a report at a later date
-(5) Modifying the codebase to generate reports for alternative repertories
+(4) Regenerating a report at a later date.<br>
+(5) Modifying the codebase to generate reports for alternative repertories.<br>
 
 Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. You access this branch by first cloning the repository and then checking out the branch as follows:
 
