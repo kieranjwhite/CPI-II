@@ -29,7 +29,7 @@ Your java classpath should include the jar files in the lib/ directory and when 
 
 Before reading the remainder of this document it is suggested that you first read the Lucene analysis package summary document at https://lucene.apache.org/core/4_10_1/core/org/apache/lucene/analysis/package-summary.html. Ensure you understand what the Lucene Analyzer, Tokenizer and TokenFilter classes do and the part they play in the overall Lucene library.
 
-Prior to running any of the commands listed below, set your working directory to the parent of the lib directory of your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of the bash shell is assumed in any instructions below, but should not be required.
+Prior to running any of the commands listed below, set your working directory to the parent of the lib directory in your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of the bash shell is assumed in any instructions below, but should not be required.
 
 (1) Developing the tools necessary to index and search Latin documents
 ======================================================================
