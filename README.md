@@ -42,7 +42,7 @@ This slightly convoluted approach of having a Factory instantiate the stemmer is
 
 There are also instances of StempelRecorderFilter, SnowballRecorderFilter and IdentityRecorderFilter available as static fields in the LatinAnalyzer class. These instances have already been configured to record stem groups and are intended for use by the MainIndexConductus class -- our trigram generator.
 
-Stempel must be trained and the result of this is a stemming model. The file at path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model is the model we created. It works quite well, but it may be important to know how to train a new model. Invoke the following to replace the existing model with a newly trained version:
+Stempel must be trained and the result of this is a stemming model. The file at path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out is the model we created. It works quite well, but it may be important to know how to train a new model. Invoke the following to replace the existing model with a newly trained version:
 
 grep <path to unzipped Perseus treebank file>/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]' '[:lower:]'|sed -nr -e "s/^.* form=\"([^\"]*)\" lemma=\"([^\"]*)\".*$/\\2 \\1/p"| grep -v "[^a-zA-Z0-9 ]" |sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p" | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.stem.MainGenStempelModel - data/com/hourglassapps/cpi_ii/latin/stem/stempel/model
 
