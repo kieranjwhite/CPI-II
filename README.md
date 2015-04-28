@@ -238,6 +238,10 @@ Interface for any object that determines which thread is responsible for a given
 Instantiates a ThreadFunction that accepts a different thread depending on the hashCode() of the argument passed to the HashTemplate.convert() method.
 * src/com/hourglassapps/threading/JobDelegator.java.
 This is instantiated with a FilterTemplate which it converts to one or more Filter instances (one per thread typically). These filters accept a task (e.g. a list of ngrams for submission to Bing) and return a boolean value to indicate whether a given thread should accept responsibility for the task.
+* src/com/hourglassapps/util/ExpansionDistributor.java. Receives ngrams via it's implemention of ExpansionReceiver methods and then redistributes them to other ExpansionReceives passed as an argument during the ExpansionDistributor's instantiation. This is part of our infrastructure for distributing queries among threads.
+* src/com/hourglassapps/util/AsyncExpansionReceiver.java.
+Receives a list of elements (3 long for trigrams) corresponding to a single permutation of unstemmed terms for the current stemmed trigram via the onExpansion method.
+An AsyncExpansionReceiver instance is notified when the permutations of the current stemmed trigram are exhausted by the onGroupDone() method being invoked.
 
 -------------------------------------------------------
 
@@ -258,21 +262,6 @@ An interface allowing 'child' clocks to be instantiated from the ExclusiveTimeKe
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/util/ExpansionDistributor.java.
-<pre>
-For all queries:
-    Receives an unsorted list of ngrams corresponding to a single Boolean query for Bing and
-    Sorts them according to a provided Comparator.
-
-Later For all the sorted queries:
-    The query is distributed to a single QueryThread which generates and submits a Bing query.
-    Once the query's top results are all downloaded the ExpansionDistributer instance notifies
-     any waiting clients (in our code this will be a single IndexingThread instance) of the
-     newly saved documents that require indexing.
-</pre>
-* src/com/hourglassapps/util/AsyncExpansionReceiver.java.
-Receives a list of elements (3 long for trigrams) corresponding to a single permutation of unstemmed terms for the current stemmed trigram via the onExpansion method.
-An AsyncExpansionReceiver instance is notified when the permutations of the current stemmed trigram are exhausted by the onGroupDone() method being invoked.
 
 -------------------------------------------------------
 
