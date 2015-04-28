@@ -127,7 +127,7 @@ Any files with names beginning with a single underscore ('_') character contain 
 (3) Interrogating these downloaded documents and generating a final report from the results
 ===========================================================================================
 
-An individual query was generated from lines of text in the Conductus. The lines were tokenised and the remaining terms were stemmed as above. A phrasal search was performed in Lucene for each query where a match between a query and document was only recognised where all stemmed terms in a line were found adjacent to each other and in the same order in an indexed document. A ranked list of up to 100 results were generated in this manner for each line in the collection except for poem titles and those lines containing a single word.
+An individual query was generated from lines of text in the Conductus. The lines were tokenised and the remaining terms were stemmed as above. A phrasal search was performed in Lucene for each query where a match between a query and document was only recognised where all stemmed terms in a line, were found adjacent to each other and in the same order in an indexed document. A ranked list of up to 100 results were generated in this manner for each line in the collection except for poem titles and those lines containing a single word.
 
 Lines containing a single word were not considered sufficiently discriminatory. Therefore for these lines two phrases were generated, one where the the single word line was appended to its preceding line and the other where it prefixed its succeeding line. These two phrases then comprised a single Boolean query of two disjunctions from which up to 100 matching documents were generated.
 
