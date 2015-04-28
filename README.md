@@ -249,10 +249,7 @@ Promises are a concept more commonly associated with Javascript (see http://blog
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/util/Ii.java.
-Immutable couple implementation.
-
--------------------------------------------------------
+Profiling aids:
 
 * src/com/hourglassapps/util/ExclusiveTimeKeeper.java.
 A class for measuring the length of time it takes to execute blocks of code. Instantiate the ExclusiveTimeKeeper object at the beginning of a try block in a try-with-resources statement. When the block closes, the timer is paused until the block is entered again. Sub-blocks, also surrounded by try statements, allow for further, more fine-grained, timing information to be recorded. Times recorded in sub-blocks are subtracted from the times associated with the outer-block -- hence the name ExclusiveTimeKeeper.
@@ -279,19 +276,12 @@ An AsyncExpansionReceiver instance is notified when the permutations of the curr
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/util/MainHeartBeat.java.
-Regularly pings a hardcoded website, typically one with near 100% availability. If the ping fails then the all processes corresponding to a list of provided PIDs are killed.
-This was written to kill the MainDownloader program in the case of network problems. It's a class that will only work on Unix-like systems, but might not be required at all on Window. On Linux if the network interface drops any sockets depending on it can remain alive whereas on Windows this may not to be the case.
+Miscellaneous:
 
--------------------------------------------------------
-
-* src/com/hourglassapps/util/Filter.java.
-A single method interface returning a Boolean value in response to a single argument.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/FileWrapper.java.
-A FileWrapper instance creates a file with a static beginning and end (saved as files themselves within the data/ directory) but with a middle section that must be created at runtime.
+* src/com/hourglassapps/util/FileWrapper.java. A FileWrapper instance creates a file with a static beginning and end (saved as files themselves within the data/ directory) but with a middle section that must be created at runtime.
+* src/com/hourglassapps/util/Filter.java. A single method interface returning a Boolean value in response to a single argument.
+* src/com/hourglassapps/util/Ii.java. Immutable couple implementation.
+* src/com/hourglassapps/util/MainHeartBeat.java. Regularly pings a hardcoded website, typically one with near 100% availability. If the ping fails then the all processes corresponding to a list of provided PIDs are killed. This was written to kill the MainDownloader program in the case of network problems. It's a class that will only work on Unix-like systems, but might not be required at all on Window. On Linux if the network interface drops any sockets depending on it can remain alive whereas on Windows this may not to be the case.
 
 -------------------------------------------------------
 
