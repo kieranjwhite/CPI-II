@@ -229,6 +229,7 @@ Now Step 3 can also be run on your collection.
 Description of selected classes
 ===============================
 
+Threading:
 * src/com/hourglassapps/threading/FilterTemplate.java.
 Converts a task representation (eg a list of trigrams for submission to Bing) to a ThreadFunction that selects a thread to process the task.
 * src/com/hourglassapps/threading/ThreadFunction.java.
