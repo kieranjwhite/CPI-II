@@ -262,15 +262,12 @@ An interface allowing 'child' clocks to be instantiated from the ExclusiveTimeKe
 
 -------------------------------------------------------
 
-
--------------------------------------------------------
-
 Miscellaneous:
 
 * src/com/hourglassapps/util/FileWrapper.java. A FileWrapper instance creates a file with a static beginning and end (saved as files themselves within the data/ directory) but with a middle section that must be created at runtime.
 * src/com/hourglassapps/util/Filter.java. A single method interface returning a Boolean value in response to a single argument.
 * src/com/hourglassapps/util/Ii.java. Immutable couple implementation.
-* src/com/hourglassapps/util/MainHeartBeat.java. Regularly pings a hardcoded website, typically one with near 100% availability. If the ping fails then the all processes corresponding to a list of provided PIDs are killed. This was written to kill the MainDownloader program in the case of network problems. It's a class that will only work on Unix-like systems, but might not be required at all on Window. On Linux if the network interface drops any sockets depending on it can remain alive whereas on Windows this may not to be the case.
+* src/com/hourglassapps/util/MainHeartBeat.java. Regularly pings a hardcoded website, typically one with near 100% availability. If the ping fails then the all processes corresponding to a list of provided PIDs are killed. This was written to kill the MainDownloader program in the case of network problems. It's a class that will only work on Unix-like systems, but might not be required at all on Window. On Linux if the network interface drops, any sockets depending on it can remain alive whereas on Windows this may not be the case.
 
 -------------------------------------------------------
 
