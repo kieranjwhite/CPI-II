@@ -231,13 +231,13 @@ Description of selected classes
 
 Threading:
 * src/com/hourglassapps/threading/FilterTemplate.java.
-Converts a task representation (eg a list of trigrams for submission to Bing) to a ThreadFunction that selects a thread to process the task.
+Converts a task representation (e.g. a list of trigrams for submission to Bing) to a ThreadFunction that selects a thread to process the task.
 * src/com/hourglassapps/threading/ThreadFunction.java.
 Interface for any object that determines which thread is responsible for a given task. An instance of FilterTemplate will generate a ThreadFunction instance from a representation of a task. In the case of our MainDownloader program, this is how Boolean queries are distributed between QueryThread instances. Tasks are represented as a list of ngrams.
 * src/com/hourglassapps/threading/HashTemplate.java.
 Instantiates a ThreadFunction that accepts a different thread depending on the hashCode() of the argument passed to the HashTemplate.convert() method.
 * src/com/hourglassapps/threading/JobDelegator.java.
-This is instantiated with a FilterTemplate which it converts to one or more Filter instances (one per thread typically). These filters accept a task (eg a list of ngrams for submission to Bing) and return a boolean value to indicate whether a given thread should accept responsibility for the task.
+This is instantiated with a FilterTemplate which it converts to one or more Filter instances (one per thread typically). These filters accept a task (e.g. a list of ngrams for submission to Bing) and return a boolean value to indicate whether a given thread should accept responsibility for the task.
 
 -------------------------------------------------------
 
