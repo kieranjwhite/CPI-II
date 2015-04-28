@@ -169,10 +169,10 @@ Opening your browser at http://localhost:8000/poems/poems.html will now display 
 (4) Regenerating a report at a later date
 =========================================
 
-Sometimes a user will create a report as described above, but at a later date wish to create another with any previously downloaded URLs filtered out. This will reduce the effort involved in manually inspecting all snippets in the new report. The first step in doing so is to invoke the following:
+Sometimes a user will create a report as described above, but at a later date wish to create another with any previously downloaded URLs filtered out. This will reduce the number of snippets that need to be inspected in the new report. The first step in doing so is to invoke the following:
 
-mv poems old_poems
-mv documents old_documents
+mv poems old_poems<br>
+mv documents old_documents<br>
 java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.blacklist.MainBlacklistReported old_poems/ old_documents/ > poems_urls.txt
 
 This will first move the report (in the poems directory) and its constituent documents (in the documents directory) out of the way and then save a list of all URLs in the report to the poems_urls.txt file. The command needs to be able to access the directory of downloaded documents too so this must be provided as one of the arguments. The file poems_urls.txt is merely a text file of all URLs that comprise the reports source documents. Files like this can be concatenated into one larger file if if the user wishes to filter out URLs from multiple earlier reports.
