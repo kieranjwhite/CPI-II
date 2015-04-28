@@ -241,7 +241,7 @@ This is instantiated with a FilterTemplate which it converts to one or more Filt
 
 -------------------------------------------------------
 
-Promises:
+Asynchronous method invocation and results:
 
 Promises are a concept more commonly associated with Javascript (see http://blog.parse.com/2013/01/29/whats-so-great-about-javascript-promises/) and are an attempt to simplify the handling of results of asynchronous methods. Usually asynchronous methods deliver their results via a myriad of different callbacks and make it difficult to structure code in a manner which is readable. Promises provide a consistent API allowing the developer to structure asynchronous method calls in a manner that is reminiscent of synchronous code.
 
