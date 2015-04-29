@@ -349,11 +349,11 @@ An instance of this class populates the poems/results directory during report ge
 Stemming:
 
 * src/com/hourglassapps/cpi_ii/latin/LatinStemmer.java.
-The Schinke Latin stemmer
+The Schinke Latin stemmer.
 * src/com/hourglassapps/cpi_ii/stem/SnowballRecorderFilter.java.
-Subclass of StemRecorderFilter that applies Schinke stemming to input tokens
+Subclass of StemRecorderFilter that applies Schinke stemming to input tokens.
 * src/com/hourglassapps/cpi_ii/stem/StempelRecorderFilter.java.
-Subclass of StemRecorderFilter that applies Stempel stemming to input tokens
+Subclass of StemRecorderFilter that applies Stempel stemming to input tokens.
 * src/com/hourglassapps/cpi_ii/stem/StemRecorderFilter.java.
 A subclass of Lucene's TokenFilter, instances of StemRecorderFilter maintain mappings between any token read by this TokenFilter and its output token (if any). These mappings can be saved to an OutputStream or restored from one.
 
