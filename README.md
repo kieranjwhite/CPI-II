@@ -418,6 +418,3 @@ Linguistic resources
 
 Perseus treebank (http://nlp.perseus.tufts.edu/syntax/treebank/ldt/1.5/ldt-1.5.tar.gz): training Latin stemming model for Stempel.<br>
 Latin stoplist from the Perseus Hopper project (http://sourceforge.net/projects/perseus-hopper/files/perseus-hopper/hopper-20110527/hopper-source-20110527.tar.gz/download): 92 common Latin words.<br>
-
-//  LocalWords:  tokenised treebank disjunction unstemmed prioritised
-LocalWords:  Conductus
