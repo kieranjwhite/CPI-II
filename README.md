@@ -13,7 +13,9 @@ Manual text searches of web pages led to the discovery by members of the Cantum 
 (2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.<br>
 (3) Interrogating these downloaded documents with Lucene and generating a final report from the results.<br>
 
-Descriptions of how we completed each of these steps as well as how another person can avail of this codebase to accomplish the same tasks are provided below. Each sub-task above depends on the successful completion of the tasks preceding it. We will also explain how to accomplish the following objectives:
+Descriptions of how we completed each of these steps as well as how another person can avail of this codebase to accomplish the same tasks are provided below. Each sub-task above depends on the successful completion of the tasks preceding it.
+
+We will also explain how to accomplish the following objectives:
 
 (4) Regenerating a report at a later date.<br>
 (5) Modifying the codebase to generate reports for other collections of Latin poetry.<br>
