@@ -230,6 +230,10 @@ Description of selected classes
 ===============================
 
 Threading:
+* src/com/hourglassapps/util/AsyncExpansionReceiver.java.
+Receives a list of elements (3 long for trigrams) corresponding to a single permutation of unstemmed terms for the current stemmed trigram via the onExpansion method.
+An AsyncExpansionReceiver instance is notified when the permutations of the current stemmed trigram are exhausted by the onGroupDone() method being invoked.
+* src/com/hourglassapps/util/ExpansionDistributor.java. Receives ngrams via it's implemention of ExpansionReceiver methods and then redistributes them to other ExpansionReceives passed as an argument during the ExpansionDistributor's instantiation. This is part of our infrastructure for distributing queries among threads.
 * src/com/hourglassapps/threading/FilterTemplate.java.
 Converts a task representation (e.g. a list of trigrams for submission to Bing) to a ThreadFunction that selects a thread to process the task.
 * src/com/hourglassapps/threading/ThreadFunction.java.
@@ -238,10 +242,10 @@ Interface for any object that determines which thread is responsible for a given
 Instantiates a ThreadFunction that accepts a different thread depending on the hashCode() of the argument passed to the HashTemplate.convert() method.
 * src/com/hourglassapps/threading/JobDelegator.java.
 This is instantiated with a FilterTemplate which it converts to one or more Filter instances (one per thread typically). These filters accept a task (e.g. a list of ngrams for submission to Bing) and return a boolean value to indicate whether a given thread should accept responsibility for the task.
-* src/com/hourglassapps/util/ExpansionDistributor.java. Receives ngrams via it's implemention of ExpansionReceiver methods and then redistributes them to other ExpansionReceives passed as an argument during the ExpansionDistributor's instantiation. This is part of our infrastructure for distributing queries among threads.
-* src/com/hourglassapps/util/AsyncExpansionReceiver.java.
-Receives a list of elements (3 long for trigrams) corresponding to a single permutation of unstemmed terms for the current stemmed trigram via the onExpansion method.
-An AsyncExpansionReceiver instance is notified when the permutations of the current stemmed trigram are exhausted by the onGroupDone() method being invoked.
+* src/com/hourglassapps/cpi_ii/web_search/QueryThread.java.
+When invoking MainDownloader to generate and submit queries for Bing, one or more of these Threads are started. Each one submits queries to Bing and downloads the results (although the downloading itself is delegated to a CloseableHttpAsyncClient instance -- an Apache class).
+* src/com/hourglassapps/util/Throttle.java.
+Class to slow down a thread. An instance only allows a limited number of calls to its choke() method over a period of time and waits as necessary to fulfill this condition. Was intended to prevent network link saturation if running MainDownloader with many threads, but not really required currently.
 
 -------------------------------------------------------
 
@@ -264,10 +268,26 @@ An interface allowing 'child' clocks to be instantiated from the ExclusiveTimeKe
 
 Miscellaneous:
 
+* src/com/hourglassapps/util/Closer.java.
+Class to facilitate the closing of a number of AutoCloseable resources in a given order
+* src/com/hourglassapps/util/Combinator.java.
+See inline Javadoc comment
+* src/com/hourglassapps/persist/DoneStore.java.
+Store implementation that maintains (URL -> Path) mappings, augmenting them with each invocation of addNew(). The addNew() and addExisting() methods both accept an Ii argument instance corresponding to a source URL and a destination file path. Calling the addExisting() method has the side-effect if the source URL is found in the mappings of symlinking the destination path provided to the path corresponding to the provided source URL in the existing mappings. Our code relies on this behaviour to ensure that each URL returned by Bing is only downloaded once per journal, even if the URL is returned in response to multiple queries.
+* src/com/hourglassapps/cpi_ii/web_search/ExpansionComparator.java.
+A Comparator that allows us to sort unstemmed ngrams according to the frequency of their constituent terms in the Conductus.
 * src/com/hourglassapps/util/FileWrapper.java. A FileWrapper instance creates a file with a static beginning and end (saved as files themselves within the data/ directory) but with a middle section that must be created at runtime.
 * src/com/hourglassapps/util/Filter.java. A single method interface returning a Boolean value in response to a single argument.
 * src/com/hourglassapps/util/Ii.java. Immutable couple implementation.
+* src/com/hourglassapps/util/InputStreamFactory.java.
+Implementations can instantiate a new InputStream wrapping another.
 * src/com/hourglassapps/util/MainHeartBeat.java. Regularly pings a hardcoded website, typically one with near 100% availability. If the ping fails then the all processes corresponding to a list of provided PIDs are killed. This was written to kill the MainDownloader program in the case of network problems. It's a class that will only work on Unix-like systems, but might not be required at all on Window. On Linux if the network interface drops, any sockets depending on it can remain alive whereas on Windows this may not be the case.
+* src/com/hourglassapps/util/Rtu.java.
+Class comprising static utility methods.
+* src/com/hourglassapps/persist/Shortener.java.
+A Converter instance the takes as input a String representing a possibly invalid path (due to filename length or invalid characters) and returns a String representing a valid path. A mapping of input -> output Strings is maintained so that a given input always returns the same output as long as the same series of inputs are provided across different runs. Therefore when utilising a Shortener instance you must ensure that calls to Shortener.convert() are not ever skipped due to, for example, a Journal instance recognising that a particular transaction was previously committed.
+* src/com/hourglassapps/cpi_ii/synonyms
+This package was intended for any classes required for synonym recognition using WordNet. This aspect of the project is incomplete.
 
 -------------------------------------------------------
 
@@ -302,46 +322,23 @@ try {
 
 The ConcreteThrower instance's client can invoke the fallThrough() method anytime to check whether a SomeException instance has been caught. When the ConcreteThrower instance is closed any pending SomeException instance will be thrown
 
--------------------------------------------------------
-
-* src/com/hourglassapps/util/Combinator.java.
-See inline Javadoc comment
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/util/Rtu.java.
-Class comprising static utility methods.
+Stemming:
 
--------------------------------------------------------
-
-* src/com/hourglassapps/util/InputStreamFactory.java.
-Implementations can instantiate a new InputStream wrapping another.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/Closer.java.
-Class to facilitate the closing of a number of AutoCloseable resources in a given order
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/Throttle.java.
-Class to slow down a thread. An instance only allows a limited number of calls to its choke() method over a period of time and waits as necessary to fulfill this condition. Was intended to prevent network link saturation if running MainDownloader with many threads, but not really required currently.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/stem/StemRecorderFilter.java.
-A subclass of Lucene's TokenFilter, instances of StemRecorderFilter maintain mappings between any token read by this TokenFilter and its output token (if any). These mappings can be saved to an OutputStream or restored from one.
-* src/com/hourglassapps/cpi_ii/stem/StempelRecorderFilter.java.
-Subclass of StemRecorderFilter that applies Stempel stemming to input tokens
+* src/com/hourglassapps/cpi_ii/latin/LatinStemmer.java.
+The Schinke Latin stemmer
 * src/com/hourglassapps/cpi_ii/stem/SnowballRecorderFilter.java.
 Subclass of StemRecorderFilter that applies Schinke stemming to input tokens
+* src/com/hourglassapps/cpi_ii/stem/StempelRecorderFilter.java.
+Subclass of StemRecorderFilter that applies Stempel stemming to input tokens
+* src/com/hourglassapps/cpi_ii/stem/StemRecorderFilter.java.
+A subclass of Lucene's TokenFilter, instances of StemRecorderFilter maintain mappings between any token read by this TokenFilter and its output token (if any). These mappings can be saved to an OutputStream or restored from one.
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/cpi_ii/web_search/QueryThread.java.
-When invoking MainDownloader to generate and submit queries for Bing, one or more of these Threads are started. Each one submits queries to Bing and downloads the results (although the downloading itself is delegated to a CloseableHttpAsyncClient instance -- an Apache class).
-
--------------------------------------------------------
+Web searches:
 
 * src/com/hourglassapps/cpi_ii/web_search/AbstractSearchEngine.java.
 Base class to simplify implementing RestrictedSearchEngine
@@ -354,41 +351,32 @@ Interface for objects that query a search engine
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/cpi_ii/web_search/ExpansionComparator.java.
-A Comparator that allows us to sort unstemmed ngrams according to the frequency of their constituent terms in the Conductus.
+Report generation:
 
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/latin/LatinStemmer.java.
-The Schinke Latin stemmer
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/synonyms
-This package was intended for any classes required for synonym recognition using WordNet. This aspect of the project is incomplete.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/report/Queryer.java.
-An instance of this class populates the poems/results directory during report generation.
-The search() method of this class is invoked for each line in the Conductus. It is passed two arguments: the line from the poem and name of the directory in which to save a Javascript file (called links.js) of results data.
-
-A Lucene query is instantiated from the Line instance and the Lucene index that was created while downloading URLs from Bing's result is searched. The following results data is saved to the links.js file for each document in the order of document's rank in the results list: document title, path to local copy the document and a list of absolute start-end character offsets corresponding to query phrase matches within the document.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/report/PoemsReport.java.
-Creates the report, except for the contents of the poems/results subdirectory.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/lucene/Phrase.java.
-The findIn() method of Phrase instances returns an Iterator over DocSpan instances listing all matches to the phrase in a given document.
 * src/com/hourglassapps/cpi_ii/lucene/DocSpan.java.
 A DocSpan instance contains the start and end character offsets to a matching phrase within a relevant document.
+* src/com/hourglassapps/persist/MainHashTagDict.java.
+The HTML report produced by MainReporter contains href links between lines in poems and their corresponding results lists as well as between each individual result and a locally stored text version of the document. Both of these types of href links encode arguments in their hash id as modified Base64 encoded JSON objects. MainHashTagDict implements the encoder that generates these hash ids. It can also decode these hash ids for debugging purposes. The following fields may be included in these JSON objects:
+<pre>
+t: document title,
+f: directory containing results (this is a subdirectory of poems/results/completed),
+n: document rank in results list (the results list can be found in the links.js file within the directory).
+</pre>
+* src/com/hourglassapps/cpi_ii/lucene/Phrase.java.
+The findIn() method of Phrase instances returns an Iterator over DocSpan instances listing all matches to the phrase in a given document.
+* src/com/hourglassapps/cpi_ii/report/PoemsReport.java.
+Creates the report, except for the contents of the poems/results subdirectory.
+* src/com/hourglassapps/cpi_ii/report/Queryer.java.
+An instance of this class populates the poems/results directory during report generation. The search() method is invoked for each line in the Conductus. It is passed two arguments: the line from the poem and name of the directory in which to save a Javascript file (called links.js) of results data. A Lucene query is instantiated from the Line instance and the Lucene index that was created while downloading URLs from Bing's result is searched. The returned results data is saved to the links.js file for each document in the order of document's rank in the results list: document title, path to local copy the document and a list of absolute start-end character offsets corresponding to query phrase matches within the document.
 
 -------------------------------------------------------
 
+Journals
+
+* src/com/hourglassapps/persist/FileCopyJournal.java.
+Journal implementation where a commit results in the creation of a single file. The addNew() method does nothing and the transaction key passed to the addedAlready() and commit() methods is the Path of an existing file.
+* src/com/hourglassapps/persist/FileJournal.java.
+Journal implementation that saves a new file on commit() with each respective line in the file corresponding to an argument passed to the addNew() method.
 * src/com/hourglassapps/persist/Journal.java.
 Implementations provides Atomic / Durable transactions. The usual idiom clients of a Journal (j) implement is:
 <pre>
@@ -400,32 +388,8 @@ foreach allTransactions transaction:
 </pre>
 
 If the process dies before all transactions have been committed then after a restart the process will iterate through the same list of transactions (allTransactions) again, checking in turn whether each transaction has been committed. Any uncommitted transactions are processed anew. Any work done on a transaction before a commit is lost if the process crashes before transaction.commit() takes effect. Whether each transaction in allTransactions is independent of the others, or whether transactions must be committed in a certain order is implementation dependent.
-* src/com/hourglassapps/persist/FileCopyJournal.java.
-Journal implementation where a commit results in the creation of a single file. The addNew() method does nothing and the transaction key passed to the addedAlready() and commit() methods is the Path of an existing file.
-* src/com/hourglassapps/persist/FileJournal.java.
-Journal implementation that saves a new file on commit() with each respective line in the file corresponding to an argument passed to the addNew() method.
 * src/com/hourglassapps/persist/NullJournal.java.
 Journal implementation that does nothing.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/persist/DoneStore.java.
-Store implementation that maintains (URL -> Path) mappings, augmenting them with each invocation of addNew(). The addNew() and addExisting() methods both accept an Ii argument instance corresponding to a source URL and a destination file path. Calling the addExisting() method has the side-effect if the source URL is found in the instance's mapping of symlinking the destination path provided to the path corresponding to the provided source URL in the existing mappings. Our code relies on this behaviour to ensure that each URL returned by Bing is only downloaded once per journal, even if the URL is returned in response to multiple queries.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/persist/MainHashTagDict.java.
-The HTML report produced by MainReporter contains href links between lines in poems and their corresponding results lists as well as between each individual result and a locally stored text version of the document. Both of these types of href links encode arguments in their hash id as modified Base64 encoded JSON objects. MainHashTagDict implements the encoder that generates these hash ids. It can also decode these hash ids for debugging purposes. The following fields may be included in these JSON objects:
-<pre>
-t: document title,
-f: directory containing results (this is a subdirectory of poems/results/completed),
-n: document rank in results list (the results list can be found in the links.js file within the directory).
-</pre>
-
--------------------------------------------------------
-
-* src/com/hourglassapps/persist/Shortener.java.
-A Converter instance the takes as input a String representing a possibly invalid path (due to filename length or invalid characters) and returns a String representing a valid path. A mapping of input -> output Strings is maintained so that a given input always returns the same output as long as the same series of inputs are provided across different runs. Therefore when utilising a Shortener instance you must ensure that calls to Shortener.convert() are not ever skipped due to, for example, a Journal instance recognising that a particular transaction was previously committed.
 
 References
 ==========
