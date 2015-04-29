@@ -382,13 +382,13 @@ Class to slow down a thread. An instance only allows a limited number of calls t
 Web searches:
 
 * src/com/hourglassapps/cpi_ii/web_search/AbstractSearchEngine.java.
-Base class to simplify implementing RestrictedSearchEngine
+Base class to simplify implementing RestrictedSearchEngine.
 * src/com/hourglassapps/cpi_ii/web_search/bing/BingSearchEngine.java.
-RestrictedSearchEngine implementation for interacting with Bing
+RestrictedSearchEngine implementation for interacting with Bing.
 * src/com/hourglassapps/cpi_ii/web_search/RestrictedSearchEngine.java.
-Implementations can query a search engine, but also formulate a query to filter out certain results (e.g. URLs from sites we are not interested in)
+Implementations can query a search engine, but also formulate a query to filter out certain results (e.g. URLs from sites we are not interested in).
 * src/com/hourglassapps/cpi_ii/web_search/SearchEngine.java.
-Interface for objects that query a search engine
+Interface for objects that query a search engine.
 
 References
 ==========
