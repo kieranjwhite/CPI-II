@@ -6,14 +6,16 @@ Introduction
 
 The objective of the mini-project Medieval Music, Big Data and the Research Blend (http://www.southampton.ac.uk/music/news/2014/04/11_medieval_music_big_data_and_research_blend.page) is to identify the purpose of the Conductus, a corpus of almost 900 thirteenth-century Latin poems variably set to monophonic and polyphonic music. The known manuscript sources of the Conductus (i.e. organised collections of music and poetry) do not provide much information about the significance and scope of the genre.
 
-Manual text searches of web pages led to the discovery by members of the Cantum pulcriorem invenire (http://www.southampton.ac.uk/music/research/projects/cantum_pulcriorem_invenire.page) research project of text from the poem "Naturas Deus regulis" on the Web. This in turn inspired the development of a more systematic and automated approach to searching for online references to more Conductus material: this project. The goal was to automatically generate a report listing likely references to poems in the Conductus from the World Wide Web. The project can be broken into a number of subtasks:
+Manual text searches of web pages led to the discovery by members of the Cantum pulcriorem invenire (http://www.southampton.ac.uk/music/research/projects/cantum_pulcriorem_invenire.page) research project of text from the poem "Naturas Deus regulis" within unexpected sources on the Web. This in turn inspired the development of a more systematic and automated approach to searching for extracts of Conductus texts online: this project. The goal was to automatically generate a report listing likely references to poems of the Conductus on the World Wide Web. The project can be broken into a number of subtasks:
 
 (1) Developing and identifying the tools necessary to index and search Latin documents.<br>
 (2a) Generating a list of search engine queries for the purpose of obtaining a list of as many potentially relevant online documents as possible.<br>
 (2b) Submitting these queries to a search engine and then downloading and indexing the relevant documents.<br>
 (3) Interrogating these downloaded documents with Lucene and generating a final report from the results.<br>
 
-Descriptions of how we completed each of these steps as well as how another person can avail of this codebase to accomplish the same tasks are provided below. Each sub-task above depends on the successful completion of the tasks preceding it. There are a number of other possible uses for this codebase and we will also explain how to perform these in more detail:
+Descriptions of how we completed each of these steps as well as how another person can avail of this codebase to accomplish the same tasks are provided below. Each sub-task above depends on the successful completion of the tasks preceding it.
+
+We will also explain how to accomplish the following objectives:
 
 (4) Regenerating a report at a later date.<br>
 (5) Modifying the codebase to generate reports for other collections of Latin poetry.<br>
