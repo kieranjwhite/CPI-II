@@ -363,7 +363,7 @@ Threading:
 * src/com/hourglassapps/util/AsyncExpansionReceiver.java.
 Receives a list of elements (3 long for trigrams) corresponding to a single permutation of unstemmed terms for the current stemmed trigram via the onExpansion method.
 An AsyncExpansionReceiver instance is notified when the permutations of the current stemmed trigram are exhausted by the onGroupDone() method being invoked.
-* src/com/hourglassapps/util/ExpansionDistributor.java. Receives ngrams via it's implemention of ExpansionReceiver methods and then redistributes them to other ExpansionReceives passed as an argument during the ExpansionDistributor's instantiation. This is part of our infrastructure for distributing queries among threads.
+* src/com/hourglassapps/util/ExpansionDistributor.java. Receives ngrams via it's implemention of ExpansionReceiver methods and then redistributes them to other ExpansionReceivers passed as an argument during the ExpansionDistributor's instantiation. This is part of our infrastructure for distributing queries among threads.
 * src/com/hourglassapps/threading/FilterTemplate.java.
 Converts a task representation (e.g. a list of trigrams for submission to Bing) to a ThreadFunction that selects a thread to process the task.
 * src/com/hourglassapps/threading/ThreadFunction.java.
