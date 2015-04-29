@@ -331,7 +331,7 @@ Report generation:
 * src/com/hourglassapps/cpi_ii/lucene/DocSpan.java.
 A DocSpan instance contains the start and end character offsets to a matching phrase within a relevant document.
 * src/com/hourglassapps/persist/MainHashTagDict.java.
-The HTML report produced by MainReporter contains href links between lines in poems and their corresponding results lists as well as between each individual result and a locally stored text version of the document. Both of these types of href links encode arguments in their hash id as modified Base64 encoded JSON objects. MainHashTagDict implements the encoder that generates these hash ids. It can also decode these hash ids for debugging purposes. The following fields may be included in these JSON objects:
+The HTML report produced by MainReporter contains href links between lines in poems and their corresponding results lists as well as between each individual result and a locally stored text version of the document. Both of these types of href links encode arguments in their hash id as modified Base64 encoded JSON objects. MainHashTagDict implements the encoder that generates these hash ids. It can also decode these hash ids for debugging purposes. The following fields are currently included in these JSON objects:
 <pre>
 t: document title,
 f: directory containing results (this is a subdirectory of poems/results/completed),
