@@ -127,13 +127,13 @@ Any files with names beginning with a single underscore ('_') character contain 
 (3) Interrogating these downloaded documents and generating a final report from the results
 ===========================================================================================
 
-An individual query was generated from most lines of text in the Conductus. The lines were tokenised and the remaining terms were stemmed as above. A phrasal search was performed in Lucene for each query where a match between a query and document was only recognised where all stemmed terms in a line were found adjacent to each other and in the same order in an indexed document. A ranked list of up to 100 results were generated in this manner for each line in the collection except for poem titles and those lines containing a single word.
+An individual query was generated from lines of text in the Conductus. The lines were tokenised and the remaining terms were stemmed as above. A phrasal search was performed in Lucene for each query where a match between a query and document was only recognised where all stemmed terms in a line, were found adjacent to each other and in the same order in an indexed document. A ranked list of up to 100 results were generated in this manner for each line in the collection except for poem titles and those lines containing a single word.
 
 Lines containing a single word were not considered sufficiently discriminatory. Therefore for these lines two phrases were generated, one where the the single word line was appended to its preceding line and the other where it prefixed its succeeding line. These two phrases then comprised a single Boolean query of two disjunctions from which up to 100 matching documents were generated.
 
 Poem titles were also treated differently. As these were typically identical to the first line of a poem, generating a query as above would usually result in a redundant list of results. Therefore this time phrases were generated for all other lines in the poem in the manner described above and the query presented to Lucene comprised all these phrases. The returned results could then be considered to be those documents most similar to the poem as a whole.
 
-Finally a HTML report was generated for the user linking all lines in each poem to a matching list of results. For the full complement of 65490 queries this should take approximately 1-2 days. As we were linking lines from poems to lists of relevant documents we needed to format each poem on the screen. Since the Conductus JSON export did not retain any newline information for the poems' content we had to rely of the Conductus XML export instead. The report contained links to relevant documents as well as links to local versions of those documents so that if the original documents were ever taken down, the user would still have a local copy available.
+Finally a HTML report was generated for the user linking all lines in each poem to a matching list of results. As we were linking lines from poems to lists of relevant documents we needed to format each poem on the screen. Since the Conductus JSON export did not retain any newline information for the poems' content we had to rely of the Conductus XML export instead. The report contained links to relevant documents as well as links to local versions of those documents so that if the original documents were ever taken down, the user would still have local copies available.
 
 We wished to filter out certain known URLs such as diamm.ac.uk and chmtl.indiana.edu/tml and this task was performed by a simple Javascript function within the report itself, allowing the set of blacklisted sites to be changed easily at a later date. Filtering blacklisted sites could also have been attempted when submitting queries to Bing and doing so would have saved us downloading and indexing blacklisted documents. However attempts to apply filtering when querying the search engine were not consistently successful: for some queries Bing seemingly interpreted the additional "AND NOT site:..." Boolean clauses to be additional desired keywords.
 
@@ -145,11 +145,11 @@ The report can be generated with the command:
 
 java -Xmx1700m -ea -cp lib/guava-18.0.jar:lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.MainReporter <CONDUCTUS_XML_EXPORT_PATH>
 
-This command takes as input the XML export of the Conductus as well as the directory of downloaded documents and Lucene index produced by the previous step. The result is a HTML report relying on some Javascript saved to the ./poems directory. Any static content (files or parts of files) will have been copied from the data/com/hourglassapps/cpi_ii/report/ directory of the git repository. The blacklist.js file in that directory may be of particular interest as it includes a list of regular expressions matching all blacklisted sites that have been determined not be of interest to the user. Changing this list will change which URLs are deemed to have been blacklisted.
+This command takes as input the XML export of the Conductus as well as the directory of downloaded documents and the Lucene index produced by the previous step. The result is a HTML report relying on some Javascript saved to the ./poems directory. Any static content (files or parts of files) will have been copied from the data/com/hourglassapps/cpi_ii/report/ directory of the git repository. The blacklist.js file in that directory may be of particular interest as it includes a list of regular expressions matching all blacklisted sites that have been determined not be of interest to the user. Changing this list will change which URLs are deemed to have been blacklisted.
 
 When viewing the report you will need to ensure that the "poems" directory shares a directory with the "documents" directory of the previous step, as the report retrieves the original URLs from the "documents" directory's URL files. If disk space is limited, it is possible to view the report even if the downloaded files themselves (ie those with names starting with a number within the "documents" directory) and the "download_index" have been deleted. Those particular files and directories are not needed to view the report.
 
-Please note that MainReporter requires an unusually large heap size (as specified by the -Xmx1700m switch). This is due to its caching of Lucene document vectors during report generation. If required the size of this cache (and consequently the maximum heap size) can be reduced by changing the value of the static field Query.NUM_CACHE_ENTRIES. Obviously this may affect the speed with which the report is generated. However it might be worthwhile evaluating the effectiveness of this cache and optimising the report generation algorithm as there was not sufficient time to adequately optimise the report generator prior the the conclusion of my contribution to this project.
+Please note that MainReporter requires an unusually large heap size (as specified by the -Xmx1700m switch). This is due to its caching of Lucene document vectors during report generation. If required the size of this cache (and consequently the maximum heap size) can be reduced by changing the value of the static field Query.NUM_CACHE_ENTRIES. Obviously this may affect the speed with which the report is generated. It might also be worthwhile evaluating the effectiveness of this cache and optimising the report generation algorithm as there was not sufficient time to adequately optimise the report generator prior the conclusion of my contribution to this project.
 
 The report can be viewed by opening the poems/poems.html file in a web browser. Due to restrictions imposed by browsers on the viewing of locally stored files you may need to configure your browser to relax these security precautions. If viewing the report in Chrome (or Chromium) you will need to launch the browser with the --allow-file-access-from-files switch. In Firefox a configuration option needs to be changed as follows:
 
@@ -169,13 +169,13 @@ Opening your browser at http://localhost:8000/poems/poems.html will now display 
 (4) Regenerating a report at a later date
 =========================================
 
-Sometimes a user will create a report as described above, but at a later date wish to create another with any previously downloaded URLs filtered out. This will reduce the effort involved in manually inspecting all snippets in the new report. The first step in doing so is to invoke the following:
+Sometimes a user will create a report as described above, but at a later date wish to create another with any previously downloaded URLs filtered out. This will reduce the number of snippets that need to be inspected in the new report. The first step in doing so is to invoke the following:
 
-mv poems old_poems
-mv documents old_documents
+mv poems old_poems<br>
+mv documents old_documents<br>
 java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.blacklist.MainBlacklistReported old_poems/ old_documents/ > poems_urls.txt
 
-This will first move the report (in the poems directory) and its constituent documents (in the documents directory) out of the way and then save a list of all URLs in the report to the poems_urls.txt file. The command needs to be able to access the directory of downloaded documents too so this must be provided as one of the arguments. The file poems_urls.txt is merely a text file of all URLs that comprise the reports source documents. Files like this can be concatenated into one larger file if if the user wishes to filter out URLs from multiple earlier reports.
+This will first move the report (in the poems directory) and its constituent documents (in the documents directory) out of the way and then save a list of all URLs in the report to the poems_urls.txt file. The command needs to be able to access the directory of downloaded documents too so this must be provided as one of the arguments. The file poems_urls.txt is merely a text file of all URLs that comprise the report's source documents. Files like this can be concatenated into one larger file if if the user wishes to filter out URLs from multiple earlier reports.
 
 Now when finally downloading documents for the latest report you use a command similar to this:
 
@@ -185,16 +185,16 @@ When reading the results returned by Bing this command will not download any URL
 
 java -Xmx1700m -ea -cp lib/guava-18.0.jar:lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-analyzers-stempel-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:lib/commons-logging-1.1.3.jar:lib/httpclient-4.3.5.jar:lib/httpcore-4.3.2.jar:lib/httpasyncclient-4.0.2.jar:lib/httpcore-nio-4.3.2.jar:lib/commons-codec-1.9.jar:lib/commons-io-2.4.jar:lib/tika-app-1.6.jar:bin:data com.hourglassapps.cpi_ii.report.MainReporter <CONDUCTUS_XML_EXPORT_PATH>
 
-(5) Modifying the codebase to generate reports for alternative repertories
-==========================================================================
+(5) Modifying the codebase to generate reports for other collections of Latin poetry
+====================================================================================
 
 <h3>Outline</h3>
 
-Steps 2 and 3 above require changes to be made to the codebase in order to operate on a different collection. Firstly, the MainIndexConductus class which indexes the collection must be altered to facilitate the generation of n-grams and consequently the downloading and indexing of the documents listed in Bing results. Secondly, minor modifications must be made to the MainReporter class to allow the final report to be generated.
+Changes must be made to the codebase prior to performing Steps 2 and 3 above on a different collection. Firstly, the MainIndexConductus class which indexes the collection must be altered to facilitate the generation of n-grams and the downloading and indexing of the documents listed in Bing results. Secondly modifications must be made to the MainReporter class to allow the final report to be generated.
 
 <h3>Altering MainIndexConductus</h3>
 
-MainIndexConductus currently employs a parser, JSONParser to read the collection and generate a series of Id-Content couples. The Id in each couple is a Long instance and a unique identifier for an individual poem as defined by the collection. The Content is a String and as the name suggests in each case is the words of poem itself. You will need to modify MainIndexConductus to allow it to parse your collection (a file specified by the mInput field) by modifying the indexById method. In this method instantiate a parser that implements a ThrowableIterator that iterates through a series of Id-Content couples of the type Record<Long, String> by replacing the
+MainIndexConductus currently employs a parser, JSONParser, to read the collection and generate a series of Id-Content couples. The Id in each couple is a Long instance and a unique identifier for an individual poem as defined by the collection. The Content is a String and as the name suggests in each case is the words of poem itself. You will need to modify MainIndexConductus to allow it to parse your collection (a file specified by the mInput field) by modifying the indexById method. In this method instantiate a parser that implements a ThrowableIterator that iterates through a series of Id-Content couples of the type Record<Long, String> by replacing the
 <pre>
 JSONParser<Long,String,PoemRecord> parser=...
 </pre>
@@ -209,7 +209,7 @@ After making these changes you should be able to perform Step 2 above on your co
 
 <h3>Changes to MainReporter</h3>
 
-MainReporter also relies on a parser, PoemRecordXMLParser. Ideally this would have been the same parser as we used earlier (JSONParser) but during development we discovered that the Conductus JSON export lacked the some of the information we needed to create a presentable report so instead we turned to the Conductus XML export in order to complete our task. Assuming that you have a single export of your collection with all the information you require, then a single parser should suffice.
+MainReporter also relies on a parser, PoemRecordXMLParser. Ideally this would have been the same parser as we used earlier (JSONParser) but during development we discovered that the Conductus JSON export lacked some of the information we needed to create a presentable report so instead we turned to the Conductus XML export in order to complete our task. Assuming that you have a single export of your collection with all the information you require, then a single parser should suffice.
 
 You need to alter the create method. Similarly to before, change the line
 <pre>
@@ -229,72 +229,18 @@ Now Step 3 can also be run on your collection.
 Description of selected classes
 ===============================
 
-* src/com/hourglassapps/threading/FilterTemplate.java.
-Converts a task representation (eg a list of trigrams for submission to Bing) to a ThreadFunction that selects a thread to process the task.
-* src/com/hourglassapps/threading/ThreadFunction.java.
-Interface for any object that determines which thread is responsible for a given task. An instance of FilterTemplate will generate a ThreadFunction instance from a representation of a task. In the case of our MainDownloader program, this is how Boolean queries are distributed between QueryThread instances. Tasks are represented as a list of ngrams.
-* src/com/hourglassapps/threading/HashTemplate.java.
-Instantiates a ThreadFunction that accepts a different thread depending on the hashCode() of the argument passed to the HashTemplate.convert() method.
-* src/com/hourglassapps/threading/JobDelegator.java.
-This is instantiated with a FilterTemplate which it converts to one or more Filter instances (one per thread typically). These filters accept a task (eg a list of ngrams for submission to Bing) and return a boolean value to indicate whether a given thread should accept responsibility for the task.
+Asynchronous method invocation and results:
 
--------------------------------------------------------
-
-* src/com/hourglassapps/util/Promiser.java.
 Promises are a concept more commonly associated with Javascript (see http://blog.parse.com/2013/01/29/whats-so-great-about-javascript-promises/) and are an attempt to simplify the handling of results of asynchronous methods. Usually asynchronous methods deliver their results via a myriad of different callbacks and make it difficult to structure code in a manner which is readable. Promises provide a consistent API allowing the developer to structure asynchronous method calls in a manner that is reminiscent of synchronous code.
 
-This codebase relies on a Java implementation of Promises known as the jdeferred library. Asynchronous results are generated by invoking methods such as notify, resolve or reject on the DeferredObject and the Promise is the interface through which these results can be passed to other objects. It desirable then that the DeferredObject remains private while the promise is publicly available. The Promiser interface provides a public method for an object that manages a DeferredObject to return a Promise. 
+* src/com/hourglassapps/util/Promiser.java. This codebase relies on a Java implementation of Promises known as the jdeferred library. Asynchronous results are generated by invoking methods such as notify, resolve or reject on the DeferredObject and the Promise is the interface through which these results can be passed to other objects. It desirable then that the DeferredObject remains private while the promise is publicly available. The Promiser interface provides a public method returning the Promise of an object that manages a DeferredObject.
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/util/Ii.java.
-Immutable couple implementation.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/ExclusiveTimeKeeper.java.
-A class for measuring the length of time it takes to execute blocks of code. Instantiate the ExclusiveTimeKeeper object at the beginning of a try block in a try-with-resources statement. When the block closes, the timer is paused until the block is entered again. Sub-blocks, also surrounded by try statements, allow for further, more fine-grained, timing information to be recorded. Times recorded in sub-blocks are subtracted from the times associated with the outer-block -- hence the name ExclusiveTimeKeeper.
-* src/com/hourglassapps/util/Clock.java.
-An interface allowing 'child' clocks to be instantiated from the ExclusiveTimeKeeper instance as well any other Clock.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/ExpansionDistributor.java.
-<pre>
-For all queries:
-    Receives an unsorted list of ngrams corresponding to a single Boolean query for Bing and
-    Sorts them according to a provided Comparator.
-
-Later For all the sorted queries:
-    The query is distributed to a single QueryThread which generates and submits a Bing query.
-    Once the query's top results are all downloaded the ExpansionDistributer instance notifies
-     any waiting clients (in our code this will be a single IndexingThread instance) of the
-     newly saved documents that require indexing.
-</pre>
-* src/com/hourglassapps/util/AsyncExpansionReceiver.java.
-Receives a list of elements (3 long for trigrams) corresponding to a single permutation of unstemmed terms for the current stemmed trigram via the onExpansion method.
-An AsyncExpansionReceiver instance is notified when the permutations of the current stemmed trigram are exhausted by the onGroupDone() method being invoked.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/MainHeartBeat.java.
-Regularly pings a hardcoded website, typically one with near 100% availability. If the ping fails then the all processes corresponding to a list of provided PIDs are killed.
-This was written to kill the MainDownloader program in the case of network problems. It's a class that will only work on Unix-like systems, but might not be required at all on Window. On Linux if the network interface drops any sockets depending on it can remain alive whereas on Windows this may not to be the case.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/Filter.java.
-A single method interface returning a Boolean value in response to a single argument.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/FileWrapper.java.
-A FileWrapper instance creates a file with a static beginning and end (saved as files themselves within the data/ directory) but with a middle section that must be created at runtime.
-
--------------------------------------------------------
+Exception handling:
 
 * src/com/hourglassapps/util/ConcreteThrower.java.
-An attempt to solve the problem of interface or subclass implementations that throw exceptions within an overridden method that are not permitted by the interface / superclass. Intended usage is as follows.
+An attempt to solve the problem of interface implementations or subclasses that throw exceptions within an overridden method that are not permitted by the interface / superclass. Intended usage is as follows.
 
 Within a method that does not permit SomeException to be thrown:
 <pre>
@@ -324,91 +270,12 @@ The ConcreteThrower instance's client can invoke the fallThrough() method anytim
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/util/Combinator.java.
-See inline Javadoc comment
+Journals:
 
--------------------------------------------------------
-
-* src/com/hourglassapps/util/Rtu.java.
-Class comprising static utility methods.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/InputStreamFactory.java.
-Implementations can instantiate a new InputStream wrapping another.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/Closer.java.
-Class to facilitate the closing of a number of AutoCloseable resources in a given order
-
--------------------------------------------------------
-
-* src/com/hourglassapps/util/Throttle.java.
-Class to slow down a thread. An instance only allows a limited number of calls to its choke() method over a period of time and waits as necessary to fulfill this condition. Was intended to prevent network link saturation if running MainDownloader with many threads, but not really required currently.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/stem/StemRecorderFilter.java.
-A subclass of Lucene's TokenFilter, instances of StemRecorderFilter maintain mappings between any token read by this TokenFilter and its output token (if any). These mappings can be saved to an OutputStream or restored from one.
-* src/com/hourglassapps/cpi_ii/stem/StempelRecorderFilter.java.
-Subclass of StemRecorderFilter that applies Stempel stemming to input tokens
-* src/com/hourglassapps/cpi_ii/stem/SnowballRecorderFilter.java.
-Subclass of StemRecorderFilter that applies Schinke stemming to input tokens
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/web_search/QueryThread.java.
-When invoking MainDownloader to generate and submit queries for Bing, one or more of these Threads are started. Each one submits queries to Bing and downloads the results (although the downloading itself is delegated to a CloseableHttpAsyncClient instance -- an Apache class).
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/web_search/AbstractSearchEngine.java.
-Base class to simplify implementing RestrictedSearchEngine
-* src/com/hourglassapps/cpi_ii/web_search/bing/BingSearchEngine.java.
-RestrictedSearchEngine implementation for interacting with Bing
-* src/com/hourglassapps/cpi_ii/web_search/RestrictedSearchEngine.java.
-Implementations can query a search engine, but also formulate a query to filter out certain results (e.g. URLs from sites we are not interested in)
-* src/com/hourglassapps/cpi_ii/web_search/SearchEngine.java.
-Interface for objects that query a search engine
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/web_search/ExpansionComparator.java.
-A Comparator that allows us to sort unstemmed ngrams according to the frequency of their constituent terms in the Conductus.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/latin/LatinStemmer.java.
-The Schinke Latin stemmer
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/synonyms
-This package was intended for any classes required for synonym recognition using WordNet. This aspect of the project is incomplete.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/report/Queryer.java.
-An instance of this class populates the poems/results directory during report generation.
-The search() method of this class is invoked for each line in the Conductus. It is passed two arguments: the line from the poem and name of the directory in which to save a Javascript file (called links.js) of results data.
-
-A Lucene query is instantiated from the Line instance and the Lucene index that was created while downloading URLs from Bing's result is searched. The following results data is saved to the links.js file for each document in the order of document's rank in the results list: document title, path to local copy the document and a list of absolute start-end character offsets corresponding to query phrase matches within the document.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/report/PoemsReport.java.
-Creates the report, except for the contents of the poems/results subdirectory.
-
--------------------------------------------------------
-
-* src/com/hourglassapps/cpi_ii/lucene/Phrase.java.
-The findIn() method of Phrase instances returns an Iterator over DocSpan instances listing all matches to the phrase in a given document.
-* src/com/hourglassapps/cpi_ii/lucene/DocSpan.java.
-A DocSpan instance contains the start and end character offsets to a matching phrase within a relevant document.
-
--------------------------------------------------------
-
+* src/com/hourglassapps/persist/FileCopyJournal.java.
+Journal implementation where a commit results in the creation of a single file. The addNew() method does nothing and the transaction key passed to the addedAlready() and commit() methods is the Path of an existing file.
+* src/com/hourglassapps/persist/FileJournal.java.
+Journal implementation that saves a new file on commit() with each respective line in the file corresponding to an argument passed to the addNew() method.
 * src/com/hourglassapps/persist/Journal.java.
 Implementations provides Atomic / Durable transactions. The usual idiom clients of a Journal (j) implement is:
 <pre>
@@ -420,32 +287,108 @@ foreach allTransactions transaction:
 </pre>
 
 If the process dies before all transactions have been committed then after a restart the process will iterate through the same list of transactions (allTransactions) again, checking in turn whether each transaction has been committed. Any uncommitted transactions are processed anew. Any work done on a transaction before a commit is lost if the process crashes before transaction.commit() takes effect. Whether each transaction in allTransactions is independent of the others, or whether transactions must be committed in a certain order is implementation dependent.
-* src/com/hourglassapps/persist/FileCopyJournal.java.
-Journal implementation where a commit results in the creation of a single file. The addNew() method does nothing and the transaction key passed to the addedAlready() and commit() methods is the Path of an existing file.
-* src/com/hourglassapps/persist/FileJournal.java.
-Journal implementation that saves a new file on commit() with each respective line in the file corresponding to an argument passed to the addNew() method.
 * src/com/hourglassapps/persist/NullJournal.java.
 Journal implementation that does nothing.
 
 -------------------------------------------------------
 
+Miscellaneous:
+
+* src/com/hourglassapps/util/Closer.java.
+Class to facilitate the closing of a number of AutoCloseable resources in a given order
+* src/com/hourglassapps/util/Combinator.java.
+See inline Javadoc comment
 * src/com/hourglassapps/persist/DoneStore.java.
-Store implementation that maintains (URL -> Path) mappings, augmenting them with each invocation of addNew(). The addNew() and addExisting() methods both accept an Ii argument instance corresponding to a source URL and a destination file path. Calling the addExisting() method has the side-effect if the source URL is found in the instance's mapping of symlinking the destination path provided to the path corresponding to the provided source URL in the existing mappings. Our code relies on this behaviour to ensure that each URL returned by Bing is only downloaded once per journal, even if the URL is returned in response to multiple queries.
+Store implementation that maintains (URL -> Path) mappings, augmenting them with each invocation of addNew(). The addNew() and addExisting() methods both accept an Ii argument instance corresponding to a source URL and a destination file path. Calling the addExisting() method has the side-effect if the source URL is found in the mappings of symlinking the destination path provided to the path corresponding to the provided source URL in the existing mappings. Our code relies on this behaviour to ensure that each URL returned by Bing is only downloaded once per journal, even if the URL is returned in response to multiple queries.
+* src/com/hourglassapps/cpi_ii/web_search/ExpansionComparator.java.
+A Comparator that allows us to sort unstemmed ngrams according to the frequency of their constituent terms in the Conductus.
+* src/com/hourglassapps/util/FileWrapper.java. A FileWrapper instance creates a file with a static beginning and end (saved as files themselves within the data/ directory) but with a middle section that must be created at runtime.
+* src/com/hourglassapps/util/Filter.java. A single method interface returning a Boolean value in response to a single argument.
+* src/com/hourglassapps/util/Ii.java. Immutable couple implementation.
+* src/com/hourglassapps/util/InputStreamFactory.java.
+Implementations can instantiate a new InputStream wrapping another.
+* src/com/hourglassapps/util/MainHeartBeat.java. Regularly pings a hardcoded website, typically one with near 100% availability. If the ping fails then the all processes corresponding to a list of provided PIDs are killed. This was written to kill the MainDownloader program in the case of network problems. It's a class that will only work on Unix-like systems, but might not be required at all on Window. On Linux if the network interface drops, any sockets depending on it can remain alive whereas on Windows this may not be the case.
+* src/com/hourglassapps/util/Rtu.java.
+Class comprising static utility methods.
+* src/com/hourglassapps/persist/Shortener.java.
+A Converter instance the takes as input a String representing a possibly invalid path (due to filename length or invalid characters) and returns a String representing a valid path. A mapping of input -> output Strings is maintained so that a given input always returns the same output as long as the same series of inputs are provided across different runs. Therefore when utilising a Shortener instance you must ensure that calls to Shortener.convert() are not ever skipped due to, for example, a Journal instance recognising that a particular transaction was previously committed.
+* src/com/hourglassapps/cpi_ii/synonyms
+This package was intended for any classes required for synonym recognition using WordNet. This aspect of the project is incomplete.
 
 -------------------------------------------------------
 
+Profiling aids:
+
+* src/com/hourglassapps/util/ExclusiveTimeKeeper.java.
+A class for measuring the length of time it takes to execute blocks of code. Instantiate the ExclusiveTimeKeeper object at the beginning of a try block in a try-with-resources statement. When the block closes, the timer is paused until the block is entered again. Sub-blocks, also surrounded by try statements, allow for further, more fine-grained, timing information to be recorded. Times recorded in sub-blocks are subtracted from the times associated with the outer-block -- hence the name ExclusiveTimeKeeper.
+* src/com/hourglassapps/util/Clock.java.
+An interface allowing 'child' clocks to be instantiated from the ExclusiveTimeKeeper instance as well any other Clock.
+
+-------------------------------------------------------
+
+Report generation:
+
+* src/com/hourglassapps/cpi_ii/lucene/DocSpan.java.
+A DocSpan instance contains the start and end character offsets to a matching phrase within a relevant document.
 * src/com/hourglassapps/persist/MainHashTagDict.java.
-The HTML report produced by MainReporter contains href links between lines in poems and their corresponding results lists as well as between each individual result and a locally stored text version of the document. Both of these types of href links encode arguments in their hash id as modified Base64 encoded JSON objects. MainHashTagDict implements the encoder that generates these hash ids. It can also decode these hash ids for debugging purposes. The following fields may be included in these JSON objects:
+The HTML report produced by MainReporter contains href links between lines in poems and their corresponding results lists as well as between each individual result and a locally stored text version of the document. Both of these types of href links encode arguments in their hash id as modified Base64 encoded JSON objects. MainHashTagDict implements the encoder that generates these hash ids. It can also decode these hash ids for debugging purposes. The following fields are currently included in these JSON objects:
 <pre>
 t: document title,
 f: directory containing results (this is a subdirectory of poems/results/completed),
 n: document rank in results list (the results list can be found in the links.js file within the directory).
 </pre>
+* src/com/hourglassapps/cpi_ii/lucene/Phrase.java.
+The findIn() method of Phrase instances returns an Iterator over DocSpan instances listing all matches to the phrase in a given document.
+* src/com/hourglassapps/cpi_ii/report/PoemsReport.java.
+Creates the report, except for the contents of the poems/results subdirectory.
+* src/com/hourglassapps/cpi_ii/report/Queryer.java.
+An instance of this class populates the poems/results directory during report generation. The search() method is invoked for each line in the Conductus. It is passed two arguments: the line from the poem and name of the directory in which to save a Javascript file (called links.js) of results data. A Lucene query is instantiated from the Line instance and the Lucene index that was created while downloading URLs from Bing. This query is searched and the following results data is saved to the links.js file for each document in the order of document's rank in the results list: document title, path to local copy of the document and a list of absolute start-end character offsets corresponding to query phrase matches within the document.
 
 -------------------------------------------------------
 
-* src/com/hourglassapps/persist/Shortener.java.
-A Converter instance the takes as input a String representing a possibly invalid path (due to filename length or invalid characters) and returns a String representing a valid path. A mapping of input -> output Strings is maintained so that a given input always returns the same output as long as the same series of inputs are provided across different runs. Therefore when utilising a Shortener instance you must ensure that calls to Shortener.convert() are not ever skipped due to, for example, a Journal instance recognising that a particular transaction was previously committed.
+Stemming:
+
+* src/com/hourglassapps/cpi_ii/latin/LatinStemmer.java.
+The Schinke Latin stemmer.
+* src/com/hourglassapps/cpi_ii/stem/SnowballRecorderFilter.java.
+Subclass of StemRecorderFilter that applies Schinke stemming to input tokens.
+* src/com/hourglassapps/cpi_ii/stem/StempelRecorderFilter.java.
+Subclass of StemRecorderFilter that applies Stempel stemming to input tokens.
+* src/com/hourglassapps/cpi_ii/stem/StemRecorderFilter.java.
+A subclass of Lucene's TokenFilter, instances of StemRecorderFilter maintain mappings between any token read by this TokenFilter and its output token (if any). These mappings can be saved to an OutputStream or restored from one.
+
+-------------------------------------------------------
+
+Threading:
+* src/com/hourglassapps/util/AsyncExpansionReceiver.java.
+Receives a list of elements (3 long for trigrams) corresponding to a single permutation of unstemmed terms for the current stemmed trigram via the onExpansion method.
+An AsyncExpansionReceiver instance is notified when the permutations of the current stemmed trigram are exhausted by the onGroupDone() method being invoked.
+* src/com/hourglassapps/util/ExpansionDistributor.java. Receives ngrams via it's implemention of ExpansionReceiver methods and then redistributes them to other ExpansionReceivers passed as an argument during the ExpansionDistributor's instantiation. This is part of our infrastructure for distributing queries among threads.
+* src/com/hourglassapps/threading/FilterTemplate.java.
+Converts a task representation (e.g. a list of trigrams for submission to Bing) to a ThreadFunction that selects a thread to process the task.
+* src/com/hourglassapps/threading/ThreadFunction.java.
+Interface for any object that determines which thread is responsible for a given task. An instance of FilterTemplate will generate a ThreadFunction instance from a representation of a task. In the case of our MainDownloader program, this is how Boolean queries are distributed between QueryThread instances. Tasks are represented as a list of ngrams.
+* src/com/hourglassapps/threading/HashTemplate.java.
+Instantiates a ThreadFunction that accepts a different thread depending on the hashCode() of the argument passed to the HashTemplate.convert() method.
+* src/com/hourglassapps/threading/JobDelegator.java.
+This is instantiated with a FilterTemplate which it converts to one or more Filter instances (one per thread typically). These filters accept a task (e.g. a list of ngrams for submission to Bing) and return a boolean value to indicate whether a given thread should accept responsibility for the task.
+* src/com/hourglassapps/cpi_ii/web_search/QueryThread.java.
+When invoking MainDownloader to generate and submit queries for Bing, one or more of these Threads are started. Each one submits queries to Bing and downloads the results (although the downloading itself is delegated to a CloseableHttpAsyncClient instance -- an Apache class).
+* src/com/hourglassapps/util/Throttle.java.
+Class to slow down a thread. An instance only allows a limited number of calls to its choke() method over a period of time and waits as necessary to fulfill this condition. Was intended to prevent network link saturation if running MainDownloader with many threads, but not really required currently.
+
+-------------------------------------------------------
+
+Web searches:
+
+* src/com/hourglassapps/cpi_ii/web_search/AbstractSearchEngine.java.
+Base class to simplify implementing RestrictedSearchEngine.
+* src/com/hourglassapps/cpi_ii/web_search/bing/BingSearchEngine.java.
+RestrictedSearchEngine implementation for interacting with Bing.
+* src/com/hourglassapps/cpi_ii/web_search/RestrictedSearchEngine.java.
+Implementations can query a search engine, but also formulate a query that filters out certain results (e.g. URLs from sites we are not interested in).
+* src/com/hourglassapps/cpi_ii/web_search/SearchEngine.java.
+Interface for objects that query a search engine.
 
 References
 ==========
@@ -475,6 +418,3 @@ Linguistic resources
 
 Perseus treebank (http://nlp.perseus.tufts.edu/syntax/treebank/ldt/1.5/ldt-1.5.tar.gz): training Latin stemming model for Stempel.<br>
 Latin stoplist from the Perseus Hopper project (http://sourceforge.net/projects/perseus-hopper/files/perseus-hopper/hopper-20110527/hopper-source-20110527.tar.gz/download): 92 common Latin words.<br>
-
-//  LocalWords:  tokenised treebank disjunction unstemmed prioritised
-LocalWords:  Conductus
