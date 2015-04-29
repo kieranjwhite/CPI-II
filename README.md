@@ -271,6 +271,8 @@ Miscellaneous:
 
 -------------------------------------------------------
 
+Exception handling:
+
 * src/com/hourglassapps/util/ConcreteThrower.java.
 An attempt to solve the problem of interface or subclass implementations that throw exceptions within an overridden method that are not permitted by the interface / superclass. Intended usage is as follows.
 
