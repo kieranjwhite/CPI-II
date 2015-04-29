@@ -386,7 +386,7 @@ Base class to simplify implementing RestrictedSearchEngine.
 * src/com/hourglassapps/cpi_ii/web_search/bing/BingSearchEngine.java.
 RestrictedSearchEngine implementation for interacting with Bing.
 * src/com/hourglassapps/cpi_ii/web_search/RestrictedSearchEngine.java.
-Implementations can query a search engine, but also formulate a query to filter out certain results (e.g. URLs from sites we are not interested in).
+Implementations can query a search engine, but also formulate a query that filters out certain results (e.g. URLs from sites we are not interested in).
 * src/com/hourglassapps/cpi_ii/web_search/SearchEngine.java.
 Interface for objects that query a search engine.
 
