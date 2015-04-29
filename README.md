@@ -240,7 +240,7 @@ Promises are a concept more commonly associated with Javascript (see http://blog
 Exception handling:
 
 * src/com/hourglassapps/util/ConcreteThrower.java.
-An attempt to solve the problem of interface or subclass implementations that throw exceptions within an overridden method that are not permitted by the interface / superclass. Intended usage is as follows.
+An attempt to solve the problem of interface implementations or subclasses that throw exceptions within an overridden method that are not permitted by the interface / superclass. Intended usage is as follows.
 
 Within a method that does not permit SomeException to be thrown:
 <pre>
