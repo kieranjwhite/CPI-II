@@ -24,7 +24,8 @@ Most programming was done in Java, however the final generated HTML report conta
 
 <pre>
 git clone https://github.com/kieranjwhite/CPI-II.git
-git checkout original_report_generation
+git branch -t remotes/origin/original_report_generation
+git checkout remotes/origin/original_report_generation
 </pre>
 
 Your java classpath should include the jar files in the lib/ directory and when compiling please ensure that the sourcepath includes both the src/ and data/ directories.
