@@ -162,12 +162,6 @@ about:config
 and hit return. A warning will be displayed. Proceed past the warning. A list of configurable settings will appear. In the search field below the address bar type security.fileuri.strict_origin_policy
 Double-click on the 'true' value of the security.fileuri.strict_origin_policy entry, changing it to false. Now you should be able to open poems.html and view the links in the report. 
 
-Alternatively hosting the report on a webserver will avoid these problems entirely. The easiest way to do this on a Linux computer is to change to the parent directory of the "poems" and "documents" directories and invoke the command:
-<pre>
-python -mSimpleHTTPServer
-</pre>
-Opening your browser at http://localhost:8000/poems/poems.html will now display the report.
-
 (4) Regenerating a report at a later date
 =========================================
 
