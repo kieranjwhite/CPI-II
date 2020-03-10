@@ -20,27 +20,26 @@ We will also explain how to accomplish the following objectives:
 (4) Regenerating a report at a later date.<br>
 (5) Modifying the codebase to generate reports for other collections of Latin poetry.<br>
 
-Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. You access this branch by first cloning the repository and then checking out the branch as follows:
+Most programming was done in Java, however the final generated HTML report contains some Javascript. All programming source code and resources are available on github at https://github.com/kieranjwhite/CPI-II. The extant version of the codebase is not on the master branch, but on the branch titled orginal_report_generation. This is configured to be the default branch so you can check it out from Github as follows:
 
 <pre>
 git clone https://github.com/kieranjwhite/CPI-II.git
-git checkout original_report_generation
 </pre>
 
 Your java classpath should include the jar files in the lib/ directory and when compiling please ensure that the sourcepath includes both the src/ and data/ directories.
 
 Before reading the remainder of this document it is suggested that you first read the Lucene analysis package summary document at https://lucene.apache.org/core/4_10_1/core/org/apache/lucene/analysis/package-summary.html. Ensure you understand what the Lucene Analyzer, Tokenizer and TokenFilter classes do and the part they play in the overall Lucene library.
 
-Prior to running any of the commands listed below, set your working directory to the parent of the lib directory in your local git repository. This directory should also contain the bin directory, for all the compiled .class files. The use of the bash shell is assumed in any instructions below, but should not be required.
+Prior to running any of the commands listed below, set your working directory to the parent of the lib directory in your local git repository. This directory will also contain the bin directory, for all the compiled .class files. The use of the bash shell is assumed in any instructions below, but should not be required.
 
 (1) Developing the tools necessary to index and search Latin documents
 ======================================================================
 
 Primarily we depended on Lucene for this sub-task but we also needed to identify a Latin stemmer. Initially we experimented with the Schinke stemmer (Schinke, Greengrass, Robertson & Willet, 1996) (http://snowball.tartarus.org/otherapps/schinke/intro.html) but found that it generates two stemming tables: one for nouns and the other for verbs. Therefore to use it you need to apply part-of-speech tagging to terms. Consequently we investigated another stemmer: Stempel (Galambos, 2001, 2004) (http://getopt.org/stempel/). Stempel is distributed with Lucene but we needed to train a Latin stemming model for it and for that we needed a Latin treebank such as that of the Perseus project (Bamman and Crane, 2006) (http://nlp.perseus.tufts.edu/syntax/treebank/).
 
-In our code the stemmer (either Stempel, Schinke or no stemming) and can be specified during the creation of a StandardLatinAnalyzer (a subclass of Lucene's Analyzer class) object. For most indexing and searching we invoke the static StandardLatinAnalyzer.searchAnalyer() method to instantiate the StandardLatinAnalyzer. The searchAnalyzer() method itself calls a setStemmer() method passing in an argument to a Factory that generates a stemmer instance when required to do so. This Factory can return instances of either StempelRecorderFilter (for Stempel), SnowballRecorderFilter (for Schinke) or IdentityRecorderFilter (to disable stemming). As their names suggest these three classes not only stem terms but can also record stem groups if that is required.
+In our code the stemmer (either Stempel, Schinke or no stemming) can be specified during the creation of a StandardLatinAnalyzer (a subclass of Lucene's Analyzer class) object. For most indexing and searching we invoke the static StandardLatinAnalyzer.searchAnalyer() method to instantiate the StandardLatinAnalyzer. The searchAnalyzer() method itself calls a setStemmer() method passing in an argument to a Factory that generates a stemmer instance when required to do so. This Factory can return instances of either StempelRecorderFilter (for Stempel), SnowballRecorderFilter (for Schinke) or IdentityRecorderFilter (to disable stemming). These three classes not only stem terms but can also record stem groups if that is required.
 
-This slightly convoluted approach of having a Factory instantiate the stemmer is needed because the stemmers' constructors each require a TokenStream argument (providing access to the input tokens) and this is provided by the Analyzer.createComponents method. However we wish to be able to specify the stemmer from the outset and before the Analyzer.createComponents method is even invoked.
+The slightly convoluted approach of having a Factory instantiate the stemmer is needed because the stemmers' constructors each require a TokenStream argument (providing access to the input tokens) and this is provided by the Analyzer.createComponents method. However we wish to be able to specify the stemmer from the outset and before the Analyzer.createComponents method is even invoked.
 
 There are also instances of StempelRecorderFilter, SnowballRecorderFilter and IdentityRecorderFilter available as static fields in the LatinAnalyzer class. These instances have already been configured to record stem groups and are intended for use by the MainIndexConductus class -- our trigram generator.
 
@@ -48,7 +47,7 @@ Stempel must be trained and the result of this is a stemming model. The file at 
 
 grep <path to unzipped Perseus treebank file>/1.5/data/*.xml -e "lemma" -h|tr '[:upper:]' '[:lower:]'|sed -nr -e "s/^.* form=\"([^\"]*)\" lemma=\"([^\"]*)\".*$/\\2 \\1/p"| grep -v "[^a-zA-Z0-9 ]" |sort -u|sed -nr -e "s/^(.*) (.*)$/\\1\\n\\2/p" | java -ea -cp lib/jackson-annotations-2.4.2.jar:lib/jackson-core-2.4.2.jar:lib/jackson-databind-2.4.2.jar:lib/lucene-core-4.10.1.jar:lib/lucene-analyzers-common-4.10.1.jar:lib/lucene-expressions-4.10.1.jar:lib/lucene-queries-4.10.1.jar:lib/lucene-facet-4.10.1.jar:lib/lucene-queryparser-4.10.1.jar:lib/commons-lang3-3.3.2.jar:bin:data com.hourglassapps.cpi_ii.stem.MainGenStempelModel - data/com/hourglassapps/cpi_ii/latin/stem/stempel/model
 
-The StandardLatinAnalyzer.searchAnalyer() method mentioned above assumes that the model should be saved to the path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out.
+The StandardLatinAnalyzer.searchAnalyer() method mentioned above assumes that the model has been saved to the path data/com/hourglassapps/cpi_ii/latin/stem/stempel/model.out.
 
 Finally, our StandardLatinAnalyzer instance doesn't filter stopwords. This can be changed easily by instantiating a StandardLatinAnalyzer with a single argument:
 <pre>
@@ -98,7 +97,7 @@ The resulting Boolean query which was submitted to Bing was therefore:
 
 Our chosen search engine, Bing, has a query length limit of approximately 2000 characters and this meant that sometimes, when this limit was exceeded, disjunctions containing the rarest terms had to be omitted.
 
-The queries were presented in turn to Bing as there were generated and up to 100 URLs were returned for each. The URLs were saved to allow us to open these links later. The documents at these URLs were downloaded. We also recorded the "Content-Type" HTTP header field value of each document as this information can be helpful when indexing and also again when displaying local copies of the documents. We do not currently make use of this information however. Text was extracted from the documents with the aid of the Apache Tika library. This text was tokenised, terms were stemmed by Stempel and then finally indexed per document by Lucene.
+The queries were presented in turn to Bing as they were generated and up to 100 URLs were returned for each. The URLs were saved to allow us to open these links later. The documents at these URLs were downloaded. We also recorded the "Content-Type" HTTP header field value of each document as this information can be helpful when indexing and also again when displaying local copies of the documents, however, we do not currently make use of this information. Text was extracted from the documents with the aid of the Apache Tika library. This text was tokenised, terms were stemmed by Stempel and then finally indexed per document by Lucene.
 
 We found Bing's behaviour to be inconsistent at times. Mostly it returned a set of URLs of documents that satisfied our Boolean query. However on occasion the documents were completely unrelated to our query. Sometimes this seems to be a result of the document having changed since Bing indexed it but some queries returned links to phone reviews and other content from unrelated topics; possibly these were advertisements. On rare occasions adding a disjunction to the submitted Boolean query reduced the number of URLs returned --- something which should never occur.
 
@@ -161,12 +160,6 @@ about:config
 </pre>
 and hit return. A warning will be displayed. Proceed past the warning. A list of configurable settings will appear. In the search field below the address bar type security.fileuri.strict_origin_policy
 Double-click on the 'true' value of the security.fileuri.strict_origin_policy entry, changing it to false. Now you should be able to open poems.html and view the links in the report. 
-
-Alternatively hosting the report on a webserver will avoid these problems entirely. The easiest way to do this on a Linux computer is to change to the parent directory of the "poems" and "documents" directories and invoke the command:
-<pre>
-python -mSimpleHTTPServer
-</pre>
-Opening your browser at http://localhost:8000/poems/poems.html will now display the report.
 
 (4) Regenerating a report at a later date
 =========================================
