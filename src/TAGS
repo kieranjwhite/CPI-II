@@ -1,0 +1,2900 @@
+
+com/googlecode/jpingy/PingArguments.java,880
+package com.googlecode.jpingy;com.googlecode.jpingy10,1070
+public class PingArguments {PingArguments12,1102
+	String url;url13,1131
+	int count;count14,1144
+	long timeout;timeout15,1156
+	int payload_bytes;payload_bytes16,1171
+	long interval;interval17,1191
+	int ttl;ttl18,1207
+	public PingArguments() {PingArguments20,1218
+	public static class Builder {Builder26,1285
+		private PingArguments arguments;arguments28,1317
+		public Builder() {Builder30,1353
+		public Builder url(String url) {url34,1420
+		public Builder count(int count) {count39,1500
+		public Builder timeout(long timeout) {timeout44,1585
+		public Builder bytes(int bytes) {bytes49,1679
+		public Builder ttl(int ttl) {ttl54,1772
+		public Builder interval(long interval) {interval65,1909
+		public PingArguments build() {build70,2007
+	public String getCommand() {getCommand76,2127
+
+com/googlecode/jpingy/UnixPingResult.java,1332
+package com.googlecode.jpingy;com.googlecode.jpingy10,1070
+public class UnixPingResult extends PingResult {UnixPingResult26,1376
+	public UnixPingResult(List<String> pingOutput) {UnixPingResult28,1426
+	private String[] pack;pack33,1502
+	private void generatePackageArray(List<String> lines) {generatePackageArray35,1527
+	public int matchTransmitted(List<String> lines) {matchTransmitted43,1706
+	public int matchReceived(List<String> lines) {matchReceived50,1863
+	public int matchTime(List<String> lines) {matchTime57,2017
+	private void generateRttArray(List<String> lines) {generateRttArray63,2156
+	private String[] rtt;rtt72,2371
+	public float matchRttMin(List<String> lines) {matchRttMin75,2406
+	public float matchRttAvg(List<String> lines) {matchRttAvg82,2532
+	public float matchRttMax(List<String> lines) {matchRttMax88,2657
+	public float matchRttMdev(List<String> lines) {matchRttMdev94,2782
+	public String matchIP(List<String> lines) {matchIP100,2931
+	public int matchTTL(List<String> lines) {matchTTL111,3214
+	protected int parsePayload(List<String> lines) {parsePayload127,3579
+	public List<PingRequest> getRequests() {getRequests134,3748
+	private PingRequest createPingRequest(String line) {createPingRequest147,4028
+	private boolean isPingRequest(String line) {isPingRequest166,4623
+
+com/googlecode/jpingy/Ping.java,336
+package com.googlecode.jpingy;com.googlecode.jpingy11,1071
+public class Ping {Ping25,1308
+	public enum Backend {Backend27,1329
+		UNIX {UNIX28,1352
+		public abstract PingResult getResult(List<String> output);getResult37,1480
+	public static PingResult ping(PingArguments ping, Backend backend) throws IOException {ping40,1545
+
+com/googlecode/jpingy/PingResult.java,1689
+package com.googlecode.jpingy;com.googlecode.jpingy10,1070
+public abstract class PingResult {PingResult20,1186
+	private List<String> lines;lines22,1222
+	private final String address;address24,1252
+	private final int transmitted;transmitted25,1283
+	private final int ttl;ttl26,1315
+	private final long time;time27,1339
+	private final int received;received28,1365
+	private final int payload;payload29,1394
+	public String address() {address36,1552
+	public int transmitted() {transmitted40,1601
+	public int ttl() {ttl44,1655
+	public long time() {time48,1693
+	public int received() {received52,1734
+	public int payload() {payload56,1782
+	protected PingResult(List<String> pingOutput) {PingResult77,2030
+	public List<String> getLines() {getLines98,2495
+	protected abstract int parsePayload(List<String> lines);parsePayload102,2549
+	protected abstract int matchTransmitted(List<String> lines);matchTransmitted104,2608
+	protected abstract int matchReceived(List<String> lines);matchReceived106,2671
+	protected abstract int matchTime(List<String> lines);matchTime108,2731
+	protected abstract float matchRttMin(List<String> lines);matchRttMin110,2787
+	protected abstract float matchRttAvg(List<String> lines);matchRttAvg112,2847
+	protected abstract float matchRttMax(List<String> lines);matchRttMax114,2907
+	protected abstract float matchRttMdev(List<String> lines);matchRttMdev116,2967
+	protected abstract String matchIP(List<String> lines);matchIP118,3028
+	protected abstract int matchTTL(List<String> lines);matchTTL120,3085
+	public abstract List<PingRequest> getRequests();getRequests122,3140
+	public String toString() {toString125,3202
+
+com/googlecode/jpingy/PingRequest.java,1529
+package com.googlecode.jpingy;com.googlecode.jpingy10,1070
+public class PingRequest {PingRequest12,1102
+	private final long bytes;bytes14,1130
+	private final String from;from15,1157
+	public String toString() {toString18,1197
+	private final String fromIP;fromIP24,1382
+	private final int reqnr;reqnr25,1412
+	private final int ttl;ttl26,1438
+	private final float time;time27,1462
+	public long bytes() {bytes29,1490
+	public String from() {from33,1533
+	public String fromIP() {fromIP37,1576
+	public int reqNr() {reqNr41,1623
+	public int ttl() {ttl45,1665
+	public float time() {time49,1703
+	protected PingRequest(long bytes, String from, String fromIP, int reqnr,PingRequest53,1745
+	public static PingRequestBuilder builder() {builder64,1986
+	protected static class PingRequestBuilder {PingRequestBuilder68,2071
+		private long bytes;bytes69,2116
+		private String from;from70,2138
+		private String fromIP;fromIP71,2161
+		private int reqnr;reqnr72,2186
+		private int ttl;ttl73,2207
+		private float time;time74,2226
+		public PingRequestBuilder() {PingRequestBuilder76,2249
+		public PingRequestBuilder bytes(long bytes) {bytes80,2287
+		public PingRequestBuilder from(String from) {from85,2379
+		public PingRequestBuilder fromIP(String fromIP) {fromIP90,2469
+		public PingRequestBuilder reqNr(int reqnr) {reqNr95,2567
+		public PingRequestBuilder ttl(int ttl) {ttl100,2658
+		public PingRequestBuilder time(float time) {time105,2741
+		public PingRequest build() {build110,2830
+
+com/hourglassapps/persist/WrappedJournal.java,552
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class WrappedJournal<A> extends FileJournal<A> {WrappedJournal10,205
+	private final Class<?> mTemplateClass;mTemplateClass11,261
+	private final String mStart;mStart12,301
+	private final String mEnd;mEnd13,331
+	private FileWrapper mWrapper;mWrapper15,361
+	public WrappedJournal(Path pDir, final Converter<A, String> pAddedToString, WrappedJournal17,394
+	protected PrintWriter writer() {writer27,662
+	public void commit(String pKey) throws IOException {commit32,740
+
+com/hourglassapps/persist/AbstractFilesJournal.java,2906
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public abstract class AbstractFilesJournal<K,C> implements Journal<K, C>, Promiser<Void,Void,Path> {AbstractFilesJournal17,405
+	private final static String TAG=AbstractFilesJournal.class.getName();TAG18,506
+	private final static String PARTIAL_DIR_NAME="partial";PARTIAL_DIR_NAME19,577
+	public final static String COMPLETED_DIR_NAME="completed";COMPLETED_DIR_NAME20,634
+	protected final static int FIRST_FILENAME=0;FIRST_FILENAME21,694
+	public final static char META_PREFIX='_';META_PREFIX22,740
+	protected final static String CUSTOM_PREFIX=META_PREFIX+"_";CUSTOM_PREFIX23,783
+	private final Path mDirectory;mDirectory25,847
+	private final Path mCompletedDir;mCompletedDir26,879
+	private final Converter<K,String> mFilenameGenerator;mFilenameGenerator27,914
+	protected final int mFirstFilename;mFirstFilename28,969
+	private int mFilename;mFilename29,1006
+	protected final Path mPartialDir;mPartialDir30,1030
+	protected final Trail<C> mTrail;mTrail31,1065
+	private final Deferred<Void,Void,Path> mDeferred=new DeferredObject<>();mDeferred32,1099
+	private final Converter<C,Typed<C>> mToTyped;mToTyped33,1173
+	protected interface PreDeleteAction {PreDeleteAction35,1222
+		public void run() throws IOException;run36,1261
+	public AbstractFilesJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, Converter<C,Typed<C>> pToTyped) throws IOException {AbstractFilesJournal39,1306
+	public AbstractFilesJournal(Path pDirectory, Converter<K,String> pFilenameGenerator, AbstractFilesJournal43,1515
+	public Path path(String pCompletedName) {path60,2056
+	protected static Path partialDir(Path pParent) {partialDir64,2152
+	private static void setupPartial(Path pPartialDir) throws IOException {setupPartial68,2252
+	public static void mkdir(Path pDir) throws IOException {mkdir75,2421
+	public static void deleteFlatDir(Path pDir) throws IOException {deleteFlatDir81,2548
+	protected Path destDir(K pKey) {destDir93,2820
+	public boolean addedAlready(K pKey) throws IOException {addedAlready99,2972
+	protected int filename() {filename103,3072
+	public Path dest(Typed<C> pContent) throws IOException {dest107,3125
+	protected void incFilename() {incFilename111,3266
+	public final void addNew(C pContent) throws IOException {addNew116,3328
+	protected abstract void addNew(Typed<C> pContent) throws IOException;addNew120,3430
+	protected void tryTidy(Path pDest) throws IOException {tryTidy122,3502
+	protected void tidyUp(Path pDest) throws IOException {tidyUp133,3824
+	public void commit(final K pKey) throws IOException {commit141,4042
+	public void reset() throws IOException {reset148,4224
+	protected void startEntry() throws IOException {startEntry160,4489
+	public void close() throws Exception {close167,4629
+	public Promise<Void, Void, Path> promise() {promise172,4711
+
+com/hourglassapps/persist/DoneStore.java,1954
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class DoneStore implements Store<Ii<String,String>,Ii<String,String>,Path> {DoneStore29,802
+	private final static String TAG=DoneStore.class.getName();TAG30,886
+	private final Path mDir;mDir32,999
+	public final static Linker LINKER=new Linker() {LINKER33,1025
+	private final DocTracker mResGen=new DocTracker(DoneFields.DST.fieldVal(), LINKER); //this can't be static if you're using multiple download threadsmResGen43,1342
+	private Indexer mIndex=null;mIndex44,1492
+	private Map<String,String> mPending=new HashMap<>(); mPending47,1581
+	private enum DoneFields {DoneFields49,1638
+		SRC(new FieldVal("src", false)), DST(new FieldVal("dst", false){SRC51,1791
+		SRC(new FieldVal("src", false)), DST(new FieldVal("dst", false){DST51,1791
+		private final FieldVal mField;mField66,2144
+		DoneFields(FieldVal pField) {DoneFields68,2180
+		public FieldVal fieldVal() {fieldVal72,2237
+	public DoneStore(Path pDir, Set<String> pFilteredURLs) throws IOException {DoneStore82,2419
+	private static void insertURLs(DocTracker pResGen, Indexer pIndex, IndexReader pReader, Set<String> pFilteredURLs) throws IOException {insertURLs105,3336
+	private static Indexer index(Path pDir) throws IOException {index114,3714
+	private boolean indexHas(final Ii<String,String> pKey) throws IOException {indexHas118,3823
+	private static boolean indexHas(DocTracker pResGen, Indexer pIndex, IndexReader pReader, String pURL) throws IOException {indexHas140,4408
+	public boolean addedAlready(Ii<String,String> pSrcDst) throws IOException {addedAlready155,4937
+	public void addNew(Ii<String,String> pSrcDst) {addNew167,5235
+	private void newTrans() throws IOException {newTrans174,5416
+	public void commit(Path pDestDir) throws IOException {commit180,5528
+	public void reset() throws IOException {reset193,5875
+	public void close() throws IOException {close199,5963
+
+com/hourglassapps/persist/Linker.java,176
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public interface Linker {Linker6,92
+	public void link(Path pLink, Path pOrig) throws IOException;link7,118
+
+com/hourglassapps/persist/DocTracker.java,596
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class DocTracker implements ResultGenerator<Boolean> {DocTracker13,315
+	private final Linker mLinker;mLinker14,377
+	private final FieldVal mField;mField15,408
+	private String mLink=null;mLink16,440
+	private Boolean mFound=Boolean.FALSE;mFound17,468
+	public DocTracker(FieldVal pField, Linker pLinker) {DocTracker19,509
+	public void setLink(String pLink) {setLink24,604
+	public void set() {set29,685
+	public void run(IndexReader pReader, TopDocs pResults)run35,760
+	public Boolean result() {result50,1158
+
+com/hourglassapps/persist/Trail.java,606
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class Trail<C> {Trail16,364
+	private final static String TAG=Trail.class.getName();TAG17,388
+	private final List<C> mTrail=new ArrayList<>();mTrail19,446
+	private final Path mPartialDir;mPartialDir20,495
+	public Trail(Path pPartialDir) {Trail22,530
+	public void add(C pSource) {add26,596
+	public void clear() {clear30,654
+	public void save(Path pDest) throws IOException {save34,699
+	public Trail(Path pTrailPath, Converter<String,C> pParser) throws IOException {Trail45,1136
+	public C url(Path pPath) {url57,1507
+
+com/hourglassapps/persist/MainHashTagDict.java,971
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class MainHashTagDict {MainHashTagDict12,270
+	private final static String TAG=MainHashTagDict.class.getName();TAG13,301
+	private final static ThreadLocal<JsonStringEncoder> JSON_ENCODER=new ThreadLocal<JsonStringEncoder>();JSON_ENCODER14,367
+	private final static String PREFIX="J"; //html 4 requires that a hashtag id begins with a latin letterPREFIX15,471
+	private StringBuilder mDict=new StringBuilder("{");mDict16,575
+	private boolean mFst=true;mFst17,628
+	public MainHashTagDict() {MainHashTagDict19,658
+	public String toString() {toString25,781
+	private void addKey(String pKey) {addKey29,841
+	public void put(String pKey, String pVal) {put40,1050
+	public void put(String pKey, int pVal) {put51,1264
+	public String encode() {encode61,1572
+	public static String decodeToStr(String pEncoded) {decodeToStr88,2470
+	public static void main(String[] pArgs) {main101,2962
+
+com/hourglassapps/persist/FileCopyJournal.java,1325
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class FileCopyJournal implements Journal<Path, Void>, Promiser<Void,Void,Path> {FileCopyJournal27,710
+	private final static String COMPLETED="completed";COMPLETED28,798
+	private final static String PARTIAL="partial";PARTIAL29,850
+	protected final Path mCompleted;mCompleted30,898
+	protected final Path mPartialFile;mPartialFile31,932
+	private final Path mDir;mDir32,968
+	protected final Converter<Path,String> mSourceToDestFilename;mSourceToDestFilename33,994
+	private final Deferred<Void,Void,Path> mDeferred=new DeferredObject<>();mDeferred34,1057
+	private final InputStreamFactory mStreamFact;mStreamFact35,1131
+	public FileCopyJournal(Path pDir, Converter<Path,String> pAddedToString, InputStreamFactory pStreamFact) throws IOException {FileCopyJournal37,1180
+	public boolean addedAlready(Path pKey) throws IOException {addedAlready48,1556
+	public void addNew(Void pContent) {}addNew57,1863
+	public void close() {close60,1913
+	protected Path partial() {partial64,1967
+	public void commit(Path pKey) throws IOException {commit69,2034
+	public Promise<Void, Void, Path> promise() {promise83,2527
+	protected PrintWriter writer() throws IOException {writer87,2597
+	public void reset() throws IOException {reset92,2751
+
+com/hourglassapps/persist/DeferredFilesJournal.java,2544
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class DeferredFilesJournal<K,C,R extends Sourceable> extends AbstractFilesJournal<K,C> {DeferredFilesJournal38,1209
+	private final static String TAG=DeferredFilesJournal.class.getName();TAG39,1305
+	public final static String DONE_INDEX="done_index";DONE_INDEX40,1376
+	public final static char TYPE_COLUMN_DELIMITER=' ';TYPE_COLUMN_DELIMITER41,1429
+	public final static String TYPE_UNKNOWN="UNKNOWN";TYPE_UNKNOWN42,1482
+	public final static String TYPE_SKIPPED="SKIPPED";TYPE_SKIPPED43,1534
+	public final static String TYPES_FILENAME=CUSTOM_PREFIX+"types.txt";TYPES_FILENAME44,1586
+	private final List<Promise<Void,IOException,Void>> mPromised;mPromised46,1676
+	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();mThrower47,1739
+	private final DeferredManager mDeferredMgr=new DefaultDeferredManager();mDeferredMgr48,1828
+	private final Promise[] mPendingArr=new Promise[]{};mPendingArr50,1933
+	private boolean mResumingAfterInterruption=false;mResumingAfterInterruption51,1987
+	private PrintWriter mTypesWriter=null;mTypesWriter52,2038
+	private final Path mDoneDir;mDoneDir55,2156
+	private final DoneStore mDone;mDone56,2186
+	private K mLastAdded=null;mLastAdded57,2218
+	private final Downloader<C,R> mContentGenerator;mContentGenerator58,2246
+	public DeferredFilesJournal(final Path pDirectory, final Set<String> pFilteredURLs,DeferredFilesJournal60,2298
+	public boolean addedAlready(K pKey) throws IOException {addedAlready72,2739
+	private synchronized void commitLastDone(K pLastAdded) throws IOException {commitLastDone83,2980
+	private List<Ii<String,Path>> checkWhatsDone(K pKey) throws IOException {checkWhatsDone91,3268
+	private synchronized void tryCommitLastDone(K pLastAdded) throws IOException {tryCommitLastDone103,3802
+	protected void addNew(final Typed<C> pLink) throws IOException {addNew122,4323
+	public void commit(final K pKey) throws IOException {commit185,6771
+	private void hold(final K pKey, Promise<Void,IOException,Void> pCommitment) throws IOException {hold247,8809
+	private static <R> boolean nonePending(Collection<Promise<R,IOException,Void>> pPromised) {nonePending257,9059
+	private volatile long mQueryTid=-1;mQueryTid266,9259
+	protected synchronized void tidyUp(Path pDest) throws IOException {tidyUp268,9307
+	protected void startEntry() throws IOException {startEntry278,9574
+	public synchronized void reset() throws IOException {reset286,9769
+
+com/hourglassapps/persist/IndexedVisitor.java,717
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+class IndexedVisitor implements FileVisitor<Path> {IndexedVisitor13,325
+	private final static String META_PREFIX=Character.toString(AbstractFilesJournal.META_PREFIX);META_PREFIX14,377
+	private final List<Path> mPaths=new ArrayList<>();mPaths15,472
+	public FileVisitResult postVisitDirectory(Path arg0, IOException arg1)postVisitDirectory18,537
+	public FileVisitResult preVisitDirectory(Path arg0,preVisitDirectory24,683
+	public FileVisitResult visitFile(Path arg0, BasicFileAttributes arg1)visitFile30,836
+	public FileVisitResult visitFileFailed(Path arg0, IOException arg1)visitFileFailed39,1100
+	public List<Path> dsts() {dsts44,1233
+
+com/hourglassapps/persist/Journal.java,131
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public interface Journal<K,A> extends Store<K,A,K> {Journal3,36
+
+com/hourglassapps/persist/ResultsJournal.java,1365
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class ResultsJournal extends AbstractFilesJournal<String,Result> {ResultsJournal37,1255
+	private final static String TAG=ResultsJournal.class.getName();TAG38,1329
+	private final static int MAX_PATH_LEN=38;MAX_PATH_LEN39,1394
+	private final Class<?> mTemplateClass;mTemplateClass40,1437
+	private final String mStart;mStart41,1477
+	private final String mEnd;mEnd42,1507
+	private final Converter<Result,String> mAddedToString;mAddedToString43,1535
+	private final Path mDocDir;mDocDir44,1591
+	private final static Path JS_FILENAME=Paths.get("links.js");JS_FILENAME45,1620
+	private final static Path PLAIN_TEXT_DIR=Paths.get("text");PLAIN_TEXT_DIR46,1682
+	private FileWrapper mWrapper=null;mWrapper47,1743
+	private final FileCopyJournal mFiles;mFiles48,1779
+	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();mThrower49,1818
+	public ResultsJournal(Path pDir, Path pDocDir, final Converter<Result, String> pAddedToString,ResultsJournal53,2057
+	private FileWrapper wrapper() throws IOException {wrapper137,4986
+	private Path normalisePath(Path pPath) throws IOException {normalisePath150,5318
+	protected void addNew(Typed<Result> pLink) throws IOException {addNew155,5444
+	public void commit(String pKey) throws IOException {commit173,5876
+
+com/hourglassapps/persist/NullJournal.java,419
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class NullJournal<K,C> implements Journal<K,C> {NullJournal7,103
+	public boolean addedAlready(K pKey) {addedAlready10,171
+	public void addNew(C pContent) throws IOException {addNew15,241
+	public void commit(K pKey) throws IOException {commit19,309
+	public void reset() throws IOException {reset23,373
+	public void close() {close27,430
+
+com/hourglassapps/persist/Shortener.java,705
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class Shortener implements Converter<String,String> {Shortener12,287
+	private final static int MAX_SUFFIX_CHARS=1+(int)Math.floor(Math.log10(Integer.MAX_VALUE)+1);MAX_SUFFIX_CHARS13,348
+	private Map<String,String> mLongNameToShorter=new HashMap<>();mLongNameToShorter14,443
+	private int mCurSuffix=0;mCurSuffix15,507
+	private final ConcreteThrower<? super UnsupportedEncodingException> mThrower;mThrower16,534
+	private final int mMaxLen;mMaxLen17,613
+	public Shortener(int pMaxLen, ConcreteThrower<? super UnsupportedEncodingException> pThrower) {Shortener19,642
+	public String convert(String cleaned) {convert25,795
+
+com/hourglassapps/persist/Store.java,397
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public interface Store<K,A,C> extends AutoCloseable {Store5,65
+	public boolean addedAlready(K pKey) throws IOException;addedAlready12,305
+	public void addNew(A pContent) throws IOException;addNew18,457
+	public void commit(C pCommittment) throws IOException;commit24,649
+	public void reset() throws IOException;reset30,776
+
+com/hourglassapps/persist/FileSaver.java,200
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public interface FileSaver<C> {FileSaver8,123
+	Promise<Void,IOException,Void> save(C pSrc, Path pDst) throws IOException;save9,155
+
+com/hourglassapps/persist/FileJournal.java,1571
+package com.hourglassapps.persist;com.hourglassapps.persist1,0
+public class FileJournal<A> implements Journal<String, A>, Promiser<Void,Void,Path> {FileJournal23,565
+	private final static String COMPLETED="completed";COMPLETED24,651
+	private final static String PARTIAL="partial";PARTIAL25,703
+	protected final Path mCompleted;mCompleted26,751
+	protected final Path mPartialFile;mPartialFile27,785
+	private final Path mDir;mDir28,821
+	private final List<A> mPartial=new ArrayList<>();mPartial29,847
+	protected final List<A> mProtectedPartial=Collections.unmodifiableList(mPartial);mProtectedPartial30,898
+	protected final Converter<A,String> mAddedToString;mAddedToString31,981
+	private final Deferred<Void,Void,Path> mDeferred=new DeferredObject<>();mDeferred32,1034
+	public FileJournal(Path pDir, Converter<A,String> pAddedToString) throws IOException {FileJournal34,1110
+	public boolean addedAlready(String pKey) throws IOException {addedAlready44,1413
+	public void addNew(A pContent) throws IOException {addNew49,1540
+	protected void clearPartial() {clearPartial53,1623
+	public void close() {close58,1692
+	protected Path partial() {partial62,1746
+	protected void tidyUp(String pKey) throws IOException {tidyUp66,1802
+	public void commit(String pKey) throws IOException {commit74,2027
+	public Promise<Void, Void, Path> promise() {promise80,2123
+	protected PrintWriter writer() throws IOException {writer84,2193
+	protected void write() throws IOException {write88,2336
+	public void reset() throws IOException {reset98,2544
+
+com/hourglassapps/serialise/Deserialiser.java,261
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public interface Deserialiser<T> {Deserialiser8,145
+	public T restore(File pLoadFrom) throws IOException;restore9,180
+	public T restore(InputStream pIn) throws IOException;restore10,234
+
+com/hourglassapps/serialise/JSONParser.java,927
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public class JSONParser<I,C, R extends Record<I,C>> implements ThrowingIterable<Record<I,C>>, AutoCloseable {JSONParser18,565
+	private JsonParser mParser;mParser19,675
+	private JsonToken mNextToken;mNextToken20,704
+	private ObjectMapper mMapper=new ObjectMapper();mMapper21,735
+	private Class<R> mClass;mClass23,825
+	private final Reader mPreprocessor;mPreprocessor24,851
+	private final JsonFactory mF=new JsonFactory();mF25,888
+	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<IOException>();mThrower26,937
+	public JSONParser(Reader pPreprocessor, Class<R> pClass) throws IOException, ParseException {JSONParser28,1027
+	public Iterator<Record<I,C>> iterator() {iterator34,1185
+	public IOIterator<Record<I,C>> throwableIterator() {throwableIterator39,1273
+	public void close() throws IOException {close90,2438
+
+com/hourglassapps/serialise/RemoveUnescapesReader.java,1061
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public class RemoveUnescapesReader extends Reader {RemoveUnescapesReader8,124
+	private Reader mInput;mInput9,176
+	private boolean done=false;done10,200
+	private Buffer mPending=new Buffer();mPending11,229
+	private ReGroupHandler mUnescapeGroup=new ReGroupHandler("unescape\\('([^)]*)'\\)", 10, 2, mUnescapeGroup15,368
+	private ReGroupHandler mEscapedCharGroup=new ReGroupHandler("%([a-fA-F0-9]{2})", 1, 0, mEscapedCharGroup40,1291
+	private char mBuf[]=new char[0];mBuf65,1846
+	private int mLen=0;mLen66,1880
+	private int mNewLen;mNewLen67,1901
+	public RemoveUnescapesReader(Reader pInput) throws IOException {RemoveUnescapesReader69,1925
+	public void close() throws IOException {close75,2034
+	public int read(char[] pDst, int pDstOff, int pMaxLen) throws IOException {read100,3009
+	private char[] enlarge(char pBuf[], int pNewMax) {enlarge125,3685
+	private int copyToNewLine() {copyToNewLine131,3830
+	private int indexOf(char pSought, int pLen) {indexOf147,4256
+
+com/hourglassapps/serialise/ReGroupHandler.java,745
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public class ReGroupHandler {ReGroupHandler16,452
+	private final Pattern mPat;mPat17,482
+	private final int mPrefixLen;mPrefixLen18,511
+	private final int mSuffixLen;mSuffixLen19,542
+	private final SearchAndReplacer mReplacer;mReplacer20,573
+	private final Buffer mOutBuf;mOutBuf21,617
+	public ReGroupHandler(String pPatText, int pPrefixLen, int pSuffixLen, SearchAndReplacer pReplacer, Buffer pBuffer) {ReGroupHandler23,650
+	private int numCharsToStartOfGroup(int pStartIdx, int pGroupIdx) {numCharsToStartOfGroup31,899
+	private int pushCharsBetween(char pSrc[], int pStartIdx, pushCharsBetween45,1446
+	public int push(char pSrc[], int pLen) {push61,2297
+
+com/hourglassapps/serialise/Buffer.java,407
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public class Buffer {Buffer10,264
+	private final static String TAG=Buffer.class.getName();TAG11,286
+	private StringBuilder mBuf=new StringBuilder();mBuf12,343
+	public Buffer() {Buffer14,394
+	public void push(char pSrc[], int pSrcOff, int pLen) {push17,418
+	public int shift(char pDst[], int pDstOff, int pMaxLen) {shift21,515
+
+com/hourglassapps/serialise/ParseException.java,541
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public class ParseException extends SerialiseException {ParseException3,38
+	private String mMsg;mMsg4,95
+	private static final long serialVersionUID = 1L;serialVersionUID8,132
+	public ParseException() {ParseException10,183
+	public ParseException(String pMsg) {ParseException14,225
+	public ParseException(Throwable pEx) {ParseException18,282
+	public ParseException setReceived(String pMsg) {setReceived22,341
+	public String getReceived() {getReceived27,424
+
+com/hourglassapps/serialise/AbstractDeserialiser.java,242
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public abstract class AbstractDeserialiser<T> implements Deserialiser<T> {AbstractDeserialiser12,283
+	public T restore(File pLoadFrom) throws IOException {restore15,370
+
+com/hourglassapps/serialise/PoemRecordXMLParser.java,780
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public class PoemRecordXMLParser implements ThrowingIterable<PoemRecord>, AutoCloseable {PoemRecordXMLParser34,1019
+	private final static String TAG=PoemRecordXMLParser.class.getName();TAG35,1109
+	private final Reader mPreprocessor;mPreprocessor36,1179
+	private final List<PoemRecord> mRecords;mRecords38,1218
+	public PoemRecordXMLParser(Reader pPreprocessor) throws IOException, ParseException {PoemRecordXMLParser40,1262
+	private String getContent(Element pEprint, String pElement) {getContent83,2862
+	public IOIterator<PoemRecord> throwableIterator() {throwableIterator96,3206
+	public Iterator<PoemRecord> iterator() {iterator134,3980
+	public void close() throws IOException {close139,4067
+
+com/hourglassapps/serialise/SerialiseException.java,413
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public class SerialiseException extends Exception {SerialiseException3,38
+	private static final long serialVersionUID = 1L;serialVersionUID8,106
+	public SerialiseException() {SerialiseException10,157
+	public SerialiseException(String pMsg) {SerialiseException14,203
+	public SerialiseException(Throwable pEx) {SerialiseException18,264
+
+com/hourglassapps/serialise/AbstractSerialiser.java,230
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public abstract class AbstractSerialiser<T> implements Serialiser<T> {AbstractSerialiser9,187
+	public void save(File pSaveTo) throws IOException {save12,270
+
+com/hourglassapps/serialise/Serialiser.java,251
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public interface Serialiser<T> {Serialiser8,145
+	public void save(File pSaveTo) throws IOException;save9,178
+	public void save(OutputStream pOut) throws IOException;save10,230
+
+com/hourglassapps/serialise/SearchAndReplacer.java,168
+package com.hourglassapps.serialise;com.hourglassapps.serialise1,0
+public interface SearchAndReplacer {SearchAndReplacer3,38
+	public int run(String pArg);run4,75
+
+com/hourglassapps/cpi_ii/stem/PreFilter.java,242
+package com.hourglassapps.cpi_ii.stem;com.hourglassapps.cpi_ii.stem1,0
+public interface PreFilter {PreFilter5,69
+	public boolean incrementToken() throws IOException;incrementToken6,98
+	public CharSequence priorToken();priorToken7,151
+
+com/hourglassapps/cpi_ii/stem/IdentityRecorderFilter.java,468
+package com.hourglassapps.cpi_ii.stem;com.hourglassapps.cpi_ii.stem1,0
+public final class IdentityRecorderFilter extends StemRecorderFilter {IdentityRecorderFilter13,368
+	public IdentityRecorderFilter(TokenStream pInput) throws IOException {IdentityRecorderFilter14,439
+	public <C extends Set<String>> IdentityRecorderFilter(TokenStream pInput,IdentityRecorderFilter19,540
+	protected TokenFilter stemmer(TokenFilter pInput) throws IOException {stemmer25,766
+
+com/hourglassapps/cpi_ii/stem/StemRecorderFilter.java,2027
+package com.hourglassapps.cpi_ii.stem;com.hourglassapps.cpi_ii.stem1,0
+public abstract class StemRecorderFilter extends TokenFilter {StemRecorderFilter24,750
+	private final Underlying mUnderlying;mUnderlying25,813
+	private TokenStream mStemmer;mStemmer26,852
+	private final MultiMap<String, Set<String>, String> mStem2Expansions;mStem2Expansions27,883
+	private final CharTermAttribute termAtt=addAttribute(CharTermAttribute.class);termAtt28,954
+	private final boolean mRecord;mRecord29,1034
+	public static abstract class Factory {Factory31,1068
+		public abstract StemRecorderFilter inst(TokenStream result) throws IOException;inst32,1108
+	public StemRecorderFilter(TokenStream pInput, boolean pRecord) throws IOException {StemRecorderFilter35,1195
+	public <C extends Set<String>> StemRecorderFilter(TokenStream pInput, boolean pRecord, MultiMap<String,C,String> stem2Expansions) throws IOException {StemRecorderFilter42,1416
+	private final static class Underlying extends TokenFilter implements PreFilter {Underlying49,1719
+		private final CharTermAttribute termAtt=addAttribute(CharTermAttribute.class);termAtt50,1801
+		private String beforeStemming;beforeStemming51,1882
+		protected Underlying(TokenStream input) {Underlying53,1918
+		public CharSequence priorToken() {priorToken58,1996
+		public boolean incrementToken() throws IOException {incrementToken64,2108
+	protected abstract TokenFilter stemmer(TokenFilter pInput) throws IOException;stemmer72,2273
+	public boolean incrementToken() throws IOException {incrementToken75,2366
+	public String stem() throws IOException {stem89,2675
+	public MultiMap<String, Set<String>, String> expansions() {expansions99,2821
+	public Serialiser<MultiMap<String, Set<String>, String>> serialiser() {serialiser107,3132
+	public Set<String> expansions(String pStem) {expansions130,3797
+	public void displayGroups() {displayGroups134,3916
+	public static Deserialiser<MultiMap<String, Set<String>, String>> deserialiser() {deserialiser146,4183
+
+com/hourglassapps/cpi_ii/stem/MainStemTest.java,525
+package com.hourglassapps.cpi_ii.stem;com.hourglassapps.cpi_ii.stem2,1
+public class MainStemTest {MainStemTest24,665
+	private final static Factory STEMMER_FACTORY=LatinAnalyzer.STEMPEL_RECORDER_FACTORY;STEMMER_FACTORY25,693
+	private static void usage()usage27,781
+	private static void stemAndShow(String pTerm, PrintWriter pOut) throws IOException {stemAndShow33,931
+	protected void invoke(String[] pArgs) throws Throwable {invoke40,1167
+	public static void main(String [] pArgs) throws Throwable {main103,2607
+
+com/hourglassapps/cpi_ii/stem/StempelRecorderFilter.java,545
+package com.hourglassapps.cpi_ii.stem;com.hourglassapps.cpi_ii.stem1,0
+public final class StempelRecorderFilter extends StemRecorderFilter {StempelRecorderFilter16,423
+	private File mModel;mModel17,493
+	public StempelRecorderFilter(TokenStream pInput, boolean pRecord, File pModel) throws IOException {StempelRecorderFilter19,517
+	public <C extends Set<String>> StempelRecorderFilter(TokenStream pInput, boolean pRecord,StempelRecorderFilter25,666
+	protected TokenFilter stemmer(TokenFilter pInput) throws IOException {stemmer32,914
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Lift.java,364
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class Lift extends Reduce {Lift68,3469
+  boolean changeSkip;changeSkip69,3504
+  public Lift(boolean changeSkip) {Lift77,3707
+  public Trie optimize(Trie orig) {optimize89,3979
+  public void liftUp(Row in, List<Row> nodes) {liftUp114,4768
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/MultiTrie.java,882
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class MultiTrie extends Trie {MultiTrie69,3456
+  final char EOM = '*';EOM70,3494
+  final String EOM_NODE = "" + EOM;EOM_NODE71,3518
+  List<Trie> tries = new ArrayList<>();tries73,3557
+  int BY = 1;BY75,3600
+  public MultiTrie(DataInput is) throws IOException {MultiTrie83,3761
+  public MultiTrie(boolean forward) {MultiTrie98,4137
+  public CharSequence getFully(CharSequence key) {getFully109,4401
+  public CharSequence getLastOnPath(CharSequence key) {getLastOnPath129,5003
+  public void store(DataOutput os) throws IOException {store148,5550
+  public void add(CharSequence key, CharSequence cmd) {add167,6030
+  public Trie reduce(Reduce by) {reduce188,6589
+  public void printInfo(PrintStream out, CharSequence prefix) {printInfo204,6950
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Trie.java,1456
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class Trie {Trie72,3629
+  List<Row> rows = new ArrayList<>();rows73,3649
+  List<CharSequence> cmds = new ArrayList<>();cmds74,3687
+  int root;root75,3734
+  boolean forward = false;forward77,3749
+  public Trie(DataInput is) throws IOException {Trie85,3918
+  public Trie(boolean forward) {Trie101,4289
+  public Trie(boolean forward, int root, List<CharSequence> cmds, List<Row> rows) {Trie116,4740
+  public CharSequence[] getAll(CharSequence key) {getAll129,5062
+  public int getCells() {getCells191,6382
+  public int getCellsPnt() {getCellsPnt203,6607
+  public int getCellsVal() {getCellsVal215,6838
+  public CharSequence getFully(CharSequence key) {getFully228,7125
+  public CharSequence getLastOnPath(CharSequence key) {getLastOnPath274,8153
+  private Row getRow(int index) {getRow303,8852
+  public void store(DataOutput os) throws IOException {store316,9142
+  void add(CharSequence key, CharSequence cmd) {add335,9654
+  public Trie reduce(Reduce by) {reduce375,10567
+  public void printInfo(PrintStream out, CharSequence prefix) {printInfo380,10688
+  class StrEnum {StrEnum389,10994
+    CharSequence s;s390,11012
+    int from;from391,11032
+    int by;by392,11046
+    StrEnum(CharSequence s, boolean up) {StrEnum400,11220
+    int length() {length411,11412
+    char next() {next415,11467
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Diff.java,622
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class Diff {Diff66,3568
+  int sizex = 0;sizex67,3588
+  int sizey = 0;sizey68,3605
+  int net[][];net69,3622
+  int way[][];way70,3637
+  int INSERT;INSERT72,3655
+  int DELETE;DELETE73,3669
+  int REPLACE;REPLACE74,3683
+  int NOOP;NOOP75,3698
+  public Diff() {Diff80,3763
+  public Diff(int ins, int del, int rep, int noop) {Diff92,4046
+  public static void apply(StringBuilder dest, CharSequence diff) {apply106,4351
+  public synchronized String exec(String a, String b) {exec160,5760
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Gener.java,303
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class Gener extends Reduce {Gener66,3367
+  public Gener() {}Gener70,3454
+  public Trie optimize(Trie orig) {optimize79,3658
+  public boolean eat(Row in, int remap[]) {eat107,4469
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/MultiTrie2.java,996
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class MultiTrie2 extends MultiTrie {MultiTrie270,3509
+  public MultiTrie2(DataInput is) throws IOException {MultiTrie277,3697
+  public MultiTrie2(boolean forward) {MultiTrie287,3935
+  public CharSequence getFully(CharSequence key) {getFully98,4200
+  public CharSequence getLastOnPath(CharSequence key) {getLastOnPath140,5481
+  public void store(DataOutput os) throws IOException {store182,6775
+  public void add(CharSequence key, CharSequence cmd) {add197,7144
+  public CharSequence[] decompose(CharSequence cmd) {decompose242,8444
+  public Trie reduce(Reduce by) {reduce279,9331
+  private boolean cannotFollow(char after, char goes) {cannotFollow289,9544
+  private CharSequence skip(CharSequence in, int count) {skip298,9714
+  private int dashEven(CharSequence in, int from) {dashEven306,9919
+  private int lengthPP(CharSequence cmd) {lengthPP318,10166
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Compile.java,549
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor59,3218
+public class Compile {Compile77,3721
+  static boolean backward;backward79,3747
+  static boolean multi;multi80,3774
+  static Trie trie;trie81,3798
+  private Compile() {}Compile84,3845
+  public static void compileFromReader(Reader pInput, String[] args) throws IOException {compileFromReader86,3869
+  public static void main(java.lang.String[] args) throws Exception {main200,7416
+  static void allocTrie() {allocTrie211,7712
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Optimizer2.java,268
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class Optimizer2 extends Optimizer {Optimizer266,3595
+  public Optimizer2() {}Optimizer270,3695
+  public Cell merge(Cell m, Cell e) {merge81,3972
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Row.java,1073
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class Row {Row67,3358
+  TreeMap<Character,Cell> cells = new TreeMap<>();cells68,3377
+  int uniformCnt = 0;uniformCnt69,3428
+  int uniformSkip = 0;uniformSkip70,3450
+  public Row(DataInput is) throws IOException {Row78,3655
+  public Row() {}Row93,4017
+  public Row(Row old) {Row100,4143
+  public void setCmd(Character way, int cmd) {setCmd110,4373
+  public void setRef(Character way, int ref) {setRef129,4807
+  public int getCells() {getCells145,5106
+  public int getCellsPnt() {getCellsPnt163,5507
+  public int getCellsVal() {getCellsVal181,5886
+  public int getCmd(Character way) {getCmd201,6358
+  public int getCnt(Character way) {getCnt213,6749
+  public int getRef(Character way) {getRef225,7092
+  public void store(DataOutput os) throws IOException {store236,7361
+  public int uniformCmd(boolean eqSkip) {uniformCmd263,8119
+  public void print(PrintStream out) {print298,8873
+  Cell at(Character index) {at307,9117
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/DiffIt.java,314
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class DiffIt {DiffIt68,3411
+  private DiffIt() {}DiffIt71,3462
+  static int get(int i, String s) {get73,3487
+  public static void main(java.lang.String[] args) throws Exception {main90,3952
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Reduce.java,429
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class Reduce {Reduce65,3308
+  public Reduce() {}Reduce70,3385
+  public Trie optimize(Trie orig) {optimize79,3595
+  List<Row> removeGaps(int ind, List<Row> old, List<Row> to, int remap[]) {removeGaps91,3965
+  class Remap extends Row {Remap110,4454
+    public Remap(Row old, int remap[]) {Remap117,4642
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Cell.java,348
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+class Cell {Cell60,3157
+  int ref = -1;ref62,3203
+  int cmd = -1;cmd64,3248
+  int cnt = 0;cnt66,3317
+  int skip = 0;skip68,3402
+  Cell() {}Cell71,3463
+  Cell(Cell a) {Cell78,3611
+  public String toString() {toString91,3841
+
+com/hourglassapps/cpi_ii/stem/stempel/egothor/Optimizer.java,377
+package com.hourglassapps.cpi_ii.stem.stempel.egothor;com.hourglassapps.cpi_ii.stem.stempel.egothor55,3059
+public class Optimizer extends Reduce {Optimizer68,3411
+  public Optimizer() {}Optimizer72,3506
+  public Trie optimize(Trie orig) {optimize82,3735
+  public Row merge(Row master, Row existing) {merge123,4839
+  public Cell merge(Cell m, Cell e) {merge157,5765
+
+com/hourglassapps/cpi_ii/stem/MainGenStempelModel.java,336
+package com.hourglassapps.cpi_ii.stem;com.hourglassapps.cpi_ii.stem1,0
+public class MainGenStempelModel {MainGenStempelModel19,517
+	private final static String TAG=MainGenStempelModel.class.getName();TAG20,552
+	public static void main(String[] pArgs) throws IOException {main22,624
+		private static void usage() {usage92,2259
+
+com/hourglassapps/cpi_ii/stem/snowball/lucene/SnowballFilter.java,700
+package com.hourglassapps.cpi_ii.stem.snowball.lucene;com.hourglassapps.cpi_ii.stem.snowball.lucene1,0
+public final class SnowballFilter extends TokenFilter {SnowballFilter54,2106
+  private final SnowballProgram stemmer;stemmer56,2163
+  private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);termAtt58,2205
+  private final KeywordAttribute keywordAttr = addAttribute(KeywordAttribute.class);keywordAttr59,2288
+  public SnowballFilter(TokenStream input, SnowballProgram stemmer) {SnowballFilter61,2374
+  public SnowballFilter(TokenStream in, String name) {SnowballFilter76,2881
+  public final boolean incrementToken() throws IOException {incrementToken91,3532
+
+com/hourglassapps/cpi_ii/stem/snowball/lucene/MetaRead.java,221
+package com.hourglassapps.cpi_ii.stem.snowball.lucene;com.hourglassapps.cpi_ii.stem.snowball.lucene1,0
+public interface MetaRead {MetaRead5,80
+	public String title();title6,108
+	public Reader reader();reader7,132
+
+com/hourglassapps/cpi_ii/stem/snowball/lucene/SnowballAnalyzer.java,636
+package com.hourglassapps.cpi_ii.stem.snowball.lucene;com.hourglassapps.cpi_ii.stem.snowball.lucene1,0
+public final class SnowballAnalyzer extends Analyzer {SnowballAnalyzer49,2119
+  private String name;name50,2174
+  private CharArraySet stopSet;stopSet51,2197
+  private final Version matchVersion;matchVersion52,2229
+  public SnowballAnalyzer(Version matchVersion, String name) {SnowballAnalyzer55,2323
+  public SnowballAnalyzer(Version matchVersion, String name, CharArraySet stopWords) {SnowballAnalyzer61,2513
+  public TokenStreamComponents createComponents(String fieldName, Reader reader) {createComponents71,2919
+
+com/hourglassapps/cpi_ii/stem/snowball/tartarus/Among.java,681
+package com.hourglassapps.cpi_ii.stem.snowball.tartarus;com.hourglassapps.cpi_ii.stem.snowball.tartarus1,0
+public class Among {Among5,92
+    public Among (String s, int substring_i, int result,Among6,113
+    public final int s_size; /* search string */s_size25,649
+    public final char[] s; /* search string */s26,698
+    public final int substring_i; /* index to longest matching substring */substring_i27,745
+    public final int result; /* result of the lookup */result28,821
+    public final Method method; /* method to use if substring matches */method29,877
+    public final SnowballProgram methodobject; /* object to invoke method on */methodobject30,950
+
+com/hourglassapps/cpi_ii/stem/snowball/tartarus/MainTestApp.java,379
+package com.hourglassapps.cpi_ii.stem.snowball.tartarus;com.hourglassapps.cpi_ii.stem.snowball.tartarus2,1
+public class MainTestApp {MainTestApp18,447
+	private static void usage()usage19,474
+	private static void stemAndShow(LatinStemmer pStemmer, String pTerm, PrintWriter pOut) {stemAndShow25,624
+	public static void main(String [] pArgs) throws Throwable {main35,984
+
+com/hourglassapps/cpi_ii/stem/snowball/tartarus/SnowballProgram.java,2482
+package com.hourglassapps.cpi_ii.stem.snowball.tartarus;com.hourglassapps.cpi_ii.stem.snowball.tartarus2,1
+public abstract class SnowballProgram {SnowballProgram7,184
+    protected SnowballProgram()SnowballProgram8,224
+    abstract public boolean stem();stem14,317
+    public void setCurrent(String value)setCurrent19,405
+    public String getCurrent()getCurrent32,642
+    protected StringBuffer current;current46,1215
+    protected int cursor;cursor48,1252
+    protected int limit;limit49,1278
+    protected int limit_backward;limit_backward50,1303
+    protected int bra;bra51,1337
+    protected int ket;ket52,1360
+    protected void copy_from(SnowballProgram other)copy_from54,1384
+    protected boolean in_grouping(char [] s, int min, int max)in_grouping64,1655
+    protected boolean in_grouping_b(char [] s, int min, int max)in_grouping_b75,1940
+    protected boolean out_grouping(char [] s, int min, int max)out_grouping86,2240
+    protected boolean out_grouping_b(char [] s, int min, int max)out_grouping_b102,2565
+    protected boolean in_range(int min, int max)in_range118,2904
+    protected boolean in_range_b(int min, int max)in_range_b127,3103
+    protected boolean out_range(int min, int max)out_range136,3317
+    protected boolean out_range_b(int min, int max)out_range_b145,3520
+    protected boolean eq_s(int s_size, String s)eq_s154,3737
+    protected boolean eq_s_b(int s_size, String s)eq_s_b165,3986
+    protected boolean eq_v(CharSequence s)eq_v176,4255
+    protected boolean eq_v_b(CharSequence s)eq_v_b181,4351
+    protected int find_among(Among v[], int v_size)find_among185,4452
+    protected int find_among_b(Among v[], int v_size)find_among_b258,6103
+    protected int replace_s(int c_bra, int c_ket, String s)replace_s329,7609
+    protected void slice_check()slice_check339,7893
+    protected void slice_from(String s)slice_from356,8245
+    protected void slice_from(CharSequence s)slice_from362,8339
+    protected void slice_del()slice_del367,8432
+    protected void insert(int c_bra, int c_ket, String s)insert372,8493
+    protected void insert(int c_bra, int c_ket, CharSequence s)insert379,8686
+    protected StringBuffer slice_to(StringBuffer s)slice_to385,8856
+    protected StringBuilder slice_to(StringBuilder s)slice_to394,9083
+    protected StringBuffer assign_to(StringBuffer s)assign_to402,9255
+    protected StringBuilder assign_to(StringBuilder s)assign_to408,9388
+
+com/hourglassapps/cpi_ii/stem/IdentityFilter.java,296
+package com.hourglassapps.cpi_ii.stem;com.hourglassapps.cpi_ii.stem1,0
+public final class IdentityFilter extends TokenFilter {IdentityFilter10,301
+	protected IdentityFilter(TokenStream input) {IdentityFilter11,357
+	public boolean incrementToken() throws IOException {incrementToken16,435
+
+com/hourglassapps/cpi_ii/stem/SnowballRecorderFilter.java,579
+package com.hourglassapps.cpi_ii.stem;com.hourglassapps.cpi_ii.stem1,0
+public final class SnowballRecorderFilter extends StemRecorderFilter {SnowballRecorderFilter13,368
+	private SnowballProgram mStemmer;mStemmer14,439
+	public SnowballRecorderFilter(TokenStream pInput, boolean pRecord, SnowballProgram pStemmer) throws IOException {SnowballRecorderFilter15,474
+	public <C extends Set<String>> SnowballRecorderFilter(TokenStream pInput, boolean pRecord,SnowballRecorderFilter21,641
+	protected TokenFilter stemmer(TokenFilter pInput) throws IOException {stemmer28,907
+
+com/hourglassapps/cpi_ii/report/QueryGenerator.java,439
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+public class QueryGenerator implements Converter<Line,List<String>> {QueryGenerator15,409
+	private final Filter<Line> mOneWordLineSpotter;mOneWordLineSpotter16,479
+	public QueryGenerator(Filter<Line> pOneWordLineSpotter) {QueryGenerator18,530
+	private String join(Line pFst, Line pSnd) {join22,637
+	public List<String> convert(Line pIn) {convert30,863
+
+com/hourglassapps/cpi_ii/report/TitlePathConverter.java,862
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+public final class TitlePathConverter implements Converter<Result,String> {TitlePathConverter22,610
+	private final Path mParent;mParent23,686
+	private final ConcreteThrower<Exception> mThrower;mThrower24,715
+	private final JsonStringEncoder mEncoder=JsonStringEncoder.getInstance();mEncoder25,767
+	private final static Converter<DocSpan,String> DOCSPAN_TO_STRING=new Converter<DocSpan,String>(){DOCSPAN_TO_STRING36,1059
+	public TitlePathConverter(ConcreteThrower<Exception> pThrower) throws IOException {TitlePathConverter45,1284
+	private Path relativize(Path pIn) {relativize54,1529
+	private String toRelURL(Path pPath) {toRelURL58,1605
+	public String convert(Result pResult) {convert66,1914
+	private String listSpans(SortedSet<DocSpan> matches) {listSpans81,2336
+
+com/hourglassapps/cpi_ii/report/Result.java,469
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+public class Result {Result9,177
+	private final String mTitle;mTitle10,199
+	private final Path mPath;mPath11,229
+	private final SortedSet<DocSpan> mMatches;mMatches12,256
+	public Result(String pTitle, Path pPath, SortedSet<DocSpan> pMatches) {Result14,302
+	public String title() {title20,468
+	public Path path() {path24,515
+	public SortedSet<DocSpan> matches() {matches28,558
+
+com/hourglassapps/cpi_ii/report/MainArchive.java,554
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+public class MainArchive {MainArchive10,234
+    private final static String TAG=MainArchive.class.getName();TAG11,261
+    private final static Path ARCHIVE_DIR=Paths.get("archives");ARCHIVE_DIR12,326
+    private final static Path POEMS_DIR=Paths.get("poems");POEMS_DIR13,391
+    private final static Path DOCUMENTS_DIR=Paths.get("documents");DOCUMENTS_DIR14,451
+    private static void usage() {usage16,524
+    public static void main(String pArgs[]) {main20,678
+
+com/hourglassapps/cpi_ii/report/Cleaner.java,340
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+final class Cleaner implements Converter<String,String> {Cleaner8,149
+	private final Pattern mNonLetters=Pattern.compile("[^a-zA-Z'-]+");mNonLetters9,207
+	private final static String JOINT=" ";JOINT10,275
+	public String convert(String pIn) {convert13,328
+
+com/hourglassapps/cpi_ii/report/Queryer.java,1412
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+public class Queryer implements AutoCloseable {Queryer44,1574
+	private final static String TAG=Queryer.class.getName();TAG45,1622
+	private final static int MAX_RESULTS=100;MAX_RESULTS46,1680
+	private final static int NUM_CACHE_ENTRIES=400;NUM_CACHE_ENTRIES47,1723
+	private final Journal<String,Result> mJournal;mJournal48,1772
+	private final Analyzer mAnalyser;mAnalyser49,1820
+	private final Deferred<Void,Exception,Ii<Line,String>> mDeferred=new DeferredObject<>();mDeferred50,1855
+    private final QueryParser mParser;mParser51,1945
+    private final IndexReader mReader;mReader52,1984
+	private final IndexSearcher mSearcher;mSearcher53,2023
+	private final Converter<Line,List<String>> mLineToQuery;mLineToQuery54,2063
+	private final ExclusiveTimeKeeper mTimes=new ExclusiveTimeKeeper();mTimes55,2121
+	private int mSearchCnt=0;mSearchCnt56,2190
+	private final Cache<Integer,Terms> mTermCache;mTermCache57,2217
+	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<>();mThrower58,2265
+	public Queryer(Journal<String,Result> pJournal, IndexViewer pIndex, Queryer60,2345
+	public Promise<Void,Exception,Ii<Line,String>> promise() {promise91,3295
+	public void search(Ii<Line,String> pLineDst) throws ParseException, IOException {search95,3380
+	public void close() {close175,5869
+
+com/hourglassapps/cpi_ii/report/PoemsReport.java,3089
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+public class PoemsReport implements AutoCloseable {PoemsReport29,901
+	private final static String TAG=PoemsReport.class.getName();TAG30,953
+	private final static String CSS="poem.css";CSS32,1017
+	private final static String FORWARD_HTML="fwd.html";FORWARD_HTML33,1062
+	private final static String RESULTS_HTML="result_list.html";RESULTS_HTML34,1116
+	private final static String BLACKLIST_JS="blacklist.js";BLACKLIST_JS35,1178
+	private final static String POEMS_JS="poems.js";POEMS_JS36,1236
+	private final static String RESULTS_JS="result_list.js";RESULTS_JS37,1286
+	private final static String WHEN_JS="when.js";WHEN_JS38,1344
+	private final static String JX_JS="jx_V3.01.A.js";JX_JS39,1392
+	private final static String RTU_JS="rtu.js";RTU_JS40,1444
+	private final static String RTU_DOMLESS_JS="rtu_domless.js";RTU_DOMLESS_JS41,1490
+	private final static String BASE64_JS="base64.js";BASE64_JS42,1552
+	private final static String JSON_JS="json.js";JSON_JS43,1604
+	private final static String POEM_PANE_NAME="poems.html";POEM_PANE_NAME44,1652
+	private final static String RESULTS_DIR="results"; //If this is changed then the corresponding string in result_list.html must be changedRESULTS_DIR45,1710
+	private final static String START="poems_start";START46,1849
+	private final static String MID="poems_mid";MID47,1899
+	private final static String END="poems_end";END48,1945
+	private final static Ii<String,String> TITLE_TAGS=new Ii<>("<h3>","</h3>");TITLE_TAGS49,1991
+	private final static Ii<String,String> STANZA_TAGS=new Ii<>("<h4 class=\"heading\">","</h4>");STANZA_TAGS50,2068
+	private final Writer mOut;mOut51,2164
+	private final FileWrapper mWrapper;mWrapper52,2192
+	private final List<ReportRecord<Long>> mPoems=new ArrayList<>();mPoems53,2229
+	private final Deferred<Void,Void,Ii<Line,String>> mDeferred=new DeferredObject<>();mDeferred54,2295
+	private final static Cleaner CLEANER=new Cleaner();CLEANER55,2380
+	private final Converter<Line,Ii<String,String>> mQueryToHashTagFilename;mQueryToHashTagFilename56,2433
+	private final Path mResultsDir;mResultsDir57,2507
+	private final Thrower mThrower;mThrower58,2540
+	public PoemsReport(Path pDest, Converter<Line,Ii<String,String>> pQueryToHashTagFilename, Thrower pThrower) throws IOException {PoemsReport60,2575
+	private void copy(String pSrc, Path pDest) throws IOException {copy82,3254
+	public void add(ReportRecord<Long> pRec) throws IOException {add88,3439
+	private String linkAndNotify(long pId, Line pLine) throws IOException {linkAndNotify95,3712
+	private String href(long pId, String pLine, String pLink) {href107,4131
+	private void addContent(PrintWriter pOut, ReportRecord<Long> pPoemRecord) throws IOException {addContent111,4281
+	public Path resultsDir() {resultsDir179,6392
+	public void genContent() throws Exception {genContent183,6447
+	public void close() throws IOException {close197,6759
+	public Promise<Void,Void,Ii<Line,String>> promise() {promise202,6853
+
+com/hourglassapps/cpi_ii/report/blacklist/BlacklistAggregator.java,878
+package com.hourglassapps.cpi_ii.report.blacklist;com.hourglassapps.cpi_ii.report.blacklist1,0
+public class BlacklistAggregator implements FileVisitor<Path> {BlacklistAggregator17,466
+	private final static Path LINKS_FILE=Paths.get("links.js");LINKS_FILE18,530
+	private final static Pattern mDocPathPattern=Pattern.compile("^\\{t:.*p:\"(documents/.*/[0-9]+(?:\\.[^\"]+)?)\",s:\\[.*$");mDocPathPattern19,591
+	private final SortedSet<Path> mDocuments=new TreeSet<>();mDocuments21,831
+	public FileVisitResult postVisitDirectory(Path arg0,postVisitDirectory24,902
+	public FileVisitResult preVisitDirectory(Path arg0,preVisitDirectory30,1048
+	public FileVisitResult visitFile(Path pFile, BasicFileAttributes arg1)visitFile36,1201
+	public FileVisitResult visitFileFailed(Path arg0, IOException arg1)visitFileFailed57,1769
+	public SortedSet<Path> get() {get62,1902
+
+com/hourglassapps/cpi_ii/report/blacklist/MainBlacklistReported.java,701
+package com.hourglassapps.cpi_ii.report.blacklist;com.hourglassapps.cpi_ii.report.blacklist1,0
+public class MainBlacklistReported {MainBlacklistReported17,413
+	private final static String TAG=MainBlacklistReported.class.getName();TAG18,450
+	private final static Path RESULTS_SUBDIR=Paths.get("results/completed");RESULTS_SUBDIR19,522
+	private final Path mResultsDir;mResultsDir22,683
+	private final DocPath2URL mIndexReader;mIndexReader23,716
+	public MainBlacklistReported(Path pPoemsDir, Path pDocsDir) {MainBlacklistReported25,759
+	public void exec() throws IOException {exec30,918
+	private static void usage() {usage54,1582
+	public static void main(String pArgs[]) {main59,1779
+
+com/hourglassapps/cpi_ii/report/blacklist/URLCanonicaliser.java,469
+package com.hourglassapps.cpi_ii.report.blacklist;com.hourglassapps.cpi_ii.report.blacklist1,0
+class URLCanonicaliser implements Converter<URL,URL>, Thrower {URLCanonicaliser10,241
+	private ConcreteThrower<MalformedURLException> mThrower=new ConcreteThrower<>();mThrower11,305
+	public URL convert(URL url) {convert14,399
+	public void close() throws Exception {close24,622
+	public <E extends Exception> void throwCaught(Class<E> pCatchable)throwCaught29,697
+
+com/hourglassapps/cpi_ii/report/blacklist/DocPath2URL.java,984
+package com.hourglassapps.cpi_ii.report.blacklist;com.hourglassapps.cpi_ii.report.blacklist1,0
+public class DocPath2URL implements Converter<Path, String>, Thrower {DocPath2URL21,581
+	private final static String TAG=DocPath2URL.class.getName();TAG22,652
+	private final static Path DOCUMENTS_DIRNAME=Paths.get("documents");DOCUMENTS_DIRNAME23,714
+	private final Path mBaseDir;mBaseDir24,783
+	private final ConcreteThrower<IOException> mThrower=new ConcreteThrower<>();mThrower25,813
+	private Path mCurIndexFile=null;mCurIndexFile27,893
+	private List<String> mCurURLs=new ArrayList<String>();mCurURLs28,927
+	public DocPath2URL(Path pDocDir) {DocPath2URL30,985
+	private List<String> readIndex(Path pIndexFile) throws FileNotFoundException, IOException {readIndex37,1177
+	public String convert(Path pFile) {convert50,1529
+	public void close() throws IOException {close83,2647
+	public <E extends Exception> void throwCaught(Class<E> pCatchable)throwCaught88,2724
+
+com/hourglassapps/cpi_ii/report/MainReporter.java,1325
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+public class MainReporter {MainReporter41,1460
+	private final static String TAG=MainReporter.class.getName();TAG42,1488
+	private final static int MAX_PATH_LEN=32;MAX_PATH_LEN43,1551
+	public final Path DOWNLOAD_PATH=Paths.get("downloaded_index");DOWNLOAD_PATH44,1594
+	private final static String POEM_DIR_NAME="poems";POEM_DIR_NAME45,1658
+	final static Path DOCUMENT_DIR=Paths.get("./documents");DOCUMENT_DIR46,1710
+	private final static String RESULT_START="results_start";RESULT_START47,1768
+	private final static String RESULT_END="results_end";RESULT_END48,1827
+	private final Path mInput;mInput49,1882
+	private final Path mDest;mDest50,1910
+	private final Path mDocDir;mDocDir51,1937
+	private final static Filter<Line> ONE_WORD_LINE_SPOTTER=new Filter<Line>(){ONE_WORD_LINE_SPOTTER53,1968
+	private final static Converter<Line,List<String>> QUERY_GENERATOR=new QueryGenerator(ONE_WORD_LINE_SPOTTER);QUERY_GENERATOR59,2143
+	public MainReporter(Path pXml, Path pDocuments, Path pDest) throws IOException {MainReporter61,2255
+	public void create() throws Exception {create74,2612
+	private static void usage() {usage151,5262
+	public static void main(String pArgs[]) throws IOException, ParseException {main155,5412
+
+com/hourglassapps/cpi_ii/report/ReportRecord.java,297
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+public interface ReportRecord<I> extends Record<I, String> {ReportRecord8,151
+	public String getTitle();getTitle9,212
+	public List<String> refrain();refrain15,340
+	public List<StanzaText> stanzas();stanzas21,433
+
+com/hourglassapps/cpi_ii/report/LineGenerator.java,1304
+package com.hourglassapps.cpi_ii.report;com.hourglassapps.cpi_ii.report1,0
+public class LineGenerator {LineGenerator8,136
+	public enum LineType {LineType9,165
+		TITLE, BODY;TITLE10,189
+		TITLE, BODY;BODY10,189
+	private final Converter<String,String> mCleaner;mCleaner13,208
+	private final long mEprintId;mEprintId14,258
+	private boolean mBuilt=false;mBuilt15,289
+	private List<Line> mLines=new ArrayList<>();mLines17,322
+	public LineGenerator(long pEprintId, Converter<String,String> pCleaner) {LineGenerator19,369
+	public void addLine(String pLine, LineType pType) {addLine24,492
+	public long eprintId() {eprintId29,626
+	public Line line(int pLineNum) {line33,676
+	public int numLines() {numLines40,788
+	public class Line {Line44,842
+		private String mCleaned=null;mCleaned45,863
+		private final int mLineNum;mLineNum46,895
+		private final String mText;mText47,925
+		private final LineType mType;mType48,955
+		private Line(String pText, LineType pType, int pLineNum) {Line50,988
+		public long eprintId() {eprintId56,1108
+		public String text() {text60,1161
+		public String cleaned() {cleaned64,1208
+		public LineType type() {type71,1330
+		public Line next() {next75,1379
+		public Line prev() {prev84,1552
+		public String toString() {toString93,1705
+
+com/hourglassapps/cpi_ii/MainListIndexTerms.java,257
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class MainListIndexTerms {MainListIndexTerms11,280
+	private final static String TAG=MainListIndexTerms.class.getName();TAG12,314
+	public static void main(String[] args) {main13,383
+
+com/hourglassapps/cpi_ii/NGramAnalyzerBuilder.java,449
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class NGramAnalyzerBuilder {NGramAnalyzerBuilder10,313
+	private final static String TAG=NGramAnalyzerBuilder.class.getName();TAG11,349
+	private final LatinAnalyzer mUnigramAnalyser;mUnigramAnalyser13,421
+	private final int mN;mN14,468
+	public NGramAnalyzerBuilder(LatinAnalyzer pTermAnalyser, int pN) {NGramAnalyzerBuilder16,493
+	public Analyzer build() {build22,654
+
+com/hourglassapps/cpi_ii/latin/LatinAnalyzer.java,2276
+package com.hourglassapps.cpi_ii.latin;com.hourglassapps.cpi_ii.latin1,0
+public abstract class LatinAnalyzer extends StopwordAnalyzerBase {LatinAnalyzer56,2259
+	private final static String TAG=LatinAnalyzer.class.getName();TAG57,2326
+	private final CharArraySet stemExclusionSet;stemExclusionSet58,2390
+	public final static String PERSEUS_STOPWORD_FILE = "/com/hourglassapps/cpi_ii/latin/la.stop";PERSEUS_STOPWORD_FILE63,2634
+	public final static String DEFAULT_STOPWORD_FILE = "/com/hourglassapps/cpi_ii/empty.stop";DEFAULT_STOPWORD_FILE65,2731
+	private StemRecorderFilter mRecorder;mRecorder66,2823
+	public final static Factory STEMPEL_RECORDER_FACTORY=new StemRecorderFilter.Factory() {STEMPEL_RECORDER_FACTORY68,2863
+	public final static Factory SNOWBALL_RECORDER_FACTORY=new StemRecorderFilter.Factory() {SNOWBALL_RECORDER_FACTORY77,3172
+	public final static Factory IDENTITY_RECORDER_FACTORY=new StemRecorderFilter.Factory() {IDENTITY_RECORDER_FACTORY86,3431
+	private Factory mStemmerFactory=IDENTITY_RECORDER_FACTORY;mStemmerFactory95,3664
+	private boolean mRealised=false;mRealised96,3724
+	public static CharArraySet getDefaultStopSet(){getDefaultStopSet102,3873
+	private static class DefaultSetHolder {DefaultSetHolder110,4113
+		static final CharArraySet DEFAULT_STOP_SET;DEFAULT_STOP_SET111,4154
+	public LatinAnalyzer() {LatinAnalyzer128,4622
+	public LatinAnalyzer(CharArraySet stopwords) {LatinAnalyzer137,4795
+	public LatinAnalyzer(String pStoplistFile) throws IOException {LatinAnalyzer141,4890
+	public LatinAnalyzer(CharArraySet stopwords, CharArraySet stemExclusionSet) {LatinAnalyzer153,5345
+	public LatinAnalyzer setStemmer(Factory pStemmerFactory) {setStemmer158,5541
+	protected abstract Ii<Tokenizer, TokenStream> underlyingTokeniser(Reader pReader);underlyingTokeniser164,5676
+	protected TokenStreamComponents createComponents(String fieldName,createComponents179,6301
+	public boolean storeStems(OutputStream pSave) throws IOException {storeStems192,6724
+	public Serialiser<MultiMap<String, Set<String>, String>> expansionsSerialiser() {expansionsSerialiser200,6895
+	public Set<String> tokenExpansions(String pStem) {tokenExpansions215,7233
+	public boolean displayStemGroups() {displayStemGroups223,7401
+
+com/hourglassapps/cpi_ii/latin/WhiteSpaceLatinAnalyzer.java,276
+package com.hourglassapps.cpi_ii.latin;com.hourglassapps.cpi_ii.latin1,0
+public final class WhiteSpaceLatinAnalyzer extends LatinAnalyzer {WhiteSpaceLatinAnalyzer11,253
+	protected Ii<Tokenizer, TokenStream> underlyingTokeniser(Reader pReader) {underlyingTokeniser14,332
+
+com/hourglassapps/cpi_ii/latin/LatinStemmer.java,1318
+package com.hourglassapps.cpi_ii.latin;com.hourglassapps.cpi_ii.latin3,75
+public class LatinStemmer extends com.hourglassapps.cpi_ii.stem.snowball.tartarus.SnowballProgram {LatinStemmer12,332
+	private static final long serialVersionUID = 1L;serialVersionUID14,433
+	public enum PartOfSpeech {PartOfSpeech17,584
+		NOUN, VERB, UNKNOWNNOUN18,612
+		NOUN, VERB, UNKNOWNVERB18,612
+		NOUN, VERB, UNKNOWNUNKNOWN18,612
+	private final static PartOfSpeech ASSUMED_POS=PartOfSpeech.UNKNOWN;ASSUMED_POS21,639
+	private final static LatinStemmer methodObject = new LatinStemmer ();methodObject23,710
+	private final static Among a_0[] = {a_025,782
+	private final static Among a_1[] = {a_182,3537
+	private final static Among a_2[] = {a_2104,4468
+	private java.lang.StringBuilder S_verb_form = new java.lang.StringBuilder();S_verb_form132,5707
+	private java.lang.StringBuilder S_noun_form = new java.lang.StringBuilder();S_noun_form133,5785
+	private void copy_from(LatinStemmer other) {copy_from135,5864
+	private boolean r_map_letters() {r_map_letters141,6010
+	private boolean r_que_word() {r_que_word238,7682
+	public boolean stem() {stem283,8508
+	public boolean stem(PartOfSpeech pPos) {stem287,8566
+	public boolean equals( Object o ) {equals440,11812
+	public int hashCode() {hashCode444,11889
+
+com/hourglassapps/cpi_ii/latin/LatinLowerCaseFilterFactory.java,469
+package com.hourglassapps.cpi_ii.latin;com.hourglassapps.cpi_ii.latin1,0
+public class LatinLowerCaseFilterFactory extends TokenFilterFactory implements MultiTermAwareComponent {LatinLowerCaseFilterFactory38,1532
+  public LatinLowerCaseFilterFactory(Map<String,String> args) {LatinLowerCaseFilterFactory41,1689
+  public TokenStream create(TokenStream input) {create49,1895
+  public AbstractAnalysisFactory getMultiTermComponent() {getMultiTermComponent55,2090
+
+com/hourglassapps/cpi_ii/latin/StandardLatinAnalyzer.java,523
+package com.hourglassapps.cpi_ii.latin;com.hourglassapps.cpi_ii.latin1,0
+public final class StandardLatinAnalyzer extends LatinAnalyzer {StandardLatinAnalyzer20,687
+	public StandardLatinAnalyzer() {StandardLatinAnalyzer21,752
+	private StandardLatinAnalyzer(String pStoplistFile) throws IOException {StandardLatinAnalyzer25,802
+	protected Ii<Tokenizer, TokenStream> underlyingTokeniser(Reader pReader) {underlyingTokeniser30,915
+	public static Analyzer searchAnalyzer() throws IOException {searchAnalyzer39,1345
+
+com/hourglassapps/cpi_ii/latin/LatinLowerCaseFilter.java,420
+package com.hourglassapps.cpi_ii.latin;com.hourglassapps.cpi_ii.latin1,0
+public final class LatinLowerCaseFilter extends TokenFilter {LatinLowerCaseFilter26,1037
+  private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);termAtt27,1099
+  public LatinLowerCaseFilter(TokenStream in) {LatinLowerCaseFilter29,1183
+  public boolean incrementToken() throws IOException {incrementToken34,1265
+
+com/hourglassapps/cpi_ii/web_search/Cmd.java,1122
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+enum Cmd {Cmd7,120
+	ALL("all"), THREADS("threads"), PARTITION("partition"), RANDOM("random"), ONE("one"), DOWNLOAD("download");ALL8,131
+	ALL("all"), THREADS("threads"), PARTITION("partition"), RANDOM("random"), ONE("one"), DOWNLOAD("download");THREADS8,131
+	ALL("all"), THREADS("threads"), PARTITION("partition"), RANDOM("random"), ONE("one"), DOWNLOAD("download");PARTITION8,131
+	ALL("all"), THREADS("threads"), PARTITION("partition"), RANDOM("random"), ONE("one"), DOWNLOAD("download");RANDOM8,131
+	ALL("all"), THREADS("threads"), PARTITION("partition"), RANDOM("random"), ONE("one"), DOWNLOAD("download");ONE8,131
+	ALL("all"), THREADS("threads"), PARTITION("partition"), RANDOM("random"), ONE("one"), DOWNLOAD("download");DOWNLOAD8,131
+	private final static Set<Cmd> CMDS=new HashSet<Cmd>(Arrays.asList(CMDS10,242
+	private final String mName;mName13,376
+	private Cmd(String pName) {Cmd15,407
+	final public String s() {s19,456
+	public static Cmd inst(String pArg) throws UnrecognisedSyntaxException {inst23,504
+
+com/hourglassapps/cpi_ii/web_search/TypedLink.java,477
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class TypedLink implements Typed<URL> {TypedLink9,151
+	public final static char FILE_EXTENSION_DELMITER='.';FILE_EXTENSION_DELMITER10,198
+	private final static int MAX_EXTENSION_LENGTH=64;MAX_EXTENSION_LENGTH11,253
+	private final URL mLink;mLink12,304
+	public TypedLink(URL pLink) {TypedLink14,332
+	public String extension() {extension19,393
+	public URL get() {get33,690
+
+com/hourglassapps/cpi_ii/web_search/MainDownloader.java,4136
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class MainDownloader implements AutoCloseable {MainDownloader75,2867
+    private final static String TAG=MainDownloader.class.getName();TAG76,2922
+    private final static Converter<String,String> KEY_CONVERTER=JournalKeyConverter.SINGLETON;KEY_CONVERTER77,2990
+    private final static Converter<URL, Typed<URL>> URL_CONVERTER=new Converter<URL, Typed<URL>>() {URL_CONVERTER78,3085
+    public final static Path DOCUMENT_DIR=Paths.get("documents");DOCUMENT_DIR84,3283
+    private final static String JOURNAL_NAME="journal";JOURNAL_NAME85,3349
+    private final static Path JOURNAL=Paths.get(JOURNAL_NAME);JOURNAL86,3405
+    public final static char JOURNAL_NUM_DELIM='_';JOURNAL_NUM_DELIM87,3468
+    public final static String THREAD_JOURNAL_NAME=JOURNAL_NUM_DELIM+JOURNAL_NAME;THREAD_JOURNAL_NAME88,3520
+    private final static Path TEST_JOURNAL=Paths.get("test_journal");TEST_JOURNAL89,3603
+    private final static boolean BLACKLISTING=false;BLACKLISTING90,3673
+    private final static Journal<String,URL> NULL_JOURNAL=new NullJournal<String,URL>();NULL_JOURNAL91,3726
+    private final static int CONNECT_TIMEOUT=10*1000;CONNECT_TIMEOUT93,3817
+    private final static int SOCKET_TIMEOUT=10*1000;SOCKET_TIMEOUT94,3871
+    private final static int COMPLETION_TIMEOUT=180*1000;COMPLETION_TIMEOUT95,3924
+    private final static long MAX_FILE_DOWNLOAD_SIZE=1024*1024*10;MAX_FILE_DOWNLOAD_SIZE96,3982
+    private final Closer mCloser=new Closer();mCloser98,4054
+    public static Path downloadIndex() {downloadIndex100,4103
+    public MainDownloader() {MainDownloader104,4214
+    public ApacheDownloader createClient() {createClient108,4254
+    private static class ApacheDownloader implements AutoCloseable, Downloader<URL, ContentTypeSourceable> {ApacheDownloader114,4409
+	private final Throttle mDownloadThrottle=new Throttle(3, 2000, TimeUnit.MILLISECONDS);mDownloadThrottle116,4519
+	private CloseableHttpAsyncClient mClient;mClient117,4607
+	private final RequestConfig mRequestConfig;mRequestConfig118,4650
+	public ApacheDownloader() {ApacheDownloader120,4696
+	public void reset() throws IOException {reset130,4908
+	public Promise<ContentTypeSourceable, IOException, Void> downloadLink(downloadLink136,5024
+	public void downloadSynchronous(URL pSource, Path pDst) throws IOException, InterruptedException {downloadSynchronous192,7319
+	public void close() throws Exception {close197,7486
+    public static RestrictedSearchEngine<String,URL,URL> setupBlacklist(RestrictedSearchEngine<String,URL,URL>  pSearchEngine) throws UnsupportedEncodingException {setupBlacklist202,7560
+    public void downloadAll(String pPath, boolean pDummyRun, Set<String> pFilteredURLs) {downloadAll232,8747
+    public QueryThread<String> setupQuery(int pNumThreads, Journal<String,URL> pJournal, Throttle pThrottle) throws Exception {setupQuery253,9669
+    public void downloadFiltered(String pStemPath, Filter<List<List<String>>> pFilter, Set<String> pFilteredURLs) throws Exception {downloadFiltered262,10044
+    public void downloadOne(String pQueryName, URL pURL) {downloadOne274,10766
+    static public SSLContext getSSLContext() {getSSLContext291,11496
+    static public Registry<SchemeIOSessionStrategy> getSSLRegistryAsync() {getSSLRegistryAsync305,12153
+    static public PoolingNHttpClientConnectionManager getPoolingNHttpClientConnectionManager() {getPoolingNHttpClientConnectionManager313,12651
+    private static CloseableHttpAsyncClient client(RequestConfig pRequestConfig) {client326,13137
+    public void close() throws Exception {close337,13714
+    private static void usage() {usage341,13782
+    private static List<String> readStdIn() throws IOException {readStdIn352,14872
+    public static void main(String pArgs[]) throws IOException, InterruptedException {main366,15210
+    private void downloadAndIndex(String stemPath, int numThreads, FilterTemplate<List<List<String>>> pFilter, Set<String> pFilteredURLs) throws Exception {downloadAndIndex486,19644
+
+com/hourglassapps/cpi_ii/web_search/QueryRecord.java,422
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class QueryRecord<K> {QueryRecord5,74
+	private final int mTid;mTid6,104
+	private final K mKey;mKey7,129
+	private final Path mDirToIndex;mDirToIndex8,152
+	public QueryRecord(int pTid, K pKey, Path pDirToIndex) {QueryRecord10,187
+	public int tid() {tid16,303
+	public K key() {key20,343
+	public Path dir() {dir24,381
+
+com/hourglassapps/cpi_ii/web_search/Sourceable.java,197
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public interface Sourceable {Sourceable3,46
+	public int dstKey(); dstKey4,76
+	public String src();src5,99
+
+com/hourglassapps/cpi_ii/web_search/QueryThread.java,1980
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<String,K>, Consumer<List<List<String>>> {QueryThread26,744
+	private final static String TAG=QueryThread.class.getName();TAG27,863
+	private static int NAME=0;NAME28,925
+	private final static List<List<String>> TERMINAL_RECORD=Collections.<List<String>>emptyList();TERMINAL_RECORD29,953
+	private final List<List<String>> mDisjunctions=new ArrayList<List<String>>();mDisjunctions30,1049
+	private final Deque<List<List<String>>> mInbox=new ArrayDeque<>();mInbox31,1128
+	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();mThrower32,1196
+	private final SearchEngine<List<String>, K, URL, URL> mQ;	mQ33,1272
+	private final Journal<K,URL> mJournal;mJournal34,1332
+	private final Deferred<Void, IOException, K> mDeferred=new DeferredObject<>();mDeferred36,1426
+	private Closer mCloser=new Closer();mCloser37,1506
+	public QueryThread(int pNumThreads, SearchEngine<List<String>,K,URL,URL> pQ, Journal<K,URL> pJournal) throws IOException {QueryThread39,1546
+	public void search(Query<K,URL> pQuery) throws IOException {search55,2038
+	private synchronized List<List<String>> unshift() {unshift67,2437
+	public synchronized void push(List<List<String>> pDisjunctions) {push79,2689
+	public void run() {run85,2834
+	private synchronized boolean runnable(List<List<String>> pQuery) {runnable114,3674
+	private synchronized void forceQuit() {forceQuit118,3773
+	private synchronized void quitWhenFinished() {quitWhenFinished123,3866
+	public void onExpansion(List<String> pExpansions) {onExpansion128,3955
+	private List<String> concat(List<List<String>> pDisjunctions) {concat132,4069
+	public void onGroupDone(int pNumExpansions) {onGroupDone142,4322
+	public void close() throws Exception {close154,4509
+	public Promise<Void, IOException, K> promise() {promise173,4789
+
+com/hourglassapps/cpi_ii/web_search/AbstractSearchEngine.java,1626
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public abstract class AbstractSearchEngine implements RestrictedSearchEngine<String,URL,URL>, AutoCloseable {AbstractSearchEngine16,413
+    private final static String TAG=AbstractSearchEngine.class.getName();TAG17,523
+    protected final Query<String,URL> NULL_QUERY=new HttpQuery<String>(uniqueName(Collections.<String>emptyList()));NULL_QUERY19,598
+    public Query<String,URL> formulate(List<String> pDisjunctions) formulate22,730
+    public abstract int maxQueryLen();maxQueryLen38,1395
+    public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {filterPhrases41,1449
+    protected String encode(String pString) throws UnsupportedEncodingException {encode45,1564
+    public boolean filterSites(Set<String> pSites) throws UnsupportedEncodingException {filterSites50,1702
+    protected abstract String encodeDisjunction(String pDisjunction) throws UnsupportedEncodingException;encodeDisjunction60,2006
+    protected abstract boolean addDisjunction(String pDisjunction) throws UnsupportedEncodingException;addDisjunction68,2382
+    protected int addedLen(String pDisjunction) throws UnsupportedEncodingException {addedLen78,2802
+    protected abstract int len();len89,3236
+    protected abstract void reset();reset94,3354
+    protected abstract Option<URL> uri() throws MalformedURLException;uri102,3557
+    public String uniqueName(List<String> pDisjunctions) {uniqueName105,3644
+    protected Ii<Option<URL>, List<String>> format(List<String> pDisjunctions) format124,4352
+
+com/hourglassapps/cpi_ii/web_search/ContentTypeSourceable.java,533
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class ContentTypeSourceable implements Sourceable {ContentTypeSourceable3,46
+	private final int mFilename;mFilename4,105
+	private final String mContentType;mContentType5,135
+	public ContentTypeSourceable(int pFilename, String pContentType) {ContentTypeSourceable7,173
+	public int dstKey() {dstKey13,309
+	public String contentType() {contentType17,356
+	public String src() {src22,425
+	public String toString() {toString27,487
+
+com/hourglassapps/cpi_ii/web_search/bing/api_v7/BingSearchEngine.java,4702
+package com.hourglassapps.cpi_ii.web_search.bing.api_v7;com.hourglassapps.cpi_ii.web_search.bing.api_v71,0
+public class BingSearchEngine extends AbstractSearchEngine implements Thrower {BingSearchEngine40,1490
+    private final static String TAG=BingSearchEngine.class.getName();TAG41,1570
+    private final static boolean FILTER_BY_SITE=false;FILTER_BY_SITE42,1640
+    public final static int RESULTS_PER_PAGE=50;RESULTS_PER_PAGE43,1695
+    public static final String END_POINT_PREFIX="websearchii";END_POINT_PREFIX45,1746
+    public static final String AUTH_KEY = "acf0850c056a4066ad580156b5981b0c";AUTH_KEY46,1809
+    private final static String SEARCH_PATH_PREFIX="/bing/v7.0/search?q=%27%28";SEARCH_PATH_PREFIX48,1888
+    private final static String SEARCH_URI_PREFIX=SEARCH_URI_PREFIX49,1969
+    private final static String CLOSING_BRACKET="%29";CLOSING_BRACKET51,2100
+    private final static String NUMBER_SPECIFIER="%d";NUMBER_SPECIFIER52,2155
+    private final static String OFFSET_SUFFIX="&offset="+NUMBER_SPECIFIER;OFFSET_SUFFIX53,2210
+    private final static String GENERAL_SUFFIX="&count="+NUMBER_SPECIFIER+"&responseFilter=webpages";GENERAL_SUFFIX54,2285
+    private final static String EOQ_SUFFIX="%27";EOQ_SUFFIX55,2387
+    private final static String AUTH_HEADER="Ocp-Apim-Subscription-Key";AUTH_HEADER57,2439
+    private final static String AUTH_PREFIX="";AUTH_PREFIX58,2512
+    private final static String ACCEPT_HEADER="Accept";ACCEPT_HEADER60,2561
+    private final static String ACCEPT="application/json";ACCEPT61,2617
+    private final static int MAX_RESULT_PAGES=2; //in addition we currently request 50 docs per page (ie the max allowed)MAX_RESULT_PAGES65,2834
+    private final static int TOTAL_QUERY_LEN=2000;TOTAL_QUERY_LEN68,3264
+    private final int mMaxQueryLenOverhead=Integer.toString((MAX_RESULT_PAGES*RESULTS_PER_PAGE)-1).length();  mMaxQueryLenOverhead75,3593
+    private final StringBuilder mQuery=new StringBuilder();mQuery76,3704
+    private final static int MAX_TIMEOUTS=3;MAX_TIMEOUTS77,3764
+    protected ConcreteThrower<Exception> mThrower=new ConcreteThrower<Exception>();mThrower79,3814
+    protected boolean mSearchInvoked=false;mSearchInvoked80,3898
+    private final String mAccountKey;mAccountKey81,3942
+    private ResponseFactory mFact=new ResponseFactory();mFact82,3980
+    private HttpClient mClient;mClient84,4101
+    private String mBlacklistedPhrases="";mBlacklistedPhrases85,4133
+    private String mBlacklistedSites="";mBlacklistedSites86,4176
+    private int mOffset=0;mOffset87,4217
+    private Option<Long> mTotalResultsPresentable=new Option<Long>();mTotalResultsPresentable88,4244
+    private final Throttle mThrottle;mThrottle89,4314
+    public BingSearchEngine(String pAccountKey, Throttle pThrottle) {BingSearchEngine91,4357
+    public BingSearchEngine(Throttle pThrottle) {BingSearchEngine98,4584
+    private static CloseableHttpClient clientInst() {clientInst104,4705
+    private static CloseableHttpClient clientInst(CloseableHttpClient pOldClient) throws IOException {clientInst123,5355
+    protected String encode(String pString) throws UnsupportedEncodingException {encode140,5826
+    public static String generalSuffix() {generalSuffix150,6340
+    public int maxQueryLen() {maxQueryLen155,6465
+    protected String encodeDisjunction(String pDisjunction) throws UnsupportedEncodingException {encodeDisjunction165,6831
+    public Query<String,URL> formulate(List<String> pDisjunctions) formulate174,7066
+    protected boolean addDisjunction(String pDisjunction) throws UnsupportedEncodingException {addDisjunction183,7335
+    protected int len() {len195,7685
+    protected void reset() {reset200,7757
+    private Option<Integer> pageCount(Option<Long> pTotalResultsPresentable) {pageCount207,7919
+    protected Option<URL> uri() throws MalformedURLException {uri250,9844
+    private Response page(String pName, URL pQuery) throws ClientProtocolException, IOException, URISyntaxException {page272,10642
+    public Iterator<URL> present(final Query<String,URL> pQuery) throws IOException {present311,11778
+    public void close() throws Exception {close400,14377
+    public <E extends Exception> void throwCaught(Class<E> pCatchable)throwCaught406,14504
+    private String blacklist(Set<String> pFiltered, String pJoinStart, String pJoinEnd) throws UnsupportedEncodingException {blacklist411,14637
+    public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {filterPhrases423,15097
+    public boolean filterSites(Set<String> pSites) throws UnsupportedEncodingException {filterSites435,15490
+
+com/hourglassapps/cpi_ii/web_search/bing/api_v7/ResponseFactory.java,364
+package com.hourglassapps.cpi_ii.web_search.bing.api_v7;com.hourglassapps.cpi_ii.web_search.bing.api_v71,0
+public class ResponseFactory {ResponseFactory14,458
+	private ObjectMapper mMapper=new ObjectMapper();mMapper15,489
+	private JsonParser mParser;mParser16,539
+	public Response inst(String pToParse) throws JsonParseException, IOException {inst18,570
+
+com/hourglassapps/cpi_ii/web_search/bing/api_v7/BingArgs.java,228
+package com.hourglassapps.cpi_ii.web_search.bing.api_v7;com.hourglassapps.cpi_ii.web_search.bing.api_v71,0
+public class BingArgs {BingArgs3,58
+	public final static String JSON_SPECIFIER="&$format=Json";JSON_SPECIFIER6,216
+
+com/hourglassapps/cpi_ii/web_search/bing/api_v7/response/Response.java,662
+package com.hourglassapps.cpi_ii.web_search.bing.api_v7.response;com.hourglassapps.cpi_ii.web_search.bing.api_v7.response1,0
+public class Response {Response14,377
+    private final static String TAG=Response.class.getName();TAG15,401
+    public enum Type { WebResult };Type17,464
+    public enum Type { WebResult };WebResult17,464
+    private WebPages mWebPages=new WebPages();mWebPages19,501
+    public void setWebPages(WebPages pWebPages) {setWebPages21,550
+    public WebPages webPages() {webPages26,668
+    public long totalEstimatedMatches() {totalEstimatedMatches30,727
+    public List<URL> urls() throws URISyntaxException {urls34,823
+
+com/hourglassapps/cpi_ii/web_search/bing/api_v7/response/__Metadata.java,335
+package com.hourglassapps.cpi_ii.web_search.bing.api_v7.response;com.hourglassapps.cpi_ii.web_search.bing.api_v7.response1,0
+public class __Metadata {__Metadata6,209
+	private String mUri;mUri7,235
+	private Type mType;mType8,257
+	public void setUri(String pUri) {setUri10,280
+	public void setType(Type pType) {setType14,333
+
+com/hourglassapps/cpi_ii/web_search/bing/api_v7/response/WebPages.java,815
+package com.hourglassapps.cpi_ii.web_search.bing.api_v7.response;com.hourglassapps.cpi_ii.web_search.bing.api_v7.response1,0
+public class WebPages implements Iterable<Value> {WebPages18,512
+    private final static String TAG=WebPages.class.getName();TAG19,563
+    private long mTotalEstimatedMatches=0;mTotalEstimatedMatches21,626
+    private Value[] mValue=new Value[]{};mValue22,669
+    public void setTotalEstimatedMatches(long pTotalEstimatedMatches) {setTotalEstimatedMatches24,712
+    public long totalEstimatedMatches() {totalEstimatedMatches28,839
+    public void setValue(Value[] pValue) {setValue32,924
+    public int size() {size36,991
+    public Value value(int pIdx) {value40,1046
+    public Iterator<Value> iterator() {iterator45,1125
+    public List<URL> urls() {urls71,1563
+
+com/hourglassapps/cpi_ii/web_search/bing/api_v7/response/Value.java,613
+package com.hourglassapps.cpi_ii.web_search.bing.api_v7.response;com.hourglassapps.cpi_ii.web_search.bing.api_v7.response1,0
+public class Value {Value13,379
+	private final static String TAG=Value.class.getName();TAG14,400
+	private String mName;mName16,458
+	private String mDisplayUrl;mDisplayUrl17,481
+	private String mUrl;mUrl18,510
+	private URL mUri=null;mUri20,534
+	public void setName(String pName) {setName22,560
+	public void setDisplayUrl(String pDisplayUrl) {setDisplayUrl26,617
+	public void setUrl(String pUrl) {setUrl30,698
+	public URL url() throws MalformedURLException {url34,751
+
+com/hourglassapps/cpi_ii/web_search/bing/old/BingSearchEngine.java,3555
+package com.hourglassapps.cpi_ii.web_search.bing.old;com.hourglassapps.cpi_ii.web_search.bing.old1,0
+public class BingSearchEngine extends AbstractSearchEngine implements Thrower {BingSearchEngine34,1218
+	private final static String TAG=BingSearchEngine.class.getName();TAG35,1298
+	private final static boolean FILTER_BY_SITE=false;FILTER_BY_SITE36,1365
+	public final static int RESULTS_PER_PAGE=50;RESULTS_PER_PAGE37,1417
+	private final static String SEARCH_PATH_PREFIX="/Bing/Search/Web?Query=%27%28";SEARCH_PATH_PREFIX40,1551
+	private final static String SEARCH_URI_PREFIX=SEARCH_URI_PREFIX41,1632
+	private final static String CLOSING_BRACKET="%29";CLOSING_BRACKET43,1738
+	public final static String GENERAL_SUFFIX="&$top="+RESULTS_PER_PAGE+BingArgs.JSON_SPECIFIER;GENERAL_SUFFIX44,1790
+	private final static String SEARCH_PATH_SUFFIX="%27"+GENERAL_SUFFIX;SEARCH_PATH_SUFFIX45,1884
+	private final static String AUTH_HEADER="Authorization";AUTH_HEADER47,1956
+	private final static String AUTH_PREFIX="Basic ";AUTH_PREFIX48,2014
+	private final static int MAX_RESULT_PAGES=2; //in addition we currently request 50 docs per page (ie the max allowed)MAX_RESULT_PAGES50,2067
+	private final static int TOTAL_QUERY_LEN=2000;TOTAL_QUERY_LEN53,2488
+	public static final String AUTH_KEY = "xD0E++DfZY7Sbumxx2QBuvmgOGliDgHuDIm0LzIGr3E=";AUTH_KEY54,2536
+	private final int mMaxQueryLenOverhead=("&$skip="+Integer.toString((MAX_RESULT_PAGES-1)*RESULTS_PER_PAGE)).length();  mMaxQueryLenOverhead67,3138
+	private final StringBuilder mQuery=new StringBuilder();mQuery68,3258
+	protected ConcreteThrower<Exception> mThrower=new ConcreteThrower<Exception>();mThrower70,3317
+	protected boolean mSearchInvoked=false;mSearchInvoked71,3398
+	private final String mAccountKey;mAccountKey72,3439
+	private ResponseFactory mFact=new ResponseFactory();mFact73,3474
+	private final HttpClient mClient=new DefaultHttpClient();mClient74,3528
+	private String mBlacklistedPhrases="";mBlacklistedPhrases75,3587
+	private String mBlacklistedSites="";mBlacklistedSites76,3627
+	public BingSearchEngine(String pAccountKey) {BingSearchEngine78,3666
+	public BingSearchEngine() {BingSearchEngine82,3795
+	protected String encode(String pString) throws UnsupportedEncodingException {encode87,3860
+	public int maxQueryLen() {maxQueryLen98,4387
+	protected String encodeDisjunction(String pDisjunction) throws UnsupportedEncodingException {encodeDisjunction106,4655
+	public Query<String,URL> formulate(List<String> pDisjunctions) formulate115,4880
+	protected boolean addDisjunction(String pDisjunction) throws UnsupportedEncodingException {addDisjunction124,5144
+	protected int len() {len135,5433
+	protected void reset() {reset140,5497
+	protected URL uri() throws MalformedURLException {uri145,5575
+	private Response page(String pName, URL pQuery) throws ClientProtocolException, IOException, URISyntaxException {page149,5792
+	public Iterator<URL> present(final Query<String,URL> pQuery) throws IOException {present165,6399
+	public void close() throws Exception {close233,8170
+	public <E extends Exception> void throwCaught(Class<E> pCatchable)throwCaught239,8290
+	private String blacklist(Set<String> pFiltered, String pJoinStart, String pJoinEnd) throws UnsupportedEncodingException {blacklist244,8420
+	public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException {filterPhrases256,8869
+	public boolean filterSites(Set<String> pSites) throws UnsupportedEncodingException {filterSites268,9252
+
+com/hourglassapps/cpi_ii/web_search/bing/old/ResponseFactory.java,358
+package com.hourglassapps.cpi_ii.web_search.bing.old;com.hourglassapps.cpi_ii.web_search.bing.old1,0
+public class ResponseFactory {ResponseFactory14,452
+	private ObjectMapper mMapper=new ObjectMapper();mMapper15,483
+	private JsonParser mParser;mParser16,533
+	public Response inst(String pToParse) throws JsonParseException, IOException {inst18,564
+
+com/hourglassapps/cpi_ii/web_search/bing/old/BingArgs.java,222
+package com.hourglassapps.cpi_ii.web_search.bing.old;com.hourglassapps.cpi_ii.web_search.bing.old1,0
+public class BingArgs {BingArgs3,55
+	public final static String JSON_SPECIFIER="&$format=Json";JSON_SPECIFIER6,213
+
+com/hourglassapps/cpi_ii/web_search/bing/old/response/D.java,674
+package com.hourglassapps.cpi_ii.web_search.bing.old.response;com.hourglassapps.cpi_ii.web_search.bing.old.response1,0
+public class D implements Iterable<Result> {D15,399
+	private final static String TAG=D.class.getName();TAG16,444
+	private Result[] mResults;mResults18,498
+	private String mNext;mNext19,526
+	public void setResults(Result[] pResults) {setResults21,551
+	public int size() {size25,622
+	public Result result(int pIdx) {result29,674
+	public void set__next(String pNext) {set__next33,738
+	public URL next() throws MalformedURLException {next37,797
+	public Iterator<Result> iterator() {iterator45,951
+	public List<URL> urls() {urls71,1377
+
+com/hourglassapps/cpi_ii/web_search/bing/old/response/Response.java,471
+package com.hourglassapps.cpi_ii.web_search.bing.old.response;com.hourglassapps.cpi_ii.web_search.bing.old.response1,0
+public class Response {Response12,295
+	public enum Type { WebResult };Type13,319
+	public enum Type { WebResult };WebResult13,319
+	private D mD;mD15,353
+	public void setD(D pD) {setD17,370
+	public D d() {d21,410
+	public List<URL> urls() throws URISyntaxException {urls25,443
+	public URL next() throws MalformedURLException {next29,520
+
+com/hourglassapps/cpi_ii/web_search/bing/old/response/Result.java,938
+package com.hourglassapps.cpi_ii.web_search.bing.old.response;com.hourglassapps.cpi_ii.web_search.bing.old.response1,0
+public class Result {Result13,376
+	private final static String TAG=Result.class.getName();TAG14,398
+	private __Metadata mMetadata;mMetadata16,457
+	private String mId;mId17,488
+	private String mTitle;mTitle18,509
+	private String mDescription;mDescription19,533
+	private String mDisplayUrl;mDisplayUrl20,563
+	private String mUrl;mUrl21,592
+	private URL mUri=null;mUri23,616
+	public void set__metadata(__Metadata pMetadata) {set__metadata25,642
+	public void setID(String pId) {setID29,721
+	public void setTitle(String pTitle) {setTitle33,770
+	public void setDescription(String pDescription) {setDescription37,831
+	public void setDisplayUrl(String pDisplayUrl) {setDisplayUrl41,916
+	public void setUrl(String pUrl) {setUrl46,1017
+	public URL url() throws MalformedURLException {url50,1070
+
+com/hourglassapps/cpi_ii/web_search/bing/old/response/__Metadata.java,329
+package com.hourglassapps.cpi_ii.web_search.bing.old.response;com.hourglassapps.cpi_ii.web_search.bing.old.response1,0
+public class __Metadata {__Metadata6,203
+	private String mUri;mUri7,229
+	private Type mType;mType8,251
+	public void setUri(String pUri) {setUri10,274
+	public void setType(Type pType) {setType14,327
+
+com/hourglassapps/cpi_ii/web_search/SearchEngine.java,389
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public interface SearchEngine<C,K,Q,R> extends AutoCloseable {SearchEngine9,160
+	public Query<K,Q> formulate(C pDisjunctions) throws IOException;formulate10,223
+	public Iterator<R> present(Query<K,Q> pQuery) throws IOException;present11,289
+	public K uniqueName(C pDisjunctions);uniqueName12,356
+
+com/hourglassapps/cpi_ii/web_search/Results.java,154
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public interface Results<T> extends Iterator<List<T>> {Results6,97
+
+com/hourglassapps/cpi_ii/web_search/RestrictedSearchEngine.java,421
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public interface RestrictedSearchEngine<K,Q,R> extends SearchEngine<List<String>,K,Q,R> {RestrictedSearchEngine17,545
+	public boolean filterPhrases(Set<String> pPhrases) throws UnsupportedEncodingException;filterPhrases30,1384
+	public boolean filterSites(Set<String> pSites) throws UnsupportedEncodingException;filterSites43,2139
+
+com/hourglassapps/cpi_ii/web_search/ExpansionComparator.java,1181
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class ExpansionComparator implements Comparator<List<String>> {ExpansionComparator24,796
+	private final static String TAG=ExpansionComparator.class.getName();TAG25,867
+	public final static Comparator<List<String>> NGRAM_PRIORITISER;NGRAM_PRIORITISER27,938
+	private final IndexReader mReader=DirectoryReader.open(FSDirectory.open(MainIndexConductus.UNSTEMMED_2_STEMMED_INDEX));mReader46,1316
+	private final IndexSearcher mSearcher=new IndexSearcher(mReader);mSearcher47,1437
+	private final IndexViewer mTermIndex=new IndexViewer(MainIndexConductus.UNSTEMMED_TERM_2_EPRINT_INDEX);mTermIndex48,1504
+	private Map<String, Long> mTerm2Freq=term2Freq();mTerm2Freq49,1609
+	public ExpansionComparator() throws IOException {ExpansionComparator51,1662
+	private Map<String, Long> term2Freq() throws IOException {term2Freq55,1721
+	private boolean presentInCollection(List<String> pToken) throws IOException {presentInCollection68,2085
+	private double geometricFreq(List<String> pToken) {geometricFreq79,2442
+	public int compare(List<String> p0, List<String> p1) {compare92,2683
+
+com/hourglassapps/cpi_ii/web_search/HttpQuery.java,442
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class HttpQuery<K> implements Query<K,URL> {HttpQuery8,126
+	private final K mName;mName10,179
+	private final URL mUrl;mUrl11,203
+	public HttpQuery(K pName) {HttpQuery13,230
+	public HttpQuery(K pName, URL pUrl) {HttpQuery18,292
+	public boolean empty() {empty24,374
+	public URL raw() {raw29,436
+	public K uniqueName() {uniqueName34,487
+
+com/hourglassapps/cpi_ii/web_search/UnrecognisedSyntaxException.java,271
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class UnrecognisedSyntaxException extends Exception {UnrecognisedSyntaxException3,46
+	private static final long serialVersionUID = -6517435663633267350L;serialVersionUID8,123
+
+com/hourglassapps/cpi_ii/web_search/JournalKeyConverter.java,509
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class JournalKeyConverter implements Converter<String, String> {JournalKeyConverter10,239
+	private final String TAG=JournalKeyConverter.class.getName();TAG11,311
+	public final static Converter<String,String> SINGLETON=new JournalKeyConverter();SINGLETON13,376
+	private final static String PATH_ENCODING=StandardCharsets.UTF_8.toString();PATH_ENCODING15,461
+	public String convert(String pIn) {convert18,551
+
+com/hourglassapps/cpi_ii/web_search/LengthFilter.java,300
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class LengthFilter implements Filter<URL> {LengthFilter7,107
+	private int mLongest;mLongest8,158
+	public LengthFilter(int pMinLen) {LengthFilter10,183
+	public boolean accept(URL pQuery) {accept15,256
+
+com/hourglassapps/cpi_ii/web_search/DeferredZeroCopyConsumer.java,1393
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class DeferredZeroCopyConsumer extends ZeroCopyConsumer<File> {DeferredZeroCopyConsumer20,545
+    private final static String TAG=DeferredZeroCopyConsumer.class.getName();TAG21,616
+    private final Deferred<ContentTypeSourceable,?,?> mDeferred;mDeferred22,694
+    private int mDestKey;mDestKey23,759
+    private final long mStartTime_ns;mStartTime_ns24,785
+    private final long mTimeToDie_ns;mTimeToDie_ns25,823
+    private boolean mAborted=false;mAborted26,861
+    private final URL mSrc;mSrc28,898
+    private final File mDest;mDest29,926
+    private boolean mContentReceived=false;mContentReceived30,956
+    private long mMaxLen=0;mMaxLen31,1000
+    private boolean mTooLarge=false;mTooLarge32,1028
+    public DeferredZeroCopyConsumer(URL pSrc, int pDestKey, File pDest, Deferred<ContentTypeSourceable,?,?> pDeferred, long pTimeout_ms, long pMaxLen_bytes) DeferredZeroCopyConsumer42,1227
+    protected void onResponseReceived(HttpResponse pResponse) {onResponseReceived55,1629
+    protected File process(HttpResponse response, File file,process68,2062
+    protected void onContentReceived(onContentReceived88,2785
+    private ContentTypeSourceable result(HttpResponse pResponse) {result103,3370
+    protected void releaseResources() {releaseResources113,3716
+
+com/hourglassapps/cpi_ii/web_search/DownloadableDeferredObject.java,407
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public class DownloadableDeferredObject<A,B,C> extends DeferredObject<A,B,C> {DownloadableDeferredObject8,138
+	private final URL mSrc;mSrc9,217
+	private final Path mDst;mDst10,242
+	public DownloadableDeferredObject(URL pSrc, Path pDst) {DownloadableDeferredObject12,270
+	public String toString() {toString18,369
+
+com/hourglassapps/cpi_ii/web_search/Query.java,230
+package com.hourglassapps.cpi_ii.web_search;com.hourglassapps.cpi_ii.web_search1,0
+public interface Query<K,R> {Query3,46
+	public K uniqueName();uniqueName4,76
+	public boolean empty();empty5,100
+	public R raw();raw6,125
+
+com/hourglassapps/cpi_ii/MainIndexDownloaded.java,357
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class MainIndexDownloaded {MainIndexDownloaded19,524
+	private final static String TAG=MainIndexDownloaded.class.getName();TAG20,559
+	public final static String INDEX_PATH="downloaded_index";INDEX_PATH21,629
+	public static void main(String[] pDirs) throws IOException {main23,689
+
+com/hourglassapps/cpi_ii/MainListTerms.java,701
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class MainListTerms {MainListTerms20,539
+	private final static String TAG=MainListTerms.class.getName();TAG21,568
+	private IndexViewer mIndex;mIndex23,634
+	public MainListTerms() throws IOException {MainListTerms25,665
+	public static void main(String[] pArgs) {main29,786
+	private static double idf(int pTotalDocs, int pTermDocs) {idf43,1079
+	private static double tfIdf(int pTotalDocs, int pTermDocs, long tf) {tfIdf47,1195
+	private void showDocTerms(IndexReader reader, int pDocId, int pTotalDocs) throws IOException {showDocTerms51,1311
+	public void showTerms(String pKey) throws IOException {showTerms83,2461
+
+com/hourglassapps/cpi_ii/StanzaText.java,355
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class StanzaText {StanzaText6,87
+	private final String mName;mName7,113
+	private final List<String> mLines;mLines8,142
+	public StanzaText(String pName, List<String> pStanzaLines) {StanzaText15,347
+	public String name() {name20,469
+	public List<String> lines() {lines24,513
+
+com/hourglassapps/cpi_ii/lucene/MetaReadFactory.java,264
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public interface MetaReadFactory {MetaReadFactory9,185
+	public MetaRead metaRead(Path pFile) throws IOException;metaRead10,220
+	public boolean indexable(Path pFile);indexable11,278
+
+com/hourglassapps/cpi_ii/lucene/ResultRelayer.java,216
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public interface ResultRelayer {ResultRelayer8,157
+	public void run(IndexReader pReader, TopDocs pResults) throws IOException;run9,190
+
+com/hourglassapps/cpi_ii/lucene/ResultGenerator.java,191
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public interface ResultGenerator<T> extends ResultRelayer {ResultGenerator4,43
+	public T result();result5,103
+
+com/hourglassapps/cpi_ii/lucene/TikaReader.java,739
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class TikaReader extends Reader implements MetaRead {TikaReader21,638
+	private final static String TAG=TikaReader.class.getName();TAG22,699
+	private String mTitle=null;mTitle23,760
+	public final static int MAX_CONTENT_SIZE=64*1024*1024;	MAX_CONTENT_SIZE26,808
+	private final StringReader mDelegate;mDelegate28,867
+	public TikaReader(InputStream pInput, String pMimeType) throws IOException, TikaException {TikaReader30,908
+	public void close() throws IOException {close50,1633
+	public int read(char[] arg0, int arg1, int arg2) throws IOException {read55,1711
+	public String title() {title60,1840
+	public Reader reader() {reader65,1897
+
+com/hourglassapps/cpi_ii/lucene/AbstractLuceneJournal.java,1499
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public abstract class AbstractLuceneJournal<C> implements Journal<String, C> {AbstractLuceneJournal20,611
+	private final static String TAG=AbstractLuceneJournal.class.getName();TAG21,690
+	private final Indexer mIndexer;mIndexer22,762
+	public final FieldVal DOC_TAG=LuceneTransactionFields.DOC_TAG.fieldVal();DOC_TAG23,795
+	public final FieldVal KEY=LuceneTransactionFields.KEY.fieldVal();KEY24,870
+	public final static String POSITION_TAG="position";POSITION_TAG25,937
+	private final IndexReader mReader;mReader26,990
+	private final IndexWriter mWriter;mWriter27,1026
+	private final String mTagName;mTagName28,1062
+	public enum LuceneTransactionFields {LuceneTransactionFields30,1096
+		DOC_TAG(new FieldVal("tag", false)),DOC_TAG31,1135
+		KEY(new FieldVal("key", false));KEY32,1174
+		private final FieldVal mField;mField34,1212
+		private LuceneTransactionFields(FieldVal pField) {LuceneTransactionFields36,1248
+		public FieldVal fieldVal() {fieldVal40,1326
+	public AbstractLuceneJournal(Indexer pIndexer, String pTagName) throws IOException {AbstractLuceneJournal45,1383
+	protected Indexer indexer() {indexer60,1835
+	public void close() throws IOException {close65,1901
+	public boolean addedAlready(final String pKey) throws IOException {addedAlready71,2027
+	public void commit(String pKey) throws IOException {commit98,2670
+	public void reset() throws IOException {reset108,2952
+
+com/hourglassapps/cpi_ii/lucene/Phrase.java,1909
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class Phrase {Phrase29,901
+	private final static String TAG=Phrase.class.getName();TAG30,923
+	private final String mPhrase;mPhrase31,980
+	private static ThreadLocal<TermsEnum> TERM_ENUM=new ThreadLocal<>();TERM_ENUM32,1011
+	private static ThreadLocal<DocsAndPositionsEnum> DOC_POS_ENUM=new ThreadLocal<>();DOC_POS_ENUM33,1081
+	private final List<BytesRef> mOrigRefs; //these are in word order as per line of poemmOrigRefs34,1165
+	private final Map<BytesRef,Integer> mRefToIndex;mRefToIndex35,1252
+	private final Clock mTimes;mTimes36,1302
+	private Cache<Integer,Terms> mTermCache;mTermCache37,1331
+	public Phrase(Analyzer pAnalyser, String pPhrase, Clock pTimes, Cache<Integer,Terms> pTermCache) throws IOException {Phrase41,1446
+	public String toString() {toString58,1965
+	private static List<BytesRef> terms(Analyzer pAnalyser, String pPhrase) throws IOException {terms62,2016
+	public Iterable<DocSpan> findIn(IndexReader pReader, int pDocId) throws IOException {findIn75,2498
+	private boolean nextAt(final Map<BytesRef,NavigableSet<Integer>> pRefsToPositions, BytesRef pRef, int pRequiredPos) {nextAt143,4914
+	private class SearchState {SearchState152,5256
+		private int mStartPos=0;mStartPos153,5285
+		private final Map<BytesRef,NavigableSet<Integer>> mRefsToPositions;mRefsToPositions154,5312
+		public SearchState(final Map<BytesRef,NavigableSet<Integer>> pRefsToPositions) {SearchState156,5385
+		private void setStartBound(int pos) {setStartBound160,5513
+		private int getRequiredPos(BytesRef pRef) {getRequiredPos164,5578
+		private boolean matches(int pPosition) {matches168,5676
+		public int nextMatchingPosition(int pStartIdx) {nextMatchingPosition179,5941
+	private Iterator<DocSpan> iterator(final Map<BytesRef,NavigableSet<Integer>> pRefsToPositions, iterator196,6376
+
+com/hourglassapps/cpi_ii/lucene/TermHandler.java,191
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public interface TermHandler {TermHandler7,114
+	public void run(TermsEnum pTerms) throws IOException;run8,145
+
+com/hourglassapps/cpi_ii/lucene/FieldVal.java,1001
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class FieldVal {FieldVal11,288
+	private final String mName;mName12,312
+	private final boolean mTokenise;mTokenise13,341
+	private final FieldType mType;mType14,375
+	private final boolean mStore;mStore15,407
+	public FieldVal(String pName, boolean pTokenise) {FieldVal17,440
+	public FieldVal(String pName, boolean pTokenise, boolean pStore) {FieldVal21,529
+	public boolean tokenised() {tokenised28,690
+	public boolean stored() {stored32,744
+	public String s() {s36,793
+	public String toString() {toString40,835
+	private static FieldType type(boolean pTokenise, boolean pStored) {type44,881
+	public Field field(String pVal) {field61,1440
+	public Field nullField() {nullField65,1518
+	public Field field(Reader pVal) {field69,1596
+	public TermQuery query(String pTerm) {query73,1674
+	public Term term(String termText) {term77,1755
+	public boolean isNull(String pFieldVal) {isNull81,1830
+
+com/hourglassapps/cpi_ii/lucene/DownloadedFields.java,502
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public enum DownloadedFields {DownloadedFields3,42
+	PATH(new FieldVal("key", false)), PATH4,73
+	POSITION(new FieldVal("pos", false)),POSITION5,109
+	TITLE(new FieldVal("title", false)),TITLE6,148
+	CONTENT(new FieldVal("content", true, false));CONTENT7,186
+	private final FieldVal mField;mField9,236
+	private DownloadedFields(FieldVal pField) {DownloadedFields11,270
+	public FieldVal fieldVal() {fieldVal15,337
+
+com/hourglassapps/cpi_ii/lucene/IndexingThread.java,1792
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class IndexingThread extends Thread implements Consumer<QueryRecord<String>>, AutoCloseable {IndexingThread27,853
+	private final static String TAG=IndexingThread.class.getName();TAG28,954
+	private final static int NUM_SKIPS_BEFORE_COMMIT=40; //a commit is slow so we don't do it for each queryNUM_SKIPS_BEFORE_COMMIT29,1019
+	private final static long LOG_SIZE_INTERVAL=600*1000; //10 minsLOG_SIZE_INTERVAL30,1125
+	private final static QueryRecord<String> TERMINAL_RECORD=new QueryRecord<String>(0,null,null);TERMINAL_RECORD31,1190
+	private final Deque<QueryRecord<String>> mInbox=new ArrayDeque<>();mInbox32,1286
+	private final Closer mCloser=new Closer();mCloser33,1355
+	private final List<Journal<String,Path>> mJournals=new ArrayList<>();mJournals34,1399
+	private final FilterTemplate<String> mCommitDecider;mCommitDecider35,1470
+	private final int mNumFeederThreads;mNumFeederThreads36,1524
+	private final List<Ii<Boolean,String>> mCommittableKey;mCommittableKey37,1562
+	private long mLastLogTime=0;mLastLogTime38,1619
+	public IndexingThread(Path pIndexDir, int pNumFeederThreads) throws Exception {IndexingThread40,1651
+	public void run() {run90,2915
+	private synchronized QueryRecord<String> unshift() {unshift120,3838
+	public synchronized void push(QueryRecord<String> pDatum) {push137,4233
+	private synchronized boolean runnable(QueryRecord<?> pRec) {runnable142,4336
+	private synchronized void forceQuit() {forceQuit146,4435
+	private void quitWhenFinished() throws InterruptedException, IOException {quitWhenFinished151,4529
+	private synchronized void commitLast() throws IOException {commitLast156,4644
+	public void close() throws Exception {close167,4986
+
+com/hourglassapps/cpi_ii/lucene/LuceneVisitor.java,1083
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class LuceneVisitor implements FileVisitor<Path> {LuceneVisitor35,1155
+	private final static String TAG=LuceneVisitor.class.getName();TAG36,1213
+	private final IndexWriter mWriter;mWriter38,1279
+	private final MetaReadFactory mPath2Reader;mPath2Reader39,1315
+	public final static FieldVal PATH=DownloadedFields.PATH.fieldVal(); PATH41,1362
+	public final static FieldVal CONTENT=DownloadedFields.CONTENT.fieldVal(); CONTENT42,1432
+	public final static FieldVal TITLE=DownloadedFields.TITLE.fieldVal(); TITLE43,1508
+	public LuceneVisitor(Indexer pIndex, MetaReadFactory pPath2Reader) throws IOException {LuceneVisitor45,1582
+	public FileVisitResult postVisitDirectory(Path arg0, IOException arg1)postVisitDirectory51,1742
+	public FileVisitResult preVisitDirectory(Path arg0,preVisitDirectory57,1888
+	public FileVisitResult visitFile(Path pPath, BasicFileAttributes arg1)visitFile80,2932
+	public FileVisitResult visitFileFailed(Path pFile, IOException e)visitFileFailed123,4352
+
+com/hourglassapps/cpi_ii/lucene/IndexViewer.java,1398
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class IndexViewer implements AutoCloseable {IndexViewer19,589
+	private final static String TAG=IndexViewer.class.getName();TAG20,641
+	private Directory mDir;mDir22,705
+	public IndexViewer(Path pDir) throws IOException {IndexViewer24,732
+	public IndexViewer(File pDir) throws IOException {IndexViewer28,829
+	public Directory dir() {dir32,917
+	public void visit(FieldVal pField, TermHandler pConsumer) throws IOException {visit36,963
+	public void interrogate(FieldVal pSearchField, String pKey, int pNumResults, ResultRelayer pRelayer) throws IOException {interrogate50,1324
+	public void interrogate(FieldVal pSearchField, String pSought, ResultRelayer pRelayer) throws IOException {interrogate56,1578
+	public void interrogate(IndexReader pReader, FieldVal pSearchField, String pSought, int pNumResults, ResultRelayer pRelayer) throws IOException {interrogate68,1987
+	public static void interrogate(IndexReader pReader, IndexSearcher pSearcher, FieldVal pSearchField, String pSought, int pNumResults, ResultRelayer pRelayer) throws IOException {interrogate73,2273
+	public static void interrogate(IndexReader pReader, IndexSearcher pSearcher, Query pQuery, int pNumResults, ResultRelayer pRelayer) throws IOException {interrogate77,2543
+	public void close() throws IOException {close88,2909
+
+com/hourglassapps/cpi_ii/lucene/LoggingAnalyzer.java,888
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class LoggingAnalyzer extends AnalyzerWrapper {LoggingAnalyzer14,419
+	private final static String TAG=LoggingAnalyzer.class.getName();TAG15,474
+	private Analyzer mDelegate;mDelegate16,540
+	public LoggingAnalyzer(Analyzer pDelegate) {LoggingAnalyzer17,569
+	private final static class LoggingFilter extends TokenFilter {LoggingFilter22,654
+		private final CharTermAttribute mTermAtt = addAttribute(CharTermAttribute.class);mTermAtt23,718
+		protected LoggingFilter(TokenStream input) {LoggingFilter25,805
+		public boolean incrementToken() throws IOException {incrementToken30,886
+	protected Analyzer getWrappedAnalyzer(String fieldName) {getWrappedAnalyzer45,1215
+	protected TokenStreamComponents wrapComponents(String fieldName, TokenStreamComponents components) {wrapComponents50,1309
+
+com/hourglassapps/cpi_ii/lucene/FoundGenerator.java,315
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class FoundGenerator implements ResultGenerator<Boolean> {FoundGenerator8,157
+	public boolean mFound=false;mFound9,223
+	public void run(IndexReader pReader, TopDocs pResults)run12,266
+	public Boolean result() {result20,419
+
+com/hourglassapps/cpi_ii/lucene/AbstractTermFreqMapper.java,373
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public abstract class AbstractTermFreqMapper implements TermHandler {AbstractTermFreqMapper17,440
+	private final static String TAG=AbstractTermFreqMapper.class.getName();TAG18,510
+	public void run(TermsEnum pTerms) {run21,596
+	public abstract void add(String pTerm, Long pFreq);add33,831
+
+com/hourglassapps/cpi_ii/lucene/DownloadedIndexJournal.java,386
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+class DownloadedIndexJournal extends AbstractLuceneJournal<Path> {DownloadedIndexJournal13,298
+	public DownloadedIndexJournal(Indexer pIndexer, int pTid) throws IOException {DownloadedIndexJournal14,365
+	public void addNew(Path pDir) throws IOException {addNew19,505
+	public void reset() {reset25,739
+
+com/hourglassapps/cpi_ii/lucene/Indexer.java,1006
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class Indexer extends IndexViewer implements AutoCloseable {Indexer20,570
+	private final static String TAG=Indexer.class.getName();TAG21,638
+	private final static double RAM_BUFFER_SIZE_MB=64;RAM_BUFFER_SIZE_MB22,696
+	private final IndexWriter mWriter;mWriter23,748
+	private IndexWriterConfig mIwc;mIwc24,784
+	public Indexer(File pDir, Analyzer pAnalyser, boolean pForceCreate) throws IOException {Indexer26,819
+	public IndexWriter writer() {writer35,1225
+	public Indexer(File pDir, Analyzer pAnalyser) throws IOException {Indexer39,1279
+	public Indexer(Path pDir, Analyzer pAnalyzer, boolean pForceCreate) throws IOException {Indexer43,1383
+	public Indexer(Path pDir, Analyzer pAnalyzer) throws IOException {Indexer47,1526
+	public void add(Field... pFields) throws IOException {add51,1639
+	public void close() throws IOException {close64,1865
+	public void wipe() throws IOException {wipe68,1930
+
+com/hourglassapps/cpi_ii/lucene/Freq2TermMapper.java,339
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class Freq2TermMapper extends AbstractTermFreqMapper {Freq2TermMapper9,191
+	private SortedMultiMap<Long,List<String>,String> mFreq2Terms=mFreq2Terms10,253
+	public void display() {display18,488
+	public void add(String pTerm, Long pFreq) {add27,651
+
+com/hourglassapps/cpi_ii/lucene/DocSpan.java,498
+package com.hourglassapps.cpi_ii.lucene;com.hourglassapps.cpi_ii.lucene1,0
+public class DocSpan implements Comparable<DocSpan> {DocSpan3,42
+	private int mStartOffset;mStartOffset4,96
+	private int mEndOffset;mEndOffset5,123
+	public DocSpan(int pStartOffset, int pEndOffset) {DocSpan7,150
+	public int startOffset() {startOffset15,380
+	public int endOffset() {endOffset19,436
+	public boolean merged(DocSpan pOther) {merged28,665
+	public int compareTo(DocSpan arg0) {compareTo53,1402
+
+com/hourglassapps/cpi_ii/CPIFields.java,347
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public enum CPIFields {CPIFields5,85
+	KEY(new FieldVal("key", true)), KEY6,109
+	CONTENT(new FieldVal("content", true));CONTENT7,143
+	private final FieldVal mField;mField9,186
+	private CPIFields(FieldVal pField) {CPIFields11,220
+	public FieldVal fieldVal() {fieldVal15,280
+
+com/hourglassapps/cpi_ii/Record.java,204
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public interface Record<I,C> {Record3,35
+	public I id();id4,66
+	public C content();content5,82
+	public boolean ignore();ignore13,445
+
+com/hourglassapps/cpi_ii/TypeFileFinder.java,588
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class TypeFileFinder implements FileVisitor<Path> {TypeFileFinder12,326
+	private Path mTypesFile=null;mTypesFile13,385
+	public FileVisitResult postVisitDirectory(Path arg0, IOException arg1)postVisitDirectory16,429
+	public FileVisitResult preVisitDirectory(Path arg0,preVisitDirectory22,575
+	public FileVisitResult visitFile(Path pFile, BasicFileAttributes arg1)visitFile28,728
+	public FileVisitResult visitFileFailed(Path arg0, IOException arg1)visitFileFailed38,1038
+	public Path types() {types43,1170
+
+com/hourglassapps/cpi_ii/PoemRecord.java,3246
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class PoemRecord implements ReportRecord<Long> {PoemRecord20,611
+	private static final String TEXT_INCIPIT_ONLY = "Text incipit only";TEXT_INCIPIT_ONLY21,667
+	public static final String LANG_LATIN="Latin";LANG_LATIN22,737
+	private String _poem_text_3;_poem_text_323,785
+	private long _eprintid;_eprintid24,815
+	private String _date;_date25,840
+	private String _first_line;_first_line26,863
+	private int _userid;_userid27,892
+	private String _author;_author28,914
+	private int _rev_number;_rev_number29,939
+	private String _dir;_dir30,965
+	private String _lastmod;_lastmod31,987
+	public enum Topical { No, Yes };Topical32,1013
+	public enum Topical { No, Yes };No32,1013
+	public enum Topical { No, Yes };Yes32,1013
+	private Topical _topical;_topical33,1047
+	private int[] _poem_text_source_multi;_poem_text_source_multi34,1074
+	private int _item_issues_count;_item_issues_count35,1114
+	private String[] _topic_tags;_topic_tags36,1147
+	private enum MetadataVisiblility { show };MetadataVisiblility37,1178
+	private enum MetadataVisiblility { show };show37,1178
+	private MetadataVisiblility _metadata_visibility;_metadata_visibility38,1222
+	private enum EprintStatus { archive };EprintStatus39,1273
+	private enum EprintStatus { archive };archive39,1273
+	private EprintStatus _eprint_status;_eprint_status40,1313
+	private String _status_changed;_status_changed41,1351
+	private String _language;_language42,1384
+	public static class Stanza {Stanza43,1411
+		private String _rhyme;_rhyme44,1441
+		private String _end_accent;_end_accent45,1466
+		private String _line_length;_line_length46,1496
+	private Stanza[] _stanzas;_stanzas48,1530
+	private String _datestamp;_datestamp49,1558
+	private String _uri;_uri50,1586
+	private enum Type { poem };Type51,1608
+	private enum Type { poem };poem51,1608
+	private Type _type;_type52,1637
+	private String _title;_title53,1658
+	private enum Datable { Yes, No };Datable54,1682
+	private enum Datable { Yes, No };Yes54,1682
+	private enum Datable { Yes, No };No54,1682
+	private Datable _datable;_datable55,1717
+	private String _no_of_stanzas;_no_of_stanzas56,1744
+	private String _refrain_text_3;_refrain_text_357,1776
+	private final static String BOUNDARY_TEXT="\n0. \n"; //numerals BOUNDARY_TEXT58,1809
+	public Long id() {id61,1888
+	public String content() {content66,1944
+	public List<StanzaText> stanzas() {stanzas94,2588
+	public List<String> refrain() {refrain128,3532
+	public String[] lines() {lines143,3928
+	public boolean ignore() {ignore154,4346
+	public void setPoem_text_3(String pArg) {setPoem_text_3158,4421
+	public void setRefrain_text_3(String pArg) {setRefrain_text_3162,4490
+	public void setEprintid(long pArg) {setEprintid166,4565
+	public String getLanguage() {getLanguage170,4626
+	public void setLanguage(String pArg) {setLanguage174,4682
+	public String getTitle() {getTitle178,4744
+	public void setTitle(String pArg) {setTitle182,4794
+	public void setDate(String pArg) {setDate186,4850
+	public String getNoOfStanzas() {getNoOfStanzas190,4905
+	public void setNo_of_stanzas(String pArg) {setNo_of_stanzas194,4969
+
+com/hourglassapps/cpi_ii/TextContentReaderFactory.java,1285
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class TextContentReaderFactory implements MetaReadFactory {TextContentReaderFactory29,891
+	private final static String TAG=TextContentReaderFactory.class.getName();TAG30,958
+	private final static String TYPE_DELIMITER=Character.toString(DeferredFilesJournal.TYPE_COLUMN_DELIMITER);TYPE_DELIMITER32,1034
+	private final static TypeFileFinder TYPE_FINDER=new TypeFileFinder();TYPE_FINDER33,1142
+	private Path mLastTypesParent=null;mLastTypesParent34,1213
+	private final Map<Integer,String> mFileNumToType=new HashMap<>();mFileNumToType35,1250
+	private final boolean mSpecifyTypes;mSpecifyTypes36,1317
+	public TextContentReaderFactory(boolean pSpecifyTypes) {TextContentReaderFactory38,1357
+	private boolean reloadedTypes(Path pParent) throws IOException {reloadedTypes42,1450
+	public String type(Path pFile) throws IOException {type71,2347
+	public static String leaf(Path pFile) {leaf83,2771
+	public static int fileNum(Path pFilename) throws IOException {fileNum92,2979
+	public boolean indexable(Path pFile) {indexable109,3406
+	protected MetaRead readerAlways(Path pFile) throws IOException {readerAlways124,3812
+	public MetaRead metaRead(Path pFile) throws IOException {metaRead137,4140
+
+com/hourglassapps/cpi_ii/synonyms/SynonymAnalyzer.java,507
+package com.hourglassapps.cpi_ii.synonyms;com.hourglassapps.cpi_ii.synonyms1,0
+public class SynonymAnalyzer extends Analyzer implements AutoCloseable {SynonymAnalyzer24,849
+	private final static String TAG=SynonymAnalyzer.class.getName();TAG25,922
+	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();mThrower26,988
+	protected TokenStreamComponents createComponents(String fieldName,createComponents29,1077
+	public void closeThrower() throws Exception {closeThrower41,1431
+
+com/hourglassapps/cpi_ii/synonyms/MainSynEnglishTest.java,312
+package com.hourglassapps.cpi_ii.synonyms;com.hourglassapps.cpi_ii.synonyms1,0
+public class MainSynEnglishTest {MainSynEnglishTest21,725
+	private final static String WORDNET_SYNONYMS="wn_s.pl";WORDNET_SYNONYMS22,759
+	public static void main(String[] pArgs) throws IOException, ParseException {main24,818
+
+com/hourglassapps/cpi_ii/synonyms/WordNetFilter.java,467
+package com.hourglassapps.cpi_ii.synonyms;com.hourglassapps.cpi_ii.synonyms1,0
+public class WordNetFilter extends TokenFilter {WordNetFilter17,578
+	private final static String WORDNET_SYNONYMS="wn_s.pl";WORDNET_SYNONYMS18,627
+	private final SynonymFilter mDelegate;mDelegate19,684
+	public WordNetFilter(TokenStream pStream) throws IOException, ParseException {WordNetFilter21,726
+	public boolean incrementToken() throws IOException {incrementToken34,1211
+
+com/hourglassapps/cpi_ii/NumeralFilter.java,446
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class NumeralFilter extends FilteringTokenFilter {NumeralFilter12,345
+	private final static Pattern NUMBER=Pattern.compile("^[0-9]+$");NUMBER13,403
+	private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);termAtt14,469
+	public NumeralFilter(TokenStream input) {NumeralFilter16,552
+	protected boolean accept() throws IOException {accept21,626
+
+com/hourglassapps/cpi_ii/CPIUtils.java,177
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class CPIUtils {CPIUtils21,623
+	public static void listAllTokenExpansions(listAllTokenExpansions22,647
+
+com/hourglassapps/cpi_ii/MainIndexConductus.java,1992
+package com.hourglassapps.cpi_ii;com.hourglassapps.cpi_ii1,0
+public class MainIndexConductus {MainIndexConductus27,946
+	private final static String TAG=MainIndexConductus.class.getName();TAG28,980
+	private final static int NGRAM_LENGTH=3;NGRAM_LENGTH29,1049
+	public final static File UNSTEMMED_TERM_2_EPRINT_INDEX=new File("unstemmed_term_index");UNSTEMMED_TERM_2_EPRINT_INDEX30,1091
+	public final static File UNSTEMMED_2_EPRINT_INDEX=new File("unstemmed_index");UNSTEMMED_2_EPRINT_INDEX31,1181
+	public final static File UNSTEMMED_2_STEMMED_INDEX=new File("unstemmed_to_stemmed_index");UNSTEMMED_2_STEMMED_INDEX32,1261
+	private final LatinAnalyzer mNonStemmingAnalyser=new StandardLatinAnalyzer();mNonStemmingAnalyser34,1355
+	private final LatinAnalyzer mStemmingAnalyser=new StandardLatinAnalyzer().setStemmer(LatinAnalyzer.STEMPEL_RECORDER_FACTORY);mStemmingAnalyser35,1434
+	private final NGramAnalyzerBuilder mNonStemmingBuilder=new NGramAnalyzerBuilder(mNonStemmingAnalyser, NGRAM_LENGTH);mNonStemmingBuilder37,1563
+	private final NGramAnalyzerBuilder mStemmingBuilder=new NGramAnalyzerBuilder(mStemmingAnalyser, NGRAM_LENGTH);mStemmingBuilder38,1681
+	private final File mInput;mInput39,1793
+	private boolean mListExpansions=false;mListExpansions41,1823
+	private boolean mSerialiseExpansions=false;mSerialiseExpansions42,1863
+	public MainIndexConductus(String pInput) throws IOException {MainIndexConductus44,1910
+	public MainIndexConductus setListExpansions(boolean pList) {setListExpansions48,2004
+	public MainIndexConductus setSerialiseExpansions(boolean pSer) {setSerialiseExpansions53,2111
+	public void index() throws ParseException, IOException {index58,2225
+	private void indexById(Indexer pIndexer) throws IOException, ParseException {indexById84,3032
+	public void indexByUnstemmed(final IndexViewer pIndexToVisit, final Indexer pIndexer) throws IOException {indexByUnstemmed108,3811
+	public static void main(String[] args) {main133,4453
+
+com/hourglassapps/threading/RandomTemplate.java,446
+package com.hourglassapps.threading;com.hourglassapps.threading1,0
+public class RandomTemplate<I> implements FilterTemplate<I> {RandomTemplate7,115
+	private final List<Random> mRngs=new ArrayList<Random>();mRngs8,177
+	private final double mP;mP9,236
+	private final int mBaseSeed;mBaseSeed10,262
+	public RandomTemplate(int pNumThreads, int pSeed, double pP) {RandomTemplate12,294
+	public ThreadFunction convert(I pIn) {convert21,474
+
+com/hourglassapps/threading/FailingTemplate.java,389
+package com.hourglassapps.threading;com.hourglassapps.threading1,0
+public class FailingTemplate<I> implements FilterTemplate<I> {FailingTemplate9,151
+    private final static String TAG=FailingTemplate.class.getName();TAG10,214
+    private int mQueryCnt=0;mQueryCnt12,284
+    public FailingTemplate() {FailingTemplate14,318
+	public ThreadFunction convert(I pIn) {convert18,364
+
+com/hourglassapps/threading/FilterTemplate.java,164
+package com.hourglassapps.threading;com.hourglassapps.threading1,0
+public interface FilterTemplate<I> extends Converter<I, ThreadFunction> {FilterTemplate9,175
+
+com/hourglassapps/threading/SkipTemplate.java,370
+package com.hourglassapps.threading;com.hourglassapps.threading1,0
+public class SkipTemplate<T> implements FilterTemplate<T> {SkipTemplate3,38
+	private final int mNumToSkip;mNumToSkip4,98
+	private final int mSkipCnt[];mSkipCnt5,129
+	public SkipTemplate(int pNumThreads, int pNumToSkip) {SkipTemplate7,162
+	public ThreadFunction convert(T pIn) {convert16,418
+
+com/hourglassapps/threading/JobDelegator.java,562
+package com.hourglassapps.threading;com.hourglassapps.threading1,0
+public class JobDelegator<I> {JobDelegator21,627
+	private final FilterTemplate<I> mTemplate;mTemplate22,658
+	private final int mNumThreads;mNumThreads23,702
+	private I mLastI;mLastI25,736
+	private ThreadFunction mLastTF;mLastTF26,755
+	public JobDelegator(int pNumThreads, FilterTemplate<I> pTemplate) {JobDelegator28,790
+	public Filter<I> filter() {filter36,1019
+	public List<Filter<I>> filters() {filters40,1073
+	public Filter<I> filter(final int pFilterNum) {filter49,1287
+
+com/hourglassapps/threading/HashTemplate.java,334
+package com.hourglassapps.threading;com.hourglassapps.threading1,0
+public class HashTemplate<I> implements FilterTemplate<I> {HashTemplate7,100
+	private final static String TAG=HashTemplate.class.getName();TAG8,160
+	private final Random mRng=new Random();mRng9,223
+	public ThreadFunction convert(final I pIn) {convert13,302
+
+com/hourglassapps/threading/Consumer.java,155
+package com.hourglassapps.threading;com.hourglassapps.threading1,0
+public interface Consumer<T> {Consumer6,90
+	public void push(T pDatum);	push7,121
+
+com/hourglassapps/threading/ThreadFunction.java,186
+package com.hourglassapps.threading;com.hourglassapps.threading1,0
+public interface ThreadFunction {ThreadFunction3,38
+	public boolean accept(int pTid, int pNumThreads);accept4,72
+
+com/hourglassapps/util/SortedMultiMap.java,209
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface SortedMultiMap<K extends Comparable<K>, C extends Collection<E>, E> extends SortedMap<K, C>, MultiMap<K, C, E> {SortedMultiMap6,91
+
+com/hourglassapps/util/MainHeartBeat.java,708
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class MainHeartBeat {MainHeartBeat10,226
+	private final static String TAG=MainHeartBeat.class.getName();TAG11,255
+	private final static int TIMEOUT=60;TIMEOUT14,334
+	private final static int PERIOD=60*1000;PERIOD16,381
+	private final static String TARGET="google.com";TARGET17,423
+	private final int mPids[];mPids19,475
+	private final static PingArguments mPingArgs=new PingArguments.Builder().url(TARGET).mPingArgs21,505
+	public MainHeartBeat(int[] pPids) {MainHeartBeat24,667
+	public void signal() throws IOException {signal28,723
+	public void beat() {beat42,1084
+	public static void main(String[] pArgs) {main59,1361
+
+com/hourglassapps/util/Closer.java,467
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class Closer implements AutoCloseable {Closer7,113
+	private boolean mClosed=false;mClosed8,160
+	private Deque<AutoCloseable> mCloseables=new LinkedList<>();mCloseables9,192
+	public Closer before(AutoCloseable pCloseable) {before16,446
+	public Closer after(AutoCloseable pCloseable) {after29,793
+	public void close() throws Exception {close41,1050
+	public boolean closed() {closed51,1219
+
+com/hourglassapps/util/FileWrapper.java,675
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class FileWrapper implements AutoCloseable {FileWrapper18,444
+	private final Path mPath;mPath19,496
+	private PrintWriter mOut;mOut20,523
+	private final Class<?> mClient;mClient21,550
+	private final String mEnd;mEnd22,583
+	public FileWrapper(Class<?> pClient, String pStart, String pEnd, Path pDest) throws IOException {FileWrapper24,613
+	public PrintWriter writer() {writer39,1042
+	private OutputStream copyInto(String pSrc) throws IOException {copyInto43,1093
+	public PrintWriter insert(String pMid) throws IOException {insert51,1372
+	public void close() throws IOException {close59,1544
+
+com/hourglassapps/util/AbstractMultiMap.java,720
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public abstract class AbstractMultiMap<K, C extends Collection<E>, E> implements MultiMap<K, C, E> {AbstractMultiMap7,115
+	private static final long serialVersionUID = 1L;serialVersionUID8,216
+	private CollectionFactory<C,E> mFact;mFact9,266
+	public AbstractMultiMap(CollectionFactory<C,E> pFact) {AbstractMultiMap11,307
+	public boolean addOne(K key, E value) {addOne15,384
+	public E removeOne(Object key) {removeOne27,599
+	public boolean containsOne(Object key) {containsOne39,792
+	public void mergeAll(Map<? extends K, ? extends E> m) {mergeAll48,951
+	public void mergeAll(MultiMap<? extends K, ? extends C, ? extends E> m) {mergeAll61,1216
+
+com/hourglassapps/util/AsyncExpansionReceiver.java,194
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface AsyncExpansionReceiver<O,K> extends ExpansionReceiver<O>, Promiser<Void,IOException,K> {AsyncExpansionReceiver8,116
+
+com/hourglassapps/util/Rtu.java,3065
+package com.hourglassapps.util;com.hourglassapps.util20,698
+public class Rtu {Rtu48,1481
+	private final static String TAG="com.hourglassapps.Rtu";TAG49,1500
+	public static boolean RELEASE=false;RELEASE51,1560
+	public final static String ID_COL_NAME="_id";ID_COL_NAME52,1598
+	public static String[] EMPTY_STRING_ARRAY=new String[]{};EMPTY_STRING_ARRAY54,1647
+    public static String safeToString(Object pObj) {safeToString56,1707
+	public static <T> boolean typeSafeEq(T o1, T o2) {typeSafeEq63,1848
+	public static boolean safeEq(Object o1, Object o2) {safeEq67,1934
+	public static int safeStrCmp(String s1, String s2, boolean ignoreCase) {safeStrCmp77,2102
+	public static <I> int safeCmp(Comparable<I> s1, I s2) {safeCmp95,2389
+	public static File setExtension(File f, String ext) {setExtension109,2586
+	public static void copyFile(FileInputStream src, FileOutputStream dst, boolean fast) throws IOException {copyFile124,2985
+	public static void copyFile(InputStream src, OutputStream dst) throws IOException {copyFile141,3488
+	public static void copyFile(Reader src, Path dst) throws IOException {copyFile158,3820
+	public static void copyFile(Reader src, File dst) throws IOException {copyFile162,3928
+	public static void copyFile(Reader src, Writer dst) throws IOException {copyFile166,4043
+	public static void copyFile(byte[] src, File dest) throws IOException {copyFile204,4826
+	public static void copyFile(File src, FileOutputStream dst) throws IOException {copyFile213,5047
+	public static void copyFile(InputStream src, File dst) throws IOException {copyFile225,5280
+	public static void copyFile(InputStream src, Path dst) throws IOException {copyFile231,5467
+	public static void copyFile(File src, File dst) throws IOException {copyFile235,5580
+	public static void copyFile(Path src, Path dst) throws IOException {copyFile247,5810
+    public static boolean isSymlink(File file) throws IOException {isSymlink251,5925
+    private final static int twoToTwenty=1024*1024;twoToTwenty264,6369
+    public static double bytes2MB(long bytes) {bytes2MB265,6421
+	private final static int LONG_PARSER_RADIX=10;LONG_PARSER_RADIX269,6519
+	private final static long LONG_PARSER_MAX=Long.MIN_VALUE/LONG_PARSER_RADIX;LONG_PARSER_MAX270,6567
+	public static boolean isLong(String string) {isLong272,6645
+	public static String convertStreamToString(java.io.InputStream is) {convertStreamToString310,7687
+	public static Integer[] box(int[] array) {box317,7913
+	public static Byte[] box(byte[] array) {box324,8092
+	public static String uuidV4() {uuidV4331,8264
+	public static String strippedUuidV4() {strippedUuidV4335,8351
+	private final static IdentityConverter<String> STRING_TO_STRING=new IdentityConverter<String>();STRING_TO_STRING355,8854
+	public static String join(Collection<String> pStrings, String pJoint) {join356,8952
+	public static <A> String join(Converter<A,String> pPrinter, Collection<A> pItems, String pJoint) {join360,9081
+	public static void continuePrompt() {continuePrompt373,9482
+
+com/hourglassapps/util/Converter.java,148
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface Converter<I, O> {Converter3,33
+	public O convert(I pIn);convert4,68
+
+com/hourglassapps/util/MultiMap.java,473
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface MultiMap<K, C extends Collection<E>, E> extends Map<K, C> {MultiMap6,85
+	public boolean addOne(K key, E value);addOne7,162
+	public E removeOne(Object key);removeOne8,202
+	public boolean containsOne(Object key);containsOne9,235
+	public void mergeAll(Map<? extends K, ? extends E> m);mergeAll10,276
+	public void mergeAll(MultiMap<? extends K, ? extends C, ? extends E> m);mergeAll11,332
+
+com/hourglassapps/util/ThrowingIterable.java,213
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface ThrowingIterable<T> extends Iterable<T> {ThrowingIterable3,33
+	public ThrowableIterator<T> throwableIterator();throwableIterator4,92
+
+com/hourglassapps/util/Ii.java,1073
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class Ii<F,S> implements Cloneable, Serializable {Ii11,188
+	private static final long serialVersionUID = 3011084707804958069L;serialVersionUID12,246
+	protected F mFst;mFst13,314
+	protected S mSnd;mSnd14,333
+	public Ii(final F fst, final S snd) {Ii15,352
+	public Ii(Ii<F, S> orig) {Ii20,430
+	public F fst() {fst24,494
+	public S snd() {snd28,537
+	public int hashCode() {hashCode32,580
+	public boolean equals(Object obj) {equals44,868
+	public String toString() {toString68,1654
+	protected Ii<F,S> clone() throws CloneNotSupportedException {clone76,1867
+	public static <F,S> List<Ii<F, S>> zip(List<F> pFsts, List<S> pSnds) {zip80,1970
+	public static <F, S> Ii<List<F>, List<S>> unzip(Collection<Ii<F, S>> pZip) {unzip91,2313
+	public interface TypeChecker<T> {TypeChecker101,2600
+		public boolean socket(T male);socket102,2635
+		public T plug();plug103,2668
+	public static <T, F extends TypeChecker<T>, S extends TypeChecker<T>> Ii<F, S> couple(F fst, S snd) {couple106,2692
+
+com/hourglassapps/util/InputStreamFactory.java,187
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface InputStreamFactory {InputStreamFactory6,90
+	InputStream wrap(InputStream pIn) throws IOException;wrap7,128
+
+com/hourglassapps/util/Log.java,1775
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class Log {Log5,92
+	public static enum Level {Level6,111
+		VERBOSE(0), INFO(1), ERROR(2);VERBOSE7,139
+		VERBOSE(0), INFO(1), ERROR(2);INFO7,139
+		VERBOSE(0), INFO(1), ERROR(2);ERROR7,139
+		private final int mImportance;mImportance9,175
+		Level(int pImportance) {Level10,208
+		public int importance() {importance14,275
+    public static Log.Level LEVEL = Log.Level.INFO;LEVEL19,335
+    static private void write(String pTag, String pMsg) {write21,388
+    static private void writeln(String pTag, String pMsg) {writeln25,498
+    static private void printStack(String tag, Throwable e) {printStack30,620
+    static private void printSuppressed(String pTag, Throwable e) {printSuppressed45,1178
+    static public void v(String tag, String msgFormat, Object...args)v54,1422
+    static public void v(String tag, Throwable t, String msgFormat, Object...args)v62,1645
+    static public void i(String tag, String msgFormat, Object...args)i71,1914
+    static public void i(String tag, Throwable t, String msgFormat, Object...args)i79,2131
+    static public void e(String tag, String msgFormat, Object...args)e88,2394
+    static public void e(Runnable pIf, Runnable pElse)e96,2617
+    static public void i(Runnable pIf, Runnable pElse)i105,2818
+    static public void v(Runnable pIf, Runnable pElse)v114,3018
+    static public void e(String tag, Throwable t)e123,3221
+    static public void i(String tag, Throwable t)i131,3399
+    static public void eStack(String tag, String msgFormat, Object...args)eStack139,3576
+    static public void e(String tag, Throwable t, String msgFormat, Object...args)e152,3940
+    static public String esc(Object pToEscape) {esc161,4209
+
+com/hourglassapps/util/HashArrayMultiMap.java,1021
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class HashArrayMultiMap<K,E> extends AbstractMultiMap<K, List<E>, E> {HashArrayMultiMap9,156
+	private static final long serialVersionUID = 1L;serialVersionUID10,234
+	private Map<K, List<E>> mDelegateMap=new HashMap<K, List<E>>();mDelegateMap11,284
+	public HashArrayMultiMap() {HashArrayMultiMap13,351
+	public void clear() {clear21,462
+	public boolean containsKey(Object key) {containsKey30,603
+	public boolean containsValue(Object value) {containsValue39,783
+	public Set<java.util.Map.Entry<K, List<E>>> entrySet() {entrySet47,933
+	public List<E> get(Object key) {get56,1111
+	public boolean isEmpty() {isEmpty64,1236
+	public Set<K> keySet() {keySet72,1355
+	public List<E> put(K key, List<E> value) {put82,1534
+	public void putAll(Map<? extends K, ? extends List<E>> arg0) {putAll90,1692
+	public List<E> remove(Object key) {remove99,1874
+	public int size() {size107,2002
+	public Collection<List<E>> values() {values115,2111
+
+com/hourglassapps/util/ExclusiveTimeKeeper.java,2092
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class ExclusiveTimeKeeper implements Clock, AutoCloseable {ExclusiveTimeKeeper25,751
+	private final static String TAG=ExclusiveTimeKeeper.class.getName();TAG26,818
+	private final static String ARROW="->";ARROW27,888
+	private final Map<String,StopWatch> mLabelToWatches=new HashMap<>();mLabelToWatches28,929
+	private final Map<String,Long> mLabelToAccumulatedInterval=new HashMap<>();mLabelToAccumulatedInterval29,999
+	public ExclusiveTimeKeeper() {ExclusiveTimeKeeper31,1078
+	private Ii<Long,String> report(String pParentLabel, Map<String,StopWatch> pChildWatches) {report34,1115
+	public String toString() {toString53,1691
+	private StopWatch createWatch(Map<String,StopWatch> pLabelToWatches, createWatch57,1770
+	public StopWatch time(String pLabel) {time91,2778
+	private class StopWatch implements AutoCloseable, Comparable<StopWatch>, Promiser<Long,Void,Void>, Clock {StopWatch96,2916
+		private final Map<String,StopWatch> mLabelToWatches=new HashMap<>();mLabelToWatches97,3024
+		private final Map<String,Long> mLabelToAccumulatedInterval=new HashMap<>();mLabelToAccumulatedInterval98,3095
+		private final String mLabel;mLabel100,3174
+		private long mStart;mStart101,3205
+		private boolean mClosed;mClosed102,3228
+		private Deferred<Long,Void,Void> mDeferred;mDeferred103,3255
+		private long mAccumulatedInterval;mAccumulatedInterval104,3301
+		private StopWatch(String pLabel, long pAccumulatedInterval) {StopWatch106,3341
+		private void reset(long pAccumulatedInterval) {reset111,3462
+		public String toString() {toString118,3652
+		public String toString(String pLabPrefix, long pTotalInterval) {toString122,3730
+		private long curInterval() {curInterval136,4225
+		private long totalInterval() {totalInterval140,4299
+		public StopWatch time(String pLabel) {time154,4704
+		public void close() {close160,4859
+		public int compareTo(StopWatch pOther) {compareTo170,5043
+		public Promise<Long, Void, Void> promise() {promise175,5178
+	public void close() {close182,5268
+
+com/hourglassapps/util/Thrower.java,225
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface Thrower extends AutoCloseable {Thrower3,33
+	public <E extends Exception> void throwCaught(Class<E> pCatchable) throws Throwable;throwCaught9,323
+
+com/hourglassapps/util/CollectionFactory.java,278
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface CollectionFactory<C extends Collection<T>, T> {CollectionFactory5,63
+	public C inst();inst6,128
+	public C inst(Collection<? extends T> els);inst7,146
+	public T removeOne(C pColl);removeOne8,191
+
+com/hourglassapps/util/NullIterable.java,179
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class NullIterable<A> implements Iterable<A> {NullIterable5,61
+	public Iterator<A> iterator() {iterator7,126
+
+com/hourglassapps/util/Typed.java,167
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface Typed<E> {Typed3,33
+	public String extension();extension4,61
+	public E get();get5,89
+
+com/hourglassapps/util/ExpansionReceiver.java,254
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface ExpansionReceiver<O> {ExpansionReceiver8,116
+	public void onExpansion(List<O> pExpansions);onExpansion19,743
+	public void onGroupDone(int pNumExpansions);onGroupDone21,792
+
+com/hourglassapps/util/TreeArrayMultiMap.java,1469
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class TreeArrayMultiMap<K extends Comparable<K>, E> extends AbstractMultiMap<K, List<E>, E> TreeArrayMultiMap11,213
+	private static final long serialVersionUID = 1L;serialVersionUID13,357
+	private final SortedMap<K, List<E>> mDelegateMap;mDelegateMap14,407
+	public TreeArrayMultiMap() {TreeArrayMultiMap16,460
+	public TreeArrayMultiMap(Comparator<K> pComparator) {TreeArrayMultiMap21,567
+	public void clear() {clear30,756
+	public Comparator<? super K> comparator() {comparator38,871
+	public boolean containsKey(Object key) {containsKey47,1046
+	public boolean containsValue(Object value) {containsValue56,1226
+	public Set<java.util.Map.Entry<K, List<E>>> entrySet() {entrySet64,1376
+	public K firstKey() {firstKey72,1534
+	public List<E> get(Object key) {get81,1677
+	public SortedMap<K, List<E>> headMap(K arg0) {headMap90,1840
+	public boolean isEmpty() {isEmpty98,1984
+	public Set<K> keySet() {keySet106,2103
+	public K lastKey() {lastKey114,2226
+	public List<E> put(K key, List<E> value) {put124,2402
+	public void putAll(Map<? extends K, ? extends List<E>> arg0) {putAll132,2560
+	public List<E> remove(Object key) {remove141,2742
+	public int size() {size149,2870
+	public SortedMap<K, List<E>> subMap(K startKey, K endKey) {subMap159,3057
+	public SortedMap<K, List<E>> tailMap(K startKey) {tailMap168,3267
+	public Collection<List<E>> values() {values176,3418
+
+com/hourglassapps/util/Downloader.java,287
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface Downloader<S,R> {Downloader10,179
+	public void reset() throws IOException;reset11,214
+	public Promise<R,IOException,Void> downloadLink(S pSrc, int pDstKey, Path pDst) throws IOException;downloadLink12,255
+
+com/hourglassapps/util/ListFactory.java,303
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class ListFactory<E> implements CollectionFactory<List<E>, E> {ListFactory7,114
+	public List<E> inst() {inst10,197
+	public List<E> inst(Collection<? extends E> els) {inst15,266
+	public E removeOne(List<E> pColl) {removeOne20,365
+
+com/hourglassapps/util/Throttle.java,1074
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class Throttle {Throttle10,249
+	private final static String TAG=Throttle.class.getName();TAG11,273
+	public final static Throttle NULL_THROTTLE=new Throttle();NULL_THROTTLE12,332
+	private final StampDelayed mDurationTemplate;mDurationTemplate14,395
+	private final int mMaxElements;mMaxElements15,442
+	private final BlockingQueue<Delayed> mInFlight;mInFlight16,475
+	private static class StampDelayed implements Delayed {StampDelayed18,525
+		private long mDuration_ns;mDuration_ns19,581
+		private final long mDelayTill_ns;mDelayTill_ns20,610
+		public StampDelayed(long pDuration, TimeUnit pUnit) {StampDelayed22,649
+		private long nsRemaining() {nsRemaining28,824
+		public long getDelay(TimeUnit pRequiredUnit) {getDelay33,917
+		public Delayed copy() {copy39,1122
+		public int compareTo(Delayed pOther) {compareTo44,1229
+	private Throttle() {Throttle52,1480
+	public Throttle(int pMaxElements, long pDuration, TimeUnit pUnit) {Throttle62,1784
+	public void choke() {choke71,2055
+
+com/hourglassapps/util/URLUtils.java,759
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class URLUtils {URLUtils12,288
+	private final static String TAG=URLUtils.class.getName();TAG13,312
+	public final static String ENCODING=StandardCharsets.UTF_8.toString();ENCODING14,371
+	public static String encode(String pString) throws UnsupportedEncodingException {encode16,444
+	public static String decode(String pString) throws UnsupportedEncodingException {decode20,579
+	public static URL reencode(URL pSource) throws UnsupportedEncodingException, MalformedURLException {reencode24,714
+	private static void unitTests() {unitTests31,1031
+	private static void usage() {usage40,1449
+	public static void main(String[] pArgs) throws UnsupportedEncodingException {main46,1620
+
+com/hourglassapps/util/Promiser.java,178
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface Promiser<A,B,C> extends AutoCloseable {Promiser5,64
+	public Promise<A,B,C> promise();promise6,121
+
+com/hourglassapps/util/IdentityConverter.java,186
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class IdentityConverter<I> implements Converter<I, I> {IdentityConverter4,34
+	public I convert(I pIn) {convert6,108
+
+com/hourglassapps/util/Clock.java,196
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface Clock extends AutoCloseable {Clock3,33
+	public Clock time(String pLabel);time4,80
+	public void close();close7,128
+
+com/hourglassapps/util/HashSetMultiMap.java,1197
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class HashSetMultiMap<K,E> extends AbstractMultiMap<K, Set<E>, E> {HashSetMultiMap10,186
+	private static final long serialVersionUID = 1L;serialVersionUID11,261
+	private Map<K, Set<E>> mDelegateMap=new HashMap<K, Set<E>>();mDelegateMap12,311
+	public HashSetMultiMap() {HashSetMultiMap14,376
+	public HashSetMultiMap(MultiMap<? extends K, ? extends Set<E>, ? extends E> pOrig) {HashSetMultiMap18,447
+	private static <E> CollectionFactory<Set<E>, E> genFact() {genFact23,567
+	public void clear() {clear54,1131
+	public boolean containsKey(Object key) {containsKey63,1272
+	public boolean containsValue(Object value) {containsValue72,1452
+	public Set<java.util.Map.Entry<K, Set<E>>> entrySet() {entrySet80,1602
+	public Set<E> get(Object key) {get89,1779
+	public boolean isEmpty() {isEmpty97,1903
+	public Set<K> keySet() {keySet105,2022
+	public Set<E> put(K key, Set<E> value) {put115,2201
+	public void putAll(Map<? extends K, ? extends Set<E>> arg0) {putAll123,2357
+	public Set<E> remove(Object key) {remove132,2538
+	public int size() {size140,2665
+	public Collection<Set<E>> values() {values148,2774
+
+com/hourglassapps/util/ConcreteThrower.java,426
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class ConcreteThrower<E extends Exception> implements Thrower {ConcreteThrower3,33
+	private E mThrowable=null;mThrowable4,104
+	public void ctch(E pThrowable) {ctch6,134
+	public boolean fallThrough() {fallThrough12,227
+	public <E2 extends Exception> void throwCaught(Class<E2> pCatchable)throwCaught17,301
+	public void close() throws E {close30,619
+
+com/hourglassapps/util/Combinator.java,582
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class Combinator<I,O> {Combinator7,107
+	private final Converter<I, O> mConverter;mConverter8,138
+	private final MultiMap<I, Set<O>, O> mOrig2Expansions;mOrig2Expansions9,181
+	private final ExpansionReceiver<O> mReceiver;mReceiver10,237
+	public Combinator(MultiMap<I, Set<O>, O> pOrig2Expansions, Converter<I, O> pConverter, ExpansionReceiver<O> pReceiver) {Combinator21,902
+	private int expand(I[] pTerms, final int pStartIdx, List<O> pOut) {expand28,1127
+	public int expand(I[] pTerms) {expand60,2195
+
+com/hourglassapps/util/IOIterator.java,190
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface IOIterator<R> extends ThrowableIterator<R> {IOIterator5,62
+	public void close() throws IOException;close7,135
+
+com/hourglassapps/util/Filter.java,144
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface Filter<T> {Filter3,33
+	public boolean accept(T pArg);accept4,62
+
+com/hourglassapps/util/Cache.java,526
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class Cache<A extends Comparable<A>,B> implements Thrower {Cache5,79
+	private final com.google.common.cache.Cache<A,B> mCache;mCache6,146
+	private final Converter<A,B> mCachedCreator;mCachedCreator7,204
+	public Cache(Converter<A,B> pCachedCreator, int pCacheSize) {Cache9,252
+	public B get(A pKey) {get22,787
+	public void close() throws Exception {close32,975
+	public <E extends Exception> void throwCaught(Class<E> pCatchable)throwCaught41,1123
+
+com/hourglassapps/util/ExpansionDistributor.java,1690
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public class ExpansionDistributor<T extends Comparable<? super T>,O> implements ExpansionReceiver<T>, AutoCloseable, Promiser<Void,IOException,Ii<Integer,O>> {ExpansionDistributor15,341
+	private final static String TAG=ExpansionReceiver.class.getName();TAG16,501
+	private final List<AsyncExpansionReceiver<T,O>> mReceivers;mReceivers17,569
+	private final List<Filter<List<List<T>>>> mFilters;mFilters18,630
+	private List<List<T>> mAllExpansions=new ArrayList<>();mAllExpansions19,683
+	private List<List<List<T>>> mAllQueryExpansions=new ArrayList<>();mAllQueryExpansions20,740
+	private Deferred<Void,IOException,Ii<Integer,O>> mDeferred=new DeferredObject<>();mDeferred21,808
+	private final Comparator<List<T>> mComparator;mComparator22,892
+	private final Closer mCloser=new Closer();mCloser23,940
+	private final Comparator<List<List<T>>> mQueryComparator=new Comparator<List<List<T>>>() {mQueryComparator25,986
+	private final Comparator<List<T>> DISJUNCTION_COMPARATOR=new Comparator<List<T>>() {DISJUNCTION_COMPARATOR34,1235
+	public ExpansionDistributor(ExpansionDistributor50,1615
+	public static <T extends Comparable<? super T>,O,R extends AsyncExpansionReceiver<T,O>> ExpansionDistributor<T,O> relay(R pReceiver, relay81,2509
+	public Promise<Void,IOException,Ii<Integer,O>> promise() {promise89,2899
+	public void onExpansion(List<T> pExpansions) {onExpansion94,2995
+	public void onGroupDone(int pNumExpansions) {onGroupDone99,3111
+	public void act() {act105,3290
+	private ProgressCallback<O> progress(final int pTid) {progress143,4412
+	public void close() throws Exception {close155,4645
+
+com/hourglassapps/util/ThrowableIterator.java,153
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public interface ThrowableIterator<T> extends Iterator<T>, Thrower {ThrowableIterator12,279
+
+com/hourglassapps/util/Option.java,559
+package com.hourglassapps.util;com.hourglassapps.util1,0
+public final class Option<T> {Option3,33
+    private final static String TAG=Option.class.getName();TAG4,64
+    private final boolean mHasVal;mHasVal6,125
+    private final T mVal;mVal7,160
+    public Option() {Option9,187
+    public Option(T pVal) {Option14,248
+    public T val() {val22,374
+    public boolean hasVal() {hasVal30,477
+    public boolean equals(Object pOther) {equals35,549
+    public int hashCode() {hashCode58,897
+    public String toString() {toString63,1017
+
+org/apache/lucene/demo/SearchFiles.java,343
+package org.apache.lucene.demo;org.apache.lucene.demo1,0
+public class SearchFiles {SearchFiles44,1708
+  private SearchFiles() {}SearchFiles46,1736
+  public static void main(String[] args) throws Exception {main49,1812
+  public static void doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, doPagingSearch153,5414
+
+org/jdeferred/Deferred.java,349
+package org.jdeferred;org.jdeferred16,594
+public interface Deferred<D, F, P> extends Promise<D, F, P> {Deferred35,1093
+	Deferred<D, F, P> resolve(final D resolve);resolve58,1656
+	Deferred<D, F, P> reject(final F reject);reject83,2249
+	Deferred<D, F, P> notify(final P progress);notify108,2897
+	Promise<D, F, P> promise();promise115,3076
+
+org/jdeferred/FailPipe.java,191
+package org.jdeferred;org.jdeferred16,594
+public interface FailPipe<F, D_OUT, F_OUT, P_OUT> {FailPipe25,777
+	public Promise<D_OUT, F_OUT, P_OUT> pipeFail(final F result);pipeFail26,829
+
+org/jdeferred/DeferredFutureTask.java,754
+package org.jdeferred;org.jdeferred16,594
+public class DeferredFutureTask<D, P> extends FutureTask<D> {DeferredFutureTask43,1709
+	protected final Deferred<D, Throwable, P> deferred;deferred44,1771
+	protected final StartPolicy startPolicy;startPolicy45,1824
+	public DeferredFutureTask(Callable<D> callable) {DeferredFutureTask47,1868
+	public DeferredFutureTask(Runnable runnable) {DeferredFutureTask53,2042
+	public DeferredFutureTask(DeferredCallable<D, P> callable) {DeferredFutureTask59,2219
+	public DeferredFutureTask(DeferredRunnable<P> runnable) {DeferredFutureTask66,2427
+	public Promise<D, Throwable, P> promise() {promise72,2634
+	protected void done() {done77,2724
+	public StartPolicy getStartPolicy() {getStartPolicy90,3000
+
+org/jdeferred/ProgressPipe.java,207
+package org.jdeferred;org.jdeferred16,594
+public interface ProgressPipe<P, D_OUT, F_OUT, P_OUT> {ProgressPipe25,783
+	public Promise<D_OUT, F_OUT, P_OUT> pipeProgress(final P result);pipeProgress26,839
+
+org/jdeferred/DeferredCallable.java,616
+package org.jdeferred;org.jdeferred1,0
+public abstract class DeferredCallable<D, P> implements Callable<D> {DeferredCallable18,551
+	private final Deferred<D, Throwable, P> deferred = new DeferredObject<D, Throwable, P>();deferred19,621
+	private final StartPolicy startPolicy;startPolicy20,712
+	public DeferredCallable() {DeferredCallable22,754
+	public DeferredCallable(StartPolicy startPolicy) {DeferredCallable26,830
+	protected void notify(P progress) {notify34,984
+	protected Deferred<D, Throwable, P> getDeferred() {getDeferred38,1055
+	public StartPolicy getStartPolicy() {getStartPolicy42,1131
+
+org/jdeferred/Promise.java,1561
+package org.jdeferred;org.jdeferred16,594
+public interface Promise<D, F, P> {Promise53,1532
+	public enum State {State54,1568
+		PENDING,PENDING59,1732
+		REJECTED,REJECTED67,1896
+		RESOLVEDRESOLVED75,2051
+	public State state();state78,2066
+	public boolean isPending();isPending84,2135
+	public boolean isResolved();isResolved90,2211
+	public boolean isRejected();isRejected96,2288
+	public Promise<D, F, P> then(DoneCallback<D> doneCallback);then104,2444
+	public Promise<D, F, P> then(DoneCallback<D> doneCallback,then112,2708
+	public Promise<D, F, P> then(DoneCallback<D> doneCallback,then123,3113
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then132,3401
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then142,3686
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then174,4713
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then184,4987
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then194,5217
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then224,6191
+	public Promise<D, F, P> done(DoneCallback<D> callback);done249,6988
+	public Promise<D, F, P> fail(FailCallback<F> callback);fail272,7633
+	public Promise<D, F, P> always(AlwaysCallback<D, F> callback);always300,8476
+	public Promise<D, F, P> progress(ProgressCallback<P> callback);progress323,9238
+	public void waitSafely() throws InterruptedException;waitSafely331,9471
+	public void waitSafely(long timeout) throws InterruptedException;waitSafely339,9724
+
+org/jdeferred/FailCallback.java,150
+package org.jdeferred;org.jdeferred16,594
+public interface FailCallback<F> {FailCallback25,731
+	public void onFail(final F result);onFail26,766
+
+org/jdeferred/DonePipe.java,191
+package org.jdeferred;org.jdeferred16,594
+public interface DonePipe<D, D_OUT, F_OUT, P_OUT> {DonePipe25,777
+	public Promise<D_OUT, F_OUT, P_OUT> pipeDone(final D result);pipeDone26,829
+
+org/jdeferred/DoneCallback.java,150
+package org.jdeferred;org.jdeferred16,594
+public interface DoneCallback<D> {DoneCallback25,732
+	public void onDone(final D result);onDone26,767
+
+org/jdeferred/impl/DeferredPromise.java,1712
+package org.jdeferred.impl;org.jdeferred.impl16,749
+public class DeferredPromise<D, F, P> implements Promise<D, F, P> {DeferredPromise31,1186
+	private final Promise<D, F, P> promise;promise32,1254
+	protected final Deferred<D, F, P> deferred;deferred33,1295
+	public DeferredPromise(Deferred<D, F, P> deferred) {DeferredPromise35,1342
+	public org.jdeferred.Promise.State state() {state40,1466
+	public boolean isPending() {isPending44,1542
+	public boolean isResolved() {isResolved48,1606
+	public boolean isRejected() {isRejected52,1672
+	public Promise<D, F, P> then(DoneCallback<D> doneCallback) {then56,1738
+	public Promise<D, F, P> then(DoneCallback<D> doneCallback,then60,1841
+	public Promise<D, F, P> then(DoneCallback<D> doneCallback,then65,1991
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then70,2197
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then75,2339
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then80,2526
+	public Promise<D, F, P> done(DoneCallback<D> callback) {done86,2773
+	public Promise<D, F, P> fail(FailCallback<F> callback) {fail90,2868
+	public Promise<D, F, P> always(AlwaysCallback<D, F> callback) {always94,2963
+	public Promise<D, F, P> progress(ProgressCallback<P> callback) {progress98,3067
+	public void waitSafely() throws InterruptedException {waitSafely103,3185
+	public void waitSafely(long timeout) throws InterruptedException {waitSafely109,3283
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then114,3397
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then120,3562
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then127,3787
+
+org/jdeferred/impl/AbstractPromise.java,3010
+package org.jdeferred.impl;org.jdeferred.impl16,594
+public abstract class AbstractPromise<D, F, P> implements Promise<D, F, P> {AbstractPromise41,1161
+	private final static String TAG=AbstractPromise.class.getName();TAG42,1238
+	protected volatile State state = State.PENDING;state44,1306
+	protected final List<DoneCallback<D>> doneCallbacks = new CopyOnWriteArrayList<DoneCallback<D>>();doneCallbacks46,1356
+	protected final List<FailCallback<F>> failCallbacks = new CopyOnWriteArrayList<FailCallback<F>>();failCallbacks47,1456
+	protected final List<ProgressCallback<P>> progressCallbacks = new CopyOnWriteArrayList<ProgressCallback<P>>();progressCallbacks48,1556
+	protected final List<AlwaysCallback<D, F>> alwaysCallbacks = new CopyOnWriteArrayList<AlwaysCallback<D, F>>();alwaysCallbacks49,1668
+	protected D resolveResult;resolveResult51,1782
+	protected F rejectResult;rejectResult52,1810
+	public State state() {state55,1849
+	public Promise<D, F, P> done(DoneCallback<D> callback) {done60,1905
+	public Promise<D, F, P> fail(FailCallback<F> callback) {fail69,2112
+	public Promise<D, F, P> always(AlwaysCallback<D, F> callback) {always78,2319
+	protected void triggerDone(D resolved) {triggerDone86,2548
+	protected void triggerDone(DoneCallback<D> callback, D resolved) {triggerDone96,2797
+	protected void triggerFail(F rejected) {triggerFail100,2899
+	protected void triggerFail(FailCallback<F> callback, F rejected) {triggerFail110,3148
+	protected void triggerProgress(P progress) {triggerProgress114,3250
+	protected void triggerProgress(ProgressCallback<P> callback, P progress) {triggerProgress124,3519
+	protected void triggerAlways(State state, D resolve, F reject) {triggerAlways128,3633
+	protected void triggerAlways(AlwaysCallback<D, F> callback, State state, D resolve, F reject) {triggerAlways142,3983
+	public Promise<D, F, P> progress(ProgressCallback<P> callback) {progress147,4140
+	public Promise<D, F, P> then(DoneCallback<D> callback) {then153,4271
+	public Promise<D, F, P> then(DoneCallback<D> doneCallback, FailCallback<F> failCallback) {then158,4369
+	public Promise<D, F, P> then(DoneCallback<D> doneCallback, FailCallback<F> failCallback,then165,4535
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then174,4773
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then180,4982
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then186,5230
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then193,5532
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then199,5749
+	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(then206,6020
+	public boolean isPending() {isPending214,6358
+	public boolean isResolved() {isResolved219,6436
+	public boolean isRejected() {isRejected224,6516
+	public void waitSafely() throws InterruptedException {waitSafely228,6586
+	public void waitSafely(long timeout) throws InterruptedException {waitSafely231,6663
+
+org/jdeferred/impl/DeferredObject.java,435
+package org.jdeferred.impl;org.jdeferred.impl16,594
+public class DeferredObject<D, F, P> extends AbstractPromise<D, F, P> implements Deferred<D, F, P> {DeferredObject58,1584
+	public Deferred<D, F, P> resolve(final D resolve) {resolve61,1698
+	public Deferred<D, F, P> notify(final P progress) {notify79,2094
+	public Deferred<D, F, P> reject(final F reject) {reject90,2357
+	public Promise<D, F, P> promise() {promise106,2731
+
+org/jdeferred/impl/FilteredPromise.java,1453
+package org.jdeferred.impl;org.jdeferred.impl16,594
+public class FilteredPromise<D, F, P, D_OUT, F_OUT, P_OUT> extends DeferredObject<D_OUT, F_OUT, P_OUT> implements Promise<D_OUT, F_OUT, P_OUT>{FilteredPromise27,913
+	protected static final NoOpDoneFilter NO_OP_DONE_FILTER = new NoOpDoneFilter();NO_OP_DONE_FILTER28,1057
+	protected static final NoOpFailFilter NO_OP_FAIL_FILTER = new NoOpFailFilter();NO_OP_FAIL_FILTER29,1138
+	protected static final NoOpProgressFilter NO_OP_PROGRESS_FILTER = new NoOpProgressFilter();NO_OP_PROGRESS_FILTER30,1219
+	private final DoneFilter<D, D_OUT> doneFilter;doneFilter32,1314
+	private final FailFilter<F, F_OUT> failFilter;failFilter33,1362
+	private final ProgressFilter<P, P_OUT> progressFilter;progressFilter34,1410
+	public FilteredPromise(final Promise<D, F, P> promise, final DoneFilter<D, D_OUT> doneFilter, final FailFilter<F, F_OUT> failFilter, final ProgressFilter<P, P_OUT> progressFilter) {FilteredPromise36,1468
+	public static final class NoOpDoneFilter<D> implements DoneFilter<D, D> {NoOpDoneFilter61,2445
+		public D filterDone(D result) {filterDone63,2532
+	public static final class NoOpFailFilter<F> implements FailFilter<F, F> {NoOpFailFilter68,2593
+		public F filterFail(F result) {filterFail70,2680
+	public static final class NoOpProgressFilter<P> implements ProgressFilter<P, P> {NoOpProgressFilter75,2741
+		public P filterProgress(P progress) {filterProgress77,2836
+
+org/jdeferred/impl/DefaultDeferredManager.java,1156
+package org.jdeferred.impl;org.jdeferred.impl16,594
+public class DefaultDeferredManager extends AbstractDeferredManager {DefaultDeferredManager34,1220
+	public static final boolean DEFAULT_AUTO_SUBMIT = true;DEFAULT_AUTO_SUBMIT41,1558
+	private final ExecutorService executorService;executorService43,1617
+	private boolean autoSubmit = DEFAULT_AUTO_SUBMIT;autoSubmit44,1665
+	public DefaultDeferredManager() {DefaultDeferredManager50,1844
+	public DefaultDeferredManager(ExecutorService executorService) {DefaultDeferredManager58,1983
+	public ExecutorService getExecutorService() {getExecutorService62,2095
+	public boolean awaitTermination(long timeout, TimeUnit unit)awaitTermination66,2172
+	public boolean isShutdown() {isShutdown71,2329
+	public boolean isTerminated() {isTerminated75,2403
+	public void shutdown() {shutdown79,2481
+	public List<Runnable> shutdownNow() {shutdownNow83,2541
+	protected void submit(Runnable runnable) {submit88,2635
+	protected void submit(Callable callable) {submit93,2731
+	public boolean isAutoSubmit() {isAutoSubmit98,2826
+	public void setAutoSubmit(boolean autoSubmit) {setAutoSubmit102,2884
+
+org/jdeferred/impl/FutureCallable.java,293
+package org.jdeferred.impl;org.jdeferred.impl16,749
+public class FutureCallable<V> implements Callable<V> {FutureCallable22,901
+	private final Future<V> future;future23,957
+	public FutureCallable(Future<V> future) {FutureCallable25,992
+	public V call() throws Exception {call30,1074
+
+org/jdeferred/impl/AbstractDeferredManager.java,1855
+package org.jdeferred.impl;org.jdeferred.impl16,594
+public abstract class AbstractDeferredManager implements DeferredManager {AbstractDeferredManager33,1167
+	private final static String TAG=AbstractDeferredManager.class.getName();TAG34,1242
+	protected abstract void submit(Runnable runnable);submit36,1318
+	protected abstract void submit(Callable callable);submit37,1370
+	public abstract boolean isAutoSubmit();isAutoSubmit52,1864
+	public Promise<MultipleResults, OneReject, MasterProgress> when(Runnable... runnables) {when55,1918
+	public Promise<MultipleResults, OneReject, MasterProgress> when(Callable<?>... callables) {when71,2339
+	public Promise<MultipleResults, OneReject, MasterProgress> when(DeferredRunnable<?>... runnables) {when87,2763
+	public Promise<MultipleResults, OneReject, MasterProgress> when(DeferredCallable<?, ?>... callables) {when100,3080
+	public Promise<MultipleResults, OneReject, MasterProgress> when(DeferredFutureTask<?, ?>... tasks) {when113,3399
+	public Promise<MultipleResults, OneReject, MasterProgress> when(Future<?> ... futures) {when125,3698
+	public Promise<MultipleResults, OneReject, MasterProgress> when(Promise... promises) {when137,3993
+	public <D, F, P> Promise<D, F, P> when(Promise<D, F, P> promise) {when143,4179
+	public <P> Promise<Void, Throwable, P> when(DeferredRunnable<P> runnable) {when148,4280
+	public <D, P> Promise<D, Throwable, P> when(DeferredCallable<D, P> runnable) {when153,4430
+	public Promise<Void, Throwable, Void> when(Runnable runnable) {when158,4581
+	public <D> Promise<D, Throwable, Void> when(Callable<D> callable) {when163,4722
+	public <D, P> Promise<D, Throwable, P> when(when184,5527
+	public <D> Promise<D, Throwable, Void> when(final Future<D> future) {when194,5792
+	protected void assertNotEmpty(Object[] objects) {assertNotEmpty213,6279
+
+org/jdeferred/impl/PipedPromise.java,550
+package org.jdeferred.impl;org.jdeferred.impl16,594
+public class PipedPromise<D, F, P, D_OUT, F_OUT, P_OUT> extends DeferredObject<D_OUT, F_OUT, P_OUT> implements Promise<D_OUT, F_OUT, P_OUT>{PipedPromise27,891
+	public PipedPromise(final Promise<D, F, P> promise, final DonePipe<D, D_OUT, F_OUT, P_OUT> doneFilter, final FailPipe<F, D_OUT, F_OUT, P_OUT> failFilter, final ProgressPipe<P, D_OUT, F_OUT, P_OUT> progressFilter) {PipedPromise28,1032
+	protected Promise<D_OUT, F_OUT, P_OUT> pipe(Promise<D_OUT, F_OUT, P_OUT> promise) {pipe54,2003
+
+org/jdeferred/DeferredManager.java,1412
+package org.jdeferred;org.jdeferred16,594
+public interface DeferredManager {DeferredManager63,1860
+	public static enum StartPolicy {StartPolicy64,1895
+		DEFAULT,DEFAULT69,2034
+		AUTO,AUTO74,2120
+		MANAULMANAUL79,2211
+	public abstract <D, F, P> Promise<D, F, P> when(Promise<D, F, P> promise);when88,2311
+	public abstract Promise<Void, Throwable, Void> when(Runnable runnable);when97,2564
+	public abstract <D> Promise<D, Throwable, Void> when(Callable<D> callable);when106,2813
+	public abstract <D> Promise<D, Throwable, Void> when(Future<D> future);when115,3064
+	public abstract <P> Promise<Void, Throwable, P> when(when124,3321
+	public abstract <D, P> Promise<D, Throwable, P> when(when134,3594
+	public abstract <D, P> Promise<D, Throwable, P> when(when144,3873
+	public abstract Promise<MultipleResults, OneReject, MasterProgress> when(when166,4748
+	public abstract Promise<MultipleResults, OneReject, MasterProgress> when(when175,4993
+	public abstract Promise<MultipleResults, OneReject, MasterProgress> when(when184,5240
+	public abstract Promise<MultipleResults, OneReject, MasterProgress> when(when193,5498
+	public abstract Promise<MultipleResults, OneReject, MasterProgress> when(when202,5764
+	public abstract Promise<MultipleResults, OneReject, MasterProgress> when(when212,6057
+	public abstract Promise<MultipleResults, OneReject, MasterProgress> when(when215,6173
+
+org/jdeferred/multiple/MasterDeferredObject.java,492
+package org.jdeferred.multiple;org.jdeferred.multiple16,594
+public class MasterDeferredObject extendsMasterDeferredObject46,1762
+	private final int numberOfPromises;numberOfPromises49,1932
+	private final AtomicInteger doneCount = new AtomicInteger();doneCount50,1969
+	private final AtomicInteger failCount = new AtomicInteger();failCount51,2031
+	private final MultipleResults results;results52,2093
+	public MasterDeferredObject(Promise... promises) {MasterDeferredObject55,2166
+
+org/jdeferred/multiple/MasterProgress.java,472
+package org.jdeferred.multiple;org.jdeferred.multiple16,594
+public class MasterProgress {MasterProgress24,790
+	private final int done;done25,820
+	private final int fail;fail26,845
+	private final int total;total27,870
+	public MasterProgress(int done, int fail, int total) {MasterProgress29,898
+	public int getDone() {getDone36,1031
+	public int getFail() {getFail40,1074
+	public int getTotal() {getTotal44,1117
+	public String toString() {toString49,1173
+
+org/jdeferred/multiple/OneResult.java,497
+package org.jdeferred.multiple;org.jdeferred.multiple16,594
+public class OneResult {OneResult26,724
+	private final int index;index27,749
+	private final Promise promise;promise28,775
+	private final Object result;result29,807
+	public OneResult(int index, Promise promise, Object result) {OneResult31,839
+	public int getIndex() {getIndex37,988
+	public Promise getPromise() {getPromise40,1032
+	public Object getResult() {getResult43,1084
+	public String toString() {toString47,1144
+
+org/jdeferred/multiple/MultipleResults.java,508
+package org.jdeferred.multiple;org.jdeferred.multiple16,594
+public class MultipleResults implements Iterable<OneResult> {MultipleResults27,801
+	private final List<OneResult> results;results28,863
+	public MultipleResults(int size) {MultipleResults30,905
+	protected void set(int index, OneResult result) {set34,1021
+	public OneResult get(int index) {get38,1107
+	public Iterator<OneResult> iterator() {iterator42,1175
+	public int size() {size46,1250
+	public String toString() {toString51,1311
+
+org/jdeferred/multiple/OneProgress.java,570
+package org.jdeferred.multiple;org.jdeferred.multiple16,594
+public class OneProgress extends MasterProgress {OneProgress27,774
+	private final int index;index28,824
+	private final Promise promise;promise30,852
+	private final Object progress;progress31,884
+	public OneProgress(int done, int fail, int total, int index, Promise promise, Object progress) {OneProgress33,918
+	public int getIndex() {getIndex40,1124
+	public Promise getPromise() {getPromise44,1170
+	public Object getProgress() {getProgress48,1223
+	public String toString() {toString53,1288
+
+org/jdeferred/multiple/OneReject.java,498
+package org.jdeferred.multiple;org.jdeferred.multiple16,594
+public class OneReject {OneReject26,768
+	private final int index;index27,793
+	private final Promise promise;promise28,819
+	private final Object reject;reject29,851
+	public OneReject(int index, Promise promise, Object reject) {OneReject31,883
+	public int getIndex() {getIndex38,1033
+	public Promise getPromise() {getPromise42,1078
+	public Object getReject() {getReject46,1131
+	public String toString() {toString51,1192
+
+org/jdeferred/AlwaysCallback.java,200
+package org.jdeferred;org.jdeferred16,594
+public interface AlwaysCallback<D, R> {AlwaysCallback20,655
+	public void onAlways(final State state, final D resolved, final R rejected);onAlways21,695
+
+org/jdeferred/ProgressCallback.java,168
+package org.jdeferred;org.jdeferred16,594
+public interface ProgressCallback<P> {ProgressCallback25,739
+	public void onProgress(final P progress);onProgress26,778
+
+org/jdeferred/DoneFilter.java,162
+package org.jdeferred;org.jdeferred16,594
+public interface DoneFilter<D, D_OUT> {DoneFilter25,781
+	public D_OUT filterDone(final D result);filterDone26,821
+
+org/jdeferred/DeferredRunnable.java,617
+package org.jdeferred;org.jdeferred1,0
+public abstract class DeferredRunnable<P> implements Runnable {DeferredRunnable15,399
+	private final Deferred<Void, Throwable, P> deferred = new DeferredObject<Void, Throwable, P>();deferred16,463
+	private final StartPolicy startPolicy;startPolicy17,560
+	public DeferredRunnable() {DeferredRunnable19,602
+	public DeferredRunnable(StartPolicy startPolicy) {DeferredRunnable23,678
+	protected void notify(P progress) {notify31,832
+	protected Deferred<Void, Throwable, P> getDeferred() {getDeferred35,903
+	public StartPolicy getStartPolicy() {getStartPolicy39,982
+
+org/jdeferred/ProgressFilter.java,180
+package org.jdeferred;org.jdeferred16,594
+public interface ProgressFilter<P, P_OUT> {ProgressFilter25,798
+	public P_OUT filterProgress(final P progress);filterProgress26,842
+
+org/jdeferred/FailFilter.java,162
+package org.jdeferred;org.jdeferred16,594
+public interface FailFilter<F, F_OUT> {FailFilter25,781
+	public F_OUT filterFail(final F result);filterFail26,821
