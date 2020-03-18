@@ -75,7 +75,7 @@ public class ExpansionDistributor<T extends Comparable<? super T>,O> implements 
 			}
 			throw e;
 		}
-		System.out.println("Generating queries (this will take about 5 mins)...");
+		System.out.println("Generating queries (this will take a few mins, after which they will be sent to the search engine)...");
 	}
 
 	public static <T extends Comparable<? super T>,O,R extends AsyncExpansionReceiver<T,O>> ExpansionDistributor<T,O> relay(R pReceiver, 

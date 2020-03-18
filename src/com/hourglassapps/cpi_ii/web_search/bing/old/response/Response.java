@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii.web_search.bing.response;
+package com.hourglassapps.cpi_ii.web_search.bing.old.response;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -25,7 +25,7 @@ public class Response {
 	public List<URL> urls() throws URISyntaxException {
 		return mD.urls();
 	}
-	
+
 	public URL next() throws MalformedURLException {
 		return mD.next();
 	}

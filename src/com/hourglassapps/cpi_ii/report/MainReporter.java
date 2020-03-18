@@ -149,7 +149,7 @@ public class MainReporter {
 	}
 
 	private static void usage() {
-		System.out.println("MainReporter <CONDUCTUS_XML_EXPORT>");
+		System.out.println("java -cp <CLASS_PATH> com.hourglassapps.cpi_ii.report.MainReporter <CONDUCTUS_XML_EXPORT>");
 	}
 
 	public static void main(String pArgs[]) throws IOException, ParseException {

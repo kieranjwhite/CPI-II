@@ -1,7 +1,7 @@
-package com.hourglassapps.cpi_ii.web_search.bing.response;
+package com.hourglassapps.cpi_ii.web_search.bing.old.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.hourglassapps.cpi_ii.web_search.bing.response.Response.Type;
+import com.hourglassapps.cpi_ii.web_search.bing.old.response.Response.Type;
 
 public class __Metadata {
 	private String mUri;

@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii.web_search.bing;
+package com.hourglassapps.cpi_ii.web_search.bing.old;
 
 public class BingArgs {
 

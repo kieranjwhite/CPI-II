@@ -43,7 +43,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
     public final static int RESULTS_PER_PAGE=50;
 	
     public static final String END_POINT_PREFIX="websearchii";
-    public static final String AUTH_KEY = "acf0850c056a4066ad580156b5981b0c";
+    public static final String AUTH_KEY = "akeyakeyakeyakeyakeyakey";
 
     private final static String SEARCH_PATH_PREFIX="/bing/v7.0/search?q=%27%28";
     private final static String SEARCH_URI_PREFIX=

@@ -16,33 +16,36 @@ public class Throttle {
 	private final BlockingQueue<Delayed> mInFlight;
 
 	private static class StampDelayed implements Delayed {
-		private long mDurationMs;
-		private final long mDelayTill;
+		private long mDuration_ns;
+		private final long mDelayTill_ns;
 		
 		public StampDelayed(long pDuration, TimeUnit pUnit) {
-			mDurationMs=pUnit.toMillis(pDuration);
-			mDelayTill=System.currentTimeMillis()+mDurationMs;
+			mDuration_ns=pUnit.toNanos(pDuration);
+			long now_ns=System.nanoTime();
+			mDelayTill_ns=now_ns+mDuration_ns;
 		}
 
-		private long msRemaining() {
-			return mDelayTill-System.currentTimeMillis();
+		private long nsRemaining() {
+			return mDelayTill_ns-System.nanoTime();
 		}
 		
 		@Override
 		public long getDelay(TimeUnit pRequiredUnit) {
-			return pRequiredUnit.convert(msRemaining(), TimeUnit.MILLISECONDS);
+		    long remaining=nsRemaining();
+		    long unitsRemaining = pRequiredUnit.convert(remaining, TimeUnit.NANOSECONDS);
+		    return unitsRemaining;
 		}
 		
 		public Delayed copy() {
-			return new StampDelayed(mDurationMs, TimeUnit.MILLISECONDS);
+			return new StampDelayed(mDuration_ns, TimeUnit.NANOSECONDS);
 		}
 
 		@Override
 		public int compareTo(Delayed pOther) {
 			if(pOther instanceof StampDelayed) {
-				return Long.compare(mDelayTill, ((StampDelayed)pOther).mDelayTill);
+				return Long.compare(mDelayTill_ns, ((StampDelayed)pOther).mDelayTill_ns);
 			}
-			return Long.compare(msRemaining(), pOther.getDelay(TimeUnit.MILLISECONDS));
+			return Long.compare(nsRemaining(), pOther.getDelay(TimeUnit.NANOSECONDS));
 		}
 	}
 	
@@ -67,6 +70,7 @@ public class Throttle {
 	 */
 	public void choke() {
 		if(mDurationTemplate!=null) {
+		    synchronized(this) {
 			assert(mInFlight!=null);
 			try {
 				if(mInFlight.size()>=mMaxElements) {
@@ -75,7 +79,8 @@ public class Throttle {
 				mInFlight.add(mDurationTemplate.copy());
 			} catch(InterruptedException e) {
 				//Okay let this download proceed
-			}			
+			}
+		    }
 		}		
 	}
 	

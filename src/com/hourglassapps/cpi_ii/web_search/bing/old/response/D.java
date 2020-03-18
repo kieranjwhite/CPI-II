@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii.web_search.bing.response;
+package com.hourglassapps.cpi_ii.web_search.bing.old.response;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.hourglassapps.cpi_ii.web_search.bing.BingArgs;
+import com.hourglassapps.cpi_ii.web_search.bing.old.BingArgs;
 import com.hourglassapps.util.Log;
 
 public class D implements Iterable<Result> {

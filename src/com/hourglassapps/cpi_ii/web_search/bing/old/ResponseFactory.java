@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii.web_search.bing;
+package com.hourglassapps.cpi_ii.web_search.bing.old;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -9,22 +9,22 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hourglassapps.cpi_ii.web_search.bing.response.Response;
+import com.hourglassapps.cpi_ii.web_search.bing.old.response.Response;
 
-class ResponseFactory {
+public class ResponseFactory {
 	private ObjectMapper mMapper=new ObjectMapper();
 	private JsonParser mParser;
 	
 	public Response inst(String pToParse) throws JsonParseException, IOException {
-		JsonFactory f=new JsonFactory();
-		try(
-				Reader reader=new StringReader(pToParse);
-				) {
-			mParser=f.createJsonParser(reader);
-			JsonToken nextToken=mParser.nextToken(); //advances mParser to first element
-			assert nextToken==JsonToken.START_OBJECT;
-			Response resp=mMapper.readValue(mParser, Response.class);
-			return resp;
-		}
+	    JsonFactory f=new JsonFactory();
+	    try(
+		Reader reader=new StringReader(pToParse);
+		) {
+		mParser=f.createJsonParser(reader);
+		JsonToken nextToken=mParser.nextToken(); //advances mParser to first element
+		assert nextToken==JsonToken.START_OBJECT;
+		Response resp=mMapper.readValue(mParser, Response.class);
+		return resp;
+	    }
 	}
 }

@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii.web_search.bing;
+package com.hourglassapps.cpi_ii.web_search.bing.old;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -22,7 +22,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.hourglassapps.cpi_ii.web_search.AbstractSearchEngine;
 import com.hourglassapps.cpi_ii.web_search.Query;
-import com.hourglassapps.cpi_ii.web_search.bing.response.Response;
+import com.hourglassapps.cpi_ii.web_search.bing.old.response.Response;
+import com.hourglassapps.cpi_ii.web_search.bing.old.ResponseFactory;
 import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
@@ -50,7 +51,7 @@ public class BingSearchEngine extends AbstractSearchEngine implements Thrower {
 	//A length 0f 2047 is too long. I do know from experience that a length of 2007 works though so I'll round it off to 2000 and go with that.
 	//private final static int TOTAL_QUERY_LEN=2047; //from http://stackoverflow.com/questions/15334531/what-are-the-query-length-limits-for-the-bing-websearch-api
 	private final static int TOTAL_QUERY_LEN=2000;
-	public static final String AUTH_KEY = "xD0E++DfZY7Sbumxx2QBuvmgOGliDgHuDIm0LzIGr3E=";
+	public static final String AUTH_KEY = "akeyakeyakeyakeyakeyakey";
 
 	static {
 		assert RESULTS_PER_PAGE>=1 && RESULTS_PER_PAGE<=50; //per https://duckduckgo.com/l/?kh=-1&uddg=http%3A%2F%2Fwww.bing.com%2Fwebmaster%2Fcontent%2Fdevelopers%2FADM_FAQ_EXT.docx

@@ -52,7 +52,7 @@ public class MainBlacklistReported {
 	}
 	
 	private static void usage() {
-		System.out.println("MainBlacklistReported <POEMS_DIRECTORY> <DOCUMENTS_DIRECTORY>");
+		System.out.println("Usage: java -cp <CLASS_PATH> com.hourglassapps.cpi_ii.report.blacklist.MainBlacklistReported <POEMS_DIRECTORY> <DOCUMENTS_DIRECTORY>");
 	}
 	
 		

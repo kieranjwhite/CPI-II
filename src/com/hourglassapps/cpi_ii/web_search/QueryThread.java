@@ -21,7 +21,6 @@ import com.hourglassapps.util.ConcreteThrower;
 import com.hourglassapps.util.ExpansionReceiver;
 import com.hourglassapps.util.Log;
 import com.hourglassapps.util.Rtu;
-import com.hourglassapps.util.Throttle;
 import com.hourglassapps.util.Typed;
 
 public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<String,K>, Consumer<List<List<String>>> {
@@ -33,7 +32,7 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 	private final ConcreteThrower<Exception> mThrower=new ConcreteThrower<>();
 	private final SearchEngine<List<String>, K, URL, URL> mQ;	
 	private final Journal<K,URL> mJournal;
-	private Throttle mThrottle=Throttle.NULL_THROTTLE;
+	//private Throttle mThrottle=Throttle.NULL_THROTTLE;
 	private final Deferred<Void, IOException, K> mDeferred=new DeferredObject<>();
 	private Closer mCloser=new Closer();
 	
@@ -43,7 +42,7 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 		mJournal=pJournal;
 		mCloser.after(mJournal).after(mQ).after(mThrower);
 	}
-	
+	/*
 	public QueryThread<K> setThrottle(Throttle pThrottle) {
 		if(getState()==Thread.State.NEW) {
 			mThrottle=pThrottle;
@@ -52,17 +51,17 @@ public class QueryThread<K> extends Thread implements AsyncExpansionReceiver<Str
 		}
 		return this;
 	}
-
+	*/
 	public void search(Query<K,URL> pQuery) throws IOException {
-		Iterator<URL> links=mQ.present(pQuery);
-		while(links.hasNext()){
-			mThrottle.choke();
-			final URL link=links.next();
-			//source=new TypedLink(link);
-			mJournal.addNew(link);
-		}
-		//Log.i(TAG, "committing: "+pQuery.uniqueName()+" tid: "+Thread.currentThread().getId());
-		mJournal.commit(pQuery.uniqueName());		
+	    Iterator<URL> links=mQ.present(pQuery);
+	    while(links.hasNext()){
+		//mThrottle.choke();
+		final URL link=links.next();
+		//source=new TypedLink(link);
+		mJournal.addNew(link);
+	    }
+	    //Log.i(TAG, "committing: "+pQuery.uniqueName()+" tid: "+Thread.currentThread().getId());
+	    mJournal.commit(pQuery.uniqueName());		
 	}
 	
 	private synchronized List<List<String>> unshift() {

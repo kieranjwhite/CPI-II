@@ -1,4 +1,4 @@
-package com.hourglassapps.cpi_ii.web_search.bing.response;
+package com.hourglassapps.cpi_ii.web_search.bing.old.response;
 
 import java.net.MalformedURLException;
 import java.net.URI;
