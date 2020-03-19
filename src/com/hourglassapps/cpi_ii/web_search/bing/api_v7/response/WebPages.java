@@ -70,10 +70,9 @@ public class WebPages implements Iterable<Value> {
 
     public List<URL> urls() {
 	List<URL> urls=new ArrayList<URL>();
-	//TODO remove this url
-	try {
-	    urls.add(new URL("http://www.catholictradition.org/Christ/nature-grace.htm"));
-	} catch(MalformedURLException ex) {}
+	//try {
+	//    urls.add(new URL("http://www.catholictradition.org/Christ/nature-grace.htm"));
+	//} catch(MalformedURLException ex) {}
 	for(int i=0; i<mValue.length; i++) {
 	    try {
 		urls.add(mValue[i].url());
