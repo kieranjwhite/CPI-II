@@ -17,7 +17,8 @@ import com.hourglassapps.cpi_ii.latin.StandardLatinAnalyzer;
 import com.hourglassapps.cpi_ii.lucene.IndexViewer;
 import com.hourglassapps.cpi_ii.lucene.Indexer;
 import com.hourglassapps.cpi_ii.lucene.TermHandler;
-import com.hourglassapps.serialise.JSONParser;
+//import com.hourglassapps.serialise.JSONParser;
+import com.hourglassapps.serialise.PoemRecordXMLParser;
 import com.hourglassapps.serialise.ParseException;
 import com.hourglassapps.serialise.RemoveUnescapesReader;
 import com.hourglassapps.util.IOIterator;
@@ -83,14 +84,13 @@ public class MainIndexConductus {
 	
 	private void indexById(Indexer pIndexer) throws IOException, ParseException {
 		try(
-				JSONParser<Long,String,PoemRecord> parser=new JSONParser<>(
-						new RemoveUnescapesReader(
+				PoemRecordXMLParser parser=new PoemRecordXMLParser(
 								new BufferedReader(
-										new FileReader(mInput))), PoemRecord.class);
-				IOIterator<Record<Long, String>> text=parser.throwableIterator();
+										new FileReader(mInput)));
+				IOIterator<PoemRecord> text=parser.throwableIterator();
 				) {
 			while(text.hasNext()) {
-				Record<Long, String> record=text.next();
+				PoemRecord record=text.next();
 				if(record==null) {
 					//an exception will cause this -- it'll be thrown when parser is closed
 					break;

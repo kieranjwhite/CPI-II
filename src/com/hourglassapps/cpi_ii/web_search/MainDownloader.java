@@ -231,7 +231,7 @@ public class MainDownloader implements AutoCloseable {
 	
     public void downloadAll(String pPath, boolean pDummyRun, Set<String> pFilteredURLs) {
 	System.out.println("About to download results for all queries.");
-	Rtu.continuePrompt();
+	//Rtu.continuePrompt();
 	try {
 	    Journal<String,URL> journal=pDummyRun?NULL_JOURNAL:new DeferredFilesJournal<String,URL,ContentTypeSourceable>(
 															  JOURNAL, pFilteredURLs,
@@ -422,10 +422,8 @@ public class MainDownloader implements AutoCloseable {
 		    //increase the number of threads you also increase
 		    //the number of queries sent.
 		    
-		    //downloader.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.013361), filteredURLs);
-		    //downloaderManager.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 345612, 0.00030539), filteredURLs);
-		    //downloaderManager.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 123456, 0.00060539), filteredURLs);
-		    downloaderManager.downloadAndIndex(stemPath, numThreads, new HashTemplate<List<List<String>>>(), filteredURLs);
+		    downloaderManager.downloadAndIndex(stemPath, numThreads, new RandomTemplate<List<List<String>>>(numThreads, 912345, 0.0028), filteredURLs); //with 4 threads, this is a 1000ish query run
+		    //downloaderManager.downloadAndIndex(stemPath, numThreads, new HashTemplate<List<List<String>>>(), filteredURLs);
 					
 		    break;
 		case PARTITION:
